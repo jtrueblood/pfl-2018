@@ -1,0 +1,1 @@
+a:16:{s:10:"1991RiceWR";i:142;s:10:"1991RisoWR";i:115;s:10:"1991SharWR";i:108;s:10:"1992IrviWR";i:102;s:10:"1993MillWR";i:79;s:10:"1991ReedWR";i:77;s:10:"1991JeffWR";i:74;s:10:"1991GiviWR";i:65;s:10:"1993MoorWR";i:21;s:10:"1991CarrWR";i:6;s:10:"1991ClakWR";i:6;s:10:"1992DuncWR";i:5;s:10:"1991BladWR";i:4;s:10:"1993HowaWR";i:4;s:10:"1992BarnWR";i:4;s:10:"1992MonkWR";i:4;}

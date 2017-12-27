@@ -1,0 +1,1 @@
+a:15:{s:10:"1991SmitRB";i:166;s:10:"1991ThomRB";i:160;s:10:"1992WattRB";i:138;s:10:"1991SandRB";i:119;s:10:"1991ByneRB";i:115;s:10:"1991WalkRB";i:104;s:10:"1992GreeRB";i:48;s:10:"1991OkoyRB";i:32;s:10:"1991HampRB";i:28;s:10:"1992FostRB";i:25;s:10:"1991BernRB";i:17;s:10:"1992WordRB";i:12;s:10:"1992CraiRB";i:9;s:10:"1991HiggRB";i:4;s:10:"1992BellRB";i:1;}

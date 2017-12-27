@@ -1,0 +1,118 @@
+var teams = {
+  NE: {
+	market: 'New England',
+	name: 'Patriots'
+  },
+  NYJ: {
+	market: 'New York',
+	name: 'Jets'
+  },
+  BUF: {
+	market: 'Buffalo',
+	name: 'Bills'
+  },
+  MIA: {
+	market: 'Miami',
+	name: 'Dolphins'
+  },
+  CIN: {
+	market: 'Cincinnati',
+	name: 'Bengals'
+  },
+  PIT: {
+	market: 'Pittsburgh',
+	name: 'Steelers'
+  },
+  BAL: {
+	market: 'Baltimore',
+	name: 'Ravens'
+  },
+  CLE: {
+	market: 'Cleveland',
+	name: 'Browns'
+  },
+  IND: {
+	market: 'Indianapolis',
+	name: 'Colts'
+  },
+  HOU: {
+	market: 'Houston',
+	name: 'Texans'
+  },
+  JAX: {
+	market: 'Jacksonville',
+	name: 'Jaguars'
+  },
+  DEN: {
+	market: 'Denver',
+	name: 'Broncos'
+  },
+  OAK: {
+	market: 'Oakland',
+	name: 'Raiders'
+  },
+  SD: {
+	market: 'San Diego',
+	name: 'Chargers'
+  },
+  KC: {
+	market: 'Kansas City',
+	name: 'Chiefs'
+  },
+  DAL: {
+	market: 'Dallas',
+	name: 'Cowboys'
+  },
+  NYG: {
+	market: 'New York',
+	name: 'Giants'
+  },
+  WAS: {
+	market: 'Washington',
+	name: 'Redskins'
+  },
+  PHI: {
+	market: 'Philadelphia',
+	name: 'Eagles'
+  },
+  GB: {
+	market: 'Green Bay',
+	name: 'Packers'
+  },
+  MIN: {
+	market: 'Minnesota',
+	name: 'Vikings'
+  },
+  TB: {
+	market: 'Tampa Bay',
+	name: 'Buccaneers'
+  },
+  NO: {
+	market: 'New Orleans',
+	name: 'Saints'
+  },
+  ARZ: {
+	market: 'Arizona',
+	name: 'Cardinals'
+  },
+  STL: {
+	market: 'St Louis',
+	name: 'Rams'
+  },
+  SEA: {
+	market: 'Seattle',
+	name: 'Seahawks'
+  },
+  SF: {
+	market: 'San Francisco',
+	name: '49ers'
+  },
+  TEN: {
+	market: 'Tennesse',
+	name: 'Titans'
+  },
+  CHI: {
+	market: 'Chicago',
+	name: 'Bears'
+  }
+};

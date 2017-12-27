@@ -1,0 +1,59 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+#whitelistbarwrap { margin-bottom: 30px;  }
+
+.whitelistbar {
+  text-align: center;
+  padding: 1px;
+  padding-top: 0px;
+  background-color: black;
+  max-height: 100px; 
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  color: #f5f5f5;
+  border-bottom: thick ridge rgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: 0px 2px 13px 0.5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 13px 0.5px rgba(0, 0, 0, 0.3);
+  display: none;
+  z-index: 3008;
+}
+
+
+
+
+#whitelistok {
+  float: right;
+  padding-top:3px;
+  padding-bottom: 1px;
+  padding-right: 20px;
+}
+
+#whitelistok a {
+    font-family : "Open Sans",sans-serif;
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    -webkit-box-shadow: 0 1px 0 #006799;
+    box-shadow: 0 1px 0 #006799;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #006799,1px 0 1px #006799,0 1px 1px #006799,-1px 0 1px #006799;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 26px;
+    height: 28px;
+    margin: 0;
+    padding: 0 10px 1px;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    -webkit-appearance: none;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    white-space: nowrap;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+     text-decoration: none;
+}

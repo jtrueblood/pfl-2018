@@ -1,0 +1,1 @@
+a:11:{s:10:"1991LohmPK";i:89;s:10:"1991NorwPK";i:88;s:10:"1991LeahPK";i:72;s:10:"1991AndePK";i:71;s:10:"1991LowrPK";i:70;s:10:"1991ButlPK";i:64;s:10:"1991RuzePK";i:63;s:10:"1991DaviPK";i:40;s:10:"1991TreaPK";i:9;s:10:"1991HowfPK";i:8;s:10:"1991CofePK";i:5;}

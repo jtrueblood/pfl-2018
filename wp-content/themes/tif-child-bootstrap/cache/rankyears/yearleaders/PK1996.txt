@@ -1,0 +1,1 @@
+a:15:{s:10:"1996WilkPK";i:86;s:10:"1994ElamPK";i:76;s:10:"1993DelGPK";i:72;s:10:"1992JohnPK";i:71;s:10:"1992ChriPK";i:70;s:10:"1991AndePK";i:62;s:10:"1996NednPK";i:57;s:10:"1996KasaPK";i:51;s:10:"1993AndePK";i:51;s:10:"1992HansPK";i:49;s:10:"1995PelfPK";i:15;s:10:"1992StoyPK";i:13;s:10:"1995StovPK";i:12;s:10:"1996BlanPK";i:6;s:10:"1993BoniPK";i:1;}

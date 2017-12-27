@@ -1,0 +1,83 @@
+.pagebody {
+	background-image: url('http://possefootball.com/img/honey_im_subtle.png');
+}
+.brandlogo{
+	display: none;
+}
+.leaguelogo {
+	display: block;
+	float: left;
+	max-height: 85px;
+	margin-top: -8px;
+}
+img.leaguelogo {
+	margin-bottom: 0px !important;
+}
+.franchiselogo, .standingslogo {
+	
+}
+.pageheader {
+/* 	margin-top: 20px; */
+    min-height: 0 !important;
+}
+.pagetitle h1 {
+	text-align: left;
+	margin-top: 10px;
+	margin-left: 200px;
+	font-size: 20px;
+	margin-bottom: 2px;
+	margin-top: 33px;
+
+}
+.pagetitle h1:before {
+    content: url('http://possefootball.com/img/pfl-circ-100.png');
+    position: absolute;
+    top: 17px;
+    left: 10px;
+}
+
+.pagetitle {
+    position: absolute;
+    top: 18px;
+    left: -45px;
+    width: auto;
+    z-index: -1;
+}
+#hsubmenu {
+/* 	height: 50px; */
+	background-image: none;
+	width: 100%;
+}
+.mmenucontainer {
+	margin-left: -100px;	
+}
+#homepagecolumn1, #homepagecolumn2, #homepagecolumn3 {
+	padding: 10px 15px;
+}
+.pageheader {
+	background: none;
+	background-image: none !important;
+}
+#home #standings .franchiseicon {
+	height: 50px !important;
+	width: 50px !important;
+}
+#standings td.ficonname {
+	text-align: center;
+}
+#standings .oddtablerow {
+	background-color: #eee;
+}
+td.ficonname a:nth-of-type(2) {
+	display: none;
+}
+
+#hsubmenu {
+	height: 50px;
+	background-image: none;
+	width: 100%;
+}
+#homepagecolumn1, #homepagecolumn2, #homepagecolumn3 {
+	padding: 10px 15px;
+}
+

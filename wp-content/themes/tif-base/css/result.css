@@ -1,0 +1,22 @@
+body {
+  background-color: #efefef;
+}
+.container {
+  max-width: 800px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.container p {
+  color: red;
+}
+div.menu-main-nav-container ul#menu-main-nav li {
+  display: inline;
+  padding-right: 10px;
+}
+div.menu-main-nav-container ul#menu-main-nav li a {
+  text-decoration: none;
+  color: #000000;
+}
+div.menu-main-nav-container ul#menu-main-nav li a:hover {
+  color: blue;
+}

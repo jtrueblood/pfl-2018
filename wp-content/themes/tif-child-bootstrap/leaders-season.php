@@ -13,12 +13,17 @@
 //echo $geturl;
 //$yearid = 1998;
 $yearid = $_GET['id'];
+	
+$theyears = the_seasons();
+$playersassoc = get_players_assoc ();
+//$playerdata = set_allplayerdata_trans('1991SmitRB');
+$getplayer = get_allplayerdata_trans('1992KosaQB'); 
+printr($getplayer, 0);
 
-get_cache('theyears', 0);	
-$theyears = $_SESSION['theyears'];
 
-get_cache('playersassoc', 0);	
-$playersassoc = $_SESSION['playersassoc'];
+
+if ($yearid <= 2015){
+
 
 // Points	
 foreach ($theyears as $getyear){	
@@ -31,6 +36,8 @@ foreach ($theyears as $getyear){
 	get_cache('rankyears/yearleaders/PK'.$getyear, 0);	
 	${'PK'.$getyear} = $_SESSION['rankyears/yearleaders/PK'.$getyear];
 }	
+
+
 
 // PVQ
 
@@ -225,5 +232,12 @@ $currentpvq = array_slice($getpvq, 0, 25);
 </div>
 </div>
 
+<?php 
+} else {
+
+	echo $yearid;
+
+}
+?>
 
 <?php get_footer(); ?>

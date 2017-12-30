@@ -25,9 +25,16 @@ $("#nextplayerbtn").click(function() {
 // leaders settings
 
  $('.leader-table').DataTable( {
-        "order": [[ 4, "desc" ]],
+        "order": [[ 3, "desc" ]],
         "lengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]]
  } );
+ 
+  $('.leaders-season').DataTable( {
+        "order": [[ 1, "desc" ]],
+        "lengthMenu": [[10, 50, 100, -1], [10, 50, 100, "All"]]
+ } );
+ 
+
  
   $('.high-table').DataTable( {
         "order": [[ 0, "desc" ]]

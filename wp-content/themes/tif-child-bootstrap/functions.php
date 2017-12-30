@@ -226,7 +226,6 @@ function set_schedule_trans() {
 
 }
 
-
 // simple get functions
 function the_seasons(){
 	$year = date('Y');
@@ -372,8 +371,7 @@ function topgames($theposition, $low){
 	get_cache('allplayerdata', 0);	
 	$allplayerdata = $_SESSION['allplayerdata'];
 	
-	get_cache('playersassoc', 0);	
-	$players = $_SESSION['playersassoc'];
+	$players = get_players_assoc ();
 	
 	$f = 0;
 	foreach ($allplayerdata as $getposition){
@@ -489,37 +487,36 @@ function getallteamcache ($team){
 	return $build;
 }
 
+
 // requires 'playersassoc' cache added to page
 function leadersbyseason ($array, $year, $labelpos){
-	get_cache('playersassoc', 0);	
-    $playersassoc = $_SESSION['playersassoc'];
+
+    $playersassoc = get_players_assoc ();
 	
-	$printval .= '<div class="col-xs-24 col-sm-12 col-md-6">';
+	$printval .= '<div class="col-xs-24 col-sm-12">';
 		$printval .= '<div class="panel">';
 			$printval .= '<div class="panel-heading">';
 				$printval .= '<h2 class="panel-title">'.$labelpos.'</h2>';
 			$printval .= '</div>';
 		$printval .= '<div class="panel-body">';
 			$printval .= '<div class="table-responsive">';
-				$printval .= '<table class="table table-striped">';
+				$printval .= '<table class="table table-striped leaders-season">';
 					$printval .= '<thead>';
 						$printval .= '<tr>';
-							$printval .= '<th></th><th>Player</th><th>Points</th>';
+							$printval .= '<th>Player</th><th class="text-center">Points</th><th class="text-center">Games</th>';
 						$printval .= '</tr>';
 					$printval .= '</thead>';
 					$printval .= '<tbody>';
 							$rank = 1;
+							
 							foreach ($array as $key => $getvars){
-								$first = $playersassoc[$key][0];
-								$last = $playersassoc[$key][1];
-								if ($rank == 1){
-									$printval .= '<tr class="top-scorer">';
-								} else {
-									$printval .= '<tr>';
-								}
-								$printval .= '<td>'.$rank.'.</td>';
-								$printval .= '<td><a href="/player/?id='.$key.'" class="btn-link">'.$first.' '.$last.'</a></td>';
-								$printval .= '<td>'.$getvars.'</td>';
+								$first = $playersassoc[$getvars['playerid']][0];
+								$last = $playersassoc[$getvars['playerid']][1];
+								
+// 								$printval .= '<td>'.$rank.'.</td>';
+								$printval .= '<td><a href="/player/?id='.$getvars['playerid'].'" class="btn-link">'.$first.' '.$last.'</a></td>';
+								$printval .= '<td class="text-center">'.$getvars['points'].'</td>';
+								$printval .= '<td class="text-center">'.$getvars['games'].'</td>';
 								$printval .= '</tr>';
 								$rank++;
 							}
@@ -698,6 +695,22 @@ function get_players_assoc (){
 	return $playersassoc;
 }
 
+function just_player_ids(){
+	$playerassoc = get_players_assoc ();
+	foreach ($playerassoc as $key => $players){
+		$playerids[] = $key;
+	}
+	return $playerids;
+}
+
+function just_player_ids_with_position(){
+	$playerassoc = get_players_assoc ();
+	foreach ($playerassoc as $key => $players){
+		$playerids[$key] = $players[2];
+	}
+	return $playerids;
+}
+
 function get_overtime(){
 	$mydb = new wpdb('root','root','pflmicro','localhost');
 	$getovertime = $mydb->get_results("select * from overtime", ARRAY_N);
@@ -745,6 +758,60 @@ function get_protections(){
 	return $protections;
 }
 
+
+function get_standings($year){
+	$mydb = new wpdb('root','root','pflmicro','localhost');
+	$get = $mydb->get_results("select * from stand$year", ARRAY_N);
+	
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($get as $key => $revisequery){
+		$standings[$revisequery[0]] = array(
+			'id' => $revisequery[0], 
+			'year' => $revisequery[1], 
+			'seed' => $revisequery[2], 
+			'division' => $revisequery[3],  
+			'teamid' => $revisequery[4],
+			'teamname' => $revisequery[5],
+			'win' => $revisequery[6],
+			'loss' => $revisequery[7],
+			'gb' => $revisequery[9],
+			'pts' => $revisequery[10],
+			'ptsvs' => $revisequery[12],
+			'divwin' => $revisequery[14],
+			'divloss' => $revisequery[15]
+		);
+	}
+	
+	return $standings;
+}
+
+
+
+function get_award($awardopt, $thekey){
+	$mydb = new wpdb('root','root','pflmicro','localhost');
+	$getaward = $mydb->get_results("select * from awards WHERE award = '$awardopt'", ARRAY_N);
+	
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($getaward as $key => $revisequery){
+		$awardinfo[$revisequery[$thekey]] = array(
+			'awardid' => $revisequery[0], 
+			'award' => $revisequery[1], 
+			'year' => $revisequery[2], 
+			'first' => $revisequery[3],  
+			'last' => $revisequery[4],
+			'team' => $revisequery[5],
+			'position' => $revisequery[6],
+			'owner' => $revisequery[7],
+			'pid' => $revisequery[8],
+			'gamepoints' => $revisequery[9]
+		);
+	}
+	
+	return $awardinfo;
+}
+
 function get_player_award($pid){
 	$mydb = new wpdb('root','root','pflmicro','localhost');
 	$getaward = $mydb->get_results("select * from awards WHERE pid = '$pid'", ARRAY_N);
@@ -790,6 +857,34 @@ function get_player_data($pid) {
 }
 
 
+
+
+// used to set transient to player data array anywhere
+function set_allplayerdata_trans($pid) {
+  global $randomplayer;
+  $transient = get_transient( $pid.'_trans' );
+  if( ! empty( $transient ) ) {
+    return $transient;
+  } else {
+   	$set[$pid] = get_player_data($pid);
+    set_transient( $pid.'_trans', $set, DAY_IN_SECONDS );
+    return $set;
+  }
+  
+}
+
+// set transient for team data
+function set_team_data_trans($teamid) {
+  $transient = get_transient( $teamid.'_trans' );
+  if( ! empty( $transient ) ) {
+    return $transient;
+  } else {
+   	$set = get_team_results($teamid);
+    set_transient( $teamid.'_trans', $set, MONTH_IN_SECONDS );
+    return $set;
+  }
+  
+}
 
 
 // gets the stats for a player for a specific season
@@ -1216,15 +1311,21 @@ function probowl_boxscores_player($pid){
 	
 }
 
-// this function is used to store total player data in separate tables 
-// WILL DO LATER
-function write_player_data($pid){
 
-	
+function get_player_teams_season($pid){
+	$player = get_player_career_stats($pid);
+	$years = $player['years'];
+	foreach ($years as $year){
+		$get = get_player_season_stats($pid, $year);
+		$playeryears[$year] = array_unique($get['teams']);
+	}
+	return $playeryears;
 }
 
-// inserts data into wp_allleaders table to store for use in leaders and other places 
-function insert_allleaders($pid){
+
+// inserts data into wp_allleaders table to store for use in leaders and other places
+// Data is grouped by CAREER
+function insert_wp_career_leaders($pid){
 	$player = get_player_career_stats($pid);
 	$streak = get_player_game_streak($pid);	
 			$clean = array(
@@ -1270,6 +1371,59 @@ function insert_allleaders($pid){
  
 }
 
+// get player carrer stats for one season only inserts when page is loaded (homepage, playerpage)
+
+function insert_wp_season_leaders($pid){
+	$player = get_player_career_stats($pid);
+	$years = $player['years'];
+	
+	foreach ($years as $key => $years){
+		$get[$years] = get_player_season_stats($pid, $years);
+	}
+	
+	foreach ($get as $k => $v){
+		$justseason[$k] = array(
+			'points' => $v['points'],
+			'games' => $v['games']
+			);
+	}
+	
+	foreach ($justseason as $key => $value){
+		$clean[$key] = array(
+			'id' => $pid.$key,
+			'playerid' => $pid,
+			'season' => (int)$key,
+			'points' => (int)$value['points'],
+			'games' => (int)$value['games']	
+		);
+	}
+	
+	global $wpdb;
+		
+ 	foreach ($clean as $key => $value){
+	 	
+	 	$testarray = $clean[$key];
+	 	
+		$insertyears = $wpdb->insert(
+			'wp_season_leaders',
+		    array(
+		        'id' => $testarray['id'],
+				'playerid' => $testarray['playerid'],
+				'season' => $testarray['season'],
+				'points' => $testarray['points'],
+				'games' => $testarray['games']
+		    ),
+			array( 
+				'%s','%s','%d','%d','%d'
+			)
+		);
+	
+	}
+
+	return $insertyears;
+	
+}
+
 
 // returns wp_allleaders data from table 
 
@@ -1298,6 +1452,25 @@ return $leaders_all;
 }
 
 
+function get_number_ones(){
+	
+	global $wpdb;
+	$get_number_ones = $wpdb->get_results("select * from wp_number_ones", ARRAY_N);
+	
+	foreach ($get_number_ones as $revisequery){
+		$number_ones[$revisequery[0]] = array(
+			'id' => $revisequery[0],
+	        'playerid' => $revisequery[1],
+	        'points' => $revisequery[2],
+	        'teams' => $revisequery[3]
+		);
+	}
+
+return $number_ones;
+
+}
+
+
 // print season draft table
 function getdraft($year, $array){
 		
@@ -1314,6 +1487,7 @@ $printit .= '<div class="panel-heading">';
 				$printit .= '<tr>';
 					$printit .= '<th class="min-width"><span class="hidden-xs">Selection</span></th>';
 					$printit .= '<th class="min-width">Team</th>';
+					$printit .= '<th class="min-width">Orig Team</th>';
 					$printit .= '<th class="min-width hidden-xs"></th>';
 					$printit .= '<th>Name</th>';
 					$printit .= '<th class="min-width">Position</th>';
@@ -1327,6 +1501,12 @@ $printit .= '<div class="panel-heading">';
 					
 					
 					$selteam_sm = $build['acteam'];
+					$origteam_sm = $build['orteam'];
+					if ($select_team == $origteam_sm){
+						$stary = '*';
+					} else {
+						$stary = '';
+					}
 
 					$pid = $build['playerid'];
 					$round = $build['round'];
@@ -1341,14 +1521,19 @@ $printit .= '<div class="panel-heading">';
 		
 					
 					if ($activenum > $picknumber){
-						$printit .= '<tr class="text-center bg-dark text-2x"><td colspan="5">Round '.$round.'</td></tr>';
+						$printit .= '<tr class="text-center bg-dark text-2x"><td colspan="6">Round '.$round.'</td></tr>';
 					}
 					
 					$printit .= '<tr>';
 						$printit .= '<td class="text-center min-width text-2x hidden-xs">'.$picknumber.'</td>';
 						$printit .= '<td class="text-center min-width visible-xs">'.$picknumber.'</td>'; // either this one or the one above for non phone devices
 						$printit .= '<td class="min-width hidden-xs">'.$selectingteam['int'].'</td>';
-						$printit .= '<td class="min-width visible-xs">'.$selteam_sm.'</td>'; // either this one or the one above for non phone devices
+						if ($selectingteam['int'] != $origteam_sm){
+							$printit .= '<td class="min-width hidden-xs">'.$origteam_sm.'</td>';
+						} else {
+							$printit .= '<td class="min-width hidden-xs">&nbsp;</td>';
+						}
+						//$printit .= '<td class="min-width visible-xs">'.$selteam_sm.'</td>'; // either this one or the one above for non phone devices
 					
 						if ($containsLetter != 0){		
 							$printit .= '<td class="min-width hidden-xs"><img src="'.$playerimg.'" class="img-sm player-image" style="background-color:#515151;"/></td>';

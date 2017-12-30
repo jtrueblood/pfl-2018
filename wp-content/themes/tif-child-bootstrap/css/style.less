@@ -322,33 +322,53 @@ a.player-link {
 }
 
 h4.protection-season {
-	margin-bottom: 30px;
+	margin: 30px 0;
+}
+
+.standings {
+	.panel {
+		margin-bottom: 5px;
+	}
 }
 
 .protections {
-	.panel-body {
-		min-height: 60px;
-		padding: 10px 20px;
-		border-left: 5px solid #ffffff;
-		h4 {
-			display: inline;
-			text-align: center;
-			margin-left: 15px;
-		}
-		img {
-			border-radius: 40px;
-		}
-		&.QB {
-			border-left: 5px solid #5aaedc;
-		}
-		&.RB {
-			border-left: 5px solid #8dba60;
-		}
-		&.WR {
-			border-left: 5px solid #f1da71;
-		}
-		&.PK {
-			border-left: 5px solid #995b92;
+	.panel {
+		margin-bottom: 5px;
+		.panel-body {
+			min-height: 60px;
+			padding: 10px 20px;
+			border-left: 5px solid #ffffff;
+			h4 {
+				display: inline;
+				text-align: center;
+				margin-left: 15px;
+			}
+			img {
+				border-radius: 40px;
+			}
+			&.QB {
+				border-left: 5px solid #5aaedc;
+			}
+			&.RB {
+				border-left: 5px solid #8dba60;
+			}
+			&.WR {
+				border-left: 5px solid #f1da71;
+			}
+			&.PK {
+				border-left: 5px solid #995b92;
+			}
 		}
 	}
+}
+
+.playoff-wrapper {
+	width: 100%;
+	overflow: auto;
+	padding-top: 20px;
+	border-top: 1px solid #ccc;
+}
+
+.timeline-entry {
+	margin-bottom: 0 !important;
 }

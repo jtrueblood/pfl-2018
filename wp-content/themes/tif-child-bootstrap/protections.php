@@ -1,7 +1,7 @@
 <?php
 /*
  * Template Name: Protections
- * Description: Page for displaying all of the Protections by Team
+ * Description: Page for displaying all of the Protections by Year
  */
  ?>
 
@@ -23,7 +23,7 @@
 				</div>
 				
 				<!--Page content-->
-				<div id="page-content">
+				<div id="page-content">	
 						<div class="col-xs-24">
 						
 						<?php

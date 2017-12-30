@@ -53,11 +53,6 @@ if (!empty($fantasydata_details)){
 	$det_format_date = date("m/d/Y", strtotime($det_bday));
 }
 
-	
-//$playercache = 'http://posse-football.dev/wp-content/themes/tif-child-bootstrap/cache/playerdata/'.$playerid.'.txt';
-//$playerget = file_get_contents($playercache, FILE_USE_INCLUDE_PATH);
-//$playerdata = unserialize($playerget);
-//$playercount = count(array_keys($playerdata));
 
 $games = $playercount;
 
@@ -75,74 +70,6 @@ if ($lastseason == $year){
 	}
 
 
-
-// get data for gamescores
-/*
-foreach ($playerdata as $key => $value) {
- $return[$value[1]][] = $value[3];
-}
-*/
-
-/*
-foreach ($return as $key => $value) {
-  $yearpoints[$key] = $value; 
-}
-*/
-
-
-/*
-foreach ($yearpoints as $addpoints){
-	$sumpoints[] = array_sum($addpoints);
-	$countgames[] = count($addpoints);
-	$highval[] = max($addpoints);
-}
-*/
-
-/*
-foreach ($playerdata as $yearof) {
-	$years[] = substr($yearof[0], 0, 4);
-}
-*/
-
-// $allyears = array_unique($years);
-
-/*
-$y = 0;
-foreach ($allyears as $thenumberedyears){
-	$alltheyears[$y] = $thenumberedyears;
-	$y++;
-}
-*/
-
-/*
-foreach ($playerdata as $thekey => $thevalue) {
- $thereturn[$thevalue[1]][] = $thevalue[4];
-}
-*/
-
-/*
-foreach ($thereturn as $thekey => $thevalue) {
-  $teamsbuild[$thekey] = $thevalue; 
-}
-*/
-
-/*
-foreach ($teamsbuild as $getuniqueteams){
-	$alltheteams[] = array_unique($getuniqueteams);
-}
-*/
-
-
-// $sumpoints  is points
-// $countgames is games
-// $highval is season high
-// $alltheyears is seasons played
-// $alltheteams is unique team ids of teams played for
-
-
-// get pfl title winners
-
-
 $w = $alltheyears[0];
 $d = 0;
 while ($w <= $year){
@@ -151,22 +78,6 @@ while ($w <= $year){
 	$d++;
 	$w++;
 }
-
-
-/*
-$r = 0;
-foreach ($sumpoints as $get){
-	$yearlydata[] = array($sumpoints[$r], $countgames[$r], $highval[$r], $alltheyears[$r], $alltheteams[$r], $setprotections[$r]);
-	$r++;
-}
-*/
-
-// get allpro selections for just this player
-// NEED TO DO THIS THE NEW WAY
-
-
-// buid array needed for player timeline
-
 
 ?>
 
@@ -185,7 +96,8 @@ printr($playersid, 1);
 */
 
 // this function will insert players seasonal data to wp_allleaders
-insert_allleaders($playerid);
+insert_wp_career_leaders($playerid);
+insert_wp_season_leaders($playerid);
 
 // printr($players, 0);
 
@@ -198,15 +110,30 @@ $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
 
+$playseasons = $careerdata['years'];
+														
+
 if (!empty($playoffsplayer)){
 	foreach ($playoffsplayer as $getplay){
 		$playpts[] = $getplay['points'];
+
+		if ($getplay['year'] == $checkyear){
+			$plwins++;
+		}
+		$checkyear = $getplay['year'];
 	}
 }
 
+
+
+
 if($playpts > 0){
 	$totalplayoffpts = array_sum($playpts);
+	$playoffgames = count($playpts);
+	$playppg = number_format($totalplayoffpts / $playoffgames, 1);
+	
 }
+
 $champions = get_champions();
 $justchamps = get_just_champions();
 $table = get_table('playoffs');
@@ -235,16 +162,22 @@ if(!empty($playoffsplayer)){
 foreach ($justchamps as $key => $possebowls){
 	if ($possebowls == $pb_apps[$key]){
 		$pbwins[$key] = $possebowls;
+		$pbwins_index[$key] = 1;
 	}
 }
 
-
+//printr($pbwins, 0);
 
 $titlewon = 0;
 $counttitles = count($pbwins);
 if ($counttitles > 0){
 	$titlewon = 1;
 }
+
+$pswins = $plwins + $counttitles;
+$psloss = $playoffgames - $pswins;
+
+// printr($pb_apps, 0);
 
 $awards = get_player_award($playerid);
 $wonaward = 0;
@@ -305,6 +238,61 @@ foreach ($wr_leaders as $key => $value){
 foreach ($pk_leaders as $key => $value){
 	$pkrank[$value['pid']] = $key + 1;
 }
+
+$number_ones = get_number_ones();
+foreach ($number_ones as $key => $value){
+	if ($value['playerid'] == $playerid){
+		$season = substr($value['id'], -4);
+		$player_number_ones[$key] = array(
+			'season' => $season,
+			'points' => $value['points'],
+			'team' => $value['teams']
+		);
+	}
+}
+
+
+// build the array for constructing the career timeline
+
+$get_player_teams = get_player_teams_season($playerid);
+//printr($get_player_teams, 0);
+
+if (($year - end($playseasons)) > 3){
+	$year_retired = end($playseasons);
+} else {
+	$year_retired = '';
+}
+
+
+
+foreach($playseasons as $season ){
+	
+	if($season == $rookieyear){
+		$get_rook = $season;
+	} 
+	
+	if($pbwins_index[$season] == 1){
+		$get_champs = $season;
+	}
+	
+	if($season == $year_retired){
+		$get_retired = $season;
+	}
+	
+	
+	$career_timeline[$season] = array(
+		'rookie' => $get_rook,
+		'teams' => $get_player_teams[$season],
+		'pfltitle' => $get_champs,
+		'awards' => '',
+		'retired' => $get_retired
+	);
+	
+	$get_rook = '';
+	$get_champs = '';
+}
+
+//printr($career_timeline, 0);
 
 
 //$simpleteam = get_team_results_expanded('ETS');
@@ -444,18 +432,42 @@ foreach ($pk_leaders as $key => $value){
 			
 			<?php 
 				$ranker = '';
-				if ($playerposition == 'QB'){ $ranker = $qbrank[$playerid]; }
-				if ($playerposition == 'RB'){ $ranker = $rbrank[$playerid]; }
-				if ($playerposition == 'WR'){ $ranker = $wrrank[$playerid]; }
-				if ($playerposition == 'PK'){ $ranker = $pkrank[$playerid]; }
+				if ($playerposition == 'QB'){ 
+					$ranker = $qbrank[$playerid]; 
+					$posaction = 'Passing';
+					}
+				if ($playerposition == 'RB'){ 
+					$ranker = $rbrank[$playerid];
+					$posaction = 'Rushing'; 
+					}
+				if ($playerposition == 'WR'){ 
+					$ranker = $wrrank[$playerid]; 
+					$posaction = 'Receiving';
+					}
+				if ($playerposition == 'PK'){ 
+					$ranker = $pkrank[$playerid];
+					$posaction = 'Kicking'; 
+					}
 			?>
 			
 			<div class="panel widget">
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-top-scorer.jpg">
-					<?php echo '<h5>Overall Position Rank - '.$ranker.'</h5>'; ?>
+					<?php echo '<h5>Overall Career<br>Position Rank</h5><h4>'.$ranker.'</h4>'; 
+						echo '<p>&nbsp;</p>';
+						if(!empty($player_number_ones)){
+							foreach ($player_number_ones as $key => $value){
+								echo '<span class="text-bold">'.$value['season'].' '.$value['team'].'</span>&emsp;'.$posaction. ' Title - '.$value['points'].' Points<br>';
+							}
+						}
+						
+					?>
+				
+				
 				</div>
 			</div>
+			
+			
 			
 
 			
@@ -469,11 +481,7 @@ foreach ($pk_leaders as $key => $value){
 					<h5>Probowl Selections</h5>
 					<?php 
 						foreach ($probowlplayer as $key => $value){
-							if ($value['starter'] == 1){
-								echo '<span class="text-bold">'.$value['year'].'</span> Probowl Starter<br>';
-							} else {
 								echo '<span class="text-bold">'.$value['year'].'</span> Probowl Selection<br>';
-							}
 						}
 					?>
 				</div>
@@ -602,22 +610,61 @@ foreach ($pk_leaders as $key => $value){
 						</div>
 					</div>
 					
-					<?php if (!empty($playoffsplayer)){  ?>
-					<hr/>
-					<div class="col-xs-12 col-sm-8 col-md-6">
-						<div class="panel panel-primary panel-colorful">
-							<div class="pad-all text-center">
-								<span class="text-2x text-thin"><?php echo $totalplayoffpts; ?></span>
-								<p class="text-white">Playoff Points</p>
-							</div>
-						</div>
-					</div>
-					<?php } ?>
-					
 				</div>
+				
 			</div>
 		</div>
 		
+		<!-- Start Playoffs -->	
+		<?php if (!empty($playoffsplayer)){  ?>
+		<div class="panel">
+		    <div class="panel-heading">
+			    <h3 class="panel-title">Postseason</h3>
+		    </div>
+		    
+		    <div class="panel-body">
+				<div class="col-xs-12 col-sm-8 col-md-6">
+					<div class="panel panel-primary panel-colorful">
+						<div class="pad-all text-center">
+							<span class="text-2x text-thin"><?php echo $totalplayoffpts; ?></span>
+							<p class="text-white">Playoff Points</p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-xs-12 col-sm-8 col-md-6">
+					<div class="panel panel-primary panel-colorful">
+						<div class="pad-all text-center">
+							<span class="text-2x text-thin"><?php echo $playoffgames; ?></span>
+							<p class="text-white">Playoff Games</p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-xs-12 col-sm-8 col-md-6">
+					<div class="panel panel-primary panel-colorful">
+						<div class="pad-all text-center">
+							<span class="text-2x text-thin"><?php echo $playppg; ?></span>
+							<p class="text-white">Playoff PPG</p>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-xs-12 col-sm-8 col-md-6">
+					<div class="panel panel-primary panel-colorful">
+						<div class="pad-all text-center">
+							<span class="text-2x text-thin"><?php echo $pswins.' - '.$psloss; ?></span>
+							<p class="text-white">Playoff Record</p>
+						</div>
+					</div>
+				</div>
+		    </div>
+						
+		</div>
+		<?php } ?>
+					
+				
+			
 		<!-- Center COL -->
 			<div class="panel panel-primary">	
 				<!--Panel heading-->
@@ -669,9 +716,7 @@ foreach ($pk_leaders as $key => $value){
 												
 														
 														<?php 
-														$playercareer = get_player_career_stats($playerid);	
 														
-														$playseasons = $playercareer['years'];
 														
 														//printr($playseasons, 0);
 	
@@ -955,15 +1000,65 @@ foreach ($pk_leaders as $key => $value){
 					<div class="panel-body">
 						<!-- Timeline -->
 						<!--===================================================-->
-						<div class="timeline">
-							
-								<div class="time-box">first info</div>
-							
-							
-						</div>
+						
+					
+				        <div class="timeline">
+						    <!-- Timeline header -->
+						    <div class="timeline-header">
+						        <div class="timeline-header-title bg-success">Rookie Year <?php echo $rookieyear; ?></div>
+						    </div>
+						    
+						    <?php 
+								foreach ($career_timeline as $key => $value){
+								?><div class="timeline-entry">
+							        <div class="timeline-stat">
+								        <?php if (!empty($value['pfltitle'])){
+									        echo '<div class="timeline-icon bg-success"><i class="demo-psi-like icon-lg"></i></div>';
+								        } else {
+							            	echo '<div class="timeline-icon"></div>';
+							            }?>
+							            <div class="timeline-time"><?php echo $key; ?></div>
+							        </div>
+							        <div class="timeline-label">
+							            <?php if (!empty($value['pfltitle'])){
+								            	echo '<span class="text-bold">'.$value['pfltitle'].'</span><br> PFL Champions'; 
+								            }?>
+							        </div>
+								</div>
+								<?php }  ?>
+						    
+						    
+<!--
+						    <div class="timeline-entry">
+						        <div class="timeline-stat">
+						            <div class="timeline-icon bg-success"><i class="demo-psi-like icon-lg"></i>
+						            </div>
+						            <div class="timeline-time">13:27</div>
+						        </div>
+						        <div class="timeline-label">
+						            Lorem ipsum ectetuer adipiscing elit, sed y nibh euismod tincidunt.
+						        </div>
+						    </div>
+						    
+						    <div class="timeline-entry">
+						        <div class="timeline-stat">
+						            <div class="timeline-icon"></div>
+						            <div class="timeline-time">11:27</div>
+						        </div>
+						        <div class="timeline-label">
+						            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.
+						        </div>
+						    </div>
+-->
+						  
+						    
+				        </div>
+						
+					           
+					</div>
 						<!--===================================================-->
 						<!-- End Timeline -->
-					</div>
+				</div>
 				<?php } ?>
 					
 		</div>

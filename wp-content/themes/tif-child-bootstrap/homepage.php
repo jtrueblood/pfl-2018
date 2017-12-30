@@ -5,10 +5,16 @@
  */
 
 
+
+
+
 /*
- $url1=$_SERVER['REQUEST_URI'];
- header("Refresh: 5; URL=$url1");
-*/ 
+$url1=$_SERVER['REQUEST_URI'];
+header("Refresh: 5; URL=$url1");
+*/
+
+
+
 
  
  
@@ -24,8 +30,11 @@ $featuredplayer = $playersassoc[$randomplayer];
 $first = $featuredplayer[0];
 $last = $featuredplayer[1];
 $position = $featuredplayer[2];
+$rookie = $featuredplayer[3];
 
-insert_allleaders($randomplayer);
+insert_wp_career_leaders($randomplayer);
+$testprint = insert_wp_season_leaders($randomplayer);
+// printr($testprint, 0);
 
 // sets transient to player data array to random player on homepage
 function set_randomplayerdata_trans() {
@@ -44,32 +53,7 @@ function set_randomplayerdata_trans() {
 $randomplayerdata = set_randomplayerdata_trans();
 
 
-// used to set transient to player data array anywhere
-function set_allplayerdata_trans($pid) {
-  global $randomplayer;
-  $transient = get_transient( $pid.'_trans' );
-  if( ! empty( $transient ) ) {
-    return $transient;
-  } else {
-   	$set[$pid] = get_player_data($pid);
-    set_transient( $pid.'_trans', $set, DAY_IN_SECONDS );
-    return $set;
-  }
-  
-}
 
-// set transient for team data
-function set_team_data_trans($teamid) {
-  $transient = get_transient( $teamid.'_trans' );
-  if( ! empty( $transient ) ) {
-    return $transient;
-  } else {
-   	$set = get_team_results($teamid);
-    set_transient( $teamid.'_trans', $set, MONTH_IN_SECONDS );
-    return $set;
-  }
-  
-}
 
 
 
@@ -103,10 +87,6 @@ get_header();
 //start the loop
 
 //build player id array. 
-
-foreach ($playersid as $play){
-			
-}
 
 ?>
 
@@ -142,7 +122,7 @@ foreach ($playersid as $play){
 					<div class="col-xs-12 col-sm-10 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">Something</h3>
+									<h3 class="panel-title">Basic Info</h3>
 								</div>
 								
 								<div class="panel-body">
@@ -199,19 +179,21 @@ foreach ($playersid as $play){
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">Set Team Results</h3>
+									<h3 class="panel-title">Return By Season - Rookie Shown</h3>
 								</div>
 								<div class="panel-body">
-									<p>Commented out unless needed</p>
+									<p>get_player_season_stats($player, $year);</p>
 									<?php 
 										
 										// used to set transient to team data tables.  It is memory heavy so sometimes you need to disable other page functions or set printr val to 1 to die() after function.  Must manually toggle team IDS and build each.
 										
 
-/*
-										$getteam = set_team_data_trans('PEP');
-									    printr($getteam, 1);
-*/
+
+										$byseason = get_player_season_stats($randomplayer, $rookie);
+										if (isset($byseason)){
+									    	printr($byseason, 0);
+									    }
+
 
 										
 									?>
@@ -231,12 +213,16 @@ foreach ($playersid as $play){
 									<p>This area generates player table transients that expire in 12 months.</p>
 									<?php
 										$getplayer = get_allplayerdata_trans($randomplayerdata); 
-										if (isset($getplayer)){
+										if (is_array($getplayer)){
 											echo 'Transient Exsists';
 										} else {
 											echo 'Transient Created';
 										}
 										printr($randomplayerdata,0);
+										
+										$teamsbyseason = get_player_teams_season($randomplayer);
+										printr($teamsbyseason, 0);
+										
 										?>
 								</div>
 							</div>
@@ -245,10 +231,14 @@ foreach ($playersid as $play){
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">G</h3>
+									<h3 class="panel-title">Career Stats</h3>
 								</div>
 								
 								<div class="panel-body">
+									<p>get_player_career_stats($pid);</p>
+							<?php $career = get_player_career_stats($randomplayer); 
+								printr($career, 0);
+							?>
 							
 								</div>
 							</div>

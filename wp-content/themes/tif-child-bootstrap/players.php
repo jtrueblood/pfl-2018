@@ -59,7 +59,7 @@ $games = $playercount;
 $getpoints = array();
 $getteams = array();
 
-$teaminfo = get_teams();							
+$teaminfo = get_teams();
 
 $teams = array_unique($getteams);
 
@@ -68,16 +68,6 @@ if ($lastseason == $year){
 	} else {
 		$active = 0;
 	}
-
-
-$w = $alltheyears[0];
-$d = 0;
-while ($w <= $year){
-	$setprotections[$d][0] = $theprotections[$w]; 
-	$setprotections[$d][1] = $thedrafts[$w]; 
-	$d++;
-	$w++;
-}
 
 ?>
 
@@ -109,6 +99,9 @@ $rookieyear = $players[$playerid][3];
 $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
+
+//printr($careerdata, 0);
+
 
 $playseasons = $careerdata['years'];
 														
@@ -263,7 +256,36 @@ if (($year - end($playseasons)) > 3){
 	$year_retired = '';
 }
 
+if(!empty($awards)){
+	foreach ($awards as $key => $value){
+		$build_awards[$value['awardid']] = array(
+			'year' => $value['year'],
+			'award' => $value['award']
+		);
+	}
+}
 
+
+// protections, drafts, trades
+$protections = get_protections_player($playerid);
+$drafts = get_drafts_player($playerid);
+
+if(!empty($drafts)){
+	foreach($drafts as $value){
+		$build_draft[$value['season']] = array(
+		'team' => $value['acteam'],
+		'round' => $value['round'],
+		'pick' => $value['pick'],
+		'overall' => $value['overall']
+		);
+	}
+}
+
+if(!empty($protections)){
+	foreach($protections as $value){
+		$build_protect[$value['year']] = $value['team'];
+	}
+}
 
 foreach($playseasons as $season ){
 	
@@ -279,21 +301,41 @@ foreach($playseasons as $season ){
 		$get_retired = $season;
 	}
 	
+	if(!empty($build_awards)){
+		foreach ($build_awards as $key => $value){
+			if ($value['year'] == $season){
+				$get_awards[] = $value['award'];
+			}
+		}
+	}
+	
+	if(!empty($player_number_ones)){
+		foreach ($player_number_ones as $key => $value){
+			if($value['season'] == $season){
+				$get_leaders = $value['points'];
+			}
+		}
+	}
 	
 	$career_timeline[$season] = array(
 		'rookie' => $get_rook,
 		'teams' => $get_player_teams[$season],
 		'pfltitle' => $get_champs,
-		'awards' => '',
+		'leader' => $get_leaders,
+		'awards' => $get_awards,
+		'drafted' => $build_draft[$season],
+		'protected' => $build_protect[$season],
+		'careerhigh' => '',
 		'retired' => $get_retired
 	);
 	
 	$get_rook = '';
+	$get_awards = '';
 	$get_champs = '';
+	$get_leaders = '';
 }
 
 //printr($career_timeline, 0);
-
 
 //$simpleteam = get_team_results_expanded('ETS');
 
@@ -560,14 +602,14 @@ foreach($playseasons as $season ){
 							<div class="pad-all text-center">
 								<?php
 								// get the function from functions.  This is delicate and has a bunch of dependancies including transients for team set on the homepage.php
-
+								
 								$playerrecord = get_player_results($playerid); 
 								
 								foreach ($playerrecord as $value){
 									$get_wins[] = $value['result'];
 								}
-								$player_wins = array_sum($get_wins);
-								$player_losses = $careerdata['games'] - $player_wins;
+								$player_wins = $careerdata['wins'];
+								$player_losses = $careerdata['loss'];
 								$winper = number_format($player_wins / $careerdata['games'], 3);
 	
 								?>
@@ -821,10 +863,11 @@ foreach($playseasons as $season ){
 												</thead>
 												<tbody>
 												<?php 
-// 														printr($playerrecord, 0);
+// NOTE.  After you have added player data for the season to the player data mysql tables most of the players page should work.  Player data should be updated LAST after all other data is added.  A single 'resutls.php' weekly page will need to be loaded to rebuild the team cache.  This will also allow individual player win / loss record to work.   Uses the team transinets on the results pages.  ex:  set_ets_transient();  													
+ 														//printr($playerrecord, 0);
 														$i = -1;
 														
-														//printr($weeklydata,0);
+// 														printr($weeklydata,0);
 														
 														foreach ($weeklydata as $printplayer) {
 														
@@ -835,9 +878,10 @@ foreach($playseasons as $season ){
 														$ppoints = $printplayer['points'];
 														$pteam = $printplayer['team'];
 														$pversus = $printplayer['versus'];
-														$pplayerid = $playerid;
-														$presult = $playerrecord[$weekids]['result'];
-														$plocation = $playerrecord[$weekids]['venue'];
+														$pplayerid = $printplayer['playerid'];
+														$presult = $printplayer['win_loss'];
+														$phomeaway = $printplayer['home_away'];
+														$plocation = $printplayer['location'];
 														
 														if ($pyear != $checkyear){
 															$gametable .= '<td class="text-center text-bold switch-year">'.$pyear.'</td>';
@@ -859,10 +903,10 @@ foreach($playseasons as $season ){
 																$gametable .= '<td class="text-center">Loss</td>';
 															}
 															
-															if ($plocation == 'H'){
-																$gametable .= '<td>'.$teaminfo[strtoupper($pteam)]['stadium'].'</td></tr>';
+															if ($phomeaway == 'H'){
+																$gametable .= '<td><span class="text-bold ">'.$teaminfo[strtoupper($pteam)]['stadium'].'</span></td></tr>';
 															} else {
-																$gametable .= '<td>@ '.$teaminfo[strtoupper($pversus)]['stadium'].'</td></tr>';
+																$gametable .= '<td>'.$teaminfo[strtoupper($pversus)]['stadium'].'</td></tr>';
 															}
 														$i++;
 														}
@@ -937,9 +981,7 @@ foreach($playseasons as $season ){
 												</tbody>
 											</table>
 										</div>
-								
 
-							
 						</div>
 				
 					</div>
@@ -1004,28 +1046,142 @@ foreach($playseasons as $season ){
 					
 				        <div class="timeline">
 						    <!-- Timeline header -->
+<!--
 						    <div class="timeline-header">
 						        <div class="timeline-header-title bg-success">Rookie Year <?php echo $rookieyear; ?></div>
 						    </div>
+-->
 						    
 						    <?php 
+							    $count = 0;
 								foreach ($career_timeline as $key => $value){
-								?><div class="timeline-entry">
+								?>
+								<!-- post the years -->
+								<div class="timeline-entry">
+									<div class="timeline-stat">
+								        <div class="timeline-icon"></div>
+								        <div class="timeline-time"><?php echo $key; ?></div> 
+							        </div>
+									
+								</div>
+								
+								<?php
+								if (isset($value['drafted'])){
+								?>
+								
+								 <div class="timeline-entry">
+							        <div class="timeline-label no-label">
+							            <p class="protected-by">Drafted by <span class="text-bold"><?php echo $value['drafted']['team'].' Round '.$value['drafted']['round'].', Pick '.$value['drafted']['pick']; ?></span></p>
+							        </div>
+							    </div>
+							    
+							    <?php } 
+								    
+								if ($count == 0){
+								?>
+								
+								 <div class="timeline-entry">
+							        <div class="timeline-label">
+							            Rookie Season
+							        </div>
+							    </div>
+							    
+							    <?php } 
+							    
+							    if (isset($value['protected'])){
+								?>
+								
+								 <div class="timeline-entry">
+									 
+							        <div class="timeline-label no-label">
+							            <p class="protected-by">Protected by <span class="text-bold"><?php echo $value['protected']; ?></span></p>
+							        </div>
+							    </div>
+							    
+							    <?php } 
+							    
+								
+								if(!empty($value['awards'])){ ?>
+								<div class="timeline-entry">
 							        <div class="timeline-stat">
-								        <?php if (!empty($value['pfltitle'])){
-									        echo '<div class="timeline-icon bg-success"><i class="demo-psi-like icon-lg"></i></div>';
-								        } else {
-							            	echo '<div class="timeline-icon"></div>';
-							            }?>
-							            <div class="timeline-time"><?php echo $key; ?></div>
+							            <div class="timeline-icon bg-success">
+								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-leaders.jpg" />
+							            </div>
+							            <div class="timeline-time"><?php $getaward['year']; ?></div>
+							        </div>
+							        <?php 
+								        foreach($value['awards'] as $car_award){
+							       ?>
+							        <div class="timeline-label">
+							            <?php echo '<span class="text-bold">'.$car_award.'</span>'; ?>
+							        </div>
+							        <?php
+							        } ?>
+						    	</div>
+								<?php } 
+								
+								
+								if(!empty($value['leader'])){ ?>
+								<div class="timeline-entry">
+							        <div class="timeline-stat">
+							            <div class="timeline-icon bg-success">
+								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-top-scorer.jpg" />
+							            </div>
+							            <div class="timeline-time"><?php $getaward['year']; ?></div>
 							        </div>
 							        <div class="timeline-label">
-							            <?php if (!empty($value['pfltitle'])){
-								            	echo '<span class="text-bold">'.$value['pfltitle'].'</span><br> PFL Champions'; 
-								            }?>
+							            <?php echo '<span class="text-bold">'.$posaction.' Title</span> - '.$value['leader'].' Points'; ?>
 							        </div>
-								</div>
-								<?php }  ?>
+						    	</div>
+								<?php } 
+										    
+								    
+								if(!empty($value['pfltitle'])){ ?>
+								<div class="timeline-entry">
+							        <div class="timeline-stat">
+							            <div class="timeline-icon bg-success">
+								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
+							            </div>
+							            <div class="timeline-time"><?php $getaward['year']; ?></div>
+							        </div>
+							        <div class="timeline-label">
+							            <?php echo '<span class="text-bold">PFL CHAMPION</span>'; ?>
+							        </div>
+						    	</div>
+								<?php } 
+ 
+						    		$count++;
+								}  
+								?>
+<!-- 						 HOF and Retired can be outside of foreach career_timeline loop -->
+								
+								<?php if($year_retired > 3){ ?>
+								 <div class="timeline-entry">
+							        <div class="timeline-label">
+							            Retired
+							        </div>
+							    </div>
+								<?php }
+								
+							    if($inhall == 1){ ?>
+								
+								<div class="timeline-entry">
+							        <div class="timeline-stat">
+							            <div class="timeline-icon bg-success">
+								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-hall.jpg" />
+							            </div>
+							            <div class="timeline-time"><?php $getaward['year']; ?></div>
+							        </div>
+							        <div class="timeline-label">
+							            <?php echo '<span class="text-bold"></span>'.$getaward['year'].' Hall of Fame Inductee'; ?>
+							        </div>
+						    	</div>
+								<?php }
+
+
+								
+								
+								?>
 						    
 						    
 <!--
@@ -1076,11 +1232,11 @@ foreach($playseasons as $season ){
 </div>
 <!--===================================================-->
 <!--END CONTENT CONTAINER-->
-		
+<?php include_once('main-nav.php'); ?>		
 </div>
 
 			
-<?php include_once('main-nav.php'); ?>
+
 
 
 <?php session_destroy(); ?>

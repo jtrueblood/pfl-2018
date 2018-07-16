@@ -13,10 +13,10 @@ get_header();
 get_cache('mfl/thestarters', 0);	
 $thestarters = $_SESSION['mfl/thestarters'];
 
-$year = 2016;
-$week = 11; // change this to 1 to 14 and reload page to build all of the week needed starters
+$year = 2017;
+$week = 1; // change this to 1 to 14 and reload page to build all of the week needed starters
 $lid = 38954;
-// $mflid = 8657;
+$mflid = 10703;
 
 $id = $_GET['id'];	
 $mflid = $thestarters[$id];
@@ -42,7 +42,6 @@ $mflteamids = $_SESSION['mfl/mflteamids'];
 get_cache('teaminfo', 0);	
 $teaminfo = $_SESSION['teaminfo'];
 
-
 get_cache('mfl/linkidcache', 0);	
 $linkidcache = $_SESSION['mfl/linkidcache'];
 
@@ -58,10 +57,11 @@ $pflid = $linkidcache[$mflid][2];
 
 	
 // get scores for that player, for each week (reguardless of starter or not) 	
-$jsonplayerscores = file_get_contents('http://football24.myfantasyleague.com/'.$year.'/export?TYPE=playerScores&L='.$lid.'&W='.$week.'&JSON=1&PLAYERS='.$mflid.'');
+// $jsonplayerscores = file_get_contents('http://football24.myfantasyleague.com/'.$year.'/export?TYPE=playerScores&L='.$lid.'&W='.$week.'&JSON=1&PLAYERS='.$mflid.'');
+$jsonplayerscores = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=playerScores&L='.$lid.'&W=&YEAR=&PLAYERS='.$mflid.'&POSITION=&STATUS=&RULES=&COUNT=&JSON=1');
 $playerscores = json_decode($jsonplayerscores, true);	
 
-$jsonweekresults = file_get_contents('http://football24.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L='.$lid.'&W='.$week.'&JSON=1');
+$jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKox1emO1HIZDYeFbox&W='.$week.'&JSON=1');
 $weekresults = json_decode($jsonweekresults, true);	
 	
 $teamstarterscache = '/Library/WebServer/possefootball-2015/wp-content/themes/tif-child-bootstrap/cache/mfl/teamstarters-'.$year.'-'.$week.'.txt';

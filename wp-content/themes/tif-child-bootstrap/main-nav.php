@@ -41,7 +41,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (70, 'active-link'); ?>"><a href="/player/?id=1998MannQB">Individual Players</a></li>
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
-												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2016">Leaders By Season</a></li>	
+												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2017">Leaders By Season</a></li>	
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
 											</ul>
 									</li>
@@ -56,7 +56,7 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=1991">Drafts</a></li>									
+												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2017">Drafts</a></li>									
 											</ul>
 									</li>
 									

@@ -10,57 +10,45 @@
 
 
 <?php 
+$temmmmm = get_team_results_expanded('ETS');
+printr($temmmmm, 0);
+	
 $year = 2017;
-// $week = 1;
+$week = 14;
 $lid = 38954;
 $apikey = 'aRNp1sySvuKox1emO1HIZDYeFbox';
 
+$mflplayer = 10276;
+$pflplayer = '2011IngrRB';
 
-// get team ids 
-/*
-$curl = curl_init();
-
-curl_setopt_array($curl, array(
-  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=league&L=$lid&APIKEY=$apikey&JSON=1",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-  CURLOPT_HTTPHEADER => array(
-    "Cache-Control: no-cache",
-    "Postman-Token: 12d23246-b5e0-73c0-4b72-2d5c0ea6d955"
-  ),
-));
-
-$mflteaminfo = curl_exec($curl);
-$err = curl_error($curl);
-
-curl_close($curl);
-
-if ($err) {
-  echo "cURL Error #:" . $err;
-} else {
-  echo "curl Worked";
-}
-
-$teaminfo = json_decode($mflteaminfo, true);
-$franchises = $teaminfo['league']['franchises']['franchise'];
-foreach ($franchises as $key => $value){
-	$teamids[$value['id']] = $value['abbrev'];
-}
-
-printr($teamids, 0);
-*/
-
-
-http://www58.myfantasyleague.com/2017/export?TYPE=playerScores&L=38954&W=1&YEAR=2017&PLAYERS=&POSITION=&STATUS=starter&RULES=&COUNT=&JSON=1
-
+$teammflid = array(
+	'0001' => 'TSG',
+	'0002' => 'ETS',
+	'0003' => 'PEP',
+	'0004' => 'WRZ',
+	'0005' => 'DST',
+	'0006' => 'SON',
+	'0007' => 'SNR',
+	'0008' => 'HAT',
+	'0009' => 'CMN',
+	'0010' => 'BUL'	
+);
 
 // get weekly starters
-$week = 1;
 
+
+function set_week_mfl_trans() {
+  $transient = get_transient( 'mfl_team_scores_'.$week );
+  if( ! empty( $transient ) ) {
+    return $transient;
+  } else {
+  
+  	global $year;
+  	global $week;
+  	global $lid;
+  	global $apikey;
+  	global $teammflid;
+  	
 	$curl = curl_init();
 	
 	curl_setopt_array($curl, array(
@@ -89,7 +77,6 @@ $week = 1;
 	}
 	
 	$weekinfoinfo = json_decode($weekly, true);
-	
 	$results = $weekinfoinfo['weeklyResults']['matchup'];
 	
 	foreach ($results as $franchise){
@@ -107,15 +94,74 @@ $week = 1;
 			}
 	}
 	
+	// change mfl ids to PFL
+	foreach ($games as $key => $value){
+		$newgames[$teammflid[$key]] = $value;
+	}
 
+	
+    set_transient( 'mfl_team_scores_'.$week, $newgames, '' );
+    return $newgames;
+  }
 
-
-printr($games, 0);
+}
+$newgames = set_week_mfl_trans();		
+	
+// printr($newgames, 0);
 // printr($results, 0);
 
 
+$i = 1;
 
+while ($i < 15){
+	$allweeks[$i] = get_transient( 'mfl_team_scores_'.$i );
+	$i++;
+}
 
+$j = 1;
+
+foreach ($allweeks as $weeks){
+	foreach ($weeks as $key => $team){
+		if (isset($team[$mflplayer])){
+			$store[$j] = array(
+			$key => $team[$mflplayer]
+			);
+		}
+	}
+	$j++;
+}
+
+foreach ($store as $key => $value){
+	
+	$pad = sprintf("%02d", $key);
+	$theid = $year.$pad;
+	
+	foreach ($value as $subkey => $subvalue){
+		$teamsub = $subkey;
+		$pointssub = $subvalue;
+		$getteam = get_team_results($teamsub);
+		$versus = $getteam[$theid]['versus'];
+	}
+	$forinsert[] = array(
+		$theid, $year, $key, $pointssub, $teamsub, $versus, ''
+	);
+}
+
+printr($forinsert, 0);
+
+echo 'INSERT INTO '.$pflplayer.' (week_id, year, week, points, team, versus, season)<br>';
+echo ' VALUES ';
+foreach ($forinsert as $insert){
+	$sep = ', ';
+	
+	if ($insert === end($forinsert)) {
+        $sep = '; ';
+    }
+	
+	echo '("'.$insert[0].'",'.$insert[1].','.$insert[2].','.$insert[3].',"'.$insert[4].'","'.$insert[5].'", 0)'.$sep.'<br> ';
+}
+
+$expanded = get_team_results_expanded($pflplayer);
 
 ?>
 

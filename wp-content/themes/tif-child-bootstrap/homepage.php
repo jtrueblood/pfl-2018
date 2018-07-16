@@ -8,15 +8,13 @@
 
 
 
+
 /*
 $url1=$_SERVER['REQUEST_URI'];
 header("Refresh: 5; URL=$url1");
 */
 
 
-
-
- 
  
 $playersassoc = get_players_assoc();
 $i = 0;
@@ -52,11 +50,6 @@ function set_randomplayerdata_trans() {
 
 $randomplayerdata = set_randomplayerdata_trans();
 
-
-
-
-
-
 /*
 $teamget = get_team_results('PEP');
 printr($teamget, 1);
@@ -70,11 +63,13 @@ $teams = get_teams();
 printr($teams, 0);
 */
 
-/*
-$teamer = get_team_results_expanded('DST');
+
+
+$teamer = set_team_data_trans('SNR');
 $teamrec = team_record('SNR');
-printr($teamer, 1);
-*/
+//printr($teamer, 1);
+
+
 
 /*
 foreach ($playersid as $id){
@@ -87,6 +82,8 @@ get_header();
 //start the loop
 
 //build player id array. 
+
+
 
 ?>
 
@@ -114,7 +111,14 @@ get_header();
 								<div class="panel-body">
 									<?php while (have_posts()) : the_post(); ?>
 										<p><?php the_content();?></p>
-									<?php endwhile; wp_reset_query(); ?>
+									<?php endwhile; wp_reset_query(); 
+										
+										
+
+										$getboxscore = put_boxscore_results(199101);
+										printr($getboxscore, 0);
+
+									?>
 								</div>
 							</div>
 					</div>

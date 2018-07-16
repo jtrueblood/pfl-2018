@@ -64,11 +64,11 @@ p {
 .champions .team-bar,
 .pro .team-bar,
 .results .team-bar {
-  min-height: 30px;
+  min-height: 40px;
   background-position: center center;
   background-size: cover;
   margin-bottom: 10px;
-  background-color: #3B4146;
+  background-color: #e7ebee;
   border-right: 5px solid #ffffff;
 }
 .results .boxscorebox {
@@ -292,6 +292,27 @@ h4.protection-season {
   padding-top: 20px;
   border-top: 1px solid #ccc;
 }
+.timeline-stat {
+  padding-bottom: 0 !important;
+}
 .timeline-entry {
   margin-bottom: 0 !important;
+}
+.timeline-label {
+  padding: 15px !important;
+  font-size: 14px;
+}
+.timeline-label.no-label {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+}
+.timeline-label.no-label:before,
+.timeline-label.no-label:after {
+  content: none !important;
+  border: none !important;
+}
+.timeline-label .protected-by {
+  font-size: 12px;
 }

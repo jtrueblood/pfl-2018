@@ -212,11 +212,13 @@ function get_table_head(){
 		</div>
 </div> 
 
-<?php include_once('main-nav.php'); ?>
+
+
+</div>
+
+<?php include_once('main-nav.php'); ?>		
+
+</div>
+
 <?php include_once('aside.php'); ?>
-		
-</div>
-</div>
-
-
 <?php get_footer(); ?>

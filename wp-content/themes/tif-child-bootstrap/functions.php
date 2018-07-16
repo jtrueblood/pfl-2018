@@ -19,7 +19,6 @@ function tif_scripts() {
 }
 */
 
-
 function tif_styles() {	
 	wp_enqueue_style( 'style-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap.css', array() );
 	wp_enqueue_style( 'style-footable', get_stylesheet_directory_uri() . '/plugins/fooTable/css/footable.core.css', array() );	
@@ -680,8 +679,8 @@ function get_players_index(){
 }
 
 function get_players_assoc (){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getplayers = $mydb->get_results("select * from players", ARRAY_N);
+	$mydb = new wpdb('root','root','local','localhost');
+	$getplayers = $mydb->get_results("select * from wp_players", ARRAY_N);
 	
 	foreach ($getplayers as $revisequery){
 		$playersassoc[$revisequery[0]] = array( 
@@ -740,6 +739,27 @@ function get_overtime(){
 function get_protections(){
 	$mydb = new wpdb('root','root','pflmicro','localhost');
 	$get = $mydb->get_results("select * from protections", ARRAY_N);
+	
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($get as $key => $revisequery){
+		$protections[$revisequery[0]] = array(
+			'protectionid' => $revisequery[0], 
+			'year' => $revisequery[1], 
+			'first' => $revisequery[2], 
+			'last' => $revisequery[3],  
+			'team' => $revisequery[4],
+			'position' => $revisequery[5],
+			'playerid' => $revisequery[6]
+		);
+	}
+	
+	return $protections;
+}
+
+function get_protections_player($pid){
+	$mydb = new wpdb('root','root','pflmicro','localhost');
+	$get = $mydb->get_results("select * from protections where playerid = '$pid'", ARRAY_N);
 	
 	// set the value of the key -- id = 0,  year = 2,  team = 5	
 	
@@ -836,7 +856,7 @@ function get_player_award($pid){
 
 // gets the weekly stats from the player table
 function get_player_data($pid) {
-	$mydb = new wpdb('root','root','pflmicro','localhost');
+	$mydb = new wpdb('root','root','local','localhost');
 	$getplayer = $mydb->get_results("select * from $pid", ARRAY_N);
 	
 	foreach ($getplayer as $key => $revisequery){
@@ -847,8 +867,10 @@ function get_player_data($pid) {
 			'points' => $revisequery[3],  
 			'team' => $revisequery[4],
 			'versus' => $revisequery[5],
-			'home' => '',
-			'result' => ''
+			'playerid' => $revisequery[6],
+			'win_loss' => $revisequery[7],
+			'home_away' => $revisequery[8],
+			'location' => $revisequery[9]
 		);
 	}
 	
@@ -1180,6 +1202,7 @@ function get_player_career_stats($pid){
 	foreach ($data_array as $get){
 		$pointsarray[] = $get['points'];
 		$yeararray[] = $get['year'];
+		$gamearray[] = $get['win_loss'];
 	}
 	
 	$indyears = array_unique($yeararray);
@@ -1190,6 +1213,8 @@ function get_player_career_stats($pid){
 	$ppg = round(($points / $games), 1);
 	$high = max($pointsarray);
 	$low = min($pointsarray);
+	$wins = array_sum($gamearray);
+	$loss = $games - $wins; 
 	
 	$carrer_stats = array(
 		'pid' => $pid,
@@ -1199,7 +1224,10 @@ function get_player_career_stats($pid){
 		'seasons' => $seasons,
 		'high' => $high,
 		'low' => $low,
+		'wins' => $wins,
+		'loss' => $loss,
 		'years' => $indyears
+		
 	);
 	
 	return $carrer_stats;
@@ -1266,6 +1294,31 @@ function probowl_boxscores(){
 function get_drafts(){
 	$mydb = new wpdb('root','root','pflmicro','localhost');
 	$get = $mydb->get_results("select * from drafts", ARRAY_N);
+	
+	foreach ($get as $getdraft){
+		$drafts[$getdraft[0]] = array(
+			'key' => $getdraft[0], 
+			'season' => $getdraft[1],
+			'round' => $getdraft[2],	
+			'pick' => $getdraft[3],	
+			'overall' => $getdraft[4],
+			'playerfirst' => $getdraft[7],
+			'playerlast' => $getdraft[8],	
+			'position' => $getdraft[9],
+			'playerid' => $getdraft[10],	
+			'orteam' => $getdraft[5],	
+			'acteam' => $getdraft[6],	
+			'tradeid' => $getdraft[11],
+			'tradehappened' => $tradehappened
+		);
+	}
+	
+	return $drafts;
+}
+
+function get_drafts_player($pid){
+	$mydb = new wpdb('root','root','pflmicro','localhost');
+	$get = $mydb->get_results("select * from drafts where playerid = '$pid'", ARRAY_N);
 	
 	foreach ($get as $getdraft){
 		$drafts[$getdraft[0]] = array(
@@ -1601,6 +1654,162 @@ function get_mfl_player_details($mflid){
 	return $mflguy['players']['player'];
 
 }
+
+
+function get_boxscore_cache($weekvar){
+	$boxscorecache = 'http://posse-football.dev/wp-content/themes/tif-child-bootstrap/cache/boxscores/'.$weekvar.'box.txt';
+	
+	
+		$boxscoreget = @file_get_contents($boxscorecache, FILE_USE_INCLUDE_PATH);
+		$boxscoredata = @unserialize($boxscoreget);
+		$boxscorecount = @count(array_keys($boxscoredata));
+	
+	if($boxscorecount > 0){
+		foreach ($boxscoredata as $buildboxreg){
+			if ($buildboxreg[4] == 0){
+				$boxscoredata_reg[] = array($buildboxreg[0],$buildboxreg[1],$buildboxreg[2],$buildboxreg[3]);	
+			}	
+		}
+	}
+	
+	return $boxscoredata_reg;
+}
+
+
+function put_boxscore_results($weekid){
+	
+	$boxscore = get_boxscore_cache($weekid);
+	$masterschedule = master_schedule();
+	
+	// get schedule by week
+	$pep_sched = $masterschedule['PEP'][$weekid];
+	$ets_sched = $masterschedule['ETS'][$weekid];
+	$wrz_sched = $masterschedule['WRZ'][$weekid];
+	$cmn_sched = $masterschedule['CMN'][$weekid];
+	$snr_sched = $masterschedule['SNR'][$weekid];
+	$bul_sched = $masterschedule['BUL'][$weekid];
+	$tsg_sched = $masterschedule['TSG'][$weekid];
+	
+	$rbs_sched = $masterschedule['RBS'][$weekid];
+	$bst_sched = $masterschedule['BST'][$weekid];
+	$max_sched = $masterschedule['MAX'][$weekid];
+	
+	$son_sched = $masterschedule['SON'][$weekid];
+	$hat_sched = $masterschedule['HAT'][$weekid];
+	$phr_sched = $masterschedule['PHR'][$weekid];
+	$atk_sched = $masterschedule['ATK'][$weekid];
+	$dst_sched = $masterschedule['DST'][$weekid];
+	
+	$weeksched_build = array(
+		'PEP' => $pep_sched,	
+		'ETS' => $ets_sched,
+		'WRZ' => $wrz_sched,
+		'CMN' => $cmn_sched,
+		'SNR' => $snr_sched,
+		'BUL' => $bul_sched,
+		'TSG' => $tsg_sched,
+		'RBS' => $rbs_sched,	
+		'BST' => $bst_sched,
+		'MAX' => $max_sched,	
+		'SON' => $son_sched,
+		'HAT' => $hat_sched,
+		'PHR' => $phr_sched,
+		'ATK' => $atk_sched,
+		'DST' => $dst_sched
+	);
+	
+	foreach ($weeksched_build as $key => $value){
+		if($value['home'] == 'H'){
+			$arraynew[$key] = array(
+				$weekid.$key,
+				$key,
+				$value['points'],
+				$value['versus'],
+				$weeksched_build[$value['versus']]['points']
+				
+			);
+		}
+	}
+	
+/*
+	$hometeam = 'ETS';
+	$roadteam = 'PEP';
+	
+	
+	$value = array(
+		$theid,
+		$hometeam,
+		22,
+		$roadteam,
+		15,
+		'1991KellQB',
+		'1991KellQB',
+		'1991KellQB',
+		'1991KellQB',
+		'',
+		'',
+		'',
+		'',
+		'1991KellQB',
+		'1991KellQB',
+		'1991KellQB',
+		'1991KellQB',
+		'',
+		'',
+		'',
+		'',
+		''
+	);
+	
+*/
+	
+	global $wpdb;
+	
+	 	 	
+		$insertresults = $wpdb->insert(
+			'wp_weekly_results',
+		    array(
+		        'weekid' => $arraynew[0],
+				'hometeam' => $arraynew[1],
+				'homescore' => $arraynew[2],
+				'roadteam' => $arraynew[3],
+				'roadscore' => $arraynew[4],
+				'homeqb1' => $arraynew[5],
+				'homerb1' => $arraynew[6],
+				'homewr1' => $arraynew[7],
+				'homepk1' => $arraynew[8],
+				'homeqb2' => $arraynew[9],
+				'homerb2' => $arraynew[10],
+				'homewr2' => $arraynew[11],
+				'homepk2' => $arraynew[12],
+				'roadqb1' => $arraynew[13],
+				'roadrb1' => $arraynew[14],
+				'roadwr1' => $arraynew[15],
+				'roadpk1' => $arraynew[16],
+				'roadqb2' => $arraynew[17],
+				'roadrb2' => $arraynew[18],
+				'roadwr2' => $arraynew[19],
+				'roadpk2' => $arraynew[20],
+				'overtime' => $arraynew[21]
+		    ),
+			array( 
+				'%s','%s','%d','%s','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s','%s'
+			)
+		);
+	
+
+	return $boxscore;
+	
+}
+
+
+
+
+
+
+
+
+
 
 
 

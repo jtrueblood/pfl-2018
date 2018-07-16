@@ -157,13 +157,13 @@
 									
 									echo '<div class="col-xs-12">';
 										foreach ($scoresa as $key => $value){
-											echo $players[$key][0].' '.$players[$key][1].' - '.$value.'<br>';
+											echo $players[$key][0].' '.$players[$key][1].' <span class="pull-right">'.$value.'</span><br>';
 										}
 									echo '</div>';
 									
 									echo '<div class="col-xs-12">';
 										foreach ($scoresb as $key => $value){
-											echo $players[$key][0].' '.$players[$key][1].' - '.$value.'<br>';
+											echo $players[$key][0].' '.$players[$key][1].' <span class="pull-right">'.$value.'</span><br>';
 										}
 									echo '</div>';
 									

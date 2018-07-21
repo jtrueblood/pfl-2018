@@ -61,8 +61,8 @@ printr($teams, 0);
 
 
 
-$teamer = set_team_data_trans('SNR');
-$teamrec = team_record('SNR');
+//$teamer = set_team_data_trans('SNR');
+//$teamrec = team_record('SNR');
 //printr($teamer, 1);
 
 
@@ -108,10 +108,10 @@ get_header();
 								
 								<div class="panel-body">
 									<p>This area is open</p>
-									<?php
-									
-										
-									?>
+									<a href="http://www58.myfantasyleague.com/2018/home/38954#0" target="_blank">MFL Website 2018</a><br>
+									<a href="http://www58.myfantasyleague.com/2017/home/38954#0" target="_blank">MFL Website 2017</a><br>
+									<a href="http://www58.myfantasyleague.com/2016/home/38954#0" target="_blank">MFL Website 2016</a><br>
+									<a href="http://www58.myfantasyleague.com/2015/home/47099#0" target="_blank">MFL Website 2015</a><br>
 								</div>
 							</div>
 					</div>
@@ -156,18 +156,23 @@ get_header();
 									<h3 class="panel-title">Games</h3>
 								</div>
 								<div class="panel-body">
-									<p>Gamestreak</p>
+									
 									
 									<?php 
+										echo '<p>Gamestreak -- get_player_game_streak($playerid)</p>';
+										echo '<p>displays games in a row played by a player.  Excludes bye weeks.</p>';
+											$gamestreak = get_player_game_streak($randomplayer); 
+											printr($gamestreak, 0);
 										
-										$gamestreak = get_player_game_streak($randomplayer); 
-										printr($gamestreak, 0);
-										echo '<p>Player Matchup</p>';
-										$record = get_player_record($randomplayer);
-										printr($record, 0);
-										echo '<p>Player Results</p>';
-										$playerrecord = get_player_results($randomplayer);
-										printr($playerrecord, 0);
+										echo '<p>Player Matchup -- get_player_record($playerid)</p>';
+										echo '<p>displays just the teams that the player played for by weekid => ETS</p>';
+											$record = get_player_record($randomplayer);
+											printr($record, 0);
+										
+										echo '<p>Player Results -- get_player_data($playerid)</p>';
+										echo '<p>gets all player data from table including record, vs, location, etc</p>';
+											$playerrecord = get_player_data($randomplayer);
+											printr($playerrecord, 0);
 									?>
 								</div>
 							</div>
@@ -177,16 +182,14 @@ get_header();
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">Return By Season - Rookie Shown</h3>
+									<h3 class="panel-title">Return By Season - Rookie Year Shown</h3>
 								</div>
 								<div class="panel-body">
 									<p>get_player_season_stats($player, $year);</p>
 									<?php 
 										
-										// used to set transient to team data tables.  It is memory heavy so sometimes you need to disable other page functions or set printr val to 1 to die() after function.  Must manually toggle team IDS and build each.
+										// this used to set transient to team data tables.  It is memory heavy so sometimes you need to disable other page functions or set printr val to 1 to die() after function.  Must manually toggle team IDS and build each.
 										
-
-
 										$byseason = get_player_season_stats($randomplayer, $rookie);
 										if (isset($byseason)){
 									    	printr($byseason, 0);

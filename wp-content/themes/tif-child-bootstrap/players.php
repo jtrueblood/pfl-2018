@@ -26,6 +26,7 @@ while ($o < $year){
 }
 
 
+
 $games = $playercount;
 
 $getpoints = array();
@@ -79,10 +80,25 @@ $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
 
-// printr($players[$playerid], 0);
+printr($careerdata, 0);
 
-
-$playseasons = $careerdata['years'];
+if(!empty( $careerdata['years'])){
+	$playseasons = $careerdata['years'];
+} else {
+	// set to zeros for players who played in the postseason but not regular season
+	$playseasons = array(
+/*
+		'games' => 0,
+		'points' => 0,
+		'ppg' => 0,
+		'seasons' => 1,
+		'high' => 0,
+		'low' => 0,
+		'wins' => 0,
+		'loss' => 0
+*/
+	);
+}
 														
 
 if (!empty($playoffsplayer)){
@@ -481,6 +497,8 @@ foreach($playseasons as $season ){
 							foreach ($player_number_ones as $key => $value){
 								echo '<span class="text-bold">'.$value['season'].' '.$value['team'].'</span>&emsp;'.$posaction. ' Title - '.$value['points'].' Points<br>';
 							}
+						} else {
+							echo 'N/A';
 						}
 						
 					?>
@@ -547,7 +565,13 @@ foreach($playseasons as $season ){
 					<div class="col-xs-12 col-sm-8 col-md-6">
 						<div class="panel panel-primary panel-colorful">
 							<div class="pad-all text-center">
-								<span class="text-2x text-thin"><?php echo $careerdata['games']; ?></span>
+								<span class="text-2x text-thin"><?php 
+									if(!empty($careerdata['games'])){
+										echo $careerdata['games']; 
+									} else {
+										echo 0;
+									}
+								?></span>
 								<p class="text-white">Games</p>
 							</div>
 						</div>
@@ -556,7 +580,13 @@ foreach($playseasons as $season ){
 					<div class="col-xs-12 col-sm-8 col-md-6">
 						<div class="panel panel-primary panel-colorful">
 							<div class="pad-all text-center">
-								<span class="text-2x text-thin"><?php echo $careerdata['ppg'];?></span>
+								<span class="text-2x text-thin"><?php 
+									if(!empty($careerdata['ppg'])){
+										echo $careerdata['ppg'];
+									} else {
+										echo '0.0';
+									}
+								?></span>
 								<p class="text-white">PPG</p>
 							</div>
 						</div>
@@ -565,7 +595,14 @@ foreach($playseasons as $season ){
 					<div class="col-xs-12 col-sm-8 col-md-6">
 						<div class="panel panel-primary panel-colorful">
 							<div class="pad-all text-center">
-								<span class="text-2x text-thin"><?php echo $careerdata['seasons']; ?></span>
+								<span class="text-2x text-thin"><?php 
+									if(!empty($careerdata['seasons'])){
+										echo $careerdata['seasons']; 
+									} else {
+										echo 0;
+									}
+								
+								?></span>
 								<p class="text-white">Seasons</p>
 								<p class="text-white"></p>
 								
@@ -585,13 +622,15 @@ foreach($playseasons as $season ){
 								
 								$playerrecord = get_player_results($playerid); 
 								
-								foreach ($playerrecord as $value){
-									$get_wins[] = $value['result'];
+								if(!empty($playerrecord)){
+									foreach ($playerrecord as $value){
+										$get_wins[] = $value['result'];
+									}
+								
+									$player_wins = $careerdata['wins'];
+									$player_losses = $careerdata['loss'];
+									$winper = number_format($player_wins / $careerdata['games'], 3);
 								}
-								$player_wins = $careerdata['wins'];
-								$player_losses = $careerdata['loss'];
-								$winper = number_format($player_wins / $careerdata['games'], 3);
-	
 								?>
 								
 								
@@ -604,7 +643,17 @@ foreach($playseasons as $season ){
 					<div class="col-xs-12 col-sm-8 col-md-6">
 						<div class="panel panel-primary panel-colorful">
 							<div class="pad-all text-center">
-								<span class="text-player-data text-thin"><?php echo $winper; ?></span>
+								<span class="text-player-data text-thin">
+									<?php 
+										if(!empty($winper)){
+											echo $winper; 
+										} else {
+											echo '0.000';
+										}
+									
+									?>
+									
+								</span>
 								<p class="text-white">Winning %</p>
 							</div>
 						</div>
@@ -613,7 +662,14 @@ foreach($playseasons as $season ){
 					<div class="col-xs-12 col-sm-8 col-md-6">
 						<div class="panel panel-primary panel-colorful">
 							<div class="pad-all text-center">
-								<span class="text-2x text-thin"><?php echo $careerdata['high']; ?></span>
+								<span class="text-2x text-thin"><?php 
+									if(!empty($careerdata['high'])){
+										echo $careerdata['high']; 
+									} else {
+										echo 0;
+									}
+								
+								?></span>
 								<p class="text-white">Game High</p>
 							</div>
 						</div>
@@ -754,19 +810,43 @@ foreach($playseasons as $season ){
 																$steams = array_unique($theteams);
 																
 // 																printr($steams, 0);
+																
+																$teamsplayer = array($steams[0],$steams[1],$steams[2],$steams[3]);
+/*
 																$iteam1 = $steams[0]; 
 																$iteam2 = $steams[1]; 
 																$iteam3 = $steams[2];
-																$iteam4 = $steams[3]; 
+																$iteam4 = $steams[3];
+*/ 
 																
+																//printr($teamsplayer, 0);
 																$seasonsList .= '<tr>';
 																$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
 																
-																$seasonsList .= '<td>'.$iteam1.' ';
+/*
+																$seasonsList .= '<td>'.$teamids[$iteam1].' ';
 																$seasonsList .= $iteam2.' ';
 																$seasonsList .= $iteam3.' ';
 																$seasonsList .= $iteam4.'</td>';
+*/
+																$seasonsList .= '<td>';
 																
+																$countteams = count($teamsplayer);
+																	
+																if(empty($teamsplayer[1])){
+																	$seasonsList .= $teamids[$teamsplayer[0]];
+																} else {
+																	foreach ($teamsplayer as $value){
+																		if (!empty($value)){
+																			$string .= $teamids[$value].', ';
+																		}
+																	}
+																	$seasonsList .= substr($string, 0, -2);
+																}
+																
+																
+																
+																$seasonsList .= '</td>';															
 																$seasonsList .= '<td class="text-center">'.$ipoints.'</td>';
 																$seasonsList .= '<td class="text-center">'.$igames.'</td>';
 																$seasonsList .= '<td class="text-center">'.$ippg.'</td>';
@@ -848,26 +928,27 @@ foreach($playseasons as $season ){
 													</tr>
 												</thead>
 												<tbody>
-												<?php 
-// NOTE.  After you have added player data for the season to the player data mysql tables most of the players page should work.  Player data should be updated LAST after all other data is added.  A single 'resutls.php' weekly page will need to be loaded to rebuild the team cache.  This will also allow individual player win / loss record to work.   Uses the team transinets on the results pages.  ex:  set_ets_transient();  													
+												<?php 												
  														//printr($playerrecord, 0);
 														$i = -1;
 														
 // 														printr($weeklydata,0);
-														
+														if(!empty($weeklydata)){
 														foreach ($weeklydata as $printplayer) {
 														
-														//$pyearnext = $playerdata[$i][1];
-														$weekids = $printplayer['weekids'];
-														$pyear = $printplayer['year'];
-														$pweek = $printplayer['week'];
-														$ppoints = $printplayer['points'];
-														$pteam = $printplayer['team'];
-														$pversus = $printplayer['versus'];
-														$pplayerid = $printplayer['playerid'];
-														$presult = $printplayer['win_loss'];
-														$phomeaway = $printplayer['home_away'];
-														$plocation = $printplayer['location'];
+														
+															//$pyearnext = $playerdata[$i][1];
+															$weekids = $printplayer['weekids'];
+															$pyear = $printplayer['year'];
+															$pweek = $printplayer['week'];
+															$ppoints = $printplayer['points'];
+															$pteam = $printplayer['team'];
+															$pversus = $printplayer['versus'];
+															$pplayerid = $printplayer['playerid'];
+															$presult = $printplayer['win_loss'];
+															$phomeaway = $printplayer['home_away'];
+															$plocation = $printplayer['location'];
+														}
 														
 														if ($pyear != $checkyear){
 															$gametable .= '<td class="text-center text-bold switch-year">'.$pyear.'</td>';
@@ -1170,7 +1251,7 @@ foreach($playseasons as $season ){
 								<?php if($year_retired > 3){ ?>
 								 <div class="timeline-entry">
 							        <div class="timeline-label">
-							            Retired
+							            Retired from PFL
 							        </div>
 							    </div>
 								<?php }
@@ -1189,37 +1270,10 @@ foreach($playseasons as $season ){
 							        </div>
 						    	</div>
 								<?php }
-
-
-								
-								
+						
 								?>
-						    
-						    
-<!--
-						    <div class="timeline-entry">
-						        <div class="timeline-stat">
-						            <div class="timeline-icon bg-success"><i class="demo-psi-like icon-lg"></i>
-						            </div>
-						            <div class="timeline-time">13:27</div>
-						        </div>
-						        <div class="timeline-label">
-						            Lorem ipsum ectetuer adipiscing elit, sed y nibh euismod tincidunt.
-						        </div>
-						    </div>
-						    
-						    <div class="timeline-entry">
-						        <div class="timeline-stat">
-						            <div class="timeline-icon"></div>
-						            <div class="timeline-time">11:27</div>
-						        </div>
-						        <div class="timeline-label">
-						            Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt.
-						        </div>
-						    </div>
--->
-						  
-						    
+
+						 						    
 				        </div>
 						
 					           

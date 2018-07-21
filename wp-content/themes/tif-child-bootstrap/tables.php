@@ -326,11 +326,11 @@ $allbest = array('RBS' => $bestRBS, 'BST' => $bestBST, 'ETS' => $bestETS, 'PEP' 
 $flatallbest = array_flatten($allbest);
 arsort($flatallbest);
 
-
 foreach ($champions as $value){
 	$cha[] = $value[2];
 	$app[] = array($value[2], $value[5]);
 }
+
 
 $championsort = array_count_values($cha);
 arsort($championsort);
@@ -339,10 +339,38 @@ $flatapps = array_flatten($app);
 $appsort = array_count_values($flatapps);
 arsort($appsort );
 
-/*
-printr($appsort  , 0);
-die();
-*/
+
+// get all games from week 15 only
+$playoffs = $wpdb->get_results("select * from wp_playoffs where week = 15", ARRAY_N);
+
+$t = 0;
+foreach ($playoffs as $value){
+	if ($t % 4 == 0){
+		$playoffteams[$value[5]][$value[1]] = $value[6];
+		$playoffteams_count[$value[5]][] = 1;
+	}
+	$t++;
+}
+
+foreach ($playoffteams_count as $key => $value){
+	$playoffsort[$key] = array_count_values($value);
+}
+arsort($playoffsort);
+
+foreach ($playoffsort as $key => $value){
+	$playoffsort_flat[$key] = $value[1];
+}
+
+
+$postseasonhighs = $wpdb->get_results("select * from wp_playoffs where points > 20 ", ARRAY_N);
+// get players high scores for playoff games
+foreach ($postseasonhighs as $value){
+	$playoff_player_highs[$value[3].$value[1].$value[2]] = $value[4];
+}
+arsort($playoff_player_highs);
+
+
+//printr($playoff_player_highs, 1);
 
 
 ?>
@@ -592,6 +620,32 @@ die();
 			</div>
 			
 			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				$labels = array('Team', 'Count/Opps', 'Percent');	
+				tablehead('Post Season Appearances', $labels);	
+				
+				
+				$b = 1;
+				foreach ($playoffsort_flat as $key => $value){
+					$opps = ${'get'.$key}[6];
+					$plperc = $value / $opps;
+					
+					$postprint .='<tr><td>'.$teamlist[$key].'</td>';
+					$postprint .='<td class="min-width text-center">'.$value.' / '.$opps.'</td>';
+					$postprint .='<td class="min-width text-right">'.number_format($plperc, 3).'</td></tr>';
+					$b++;
+					
+				}
+				
+				echo $postprint;
+				
+				tablefoot('');	
+				?>	
+				
+			</div>
+			
+			
 			
 			<!-- NEW SECTION -->
 			<div class="col-xs-24">
@@ -631,6 +685,8 @@ die();
 				echo $toppointsprint;
 				
 				tablefoot('-- Score of 30+');	
+			
+				
 				?>	
 				
 			
@@ -643,8 +699,47 @@ die();
 				<h4>Player Data - Post Season</h4>
 				<hr>
 			</div>
+	
+				<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+
+				$labels = array('Player', 'Season', 'Points');	
+				tablehead('Top Individual Playoff Scores', $labels);	
+				
+				
+				foreach ($playoff_player_highs as $key => $value){
+					
+					$highguy = substr($key , 0, -6);
+					//$highpos = substr($highguy, -2, -1);
+					$getweek = substr($key , -2);
+					if($getweek == 15){
+						$highweek = 'Playoffs';
+					} else {
+						$highweek = 'Posse Bowl';	
+					}
+					
+					$highyear = substr($key , -6, -2);
+					
+					$name = get_player_name($highguy);
+					
+						if ($value >= 20){
+							$topplayptsprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
+							$topplayptsprint .='<td>'.$highweek.', '.$highyear.'</td>';
+							$topplayptsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+						}
+					
+				}
+				
+				echo $topplayptsprint;
+				
+				tablefoot('-- Score of 20+');	
+			
+				
+				?>	
+				
+	
 		
-		
+		</div>
 		</div>
 	</div>
 	<!--===================================================-->

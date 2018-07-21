@@ -988,10 +988,12 @@ function playerplayoffs($pid){
 // returns an array of all weeks played by that player weekid => points
 function gettheweek ($pid){
 	$data_array = get_player_data($pid);
-	foreach ($data_array as $get){
-		$weeks[$get['weekids']] = $get['points'];
-	}
 	
+	if(!empty($data_array )){
+		foreach ($data_array as $get){
+			$weeks[$get['weekids']] = $get['points'];
+		}
+	}
 	return $weeks;
 }
 
@@ -1210,41 +1212,42 @@ function get_player_career_stats($pid){
 	
 	$data_array = get_player_data($pid);
 	
-	foreach ($data_array as $get){
-		$pointsarray[] = $get['points'];
-		$yeararray[] = $get['year'];
-		$gamearray[] = $get['win_loss'];
-
-	}
+	if(!empty($data_array)){
+		foreach ($data_array as $get){
+			$pointsarray[] = $get['points'];
+			$yeararray[] = $get['year'];
+			$gamearray[] = $get['win_loss'];
 	
-	
-	$indyears = array_unique($yeararray);
-	
-	$points = array_sum($pointsarray);
-	$games = count($data_array);
-	$seasons = count($indyears);
-	$ppg = round(($points / $games), 1);
-	$high = max($pointsarray);
-	$low = min($pointsarray);
-	$wins = array_sum($gamearray);
-	$loss = $games - $wins; 
-	
-	$carrer_stats = array(
-		'pid' => $pid,
-		'games' => $games,
-		'points' => $points,
-		'ppg' => $ppg,
-		'seasons' => $seasons,
-		'high' => $high,
-		'low' => $low,
-		'wins' => $wins,
-		'loss' => $loss,
-		'years' => $indyears
+		}
 		
-	);
-	
-	return $carrer_stats;
-	
+		
+		$indyears = array_unique($yeararray);
+		
+		$points = array_sum($pointsarray);
+		$games = count($data_array);
+		$seasons = count($indyears);
+		$ppg = round(($points / $games), 1);
+		$high = max($pointsarray);
+		$low = min($pointsarray);
+		$wins = array_sum($gamearray);
+		$loss = $games - $wins; 
+		
+		$carrer_stats = array(
+			'pid' => $pid,
+			'games' => $games,
+			'points' => $points,
+			'ppg' => $ppg,
+			'seasons' => $seasons,
+			'high' => $high,
+			'low' => $low,
+			'wins' => $wins,
+			'loss' => $loss,
+			'years' => $indyears
+			
+		);
+		
+		return $carrer_stats;
+	}
 }
 
 
@@ -1256,13 +1259,14 @@ function just_team_record($team, $week){
 	return $justweek;
 }
 
-// displays the teams that the player played for by weekid => ETS
+// displays just the teams that the player played for by weekid => ETS
 function get_player_record($pid){
 	//$playerdata = allplayerdata_trans($pid);
 	$playerdata = get_player_data($pid);
-	
-	foreach ($playerdata as $key => $value){
-		$cleanteams[$key] = $value['team'];
+	if(!empty($playerdata)){
+		foreach ($playerdata as $key => $value){
+			$cleanteams[$key] = $value['team'];
+		}
 	}
 	return $cleanteams;
 }
@@ -1271,12 +1275,14 @@ function get_player_record($pid){
 function get_player_results($pid){
 	$playerrecord = get_player_record($pid);
 	
-	foreach ($playerrecord as $key => $value){
-		$schedule = get_team_results_expanded($value);
-		$playerresults[$key] = array(
-			'result' => $schedule[$key]['result'],
-			'venue' => $schedule[$key]['venue']
-		);
+	if(!empty($playerrecord)){
+		foreach ($playerrecord as $key => $value){
+			$schedule = get_team_results_expanded($value);
+			$playerresults[$key] = array(
+				'result' => $schedule[$key]['result'],
+				'venue' => $schedule[$key]['venue']
+			);
+		}
 	}
 	return $playerresults;
 }
@@ -1381,9 +1387,12 @@ function probowl_boxscores_player($pid){
 function get_player_teams_season($pid){
 	$player = get_player_career_stats($pid);
 	$years = $player['years'];
-	foreach ($years as $year){
-		$get = get_player_season_stats($pid, $year);
-		$playeryears[$year] = array_unique($get['teams']);
+	
+	if(!empty($years)){
+		foreach ($years as $year){
+			$get = get_player_season_stats($pid, $year);
+			$playeryears[$year] = array_unique($get['teams']);
+		}
 	}
 	return $playeryears;
 }
@@ -1394,20 +1403,22 @@ function get_player_teams_season($pid){
 function insert_wp_career_leaders($pid){
 	$player = get_player_career_stats($pid);
 	$streak = get_player_game_streak($pid);	
-			$clean = array(
-				'pid' => $player['pid'],
-				'games' => $player['games'],
-				'points' => $player['points'],
-				'ppg' => $player['ppg'],
-				'seasons' => $player['seasons'],
-				'high' => $player['high'],
-				'low' => $player['low'],
-				'firstyear' => $player['years'][0],
-				'lastyear' => end($player['years']),
-				'gamestreak' => $streak,
-				'position' => substr($player['pid'], -2)
-				
-			);
+			if (!empty($streak)){
+				$clean = array(
+					'pid' => $player['pid'],
+					'games' => $player['games'],
+					'points' => $player['points'],
+					'ppg' => $player['ppg'],
+					'seasons' => $player['seasons'],
+					'high' => $player['high'],
+					'low' => $player['low'],
+					'firstyear' => $player['years'][0],
+					'lastyear' => end($player['years']),
+					'gamestreak' => $streak,
+					'position' => substr($player['pid'], -2)
+					
+				);
+			}
 			
 	global $wpdb;
 	
@@ -1443,46 +1454,51 @@ function insert_wp_season_leaders($pid){
 	$player = get_player_career_stats($pid);
 	$years = $player['years'];
 	
-	foreach ($years as $key => $years){
-		$get[$years] = get_player_season_stats($pid, $years);
-	}
-	
-	foreach ($get as $k => $v){
-		$justseason[$k] = array(
-			'points' => $v['points'],
-			'games' => $v['games']
-			);
-	}
-	
-	foreach ($justseason as $key => $value){
-		$clean[$key] = array(
-			'id' => $pid.$key,
-			'playerid' => $pid,
-			'season' => (int)$key,
-			'points' => (int)$value['points'],
-			'games' => (int)$value['games']	
-		);
-	}
-	
-	global $wpdb;
+	if(!empty($years)){
 		
- 	foreach ($clean as $key => $value){
-	 	
-	 	$testarray = $clean[$key];
-	 	
-		$insertyears = $wpdb->insert(
-			'wp_season_leaders',
-		    array(
-		        'id' => $testarray['id'],
-				'playerid' => $testarray['playerid'],
-				'season' => $testarray['season'],
-				'points' => $testarray['points'],
-				'games' => $testarray['games']
-		    ),
-			array( 
-				'%s','%s','%d','%d','%d'
-			)
-		);
+		foreach ($years as $key => $years){
+			$get[$years] = get_player_season_stats($pid, $years);
+		}
+	
+	
+		foreach ($get as $k => $v){
+			$justseason[$k] = array(
+				'points' => $v['points'],
+				'games' => $v['games']
+				);
+		}
+		
+		foreach ($justseason as $key => $value){
+			$clean[$key] = array(
+				'id' => $pid.$key,
+				'playerid' => $pid,
+				'season' => (int)$key,
+				'points' => (int)$value['points'],
+				'games' => (int)$value['games']	
+			);
+		}
+
+		global $wpdb;
+			
+	 	foreach ($clean as $key => $value){
+		 	
+		 	$testarray = $clean[$key];
+		 	
+			$insertyears = $wpdb->insert(
+				'wp_season_leaders',
+			    array(
+			        'id' => $testarray['id'],
+					'playerid' => $testarray['playerid'],
+					'season' => $testarray['season'],
+					'points' => $testarray['points'],
+					'games' => $testarray['games']
+			    ),
+				array( 
+					'%s','%s','%d','%d','%d'
+				)
+			);
+		
+		}
 	
 	}
 
@@ -1823,6 +1839,7 @@ function get_player_name($playerid){
 	$name = array('first' => $first, 'last' => $last);
 	return $name;
 }
+
 
 
 

@@ -227,7 +227,7 @@ function insert_wp_number_ones_pk(){
 insert_wp_number_ones_pk();
 
 ?>
-
+<?php include_once('main-nav.php'); ?>
 <div class="boxed">
 			
 			<!--CONTENT CONTAINER-->
@@ -363,21 +363,21 @@ insert_wp_number_ones_pk();
 																?>
 														</tbody>
 													</table>
+												
 												</div>
+											
 											</div>
+										
 										</div>
 									</div>
-									
-							
-		
 
-<?php include_once('main-nav.php'); ?>
-<?php include_once('aside.php'); ?>
 
 <?php session_destroy(); ?>
 		
 </div>
+
 </div>
 
+<?php include_once('aside.php'); ?>
 
 <?php get_footer(); ?>

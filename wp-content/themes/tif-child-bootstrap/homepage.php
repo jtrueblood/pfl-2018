@@ -4,16 +4,10 @@
  * Description: Homepage for the PFL Website
  */
 
-
-
-
-
-
 /*
 $url1=$_SERVER['REQUEST_URI'];
 header("Refresh: 5; URL=$url1");
 */
-
 
  
 $playersassoc = get_players_assoc();
@@ -40,11 +34,13 @@ function set_randomplayerdata_trans() {
   $transient = get_transient( $randomplayer.'_trans' );
   if( ! empty( $transient ) ) {
     return $transient;
-  } else {
+  } /*
+else {
    	$set[$randomplayer] = get_player_data($randomplayer);
     set_transient( $randomplayer.'_trans', $set, DAY_IN_SECONDS );
     return $set;
   }
+*/
   
 }
 
@@ -103,27 +99,25 @@ get_header();
 				
 				<!-- THE ROW -->
 				<div class="row">
-					<div class="col-xs-12 col-sm-8 eq-box-sm">
+					
+					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">Welcome</h3>
+									<h3 class="panel-title">Title</h3>
 								</div>
+								
 								<div class="panel-body">
-									<?php while (have_posts()) : the_post(); ?>
-										<p><?php the_content();?></p>
-									<?php endwhile; wp_reset_query(); 
+									<p>This area is open</p>
+									<?php
+									
 										
-										
-
-										$getboxscore = put_boxscore_results(199101);
-										printr($getboxscore, 0);
-
 									?>
 								</div>
 							</div>
 					</div>
 					
-					<div class="col-xs-12 col-sm-10 eq-box-sm">
+					
+					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
 									<h3 class="panel-title">Basic Info</h3>
@@ -206,31 +200,26 @@ get_header();
 					</div>
 					
 					
-					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">Player Table Transients</h3>
+									<h3 class="panel-title">Boxscore By Week.  Pass Week ID</h3>
 								</div>
-								
 								<div class="panel-body">
-									<p>This area generates player table transients that expire in 12 months.</p>
-									<?php
-										$getplayer = get_allplayerdata_trans($randomplayerdata); 
-										if (is_array($getplayer)){
-											echo 'Transient Exsists';
-										} else {
-											echo 'Transient Created';
-										}
-										printr($randomplayerdata,0);
+									<?php while (have_posts()) : the_post(); ?>
+										<p><?php the_content();?></p>
+									<?php endwhile; wp_reset_query(); 
 										
-										$teamsbyseason = get_player_teams_season($randomplayer);
-										printr($teamsbyseason, 0);
 										
-										?>
+
+										$getboxscore = put_boxscore_results(199101);
+										printr($getboxscore, 0);
+
+									?>
 								</div>
 							</div>
 					</div>
+					
 					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
 							<div class="panel panel-bordered panel-light">
@@ -252,7 +241,7 @@ get_header();
 				
 				
 		</div>
-		
+		<?php include_once('main-nav.php'); ?>
 	</div>
 	
 </div>

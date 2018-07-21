@@ -25,34 +25,6 @@ while ($o < $year){
 	$o++;
 }
 
-$first = $playerinfo[0];
-$last = $playerinfo[1];
-$position = $playerinfo[2];	
-$rookie = $playerinfo[3];
-
-$commaname = $last.', '.$first;	
-$fantasydata_playerid = $fantasydataids[$commaname];	
-
-			
-if (!empty($fantasydata_details)){
-	$det_nflteam = $fantasydata_details['Team'];
-	$det_number = $fantasydata_details['Number'];
-	$det_height = $fantasydata_details['Height'];
-	$det_weight = $fantasydata_details['Weight'];
-	$det_college = $fantasydata_details['College'];
-	$det_bday = $fantasydata_details['BirthDate'];
-	$det_age = date_diff(date_create($det_bday), date_create('today'))->y;
-	$det_format_date = date("m/d/Y", strtotime($det_bday));
-} else {
-	$det_number = $playerdetails[$playerid]['Number'];
-	$det_height = $playerdetails[$playerid]['Height'];
-	$det_weight = $playerdetails[$playerid]['Weight'];
-	$det_college = $playerdetails[$playerid]['College'];
-	$det_bday = $playerdetails[$playerid]['Age'];
-	$det_age = date_diff(date_create($det_bday), date_create('today'))->y;
-	$det_format_date = date("m/d/Y", strtotime($det_bday));
-}
-
 
 $games = $playercount;
 
@@ -64,10 +36,10 @@ $teaminfo = get_teams();
 $teams = array_unique($getteams);
 
 if ($lastseason == $year){
-		$active = 1; 
-	} else {
-		$active = 0;
-	}
+	$active = 1; 
+} else {
+	$active = 0;
+}
 
 ?>
 
@@ -95,12 +67,19 @@ $firstname = $players[$playerid][0];
 $lastname = $players[$playerid][1];
 $playerposition = $players[$playerid][2];
 $rookieyear = $players[$playerid][3];
+$mflid = $players[$playerid][4];
+$height = $players[$playerid][5];
+$weight = $players[$playerid][6];
+$college = $players[$playerid][7];
+$birthdate = $players[$playerid][8];
+$playernumber = $players[$playerid][9];
+
 
 $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
 
-//printr($careerdata, 0);
+// printr($players[$playerid], 0);
 
 
 $playseasons = $careerdata['years'];
@@ -381,8 +360,7 @@ foreach($playseasons as $season ){
 				</div>
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">
-					<h3 class="mar-no"><?php echo $firstname.' '.$lastname; ?></h3>
-					<p></p>
+					<h3 class="" style="margin-bottom: 0;"><?php echo $firstname.' '.$lastname; ?></h3>
 					<h4 class="mar-no text-sm">
 						<?php 
 							$prefix = '';
@@ -396,20 +374,22 @@ foreach($playseasons as $season ){
 							?>
 					</h4>
 					
-					<?php if (!empty($det_number)){ ?>
-					<h3 class="text-bold mar-btm"><?php echo $det_number; ?></h3> 
+					<?php if (!empty($weight)){ ?>
+					<h3 class="text-bold mar-btm" style="margin-top: 0;"><?php echo $playernumber; ?></h3> 
 					
 					<p class="mar-btm">
-					<span class="text-muted">College: </span><span class="text-bold"><?php echo $det_college; ?></span><br/>
-					<span class="text-muted">Height: </span><span class="text-bold"><?php echo $det_height; ?></span><br/>
-					<span class="text-muted">Weight: </span><span class="text-bold"><?php echo $det_weight; ?></span><br/>
-					<span class="text-muted">Birthdate: </span><span class="text-bold"><?php echo $det_format_date ?></span><br/>
-							<?php if ($det_age < 40){
-							echo '<span class="text-muted">Age: </span><span class="text-bold">'.$det_age.'</span><br/>';
-							}
+						<span class="text-muted">IDs: </span><?php echo $playerid; ?><?php 
+							if(!empty($mflid)){
+								echo ' / '.$mflid;
+							} ?>
+						</span><br/>
+						<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br/>
+						<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span><br/>
+						<span class="text-muted">Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br/>
+						<span class="text-muted">Birthdate: </span><span class="text-bold"><?php echo $birthdate; ?></span><br/>
 						
-					} ?></p>
-										
+					<?php } ?>
+					</p>					
 				</div>
 			</div>
 		
@@ -814,13 +794,17 @@ foreach($playseasons as $season ){
 							<!-- Season Data Chart -->
 							<?php if( $enhanced == 1) { ?>
 							<div class="panel hidden-xs">
+								<h4 class="text-thin">Points Over PFL Lifetime</h4>
+								<hr>
 								<span class="seasonbar">
 									
 									<?php
 										//printr($pointarray, 1); 
+										$seasons = the_seasons();
+										
 										$prefixc = '';
-										foreach ($pointarray as $key => $printchart){
-											$chartList .= $prefixc . '' . $printchart;
+										foreach ($seasons as $printchart){
+											$chartList .= $prefixc . '' . $pointarray[$printchart];
 											$prefixc = ', ';
 										}
 										
@@ -829,8 +813,10 @@ foreach($playseasons as $season ){
 									?>
 								</span><br/>
 									
-									<?php foreach ($pointarray as $key => $printchart){
-										echo '<span class="labelchart">'.$key.'</span>';
+									<?php foreach ($seasons as $key => $printchart){
+										$trimyear = substr($printchart, -2);
+										echo '<span class="labelchart">'.$trimyear.'</span>';
+										//echo '&bull;';
 									}
 									?>
 							</div>
@@ -934,15 +920,28 @@ foreach($playseasons as $season ){
 														<th class="text-center">Team</th>
 														<th class="text-center">Points</th>
 														<th class="text-center">Versus</th>
-<!-- 													<th class="text-center">Result</th> -->
+														<th class="text-center">Result</th>
 														
 													</tr>
 												</thead>
 												<tbody>
 													<?php
-
+														foreach($champions as $key => $value){
+															$pbteams_assoc[$key] = array(
+																$value['winner'] => 1,
+																$value['loser'] => 0
+															);
+															$pbteams_index[$key] = array(
+																$value['winner'],
+																$value['loser']															
+															);
+														}
+														
+														//printr($pbteams_index, 0);
 														
 														foreach ($playoffsplayer as $printplay) {
+														
+														
 														
 														$plyear = $printplay['year'];
 														$plweek = $printplay['week'];
@@ -962,15 +961,26 @@ foreach($playseasons as $season ){
 														}
 														if ($plweek == '15'){
 															$playtable .= '<td class="text-center">Playoffs</td>';
+															if(in_array($plteam, $pbteams_index[$plyear])){
+																$plresult = 'Advanced';
+															} else {
+																$plresult = 'Lost';
+															}
 														} else {
 															$playtable .= '<td class="text-center">Posse Bowl '.$champions[$plyear][1].'</td>';
+															if ($pbteams_assoc[$plyear][$plteam] == 1 ){
+																$plresult = '<b>Champion</b>';
+															} else {
+																$plresult = 'Lost';
+															}
 														}
 														
 														
 														
 														$playtable .= '<td class="text-center">'.$plteam.'</td>';
 														$playtable .= '<td class="text-center">'.$plpoints.'</td>';
-														$playtable .= '<td class="text-center">'.$plversus.'</td></tr>';
+														$playtable .= '<td class="text-center">'.$plversus.'</td>';
+														$playtable .= '<td class="text-center">'.$plresult.'</td></tr>';
 														
 														
 												}	
@@ -978,6 +988,8 @@ foreach($playseasons as $season ){
 												echo $playtable;
 
 												?>	
+												
+												
 												</tbody>
 											</table>
 										</div>

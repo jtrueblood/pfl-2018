@@ -9,8 +9,24 @@
 
 <?php get_header(); 
 
+$teamlist = array(
+	'RBS' => 'Red Barons',
+	'ETS' => 'Euro-Trashers',
+	'PEP' => 'Peppers',
+	'WRZ' => 'Space Warriorz',
+	'CMN' => 'C-Men',
+	'BUL' => 'Raging Bulls',
+	'SNR' => 'Sixty Niners',
+	'TSG' => 'Tsongas',
+	'BST' => 'Booty Bustas',
+	'MAX' => 'Mad Max',
+	'PHR' => 'Paraphernalia',
+	'SON' => 'Rising Son',
+	'ATK' => 'Melmac Attack',
+	'HAT' => 'Jimmys Hats',
+	'DST' => 'Destruction'	
+);
 
-//cache all team files
 $theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN', 'BUL', 'SNR', 'TSG', 'RBS', 'BST','DST');
 $firstyear = 1991;
 $currentyear = date("Y");
@@ -21,36 +37,128 @@ while ($firstyear < $currentyear){
 }
 
 
-$i = 0;
-foreach ($theteams as $getteams){
-	get_cache('team/'.$getteams.'_f', 0);
-	${$getteams}[] = $_SESSION['team/'.$getteams.'_f'];
-	$teamarray[] = ${$getteams}['team_'.$i.'_f'];
+
+$mydb = new wpdb('root','root','local','localhost');
+	
+$RBS = $wpdb->get_results("select * from wp_team_RBS", ARRAY_N);
+$ETS = $wpdb->get_results("select * from wp_team_ETS", ARRAY_N);
+$PEP = $wpdb->get_results("select * from wp_team_PEP", ARRAY_N);
+$WRZ = $wpdb->get_results("select * from wp_team_WRZ", ARRAY_N);
+$CMN = $wpdb->get_results("select * from wp_team_CMN", ARRAY_N);
+$BUL = $wpdb->get_results("select * from wp_team_BUL", ARRAY_N);
+$SNR = $wpdb->get_results("select * from wp_team_SNR", ARRAY_N);
+$TSG = $wpdb->get_results("select * from wp_team_TSG", ARRAY_N);
+$BST = $wpdb->get_results("select * from wp_team_BST", ARRAY_N);
+$MAX = $wpdb->get_results("select * from wp_team_MAX", ARRAY_N);
+$PHR = $wpdb->get_results("select * from wp_team_PHR", ARRAY_N);
+$SON = $wpdb->get_results("select * from wp_team_SON", ARRAY_N);
+$ATK = $wpdb->get_results("select * from wp_team_ATK", ARRAY_N);
+$HAT = $wpdb->get_results("select * from wp_team_HAT", ARRAY_N);
+$DST = $wpdb->get_results("select * from wp_team_DST", ARRAY_N);
+
+$allteams = array('ETS' => $ETS, 'PEP' => $PEP, 'WRZ' => $WRZ, 'CMN' => $CMN, 'BUL' => $BUL, 'SNR' => $SNR, 'TSG' => $TSG, 'SON' => $SON, 'HAT' => $HAT, 'DST' => $DST, 'ATK' => $ATK, 'PHR' => $PHR, 'MAX' => $MAX);
+
+
+$champions = $wpdb->get_results("select * from wp_champions", ARRAY_N);
+
+
+
+$playersassoc = get_players_assoc();
+
+
+
+/*
+$me = get_player_name('2004BreeQB');
+printr($me, 0);
+die();
+*/
+
+
+function allplayerdata_tables_trans() {
+	$transient = get_transient( 'allplayerdata_table_trans' );
+	if( ! empty( $transient ) ) {
+    	return $transient;
+  	} else {
+	  	global $playersassoc;
+	  	foreach ($playersassoc as $key => $value){
+	  		$allplayerdata[$key] = get_player_data($key);
+		}
+	    set_transient( 'allplayerdata_table_trans', $allplayerdata, 129600 );
+	    return $set;
+    }
 }
 
+$allplayerdata = allplayerdata_tables_trans();
+
+
+foreach ($allplayerdata as $weeks){
+	if(!empty($weeks)){
+			foreach ($weeks as $key => $value){
+				if($value['points'] > 25){
+				$toppoints[$value['playerid'].$value['weekids']] = $value['points'];
+			}
+		}
+	}
+}
+/*
+
+usort($toppoints, function($a, $b) {
+    return $a['points'] - $b['points'];
+});
+*/
+
+
+
+
+function local_all_team_data_trans() {
+	$transient = get_transient( 'local_all_team_data_trans' );
+	if( ! empty( $transient ) ) {
+    	return $transient;
+  	} else {
+		global $allteams;
+		set_transient( 'local_all_team_data_trans', $allteams, '' );
+		return $set;
+  	}
+}
+
+$all_team_transient = local_all_team_data_trans();
+
+
+//printr($all_team_transient, 0);
+
+//printr($teamarray, 0);
+
+/*
 $k = 0;
 foreach ($theyears as $getstandings){
 	echo $getstandings;
 	get_cache('standings/stand'.$getstandings, 0);
 	$stand[$getstandings] = $_SESSION['standings/stand'.$getstandings];
 }
+*/
 
 // build arrays needed to display team points and win related tables
 function totalteampoints($TEAM){
-	foreach ($TEAM[0] as $getinfo){
-		$info[] = array($getinfo['points'], $getinfo['result'], $getinfo['vspts']);
+	foreach ($TEAM as $getinfo){
+		if($getinfo[9] > 0){
+			$winloss = 1;
+		} else {
+			$winloss = 0;
+		}
+		$info[] = array($getinfo[4], $winloss, $getinfo[6]);
 	}
+	
 	
 	foreach ($info as $flatten){
 		$ppoints[] = $flatten[0];
-		$ploss[] = $flatten[1];
+		$pwins[] = $flatten[1];
 		$pvs[] = $flatten[2];
 	}
 		
 	$points = array_sum($ppoints);
-	$loss = array_sum($ploss);
-	$games = count($ploss);
-	$wins = $games - $loss;
+	$wins = array_sum($pwins);
+	$games = count($pwins);
+	$loss = $games - $wins;
 	$ppg = number_format(($points / $games), 1);
 	$winper = $wins / $games;
 	$versus = array_sum($pvs);
@@ -82,10 +190,15 @@ $getTSG = totalteampoints($TSG);
 $getDST = totalteampoints($DST);
 
 
-$allteams = array('RBS' => $getRBS, 'BST' => $getBST, 'ETS' => $getETS, 'PEP' => $getPEP, 'WRZ' => $getWRZ, 'MAX' => $getMAX, 'SON' => $getSON, 'PHR' => $getPHR, 'HAT' => $getHAT, 'ATK' => $getATK, 'CMN' => $getCMN, 'SNR' => $getSNR, 'BUL' => $getBUL, 'TSG' => $getTSG, 'DST' => $getDST);
+$allteamget = array('ETS' => $getETS, 'PEP' => $getPEP, 'WRZ' => $getWRZ, 'CMN' => $getCMN, 'BUL' => $getBUL, 'SNR' => $getSNR, 'TSG' => $getTSG, 'SON' => $getSON, 'HAT' => $getHAT, 'DST' => $getDST, 'ATK' => $getATK, 'PHR' => $getPHR, 'MAX' => $getMAX);
+
+/*
+printr($CMN, 0);
+die();
+*/
 
 // Pull values from 'allteams' 
-foreach ($allteams as $key => $value){
+foreach ($allteamget as $key => $value){
 	$allpoints[$key] = $value[0];
 	$allwins[$key] = $value[1];
 	$allgames[$key] = $value[2];
@@ -95,6 +208,12 @@ foreach ($allteams as $key => $value){
 	$allseasons[$key] = $value[6];
 	$alldif[$key] = $value[7];
 }
+
+/*
+printr($allpoints, 0);
+die();
+*/
+
 arsort($allpoints);
 arsort($allwins);
 arsort($allgames);
@@ -103,12 +222,30 @@ arsort($allwinper);
 asort($allvs);
 asort($alldif);
 
+foreach ($allteams as $key => $value){
+	foreach ($value as $differ){
+		$gamediffs[$key.$differ[0].$differ[5]] = $differ[9];
+	}
+}
+
+arsort($gamediffs);
+
+
+
+/*
+printr($gamediffs, 0);
+die();
+*/
+
+
+
+
 
 // arrays for individual seasons and games
 function teamhighs($TEAM){
-	foreach ($TEAM[0] as $getinfo){
-		$theseason = $getinfo['season'];
-		$high[] = array($theseason => $getinfo['points']);
+	foreach ($TEAM as $getinfo){
+		$theseason = $getinfo[1];
+		$high[] = array($theseason => $getinfo[4]);
 	}
 	
 	$sumArray = array();
@@ -154,16 +291,17 @@ foreach ($allhighs as $teamkey => $gethigh){
 arsort($sorthigh);
 
 
+
+
 function bestweek($TEAM, $myteam){
-	foreach ($TEAM[0] as $key => $value){
-		$bestweek[$myteam.''.$value['id']] = $value['points'];
+	foreach ($TEAM as $key => $value){
+		$bestweek[$myteam.''.$value[0]] = $value[4];
 	}
 	return $bestweek;
 }
 
 $bestRBS = bestweek($RBS, 'RBS');
 $bestBST = bestweek($BST, 'BST');
-
 
 $bestETS = bestweek($ETS, 'ETS');
 $bestPEP = bestweek($PEP, 'PEP');
@@ -180,30 +318,33 @@ $bestCMN = bestweek($CMN, 'CMN');
 $bestSNR = bestweek($SNR, 'SNR');
 $bestTSG = bestweek($TSG, 'TSG');
 
-$bestDST = bestweek($TSG, 'DST');
+$bestDST = bestweek($DST, 'DST');
 
 
 $allbest = array('RBS' => $bestRBS, 'BST' => $bestBST, 'ETS' => $bestETS, 'PEP' => $bestPEP, 'WRZ' => $bestWRZ, 'MAX' => $bestMAX, 'SON' => $bestSON, 'PHR' => $bestPHR, 'HAT' => $bestHAT, 'ATK' => $bestATK, 'CMN' => $bestCMN, 'SNR' => $bestSNR, 'BUL' => $bestBUL, 'TSG' => $bestTSG, 'DST' => $bestDST);
 
-
 $flatallbest = array_flatten($allbest);
 arsort($flatallbest);
 
-function topscoreyear($yyyear){
-	$arraycheck = $stand[$yyyear];
-	foreach ($arraycheck as $topscore){
-		$topid = $topscore['teamid'];
-		echo $topid;
-		$toppts = $topscore['pts']; 
-		$gettopbyyear[$topid] = $toppts;	
-	}
 
-	return $gettopbyyear;
+foreach ($champions as $value){
+	$cha[] = $value[2];
+	$app[] = array($value[2], $value[5]);
 }
 
-$stand1991 = topscoreyear(1991);
+$championsort = array_count_values($cha);
+arsort($championsort);
 
-printr($stand1991, 1);	
+$flatapps = array_flatten($app);
+$appsort = array_count_values($flatapps);
+arsort($appsort );
+
+/*
+printr($appsort  , 0);
+die();
+*/
+
+
 ?>
 
 
@@ -221,6 +362,11 @@ printr($stand1991, 1);
 	<div id="page-content">
 		
 		<div class="row">
+			
+			<div class="col-xs-24">
+				<h4>Team Data - Regular Season</h4>
+				<hr>
+			</div>
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
 	
@@ -260,6 +406,8 @@ printr($stand1991, 1);
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				<?php 
+// 				printr($allwins, 0);	
+					
 				$pointlabels = array('Team', 'Wins');	
 				tablehead('Wins', $pointlabels);	
 				
@@ -362,10 +510,139 @@ printr($stand1991, 1);
 				?>	
 				
 			</div>
-
-
 			
 			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				$labels = array('Team / Week', 'Margin');	
+				tablehead('Largest Margin of Victory', $labels);	
+				
+				$b = 1;
+				foreach ($gamediffs as $key => $value){
+					$flteam = substr($key , 0, -9);
+					$flyear = substr($key , 3, -5);
+					$flweek = substr($key , 7, -3);
+					$flversus = substr($key , -3);
+					if ($b <= 15){
+						$blowoutprint .='<tr><td>'.$b.'. '.$teamids[$flteam].' / '.$flyear.', '.$flweek.' over '.$flversus.'</td>';
+						$blowoutprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+					}
+					$b++;	
+				}
+				
+				echo $blowoutprint;
+
+				
+				tablefoot('-- Top 15 Games');	
+				?>	
+				
+			</div>
+			
+			
+			
+
+			<!-- NEW SECTION -->
+			<div class="col-xs-24">
+				<h4>Team Data - Post Season</h4>
+				<hr>
+			</div>
+			
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				$labels = array('Team', 'Count');	
+				tablehead('Total PFL Championships', $labels);	
+				
+				$b = 1;
+				foreach ($championsort as $key => $value){
+		
+					$champprint .='<tr><td>'.$teamlist[$key].'</td>';
+					$champprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+					$b++;
+					
+				}
+				
+				echo $champprint;
+				
+				tablefoot('');	
+				?>	
+				
+			</div>
+			
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				$labels = array('Team', 'Count');	
+				tablehead('Posse Bowl Appearances', $labels);	
+				
+				$b = 1;
+				foreach ($appsort as $key => $value){
+		
+					$pbappprint .='<tr><td>'.$teamlist[$key].'</td>';
+					$pbappprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+					$b++;
+					
+				}
+				
+				echo $pbappprint;
+				
+				tablefoot('');	
+				?>	
+				
+			</div>
+			
+			
+			
+			<!-- NEW SECTION -->
+			<div class="col-xs-24">
+				<h4>Player Data - Regular Season</h4>
+				<hr>
+				
+				
+				<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				arsort($toppoints);
+				
+				
+				
+				$labels = array('Player', 'Points');	
+				tablehead('Top Individual Game Scores', $labels);	
+				
+//				$b = 1;
+				foreach ($toppoints as $key => $value){
+					
+					$highplayer = substr($key , 0, -6);
+					$highpos = substr($highplayer, -2);
+					$highweek= substr($key , -2);
+					$highyear = substr($key , -6, -2);
+					
+					$name = get_player_name($highplayer);
+					
+// 					if ($highpos == 'RB'){
+						if ($value >= 30){
+							$toppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+							$toppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+						}
+// 					}
+//					$b++;
+					
+				}
+				
+				echo $toppointsprint;
+				
+				tablefoot('-- Score of 30+');	
+				?>	
+				
+			
+			</div>
+			
+			
+			
+			<!-- NEW SECTION -->
+			<div class="col-xs-24">
+				<h4>Player Data - Post Season</h4>
+				<hr>
+			</div>
 		
 		
 		</div>

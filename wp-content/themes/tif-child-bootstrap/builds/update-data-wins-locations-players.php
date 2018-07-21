@@ -124,7 +124,7 @@ printr($winloss, 0);
 	foreach ($buildnew as $build){
 	
 		$wpdb->insert(
-			'2001BradQB_copy', 
+			$playerA, 
 			array(
 				'week_id' 	=> $build['week_id'],
 				'year' 		=> $build['year'], 

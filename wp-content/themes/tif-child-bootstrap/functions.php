@@ -42,6 +42,7 @@ $teamids = array( 'RBS'=>'Red Barons', 'ETS'=>'Euro-Trashers', 'PEP'=>'Peppers',
 $_SESSION['teamids'] = $teamids;
 
 /* connect to pflmicro database */
+$mydb = new wpdb('root','root','pflmicro','localhost');
 
 
 /* allow plugin updates on localhost */
@@ -321,6 +322,7 @@ function array_flatten($array) {
 	   return $return;
 
 }
+
 
 
 function pointsleaders($theposition){
@@ -657,14 +659,14 @@ function selectteam (){
 
 // new functions for just database data
 function get_table($table){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getdata = $mydb->get_results("select * from $table", ARRAY_N);
+	global $wpdb;
+	$getdata = $wpdb->get_results("select * from $table", ARRAY_N);
 	return $getdata;	
 }
 
 function get_players_index(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getplayers = $mydb->get_results("select * from players", ARRAY_N);
+	global $wpdb;
+	$getplayers = $wpdb->get_results("select * from wp_players", ARRAY_N);
 	
 	foreach ($getplayers as $revisequery){
 		$playersindex[] = array( 
@@ -679,15 +681,21 @@ function get_players_index(){
 }
 
 function get_players_assoc (){
-	$mydb = new wpdb('root','root','local','localhost');
-	$getplayers = $mydb->get_results("select * from wp_players", ARRAY_N);
+	global $wpdb;
+	$getplayers = $wpdb->get_results("select * from wp_players", ARRAY_N);
 	
 	foreach ($getplayers as $revisequery){
 		$playersassoc[$revisequery[0]] = array( 
 			$revisequery[1], 
 			$revisequery[2], 
 			$revisequery[3],  
-			$revisequery[4]
+			$revisequery[4],
+			$revisequery[5],
+			$revisequery[6],
+			$revisequery[7],
+			$revisequery[8],
+			$revisequery[9],
+			$revisequery[10]
 		);
 	}
 	
@@ -711,8 +719,8 @@ function just_player_ids_with_position(){
 }
 
 function get_overtime(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getovertime = $mydb->get_results("select * from overtime", ARRAY_N);
+	global $wpdb;
+	$getovertime = $wpdb->get_results("select * from wp_overtime", ARRAY_N);
 	
 	foreach ($getovertime as $revisequery){
 		$theot[$revisequery[0]] = array(
@@ -737,8 +745,8 @@ function get_overtime(){
 }
 
 function get_protections(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from protections", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_protections", ARRAY_N);
 	
 	// set the value of the key -- id = 0,  year = 2,  team = 5	
 	
@@ -758,8 +766,8 @@ function get_protections(){
 }
 
 function get_protections_player($pid){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from protections where playerid = '$pid'", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_protections where playerid = '$pid'", ARRAY_N);
 	
 	// set the value of the key -- id = 0,  year = 2,  team = 5	
 	
@@ -780,8 +788,8 @@ function get_protections_player($pid){
 
 
 function get_standings($year){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from stand$year", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from stand$year", ARRAY_N);
 	
 	// set the value of the key -- id = 0,  year = 2,  team = 5	
 	
@@ -809,8 +817,8 @@ function get_standings($year){
 
 
 function get_award($awardopt, $thekey){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getaward = $mydb->get_results("select * from awards WHERE award = '$awardopt'", ARRAY_N);
+	global $wpdb;
+	$getaward = $wpdb->get_results("select * from wp_awards WHERE award = '$awardopt'", ARRAY_N);
 	
 	// set the value of the key -- id = 0,  year = 2,  team = 5	
 	
@@ -833,8 +841,8 @@ function get_award($awardopt, $thekey){
 }
 
 function get_player_award($pid){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getaward = $mydb->get_results("select * from awards WHERE pid = '$pid'", ARRAY_N);
+	global $wpdb;
+	$getaward = $wpdb->get_results("select * from wp_awards WHERE pid = '$pid'", ARRAY_N);
 	
 	foreach ($getaward as $key => $revisequery){
 		$awardinfo[] = array(
@@ -856,8 +864,8 @@ function get_player_award($pid){
 
 // gets the weekly stats from the player table
 function get_player_data($pid) {
-	$mydb = new wpdb('root','root','local','localhost');
-	$getplayer = $mydb->get_results("select * from $pid", ARRAY_N);
+	global $wpdb;
+	$getplayer = $wpdb->get_results("select * from $pid", ARRAY_N);
 	
 	foreach ($getplayer as $key => $revisequery){
 		$playerstats[$revisequery[0]] = array( 
@@ -875,7 +883,7 @@ function get_player_data($pid) {
 	}
 	
 	return $playerstats;
-
+	
 }
 
 
@@ -957,8 +965,8 @@ function get_player_season_stats($pid, $season){
 
 
 function playerplayoffs($pid){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$newgetplayer = $mydb->get_results("select * from playoffs WHERE playerid = '$pid'", ARRAY_N);
+	global $wpdb;
+	$newgetplayer = $wpdb->get_results("select * from wp_playoffs WHERE playerid = '$pid'", ARRAY_N);
 	
 	foreach ($newgetplayer as $key => $revisequery){
 		$playerplayoffs[$revisequery[0]] = array( 
@@ -972,7 +980,9 @@ function playerplayoffs($pid){
 			'overtime' => $revisequery[7]
 		);
 	}
+	
 	return $playerplayoffs;
+	
 }
 
 // returns an array of all weeks played by that player weekid => points
@@ -1036,9 +1046,9 @@ function get_player_game_streak($pid){
 }
 
 function get_champions(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
+	global $wpdb;
 	
-	$getchampionstable = $mydb->get_results("select * from champions", ARRAY_N);
+	$getchampionstable = $wpdb->get_results("select * from wp_champions", ARRAY_N);
 	
 	$buildchamps = array();
 	foreach ($getchampionstable as $revisequery){
@@ -1055,6 +1065,7 @@ function get_champions(){
 		);
 	}
 	
+	
 	return $champions;
 }
 
@@ -1069,9 +1080,9 @@ function get_just_champions(){
 
 // gets basic team table 
 function get_team_results($team){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
+	global $wpdb;
 	
-	$getteam = $mydb->get_results("select * from $team", ARRAY_N);
+	$getteam = $wpdb->get_results("select * from $team", ARRAY_N);
 	foreach ($getteam as $revisequery){
 		$simpleteam[$revisequery[0]] = array(
 			'id' => $revisequery[0], 
@@ -1097,8 +1108,8 @@ function master_schedule(){
 
 // gets basic info about team
 function get_teams(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getteams = $mydb->get_results("select * from teams", ARRAY_N);
+	global $wpdb;
+	$getteams = $wpdb->get_results("select * from wp_teams", ARRAY_N);
 	
 	foreach ($getteams as $revisequery){
 		$teams[$revisequery[4]] = array(
@@ -1203,7 +1214,9 @@ function get_player_career_stats($pid){
 		$pointsarray[] = $get['points'];
 		$yeararray[] = $get['year'];
 		$gamearray[] = $get['win_loss'];
+
 	}
+	
 	
 	$indyears = array_unique($yeararray);
 	
@@ -1270,8 +1283,8 @@ function get_player_results($pid){
 
 // get probowl boxscore
 function probowl_boxscores(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from probowlbox", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_probowlbox", ARRAY_N);
 	
 	foreach ($get as $revisequery){
 		$probowlbox[$revisequery[0]] = array(
@@ -1292,8 +1305,8 @@ function probowl_boxscores(){
 
 // get probowl boxscore
 function get_drafts(){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from drafts", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_drafts", ARRAY_N);
 	
 	foreach ($get as $getdraft){
 		$drafts[$getdraft[0]] = array(
@@ -1317,8 +1330,8 @@ function get_drafts(){
 }
 
 function get_drafts_player($pid){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from drafts where playerid = '$pid'", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_drafts where playerid = '$pid'", ARRAY_N);
 	
 	foreach ($get as $getdraft){
 		$drafts[$getdraft[0]] = array(
@@ -1343,8 +1356,8 @@ function get_drafts_player($pid){
 
 // get probowl by player 
 function probowl_boxscores_player($pid){
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$get = $mydb->get_results("select * from probowlbox where playerid = '$pid'", ARRAY_N);
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_probowlbox where playerid = '$pid'", ARRAY_N);
 	
 	foreach ($get as $revisequery){
 		$probowlbox[$revisequery[0]] = array(
@@ -1802,6 +1815,14 @@ function put_boxscore_results($weekid){
 	
 }
 
+
+function get_player_name($playerid){
+	$values = get_players_assoc();
+	$first = $values[$playerid][0];
+	$last = $values[$playerid][1];
+	$name = array('first' => $first, 'last' => $last);
+	return $name;
+}
 
 
 

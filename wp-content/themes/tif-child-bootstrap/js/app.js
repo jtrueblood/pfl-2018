@@ -118,8 +118,8 @@ $('.seasonbar').sparkline('html',
 		type: 'bar', 
 		barColor: '#5fa2dd', 
 		height: '100px', 
-		barWidth: '25px', 
-		barSpacing:'4px' 
+		barWidth: '16px', 
+		barSpacing:'5px' 
 		
 	}); 
 	

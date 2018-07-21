@@ -209,6 +209,10 @@ foreach ($getgamenotes as $note){
 	}
 }
 
+function linktoplayerpage($pid, $all){
+	echo '<a href="/player/?id='.$pid.'" style="cursor:hand;">'.$all.'</a>';
+}
+
 //printr($weeknotes, 0);
 
 ?>
@@ -352,7 +356,7 @@ foreach ($getgamenotes as $note){
 							echo '</div>';
 					
 					// boxscore right image	
-							echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$awayteam.'-bar.png);">';
+							echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$awayteam.'-bar-horz.png);">';
 							echo '</div>';
 					
 					// boxscore left players
@@ -484,8 +488,12 @@ foreach ($getgamenotes as $note){
 										
 
 									// end notes area
+									
+									// tooltip....
+									//echo '<a class="add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Tooltip on top">Tooltip on top</a>';
+									
 									echo '</div> 
-									</div>
+										</div>
 									</div>
 									
 								</div>';

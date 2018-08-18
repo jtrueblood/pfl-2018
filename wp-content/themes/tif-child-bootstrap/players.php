@@ -1,7 +1,7 @@
 <?php
 /*
  * Template Name: Player Page
- * Description: Page for displaying player profiles -- should be added into a modal
+ * Description: Page for displaying player profiles
  */
  ?>
 
@@ -80,7 +80,7 @@ $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
 
-printr($careerdata, 0);
+// printr($careerdata, 0);
 
 if(!empty( $careerdata['years'])){
 	$playseasons = $careerdata['years'];
@@ -377,21 +377,10 @@ foreach($playseasons as $season ){
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">
 					<h3 class="" style="margin-bottom: 0;"><?php echo $firstname.' '.$lastname; ?></h3>
-					<h4 class="mar-no text-sm">
-						<?php 
-							$prefix = '';
-							foreach ($teams as $printteams) { 
-								$teamList .= $prefix . '' . $teamids[$printteams];
-								$prefix = ', ';
-							} 
-							
-							echo $teamList;
-							
-							?>
-					</h4>
 					
-					<?php if (!empty($weight)){ ?>
-					<h3 class="text-bold mar-btm" style="margin-top: 0;"><?php echo $playernumber; ?></h3> 
+					<?php if (!empty($weight)){ 
+						echo '<div class="uniform">'.$playernumber.'</div> ';
+					?>
 					
 					<p class="mar-btm">
 						<span class="text-muted">IDs: </span><?php echo $playerid; ?><?php 
@@ -402,7 +391,24 @@ foreach($playseasons as $season ){
 						<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br/>
 						<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span><br/>
 						<span class="text-muted">Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br/>
-						<span class="text-muted">Birthdate: </span><span class="text-bold"><?php echo $birthdate; ?></span><br/>
+<!-- 					<span class="text-muted">Birthdate: </span><span class="text-bold"><?php echo $birthdate; ?></span><br/> -->
+						
+						<h4 class="mar-no text-sm">
+							<?php 
+								$prefix = '';
+								
+								$teamall = get_player_record($playerid);
+								//printr($teamall, 0);
+								$teams = array_unique($teamall);
+								foreach ($teams as $printteams) { 
+									$teamList .= $prefix . '' . $teamids[$printteams];
+									$prefix = ', ';
+								} 
+								
+								echo '<p class="text-muted teams-list">'.$teamList.'</p>';
+								
+							?>
+						</h4>
 						
 					<?php } ?>
 					</p>					
@@ -497,9 +503,7 @@ foreach($playseasons as $season ){
 							foreach ($player_number_ones as $key => $value){
 								echo '<span class="text-bold">'.$value['season'].' '.$value['team'].'</span>&emsp;'.$posaction. ' Title - '.$value['points'].' Points<br>';
 							}
-						} else {
-							echo 'N/A';
-						}
+						} 
 						
 					?>
 				
@@ -618,7 +622,6 @@ foreach($playseasons as $season ){
 						<div class="panel panel-primary panel-colorful">
 							<div class="pad-all text-center">
 								<?php
-								// get the function from functions.  This is delicate and has a bunch of dependancies including transients for team set on the homepage.php
 								
 								$playerrecord = get_player_results($playerid); 
 								
@@ -786,6 +789,7 @@ foreach($playseasons as $season ){
 														<th class="text-center">Games</th>
 														<th class="text-center">PPG</th>
 														<th class="text-center">High</th>
+														
 <!-- 														<th class="hidden-xs">Acquisition</th> -->
 													</tr>
 												</thead>
@@ -795,71 +799,78 @@ foreach($playseasons as $season ){
 														
 														<?php 
 														
-														
-														//printr($playseasons, 0);
-	
-															foreach ($playseasons as $printyear) {
-																
-																$playerseasonstats = get_player_season_stats($playerid, $printyear);
-																
-																$ipoints = $playerseasonstats['points'];
-																$igames = $playerseasonstats['games'];
-																$ippg = number_format(($ipoints / $igames), 1);
-																$ihigh = $playerseasonstats['high'];
-																$theteams = $playerseasonstats['teams'];
-																$steams = array_unique($theteams);
-																
-// 																printr($steams, 0);
-																
-																$teamsplayer = array($steams[0],$steams[1],$steams[2],$steams[3]);
-/*
-																$iteam1 = $steams[0]; 
-																$iteam2 = $steams[1]; 
-																$iteam3 = $steams[2];
-																$iteam4 = $steams[3];
-*/ 
-																
-																//printr($teamsplayer, 0);
-																$seasonsList .= '<tr>';
-																$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
-																
-/*
-																$seasonsList .= '<td>'.$teamids[$iteam1].' ';
-																$seasonsList .= $iteam2.' ';
-																$seasonsList .= $iteam3.' ';
-																$seasonsList .= $iteam4.'</td>';
-*/
-																$seasonsList .= '<td>';
-																
-																$countteams = count($teamsplayer);
+ //														printr($playseasons, 0);
+															$first = $playseasons[0];
+															$last = end($playseasons);
+															while ($first != ($last + 1)){
+																$buildtheyears[] = $first;
+																$first++;
+															} 
+															
+															if(isset($buildtheyears)){
+																foreach ($buildtheyears as $printyear) {
+																																		
+																		$playerseasonstats_all[] = get_player_season_stats($playerid, $printyear);
+																		$playerseasonstats = get_player_season_stats($playerid, $printyear);
+																		
+																		if(isset($playerseasonstats)){
+																			$ipoints = $playerseasonstats['points'];
+																			$igames = $playerseasonstats['games'];
+																			$ippg = number_format(($ipoints / $igames), 1);
+																			$ihigh = $playerseasonstats['high'];
+																			$theteams = $playerseasonstats['teams'];
+																			$steams = array_unique($theteams);
+																			$teamsplayer = array($steams[0],$steams[1],$steams[2],$steams[3]);
+																			$yearsplayed[] = $printyear;
+																		
+																			$seasonsList .= '<tr>';
+																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
+																					
+																			$seasonsList .= '<td>';
+																			
+																			$countteams = count($teamsplayer);
+																				
+																			if(empty($teamsplayer[1])){
+																				$seasonsList .= $teamids[$teamsplayer[0]];
+																			} else {
+																				foreach ($teamsplayer as $value){
+																					if (!empty($value)){
+																						$string .= $teamids[$value].', ';
+																					}
+																				}
+																				$seasonsList .= substr($string, 0, -2);
+																			}
+																			
+																			$seasonsList .= '</td>';															
+																			$seasonsList .= '<td class="text-center">'.$ipoints.'</td>';
+																			$seasonsList .= '<td class="text-center">'.$igames.'</td>';
+																			$seasonsList .= '<td class="text-center">'.$ippg.'</td>';
+																			$seasonsList .= '<td class="text-center">'.$ihigh.'</td>';
+																			
+																				
+																			$seasonsList .= '</td>';
+																			$seasonsList .= '</tr>';
+																			
+																			$pointarray[$printyear] = $ipoints;		
+																			
+																		// condition if the player never played in a particular season	
+																		} else {
+																			$seasonsList .= '<tr>';
+																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
+																			$seasonsList .= '</td>';															
+																			$seasonsList .= '<td class="text-bold">Did Not Play</td>';
+																			$seasonsList .= '<td class="text-center">-</td>';
+																			$seasonsList .= '<td class="text-center">-</td>';
+																			$seasonsList .= '<td class="text-center">-</td>';
+																			$seasonsList .= '<td class="text-center">-</td>';
+																				
+																			$seasonsList .= '</td>';
+																			$seasonsList .= '</tr>';
+																		}	
 																	
-																if(empty($teamsplayer[1])){
-																	$seasonsList .= $teamids[$teamsplayer[0]];
-																} else {
-																	foreach ($teamsplayer as $value){
-																		if (!empty($value)){
-																			$string .= $teamids[$value].', ';
-																		}
-																	}
-																	$seasonsList .= substr($string, 0, -2);
 																}
-																
-																
-																
-																$seasonsList .= '</td>';															
-																$seasonsList .= '<td class="text-center">'.$ipoints.'</td>';
-																$seasonsList .= '<td class="text-center">'.$igames.'</td>';
-																$seasonsList .= '<td class="text-center">'.$ippg.'</td>';
-																$seasonsList .= '<td class="text-center">'.$ihigh.'</td>';
-// 																$seasonsList .= '<td class="hidden-xs"> NEED TO DO';
-																	
-																$seasonsList .= '</td>';
-																$seasonsList .= '</tr>';
-																
-																$pointarray[$printyear] = $ipoints;
-																
 															}
-														echo $seasonsList;
+															echo $seasonsList;
 														
 														?>
 													
@@ -869,6 +880,8 @@ foreach($playseasons as $season ){
 									<!--===================================================-->
 									<!-- End Striped Table -->
 								</div>
+								
+								
 							<!-- TABLE END -->
 								
 							<!-- Season Data Chart -->
@@ -929,13 +942,16 @@ foreach($playseasons as $season ){
 												</thead>
 												<tbody>
 												<?php 												
- 														//printr($playerrecord, 0);
-														$i = -1;
+ 													
+														$u = -1;
 														
-// 														printr($weeklydata,0);
-														if(!empty($weeklydata)){
+ 														//printr($weeklydata,0);
+													if(!empty($weeklydata)){
+														
+														
+														$checkyear = $rookieyear - 1;
+														
 														foreach ($weeklydata as $printplayer) {
-														
 														
 															//$pyearnext = $playerdata[$i][1];
 															$weekids = $printplayer['weekids'];
@@ -948,21 +964,21 @@ foreach($playseasons as $season ){
 															$presult = $printplayer['win_loss'];
 															$phomeaway = $printplayer['home_away'];
 															$plocation = $printplayer['location'];
-														}
 														
-														if ($pyear != $checkyear){
-															$gametable .= '<td class="text-center text-bold switch-year">'.$pyear.'</td>';
-															$checkyear = $pyear;
-														} else {
-															$gametable .= '<td class="text-center">&emsp;</td>';
-														}
-														
-														
-														$gametable .= '<td class="text-center">'.$pweek.'</td>';
-														$gametable .= '<td class="text-center">'.$pteam.'</td>';
-														$gametable .= '<td class="text-center">'.$ppoints.'</td>';
-														$gametable .= '<td class="text-center">'.$pversus.'</td>';
-														
+															
+															if ($pyear != $checkyear){
+																$gametable .= '<td class="text-center text-bold switch-year">'.$pyear.'</td>';
+																$checkyear = $pyear;
+															} else {
+																$gametable .= '<td class="text-center">&emsp;</td>';
+															}
+															
+															
+															$gametable .= '<td class="text-center">'.$pweek.'</td>';
+															$gametable .= '<td class="text-center">'.$pteam.'</td>';
+															$gametable .= '<td class="text-center">'.$ppoints.'</td>';
+															$gametable .= '<td class="text-center">'.$pversus.'</td>';
+															
 														
 															if ($presult == '1'){
 																$gametable .= '<td class="text-bold text-center">Win</td>';
@@ -975,9 +991,11 @@ foreach($playseasons as $season ){
 															} else {
 																$gametable .= '<td>'.$teaminfo[strtoupper($pversus)]['stadium'].'</td></tr>';
 															}
-														$i++;
+						
+														$u++;
 														}
-										
+													}
+														
 														echo $gametable;
 													?>													
 												</tbody>
@@ -1020,9 +1038,9 @@ foreach($playseasons as $season ){
 														
 														//printr($pbteams_index, 0);
 														
+														$checkyear = $rookieyear - 1;
+														
 														foreach ($playoffsplayer as $printplay) {
-														
-														
 														
 														$plyear = $printplay['year'];
 														$plweek = $printplay['week'];
@@ -1118,15 +1136,6 @@ foreach($playseasons as $season ){
 				</div>
 				
 				
-				
-<!--
-				<div class="panel">
-					<div class="panel-body">
-						<button class="btn btn-warning btn-labeled fa fa-user" onclick="randPlayer()">Random Player</button>
-					</div>
-				</div>
--->
-				
 				<?php if( $enhanced == 1) { ?>
 				<div class="panel">
 					<div class="panel-heading">
@@ -1138,12 +1147,6 @@ foreach($playseasons as $season ){
 						
 					
 				        <div class="timeline">
-						    <!-- Timeline header -->
-<!--
-						    <div class="timeline-header">
-						        <div class="timeline-header-title bg-success">Rookie Year <?php echo $rookieyear; ?></div>
-						    </div>
--->
 						    
 						    <?php 
 							    $count = 0;

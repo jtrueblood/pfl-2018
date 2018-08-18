@@ -13,6 +13,8 @@ while ($o < $year){
 	$theyears[] = $o;
 	$o++;
 }
+
+
 	
 $playersassoc = get_players_assoc();
 foreach ($playersassoc as $key => $value){
@@ -36,6 +38,8 @@ function sortByOrder($a, $b) {
     return $b['points'] - $a['points'];
 }
 
+
+
 usort($qb_leaders, 'sortByOrder');
 usort($rb_leaders, 'sortByOrder');
 usort($wr_leaders, 'sortByOrder');
@@ -44,8 +48,25 @@ usort($pk_leaders, 'sortByOrder');
 // printr($arr_position, 0);
 
 function get_leaders_page($array){	
+	$esea = date('Y');
 	$playersassoc = get_players_assoc();
+	
 	foreach ($array as $key => $value)	{
+		
+		$pcs = get_player_career_stats($value['pid']);
+		if(is_array($pcs['years'])){
+			$lastsea = end($pcs['years']);
+		} else {
+			$lastsea = $pcs['years'][0];
+		}
+		$yearcheck = $esea - 1;
+		
+		if($lastsea >= $yearcheck){
+			$isactive = 1;
+		} else {
+			$isactive = 0;
+		}
+		
 		$rank = $key + 1;
 		$fname = $playersassoc[$value['pid']][0];
 		$lname = $playersassoc[$value['pid']][1];
@@ -58,12 +79,13 @@ function get_leaders_page($array){
 			<td class="text-center">'.$rank.'</td>
 			<td class="text-center"><img src="https://posse-football.dev/wp-content/themes/tif-child-bootstrap/img/players/'.$value['pid'].'.jpg" class="leaders-image"></td>
 			<td>
-			<a href="/player?id='.$value['pid'].'"><span class="text-semibold '.$isactive.'">'.$fname.' '.$lname.'</span></a>
+			<a href="/player?id='.$value['pid'].'"><span class="text-semibold">'.$fname.' '.$lname.'</span></a>
 			</td>
 			<td class="text-center"><span class="text-semibold">'.number_format($points, 0).'</span></td>
 			<td class="text-center"><span class="text-semibold">'.$games.'</span></td>
 			<td class="text-center"><span class="text-semibold">'.$ppg.'</span></td>
 			<td class="text-center"><span class="text-semibold">'.$value['seasons'].'</span></td>
+			<td class="text-center"><span class="text-semibold">'.$isactive.'</span></td>
 		</tr>';
 	}
 }
@@ -77,6 +99,7 @@ function get_table_head(){
 		<th class="text-center">Games</th>
 		<th class="text-center">PPG</th>
 		<th class="text-center">Seasons</th>
+		<th class="text-center">Active</th>
 	</tr>';
 }
 ?>

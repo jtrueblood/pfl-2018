@@ -89,6 +89,7 @@
 						<a href="/leaders">Leaders</a>
 						<a href="/drafts/?id=1991">Drafts</a>
 						<a href="/champions/">Champions</a>
+						<a href="/teams/?id=ETS">Teams</a>
 					</div>
 					
 					<ul class="nav navbar-top-links pull-right">

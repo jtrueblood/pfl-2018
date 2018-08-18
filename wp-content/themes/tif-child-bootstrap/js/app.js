@@ -133,6 +133,14 @@ $("#playerSelect").click(function() {
   	//alert(url);
 });	
 
+$("#teamSelect").click(function() {
+  //alert("Handler for .click() called.");
+  var dropselect7 = $("#teamDrop").val(); 
+  var headurl = (''+dropselect7);
+  window.location = headurl;	
+  	//alert(url);
+});	
+
 $("#yearbtn").click(function() {
   //alert("Handler for .click() called.");
   var yeardropselect = $("#pickyear").val(); 

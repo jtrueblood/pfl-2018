@@ -4,10 +4,14 @@
  * Description: Homepage for the PFL Website
  */
 
+
 /*
+
 $url1=$_SERVER['REQUEST_URI'];
 header("Refresh: 5; URL=$url1");
 */
+
+
 
  
 $playersassoc = get_players_assoc();
@@ -17,12 +21,16 @@ foreach ($playersassoc as $key => $value){
 }
 
 $randomize = array_rand($playersid);
+
 $randomplayer = $playersid[$randomize];
+//$randomplayer = '2004PalmQB';
+
 $featuredplayer = $playersassoc[$randomplayer];
 $first = $featuredplayer[0];
 $last = $featuredplayer[1];
 $position = $featuredplayer[2];
 $rookie = $featuredplayer[3];
+$mflid = $featuredplayer[4];
 
 insert_wp_career_leaders($randomplayer);
 $testprint = insert_wp_season_leaders($randomplayer);
@@ -144,8 +152,56 @@ get_header();
 							</div>
 						</div>
 					</div>
-								
+							
+					<!-- PLAYER SPOTLIGHT -->
+					<div class="col-xs-24 col-sm-6 left-column">
+						<div class="panel widget">
+							<div class="widget-body text-center">
+								<?php 
+/*
+									$pmflid = $wpdb->get_results("select mflid from wp_players where p_id = '$randomplayer'");
+									$theid = $pmflid[0]->mflid;
+*/
+// 									printr($theid, 0);
+									if(!empty($mflid)){
+										echo 'From MFL API ';
+										$mfldeet = get_mfl_player_details($mflid); 
+										printr($mfldeet, 0);
+										
+										$inches = $mfldeet['height'];
+										$getweight = $mfldeet['weight'];
+										$getcollege = $mfldeet['college'];
+										$getnumber = $mfldeet['jersey'];
+										$getbirthdate = $mfldeet['birthdate'];
+										
+										$feet = floor($inches/12);
+										$inches = ($inches%12);
+										$getheight = $feet.'-'.$inches;
+										
+										//$php_timestamp_date = date("Y/m/d", $getbirthdate);
+										//echo "".$php_timestamp_date."";
+										
+// 										foreach ($mflids as $key => $value){
 
+											$wpdb->query(
+											"UPDATE wp_players
+											SET weight = $getweight, height = '$getheight', college = '$getcollege', number = $getnumber 
+											WHERE p_id = '$randomplayer'"
+											);
+
+// 										}
+
+										
+									} else {
+										echo 'MFL ID Not Found';
+									}
+									
+									
+								?>
+							</div>
+						</div>
+					</div>			
+					
 					
 				</div>
 				<!-- THE ROW -->
@@ -239,6 +295,41 @@ get_header();
 								</div>
 							</div>
 					</div>
+					
+					<div class="col-xs-12 col-sm-6 eq-box-sm">
+							<div class="panel panel-bordered panel-light">
+								<div class="panel-heading">
+									<h3 class="panel-title">MFL Data</h3>
+								</div>
+								
+								<div class="panel-body">
+									<p>g</p>
+							<?php 		get_cache('mfl/linkidcache', 0);	
+										$linkidcache = $_SESSION['mfl/linkidcache']; 
+										
+										foreach ($linkidcache as $key => $value){
+											$mflids[$value[2]] = $key;
+										}
+										
+										printr($mflids, 0);
+										
+										
+/*
+										foreach ($mflids as $key => $value){
+											$wpdb->query("UPDATE wp_players SET mflid = $value WHERE p_id = '$key'");
+										}
+										
+										
+*/
+										
+
+										
+							?>
+							
+								</div>
+							</div>
+					</div>
+
 					
 				</div>
 				

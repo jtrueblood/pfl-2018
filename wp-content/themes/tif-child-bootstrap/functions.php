@@ -814,6 +814,33 @@ function get_standings($year){
 	return $standings;
 }
 
+function get_standings_by_team($year, $team){
+	global $wpdb;
+	$get = $wpdb->get_results("SELECT * from stand$year where teamid = '$team';", ARRAY_N);
+	
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($get as $key => $revisequery){
+		$standings[] = array(
+			'id' => $revisequery[0], 
+			'year' => $revisequery[1], 
+			'seed' => $revisequery[2], 
+			'division' => $revisequery[3],  
+			'teamid' => $revisequery[4],
+			'teamname' => $revisequery[5],
+			'win' => $revisequery[6],
+			'loss' => $revisequery[7],
+			'gb' => $revisequery[9],
+			'pts' => $revisequery[10],
+			'ptsvs' => $revisequery[12],
+			'divwin' => $revisequery[14],
+			'divloss' => $revisequery[15]
+		);
+	}
+	
+	return $standings;
+}
+
 
 
 function get_award($awardopt, $thekey){
@@ -922,27 +949,30 @@ function get_player_season_stats($pid, $season){
 	
 	$data_array = get_player_data($pid);
 	
-	foreach ($data_array as $get){
-		if ($get['year'] == $season){
-			$justseason[$get['week']] = array(
-				'season' => $season,
-				'week' => $get['week'],
-				'points' => $get['points'],
-				'team' => $get['team'],
-				'versus' => $get['versus']	
-			);
+	if(isset($data_array)){
+		foreach ($data_array as $get){
+			if ($get['year'] == $season){
+				$justseason[$get['week']] = array(
+					'season' => $season,
+					'week' => $get['week'],
+					'points' => $get['points'],
+					'team' => $get['team'],
+					'versus' => $get['versus']	
+				);
+			}
 		}
 	}
 	
 	//summary 
-	foreach ($justseason as $get){
-		$points[] = $get['points'];
-		$storeteams[] = $get['team'];
-	}
+	if(isset($justseason)){
+		foreach ($justseason as $get){
+			$points[] = $get['points'];
+			$storeteams[] = $get['team'];
+		}
 	
-	$totalpoints = array_sum($points);
-	$totalgames = count($points);
-	$high = max($points);
+		$totalpoints = array_sum($points);
+		$totalgames = count($points);
+		$high = max($points);
 	
 	$value = 1;
 	while ($value < 15){
@@ -959,7 +989,7 @@ function get_player_season_stats($pid, $season){
 	);
 	
 	$merge = array_merge($newseason, $summary);
-	
+	}
 	return $merge;
 }
 
@@ -1654,7 +1684,9 @@ function get_mfl_player_details($mflid){
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=players&DETAILS=&SINCE=&PLAYERS=$mflid&JSON=1",
+	 // CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=players&DETAILS=&SINCE=&PLAYERS=$mflid&JSON=1",
+	 
+	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,

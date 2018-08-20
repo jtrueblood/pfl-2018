@@ -282,6 +282,10 @@ if(!empty($protections)){
 	}
 }
 
+// Trades by player
+$playerbytrade = get_trade_by_player($playerid);
+										
+
 foreach($playseasons as $season ){
 	
 	if($season == $rookieyear){
@@ -320,6 +324,7 @@ foreach($playseasons as $season ){
 		'awards' => $get_awards,
 		'drafted' => $build_draft[$season],
 		'protected' => $build_protect[$season],
+		'traded' => $playerbytrade[$season],
 		'careerhigh' => '',
 		'retired' => $get_retired
 	);
@@ -329,6 +334,8 @@ foreach($playseasons as $season ){
 	$get_champs = '';
 	$get_leaders = '';
 }
+
+
 
 //printr($career_timeline, 0);
 
@@ -1183,6 +1190,36 @@ foreach($playseasons as $season ){
 							    </div>
 							    
 							    <?php } 
+							   
+ 
+							    if (isset($value['traded'])){
+								
+								$tradedto = $teamids[$value['traded']['traded_to_team']];
+								$tradedfrom = $teamids[$value['traded']['traded_from_team']];
+								$when = $value['traded']['when'];
+								$alongwith_players = $value['traded']['received_players'];
+								$alongwith_picks = $value['traded']['received_picks'];
+								$sent_players = $value['traded']['sent_players'];
+								$sent_picks = $value['traded']['sent_picks'];
+								
+								$a_picks = implode( ", ", $alongwith_picks);
+								$s_picks = implode( ", ", $sent_picks);
+								?>
+								
+								 <div class="timeline-entry">
+									 
+							        <div class="timeline-label no-label">
+							            <p class="protected-by"><span class="text-bold">
+								            Traded to <?php echo $tradedto; ?></span> during the <?php echo $when; ?></p>
+								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_to_team'];?></span> &mdash; Get <?php echo implode( ", ", $alongwith_players); ?> <?php echo $a_picks; ?> </p> 
+										<p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_from_team'];?></span> &mdash; Get <?php echo implode( ", ", $sent_players); ?> <?php echo $s_picks; ?>  
+								        </p>
+							        </div>
+							    </div>
+							    
+							    <?php } 
+							    
+							    
 							    
 							    if (isset($value['protected'])){
 								?>
@@ -1195,8 +1232,9 @@ foreach($playseasons as $season ){
 							    </div>
 							    
 							    <?php } 
-							    
-								
+								    
+								    
+								    
 								if(!empty($value['awards'])){ ?>
 								<div class="timeline-entry">
 							        <div class="timeline-stat">

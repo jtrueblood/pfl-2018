@@ -765,6 +765,86 @@ function get_protections(){
 	return $protections;
 }
 
+function get_trades(){
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_trades", ARRAY_N);
+	
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($get as $key => $revisequery){
+		$trades[] = array(
+			'year' => $revisequery[1], 
+			'team1' => $revisequery[2], 
+			'players1' => $revisequery[3], 
+			'picks1' => $revisequery[4], 
+			'protections1' => $revisequery[5],
+			'team2' => $revisequery[6],
+			'players2' => $revisequery[7], 
+			'picks2' => $revisequery[8], 
+			'protections2' => $revisequery[9],
+			'notes' => $revisequery[10],
+			'when' => $revisequery[11]
+		);
+	}
+	
+	return $trades;
+}
+
+function get_trade_by_player($pid){
+	global $wpdb;
+	$get1 = $wpdb->get_results("select * from wp_trades where players1 like '%$pid%' or players2 like '%$pid%'", ARRAY_N);
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($get1 as $key => $revisequery){
+		$players1 = explode(',', $revisequery[3]);
+		$picks1 = explode(',', $revisequery[4]);
+		$players2 = explode(',', $revisequery[7]);
+		$picks2 = explode(',', $revisequery[8]);
+		
+		if(in_array($pid, $players1)){
+			$numplayer = 1;
+			$traded_from_team = $revisequery[6];
+			$traded_to_team = $revisequery[2];
+			$players_to = $players2;
+			$picks_to = $picks2;
+			$players_from =  $players1;
+			$picks_from = $picks1;
+		}
+		if(in_array($pid, $players2)){
+			$numplayer = 2;
+			$traded_from_team = $revisequery[2];
+			$traded_to_team = $revisequery[6];
+			$players_to = $players1;
+			$picks_to = $picks1;
+			$players_from =  $players2;
+			$picks_from = $picks2;
+		}
+		
+		$trades[$revisequery[1]] = array(
+			'playerid' => $pid,
+			'tradeteamnum' => $numplayer,
+			'year' => $revisequery[1], 
+			'traded_to_team' => $traded_to_team,
+			'received_players' => $players_from,
+			'received_picks' => $picks_from,
+			'traded_from_team' => $traded_from_team,
+			'sent_players' => $players_to,
+			'sent_picks' => $picks_to,
+			'notes' => $revisequery[10],
+			'when' => $revisequery[11]
+		);
+	}	
+	
+	return $trades;
+	//return $playertrade;
+	
+}
+
+function format_pick($pick){
+	$explode = explode('.', $pick);
+	echo 'R'.$explode[1].'-'.$explode[2].', '.$explode[0];
+}
+
 function get_protections_player($pid){
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_protections where playerid = '$pid'", ARRAY_N);
@@ -867,6 +947,7 @@ function get_award($awardopt, $thekey){
 	return $awardinfo;
 }
 
+// get award data by player id
 function get_player_award($pid){
 	global $wpdb;
 	$getaward = $wpdb->get_results("select * from wp_awards WHERE pid = '$pid'", ARRAY_N);
@@ -887,6 +968,17 @@ function get_player_award($pid){
 	}
 	
 	return $awardinfo;
+}
+
+// get hall of fame inductees only
+function get_award_hall(){
+	global $wpdb;
+	$gethall = $wpdb->get_results("select * from wp_awards WHERE award = 'Hall of Fame Inductee'", ARRAY_N);
+	foreach ($gethall as $hall){
+		$hallids[$hall[2]] = $hall[8];
+	}
+	
+	return $hallids;
 }
 
 // gets the weekly stats from the player table

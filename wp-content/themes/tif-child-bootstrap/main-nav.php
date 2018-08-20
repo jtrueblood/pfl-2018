@@ -89,7 +89,7 @@
 												<li class="<?php ifbodyclass (252, 'active-link'); ?>"><a href="/protections">Protections By Year</a></li>
 												<li class="<?php ifbodyclass (281, 'active-link'); ?>"><a href="/protections-team">Protections By Team</a></li>
 												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2017">Standings By Year</a></li>
-												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>									
+												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>																			<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>	
 											</ul>
 									</li>
 									

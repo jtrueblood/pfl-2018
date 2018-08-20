@@ -345,6 +345,9 @@ div.helmet-crop {
 .teams-list {
   margin-top: 5px;
 }
+.hallleader {
+  border: 2px solid gold;
+}
 .uniform {
   background-color: #515151;
   text-align: center;

@@ -74,10 +74,18 @@ function get_leaders_page($array){
 		$games = $value['games'];
 		$ppg = number_format(($points / $games),1);
 		
+		$awards = get_player_award($value['pid']); 
+		$hall_of_fame = get_award_hall();
+		
+		if(in_array($value['pid'], $hall_of_fame)){
+			$checkhall = ' hallleader';
+		} else {
+			$checkhall = '';
+		}
 		
 		echo '<tr>
 			<td class="text-center">'.$rank.'</td>
-			<td class="text-center"><img src="https://posse-football.dev/wp-content/themes/tif-child-bootstrap/img/players/'.$value['pid'].'.jpg" class="leaders-image"></td>
+			<td class="text-center"><img src="https://posse-football.dev/wp-content/themes/tif-child-bootstrap/img/players/'.$value['pid'].'.jpg" class="leaders-image'.$checkhall.'"></td>
 			<td>
 			<a href="/player?id='.$value['pid'].'"><span class="text-semibold">'.$fname.' '.$lname.'</span></a>
 			</td>

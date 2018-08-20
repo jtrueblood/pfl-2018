@@ -23,7 +23,7 @@ foreach ($playersassoc as $key => $value){
 $randomize = array_rand($playersid);
 
 $randomplayer = $playersid[$randomize];
-//$randomplayer = '2004PalmQB';
+//$randomplayer = '2001TomlRB';
 
 $featuredplayer = $playersassoc[$randomplayer];
 $first = $featuredplayer[0];
@@ -134,6 +134,14 @@ get_header();
 								<div class="panel-body">
 									<?php printr($featuredplayer, 0); ?>
 								</div>
+								<div class="panel-body">
+									<p>Trade for Player</p>
+									<?php
+										$playerbytrade = get_trade_by_player($randomplayer);
+										printr($playerbytrade, 0);
+									?>
+								</div>
+								
 							</div>
 					</div>
 					
@@ -290,6 +298,23 @@ get_header();
 									<p>get_player_career_stats($pid);</p>
 							<?php $career = get_player_career_stats($randomplayer); 
 								printr($career, 0);
+							?>
+							
+								</div>
+							</div>
+					</div>
+					
+					
+					<div class="col-xs-12 col-sm-6 eq-box-sm">
+							<div class="panel panel-bordered panel-light">
+								<div class="panel-heading">
+									<h3 class="panel-title">Awards</h3>
+								</div>
+								
+								<div class="panel-body">
+									<p>get_player_award($pid);</p>
+							<?php $awards = get_player_award($randomplayer); 
+								printr($awards, 0);
 							?>
 							
 								</div>

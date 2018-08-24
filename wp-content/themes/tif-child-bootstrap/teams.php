@@ -16,6 +16,7 @@ $teamid = $_GET['id'];
 $year = date("Y");
 $team_all_ids = get_teams();
 $seasons = the_seasons();
+
 //printr($seasons, 0);
 
 foreach ($seasons as $year){
@@ -40,7 +41,18 @@ $totalloss = array_sum($loss);
 $gamesplayed = $totalwins + $totalloss;
 $totalwinper = $totalwins / $gamesplayed;
 
-// printr($totalwins, 1);
+
+// get hall of famers for this team.
+$hall = get_award('Hall of Fame Inductee', 2);
+
+foreach($hall as $key => $item){
+   $arr_hall[$item['team']][$key] = $item;
+}
+ksort($arr_hall, SORT_NUMERIC);
+
+$award_hall = $arr_hall[$teamid];
+
+
 ?>
 
 
@@ -75,6 +87,17 @@ $totalwinper = $totalwins / $gamesplayed;
 				</div>
 				<div class="panel-footer">
 				</div>
+				
+				<?php if(isset($award_hall)){ ?>
+				<div class="panel">
+					<div class="panel-heading">
+				    	<h3 class="panel-title">PFL Hall of Famers</h3>
+			    	</div>
+					<div class="panel-body text-center">
+						<?php printr($award_hall, 0);?>
+					</div>
+				</div>
+				<?php } ?>
 				
 			</div>
 			

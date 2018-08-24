@@ -325,6 +325,8 @@ function array_flatten($array) {
 
 
 
+
+
 function pointsleaders($theposition){
 		$i = 0; 
 		
@@ -809,8 +811,7 @@ function get_trade_by_player($pid){
 			$picks_to = $picks2;
 			$players_from =  $players1;
 			$picks_from = $picks1;
-		}
-		if(in_array($pid, $players2)){
+		} else {
 			$numplayer = 2;
 			$traded_from_team = $revisequery[2];
 			$traded_to_team = $revisequery[6];
@@ -921,6 +922,65 @@ function get_standings_by_team($year, $team){
 	return $standings;
 }
 
+// returns just week 15 playoff games
+function get_playoffs(){
+	
+	global $wpdb;
+	$getplayoffs = $wpdb->get_results("select * from wp_playoffs WHERE week = '15'", ARRAY_N);
+	
+	foreach ($getplayoffs as $revisequery){
+		$playoffs[] = array(
+			'playoffid' => $revisequery[0], 
+			'year' => $revisequery[1], 
+			'week' => $revisequery[2], 
+			'playerid' => $revisequery[3],  
+			'score' => $revisequery[4],
+			'team' => $revisequery[5],
+			'versus' => $revisequery[6],
+			'overtime' => $revisequery[7],
+			'result' => $revisequery[8]
+		);
+	}
+	
+	return $playoffs;
+}
+
+// returns just team info for playoffs and possebowl
+function get_postseason(){
+	
+	global $wpdb;
+	$getplayoffs = $wpdb->get_results("select * from wp_playoffs", ARRAY_N);
+	
+	foreach ($getplayoffs as $revisequery){
+		$playoffs[] = array(
+			'playoffid' => $revisequery[0], 
+			'year' => $revisequery[1], 
+			'week' => $revisequery[2], 
+			'playerid' => $revisequery[3],  
+			'score' => $revisequery[4],
+			'team' => $revisequery[5],
+			'versus' => $revisequery[6],
+			'overtime' => $revisequery[7],
+			'result' => $revisequery[8]
+		);
+	}
+	
+	return $playoffs;
+}
+
+
+function get_playoff_points_by_team_year($year, $team, $week){
+	global $wpdb;
+	$get = $wpdb->get_results("select points from wp_playoffs where week = '$week' && team = '$team' && year='$year'", ARRAY_N);
+	
+	foreach ($get as $value){
+		$sumval[] = $value[0];
+	}
+	if(isset($sumval)){
+		$output = array_sum($sumval);
+	}
+	return $output;
+}
 
 
 function get_award($awardopt, $thekey){
@@ -940,7 +1000,7 @@ function get_award($awardopt, $thekey){
 			'position' => $revisequery[6],
 			'owner' => $revisequery[7],
 			'pid' => $revisequery[8],
-			'gamepoints' => $revisequery[9]
+			'gamepoints' => $revisequery[9],
 		);
 	}
 	
@@ -1099,7 +1159,8 @@ function playerplayoffs($pid){
 			'points' => $revisequery[4],
 			'team' => $revisequery[5],
 			'versus' => $revisequery[6],
-			'overtime' => $revisequery[7]
+			'overtime' => $revisequery[7],
+			'result' => $revisequery[8]
 		);
 	}
 	

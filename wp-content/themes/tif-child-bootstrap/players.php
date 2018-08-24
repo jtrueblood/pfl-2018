@@ -104,22 +104,17 @@ if(!empty( $careerdata['years'])){
 if (!empty($playoffsplayer)){
 	foreach ($playoffsplayer as $getplay){
 		$playpts[] = $getplay['points'];
-
-		if ($getplay['year'] == $checkyear){
-			$plwins++;
-		}
+		$plwinarr[] = $getplay['result'];
 		$checkyear = $getplay['year'];
 	}
 }
 
-
-
+//printr($playoffsplayer, 0);
 
 if($playpts > 0){
 	$totalplayoffpts = array_sum($playpts);
 	$playoffgames = count($playpts);
 	$playppg = number_format($totalplayoffpts / $playoffgames, 1);
-	
 }
 
 $champions = get_champions();
@@ -162,10 +157,10 @@ if ($counttitles > 0){
 	$titlewon = 1;
 }
 
-$pswins = $plwins + $counttitles;
+if(isset($plwinarr)){
+	$pswins = array_sum($plwinarr);
+}
 $psloss = $playoffgames - $pswins;
-
-// printr($pb_apps, 0);
 
 $awards = get_player_award($playerid);
 $wonaward = 0;
@@ -282,11 +277,22 @@ if(!empty($protections)){
 	}
 }
 
+
+// get first and last player years in an array
+$first = $playseasons[0];
+$last = end($playseasons);
+while ($first != ($last + 1)){
+	$buildtheyears[] = $first;
+	$first++;
+} 
+
 // Trades by player
 $playerbytrade = get_trade_by_player($playerid);
 										
 
-foreach($playseasons as $season ){
+foreach($buildtheyears as $season ){
+	
+	$teams = $get_player_teams[$season];
 	
 	if($season == $rookieyear){
 		$get_rook = $season;
@@ -316,9 +322,15 @@ foreach($playseasons as $season ){
 		}
 	}
 	
+	if(empty($teams)){
+		$empty = 'Did Not Play';
+	} else {
+		$empty = '';
+	}
+	
 	$career_timeline[$season] = array(
 		'rookie' => $get_rook,
-		'teams' => $get_player_teams[$season],
+		'teams' => $teams,
 		'pfltitle' => $get_champs,
 		'leader' => $get_leaders,
 		'awards' => $get_awards,
@@ -326,7 +338,8 @@ foreach($playseasons as $season ){
 		'protected' => $build_protect[$season],
 		'traded' => $playerbytrade[$season],
 		'careerhigh' => '',
-		'retired' => $get_retired
+		'retired' => $get_retired,
+		'dnp' => $empty
 	);
 	
 	$get_rook = '';
@@ -336,6 +349,7 @@ foreach($playseasons as $season ){
 }
 
 
+//printr($playseasons, 0);
 
 //printr($career_timeline, 0);
 
@@ -807,12 +821,7 @@ foreach($playseasons as $season ){
 														<?php 
 														
  //														printr($playseasons, 0);
-															$first = $playseasons[0];
-															$last = end($playseasons);
-															while ($first != ($last + 1)){
-																$buildtheyears[] = $first;
-																$first++;
-															} 
+															
 															
 															if(isset($buildtheyears)){
 																foreach ($buildtheyears as $printyear) {
@@ -1179,31 +1188,50 @@ foreach($playseasons as $season ){
 							    </div>
 							    
 							    <?php } 
-								    
+								 
+								// free agents
+								if (empty($value['dnp'])){
+									if(empty($value['drafted'])){
+										if(empty($value['protected'])){
+											include('inc/player_timeline_free_agent.php');
+										}
+									}
+								}
+								 
+								// rookie season    
 								if ($count == 0){
-								?>
-								
-								 <div class="timeline-entry">
-							        <div class="timeline-label">
-							            Rookie Season
+								echo '<div class="timeline-entry">
+									<div class="timeline-label no-label">
+							        	<p class="protected-by"><span class="text-bold">Rookie Season</p>
 							        </div>
-							    </div>
-							    
-							    <?php } 
-							   
- 
+							    </div>';							    
+							    } 
+								 
+								// did not play    
+								if (!empty($value['dnp'])){
+									include('inc/player_timeline_dnp.php');
+								}    
+								
+								// protected (order based on season or preseason trade)
+								if ($value['traded']['when'] == ''){
+									include('inc/player_timeline_protected.php');
+								}
+								
+								// traded player									
 							    if (isset($value['traded'])){
-								
-								$tradedto = $teamids[$value['traded']['traded_to_team']];
-								$tradedfrom = $teamids[$value['traded']['traded_from_team']];
-								$when = $value['traded']['when'];
-								$alongwith_players = $value['traded']['received_players'];
-								$alongwith_picks = $value['traded']['received_picks'];
-								$sent_players = $value['traded']['sent_players'];
-								$sent_picks = $value['traded']['sent_picks'];
-								
-								$a_picks = implode( ", ", $alongwith_picks);
-								$s_picks = implode( ", ", $sent_picks);
+								    
+									$tradedto = $teamids[$value['traded']['traded_to_team']];
+									$tradedfrom = $teamids[$value['traded']['traded_from_team']];
+									$when = $value['traded']['when'];
+									$alongwith_players = $value['traded']['received_players'];
+									$alongwith_picks = $value['traded']['received_picks'];
+									$sent_players = $value['traded']['sent_players'];
+									$sent_picks = $value['traded']['sent_picks'];
+									$notes = $value['traded']['notes'];
+									
+									$a_picks = implode( ", ", $alongwith_picks);
+									$s_picks = implode( ", ", $sent_picks);
+	
 								?>
 								
 								 <div class="timeline-entry">
@@ -1214,27 +1242,17 @@ foreach($playseasons as $season ){
 								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_to_team'];?></span> &mdash; Get <?php echo implode( ", ", $alongwith_players); ?> <?php echo $a_picks; ?> </p> 
 										<p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_from_team'];?></span> &mdash; Get <?php echo implode( ", ", $sent_players); ?> <?php echo $s_picks; ?>  
 								        </p>
+								         <p class="protected-by"><?php echo $notes; ?> </p>
 							        </div>
 							    </div>
 							    
 							    <?php } 
 							    
-							    
-							    
-							    if (isset($value['protected'])){
-								?>
-								
-								 <div class="timeline-entry">
-									 
-							        <div class="timeline-label no-label">
-							            <p class="protected-by">Protected by <span class="text-bold"><?php echo $value['protected']; ?></span></p>
-							        </div>
-							    </div>
-							    
-							    <?php } 
-								    
-								    
-								    
+							    if ($value['traded']['when'] == 'Preseason'){
+									include('inc/player_timeline_protected.php');
+								}
+									
+  
 								if(!empty($value['awards'])){ ?>
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
@@ -1279,7 +1297,7 @@ foreach($playseasons as $season ){
 							            <div class="timeline-time"><?php $getaward['year']; ?></div>
 							        </div>
 							        <div class="timeline-label">
-							            <?php echo '<span class="text-bold">PFL CHAMPION</span>'; ?>
+							            <?php echo '<span class="text-bold">PFL CHAMPION </span>'.$teamids[$justchamps[$key]];?>
 							        </div>
 						    	</div>
 								<?php } 
@@ -1290,9 +1308,9 @@ foreach($playseasons as $season ){
 <!-- 						 HOF and Retired can be outside of foreach career_timeline loop -->
 								
 								<?php if($year_retired > 3){ ?>
-								 <div class="timeline-entry">
-							        <div class="timeline-label">
-							            Retired from PFL
+								 <div class="timeline-entry" style="margin-top:50px;">
+							        <div class="timeline-label no-label">
+							            <span class="text-bold">Retired</span> from PFL
 							        </div>
 							    </div>
 								<?php }

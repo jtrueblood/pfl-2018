@@ -11,7 +11,7 @@
 	$season = date("Y");
 	
 	$mydb = new wpdb('root','root','pflmicro','localhost');
-	$getchampionstable = $mydb->get_results("select * from champions", ARRAY_N);
+	$getchampionstable = $wpdb->get_results("select * from wp_champions", ARRAY_N);
 	
 	$buildchamps = array();
 	foreach ($getchampionstable as $revisequery){
@@ -29,7 +29,7 @@
 	}
 
 
-	$getpbmvp = $mydb->get_results("select * from awards WHERE award = 'Posse Bowl MVP'", ARRAY_N);
+	$getpbmvp = $wpdb->get_results("select * from wp_awards WHERE award = 'Posse Bowl MVP'", ARRAY_N);
 	
 	foreach ($getpbmvp as $revisequery){
 		$pbmvp[] = array(
@@ -49,8 +49,8 @@
 		
 	}
 	
-	$getplayoffs = $mydb->get_results("select * from playoffs WHERE week = '16'", ARRAY_N);
-	
+	$getplayoffs = $wpdb->get_results("select * from wp_playoffs WHERE week = '16'", ARRAY_N);
+
 	foreach ($getplayoffs as $revisequery){
 		$playoffs[] = array(
 			$revisequery[0], 

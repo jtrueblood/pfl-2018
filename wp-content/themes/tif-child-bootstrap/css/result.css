@@ -339,18 +339,22 @@ div.helmet-crop {
   background-repeat: no-repeat;
 }
 .team-helmet.widget-header {
-  background-color: #ddd;
-  min-height: 100px;
+  background-color: #58585A;
+  background-position: left top;
+  background-repeat: no-repeat;
+  background-size: auto;
 }
 .teams-list {
   margin-top: 5px;
 }
 img .leaders-image {
-  max-height: 50px;
+  height: 50px !important;
+  width: 50px !important;
   border: 2px solid #efefef;
 }
-img .hallleader {
-  border: 2px double gold;
+span.hallleader {
+  color: orange;
+  font-weight: 700;
 }
 .uniform {
   background-color: #515151;
@@ -418,4 +422,73 @@ img .hallleader {
   border-top: 1px solid #3b4146;
   padding-top: 5px;
   display: block;
+}
+.team-hel-panel {
+  padding-bottom: 20px;
+}
+img.widget-bg.team-helmet-image {
+  min-width: 0;
+  min-height: 0;
+  height: 125px;
+  left: 10px;
+}
+.hall-for-teams {
+  text-align: left;
+  margin-bottom: 5px;
+}
+.hall-for-teams h4 {
+  margin-bottom: 0px;
+}
+.panel-body.probowl {
+  max-height: 500px;
+  overflow-y: scroll;
+  margin: 5px;
+}
+.panel-body.probowl .pro-rows {
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 5px;
+}
+.panel-body.probowl .pro-rows h5 {
+  margin: 0;
+}
+.panel-body.probowl .pro-rows p {
+  margin-bottom: 3px;
+}
+.widget-bg img {
+  width: 50%;
+}
+.champion-team {
+  display: block;
+  clear: both;
+  position: absolute;
+  top: -15px;
+  right: 185px;
+  z-index: 333;
+}
+.champion-team .winner-winner {
+  text-align: center;
+  background-image: url('../img/champ-banner.png');
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 10px 10px 0;
+  display: block;
+  width: 80px;
+  min-height: 130px;
+  float: right;
+}
+.champion-team .winner-winner h4 {
+  color: #fff;
+  margin-bottom: 15px;
+}
+.champion-team .winner-winner p {
+  color: #fff;
+  line-height: 1em;
+}
+.panel.season-standing {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+.awards-team {
+  margin-bottom: 20px;
 }

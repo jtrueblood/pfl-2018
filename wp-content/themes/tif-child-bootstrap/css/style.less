@@ -46,6 +46,10 @@ body {
 	}
 }
 
+.text-orange {
+	//color: orange;
+}
+
 #page-title {
 	h1 {
 		padding-left: 10px;
@@ -423,8 +427,11 @@ div.helmet-crop {
 	//background: -moz-linear-gradient(left, rgba(0,0,0,0.65) 0%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
 	//background: -webkit-linear-gradient(left, rgba(0,0,0,0.65) 0%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
 	//background: linear-gradient(to right, rgba(0,0,0,0.65) 0%,rgba(255,255,255,1) 100%); 
-	background-color: #ddd;
-	min-height: 100px;
+	// 	background-color: rgba(0, 0, 0, 0.2);
+	background-color: #58585A;
+	background-position: left top;
+	background-repeat: no-repeat;
+	background-size: auto;
 }
 
 .teams-list {
@@ -433,12 +440,16 @@ div.helmet-crop {
 
 img {
 	.leaders-image {
-		max-height: 50px;
+		height: 50px !important;
+		width: 50px !important;
 		border: 2px solid #efefef;
 	}
-	.hallleader {
-		border: 2px double gold;
-	}
+	
+}
+
+span.hallleader {
+	color: orange;
+	font-weight: 700;
 }
 
 .uniform {
@@ -512,4 +523,88 @@ img {
 // 	margin-top: 15px;
 	padding-top: 5px;
 	display: block;
+}
+
+.team-hel-panel {
+	padding-bottom: 20px;
+}
+
+img.widget-bg.team-helmet-image {
+	min-width: 0;     
+	min-height: 0;
+	height: 125px;
+	left: 10px;
+}
+
+.hall-for-teams {
+	text-align: left;
+	margin-bottom: 5px;
+// 	border-bottom: 1px solid #3b4146;
+	h4 {
+		margin-bottom: 0px;
+	}
+}
+
+.panel-body.probowl {
+	max-height: 500px;
+	overflow-y: scroll; 
+	margin: 5px;
+	.pro-rows {
+		text-align: left;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		padding: 5px;
+		h5 {
+			margin: 0;
+		}
+		p {
+			margin-bottom: 3px; 
+		}
+	
+	}
+}
+
+.widget-bg {
+	img {
+		width: 50%;
+	}
+}
+
+.champion-team {
+	display: block;
+	clear: both;
+	position: absolute;
+	top: -15px;
+	right: 185px;
+	z-index: 333;
+			
+	.winner-winner {
+// 		border: 1px solid rgba(0, 0, 0, 0.2);
+// 		background-color: rgba(0, 0, 0, 0.1);
+		text-align: center;
+		background-image: url('../img/champ-banner.png'); 
+		background-position: center bottom;
+		background-repeat: no-repeat;
+		background-size: contain;
+		padding: 10px 10px 0;
+		display: block;
+		width: 80px;
+		min-height: 130px;
+		float: right;
+		h4 {
+			color: #fff;
+			margin-bottom: 15px;
+		}
+		p {
+			color: #fff;
+			line-height: 1em;
+		}
+	}
+}
+
+.panel.season-standing {
+	background-color: rgba(256, 256, 256, 0.9);
+}
+
+.awards-team {
+	margin-bottom: 20px;
 }

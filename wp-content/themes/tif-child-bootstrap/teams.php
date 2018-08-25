@@ -16,13 +16,15 @@ $teamid = $_GET['id'];
 $year = date("Y");
 $team_all_ids = get_teams();
 $seasons = the_seasons();
+$players = get_players_assoc();
+$champs = get_champions();
+//$player = get_player_data('2004BreeQB');
+//$player = get_raw_player_data_team('2004BreeQB', $teamid);
 
-//printr($seasons, 0);
 
 foreach ($seasons as $year){
 	$stand[$year] = get_standings_by_team($year, $teamid); 
 }
-
 
 foreach ($stand as $key => $value){
 	$diffo = $pts - $value[0]['ptsvs'];
@@ -44,190 +46,101 @@ $totalwinper = $totalwins / $gamesplayed;
 
 // get hall of famers for this team.
 $hall = get_award('Hall of Fame Inductee', 2);
-
 foreach($hall as $key => $item){
    $arr_hall[$item['team']][$key] = $item;
 }
-ksort($arr_hall, SORT_NUMERIC);
+if(isset($arr_hall)){
+	ksort($arr_hall, SORT_NUMERIC);
+	$award_hall = $arr_hall[$teamid];
+}
 
-$award_hall = $arr_hall[$teamid];
+// get all player awards by team
+$teamawards = get_award_team($teamid);
+if(isset($teamawards)){
+foreach($teamawards as $key => $item){
+   $arr_taward[$item['award']][$key] = $item;
+}
 
+	ksort($arr_taward, SORT_NUMERIC);
+}
+
+// build leaders by team
+$playersall = get_players_assoc();
+//$careerstats = get_player_career_stats_team('1994ElamPK', $teamid);
+//printr($playersall, 1);
+
+foreach ($playersall as $key => $val){
+	$careerstats_team[] = get_player_career_stats_team($key, $teamid);
+}
+//printr($careerstats_team, 1);
 
 ?>
 
-
 <!--CONTENT CONTAINER-->
-<div class="boxed add-to-top">
+<div class="boxed">
+	
 
 <!--CONTENT CONTAINER-->
 <!--===================================================-->
 <div id="content-container">
-	
+	<!-- Championship banners -->
+    <?php include_once('inc/team_championships.php');?>
 
 	<!--Page content-->
 	<!--===================================================-->
 	<div id="page-content">
 		
+		
+		
 		<div class="row">
-
-		<!-- HELMET AND NAME -->
+		
+		<!-- LEFT COLUMN -->
+		
 		<div class="col-xs-24 col-sm-6 left-column">
 			
-			<div class="panel">
-				<div class="team-helmet widget-header">
-					<img src="<?php echo get_stylesheet_directory_uri();?>/img/<?php echo $teamid;?>-bar.png" class="widget-bg img-responsive">
-
-				</div>
-				<div class="text-center">
-					<?php 
-						echo '<h2>'.$team_all_ids[$teamid]['team'].'</h2>';
-						echo '<h5>'.$team_all_ids[$teamid]['owner'].'</h5>'; 
-						echo '<h4><span class="text-thin">Record:</span> '.$totalwins.' - '.$totalloss.'</h4>'; 
-						echo '<h4><span class="text-thin">Win %:</span> '.number_format($totalwinper, 3).'</h4>'; ?>
-				</div>
-				<div class="panel-footer">
-				</div>
+			<?php include_once('inc/team_helmet_name.php');?>
 				
-				<?php if(isset($award_hall)){ ?>
-				<div class="panel">
-					<div class="panel-heading">
-				    	<h3 class="panel-title">PFL Hall of Famers</h3>
-			    	</div>
-					<div class="panel-body text-center">
-						<?php printr($award_hall, 0);?>
-					</div>
-				</div>
-				<?php } ?>
-				
-			</div>
+			<?php include_once('inc/team_hall.php');?>	
+			
+			<?php include_once('inc/team_awards.php');?>	
+			
 			
 		</div>
 		
 		
-		<!-- STANDFINGS -->
+		<!-- CENTER COLUMN -->
+		
 		<div class="col-xs-24 col-sm-12">
+		
 			
-			<div class="panel">
-				<div class="panel-heading">
-			    	<h3 class="panel-title">Standings &mdash; By Season</h3>
-		    	</div>
-				<div class="panel-body text-center">
-					
-					<div class="table-responsive">
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th class="text-center">Year</th>
-									<th class="text-center">Record</th>
-									<th class="text-center">Points</th>
-									<th class="text-center">Point Dif</th>
-									<th class="text-center">Back</th>
-									<th class="text-center">Div Record</th>
-									<th class="text-center">Division</th>
-									<th class="hidden-xs">Seed</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-									foreach ($stand as $key => $value){
-										$win = $value[0]['win'];
-										$loss = $value[0]['loss'];
-										$pts = $value[0]['pts'];
-										$diff = $pts - $value[0]['ptsvs'];
-										$gb = $value[0]['gb'];
-										$divw = $value[0]['divwin'];
-										$divloss = $value[0]['divloss'];
-										$division = $value[0]['division'];
-										$seed = $value[0]['seed'];
-										
-										if($pts > 0){
-											$standtable .=  '<tr><td class="text-bold">'.$key.'</td>';
-											
-											if($win == $highwins){
-												$standtable .=  '<td><span class="text-bold text-primary">'.$win.'</span> - '.$loss.'</td>';
-											} else {
-												$standtable .=  '<td>'.$win.' - '.$loss.'</td>';
-											}
-																	
-											if ($pts == $besthigh){
-												$standtable .= '<td class="text-bold text-primary">* '.$pts.' *</td>';
-											} else {
-												$standtable .= '<td>'.$pts.'</td>';
-											}
-											
-											$standtable .=  '<td>'.$diff.'</td>';
-											$standtable .=  '<td>'.$gb.'</td>';
-											
-											if(($divw + $divloss) != 0){
-												$standtable .=  '<td>'.$divw.' - '.$divloss.'</td>';
-											} else {
-												$standtable .=  '<td> - </td>';
-											}
-											
-											if ($gb == 0 && ($seed == 1 OR $seed == 2)){
-												$standtable .=  '<td class="text-bold text-primary">'.$division.'</td>';
-											} else {
-												$standtable .=  '<td>'.$division.'</td>';
-											}
-											
-											if($seed != 0){
-												$standtable .=  '<td>'.$seed.'</td></tr>';
-											} else {
-												$standtable .=  '<td> - </td></tr>';
-											}
-										}
-									}
-									echo $standtable;
-								?>
-							</tbody>
-						</table>
-					
+			<!-- Standings -->
+			<?php include_once('inc/team_standings.php');?>
+			
+			<div class="row">
+				<div class="col-xs-24 col-sm-12">
+					<?php include_once('inc/team_probowl_selections.php');?>
 				</div>
+				
+				<div class="col-xs-24 col-sm-12">
+					<!-- hold -->
 				</div>
+			
 			</div>
-			
+						
 		</div>
 	
 	
 		<!-- SELECT DROPDOWN -->
 		<div class="hidden-xs hidden-sm col-md-6">
 				
+				<?php include_once('inc/teams_select.php');?>
 				
-				<div class="panel">
-					<div class="panel-body">
-
-						<!-- Default choosen -->
-						<!--===================================================-->
-						<div class="row">
+				<?php include_once('inc/team_leaders.php');?>
 						
-						<div class="col-xs-24 col-sm-18">
-							<select data-placeholder="Select A Team..." class="chzn-select" style="width:100%;" tabindex="2" id="teamDrop">
-								<option value=""></option>
-								
-								<?php 	
-								foreach ($team_all_ids as $key => $value){
-									$printselect .= '<option value="/teams/?id='.$key.'">'.$value['team'].'</option>';
-								}
-								echo $printselect;
-								?>
-							</select>
-							</div>
-							<div class="col-xs-24 col-sm-6">
-								<button class="btn btn-warning" id="teamSelect">Select</button>
-							</div>
-						</div>
-						<!--===================================================-->
-
-					</div>
-				</div>
-		
+				
+				
 		</div>
-		
-		
-		
-		
-		
-		
+
 		
 	</div>
 	<!--===================================================-->

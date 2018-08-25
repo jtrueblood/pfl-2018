@@ -1007,6 +1007,31 @@ function get_award($awardopt, $thekey){
 	return $awardinfo;
 }
 
+function get_award_team($teamid){
+	global $wpdb;
+	$getaward = $wpdb->get_results("select * from wp_awards WHERE team = '$teamid'", ARRAY_N);
+	
+	// set the value of the key -- id = 0,  year = 2,  team = 5	
+	
+	foreach ($getaward as $key => $revisequery){
+		$awardteam[] = array(
+			'awardid' => $revisequery[0], 
+			'award' => $revisequery[1], 
+			'year' => $revisequery[2], 
+			'first' => $revisequery[3],  
+			'last' => $revisequery[4],
+			'team' => $revisequery[5],
+			'position' => $revisequery[6],
+			'owner' => $revisequery[7],
+			'pid' => $revisequery[8],
+			'gamepoints' => $revisequery[9],
+		);
+	}
+	
+	return $awardteam;
+}
+
+
 // get award data by player id
 function get_player_award($pid){
 	global $wpdb;
@@ -1045,6 +1070,30 @@ function get_award_hall(){
 function get_player_data($pid) {
 	global $wpdb;
 	$getplayer = $wpdb->get_results("select * from $pid", ARRAY_N);
+	
+	foreach ($getplayer as $key => $revisequery){
+		$playerstats[$revisequery[0]] = array( 
+			'weekids' => $revisequery[0],
+			'year' => $revisequery[1], 
+			'week' => $revisequery[2], 
+			'points' => $revisequery[3],  
+			'team' => $revisequery[4],
+			'versus' => $revisequery[5],
+			'playerid' => $revisequery[6],
+			'win_loss' => $revisequery[7],
+			'home_away' => $revisequery[8],
+			'location' => $revisequery[9]
+		);
+	}
+	
+	return $playerstats;
+	
+}
+
+// gets the weekly stats from the player table
+function get_raw_player_data_team($pid, $team) {
+	global $wpdb;
+	$getplayer = $wpdb->get_results("select * from $pid where team = '$team'", ARRAY_N);
 	
 	foreach ($getplayer as $key => $revisequery){
 		$playerstats[$revisequery[0]] = array( 
@@ -1434,6 +1483,52 @@ function get_player_career_stats($pid){
 }
 
 
+
+// gets the cumulative career stats from the player table for a single team only
+function get_player_career_stats_team($pid, $team){
+	
+	$data_array = get_raw_player_data_team($pid, $team);
+	
+	if(!empty($data_array)){
+		foreach ($data_array as $get){
+			$pointsarray[] = $get['points'];
+			$yeararray[] = $get['year'];
+			$gamearray[] = $get['win_loss'];
+	
+		}
+		
+		
+		$indyears = array_unique($yeararray);
+		
+		$points = array_sum($pointsarray);
+		$games = count($data_array);
+		$seasons = count($indyears);
+		$ppg = round(($points / $games), 1);
+		$high = max($pointsarray);
+		$low = min($pointsarray);
+		$wins = array_sum($gamearray);
+		$loss = $games - $wins; 
+		
+		$carrer_stats = array(
+			'pid' => $pid,
+			'games' => $games,
+			'points' => $points,
+			'ppg' => $ppg,
+			'seasons' => $seasons,
+			'high' => $high,
+			'low' => $low,
+			'wins' => $wins,
+			'loss' => $loss,
+			'years' => $indyears
+			
+		);
+		
+		return $carrer_stats;
+	}
+}
+
+
+
 // gets just the win=1 loss=0 for a particular team by week
 function just_team_record($team, $week){
 	$get = team_record($team);
@@ -1567,6 +1662,30 @@ function probowl_boxscores_player($pid){
 }
 
 
+// get probowl by player 
+function probowl_teams_player($teamid){
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_probowlbox where team = '$teamid'", ARRAY_N);
+	
+	foreach ($get as $revisequery){
+		$probowlbox[$revisequery[0]] = array(
+			'id' => $revisequery[0], 
+			'playerid' => $revisequery[1], 
+			'position' => $revisequery[2], 
+			'team' => $revisequery[3],  
+			'league' => $revisequery[4],
+			'year' => $revisequery[5],
+			'points' => $revisequery[6],
+			'starter' => $revisequery[7],
+			'pointsused' => $revisequery[8]
+		);
+	}
+	
+	return $probowlbox;
+	
+}
+
+
 function get_player_teams_season($pid){
 	$player = get_player_career_stats($pid);
 	$years = $player['years'];
@@ -1631,7 +1750,7 @@ function insert_wp_career_leaders($pid){
  
 }
 
-// get player carrer stats for one season only inserts when page is loaded (homepage, playerpage)
+// get player career stats for one season only inserts when page is loaded (homepage, playerpage)
 
 function insert_wp_season_leaders($pid){
 	$player = get_player_career_stats($pid);
@@ -1715,6 +1834,8 @@ function get_allleaders(){
 return $leaders_all;
 
 }
+
+
 
 
 function get_number_ones(){
@@ -2021,7 +2142,8 @@ function get_player_name($playerid){
 	$values = get_players_assoc();
 	$first = $values[$playerid][0];
 	$last = $values[$playerid][1];
-	$name = array('first' => $first, 'last' => $last);
+	$pos = $values[$playerid][2];
+	$name = array('first' => $first, 'last' => $last, 'pos' => $pos);
 	return $name;
 }
 

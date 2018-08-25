@@ -85,9 +85,10 @@ function get_leaders_page($array){
 		
 		echo '<tr>
 			<td class="text-center">'.$rank.'</td>
-			<td class="text-center"><img src="https://posse-football.dev/wp-content/themes/tif-child-bootstrap/img/players/'.$value['pid'].'.jpg" class="leaders-image'.$checkhall.'"></td>
+			<td class="text-center">
+			</td>
 			<td>
-			<a href="/player?id='.$value['pid'].'"><span class="text-semibold">'.$fname.' '.$lname.'</span></a>
+			<a href="/player?id='.$value['pid'].'"><span class="text-semibold '.$checkhall.'">'.$fname.' '.$lname.'</span></a>
 			</td>
 			<td class="text-center"><span class="text-semibold">'.number_format($points, 0).'</span></td>
 			<td class="text-center"><span class="text-semibold">'.$games.'</span></td>

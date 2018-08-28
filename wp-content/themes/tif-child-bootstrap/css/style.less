@@ -181,6 +181,16 @@ body.page-template-builds #content-container, body.page-template-tables #content
 	min-height: 175px;
 }
 
+// career leaders page only
+.page-id-62 {
+	.panel {
+		min-height: 650px;
+	}
+	.dataTables_info {
+		text-align: center; 
+	}
+}
+
 .text-white {
 	color: #ffffff;
 }
@@ -352,7 +362,8 @@ h4.protection-season {
 				margin-left: 15px;
 			}
 			img {
-				border-radius: 40px;
+// 				border-radius: 40px;
+				max-width: 50px;
 			}
 			&.QB {
 				border-left: 5px solid #5aaedc;
@@ -371,8 +382,8 @@ h4.protection-season {
 }
 
 .timeline {
-	margin-top: 30px;
-	margin-left: -15px;
+	//margin-top: 30px;
+	margin-left: -20px;
 }
 .playoff-wrapper {
 	width: 100%;
@@ -389,6 +400,7 @@ h4.protection-season {
 .timeline-label {
 	padding: 15px !important;
 	font-size: 15px;
+	margin-bottom: 10px;
 	&.no-label {
 		background-color: transparent !important;
 		border: none !important;
@@ -403,17 +415,24 @@ h4.protection-season {
 	p {
 		margin-bottom: 0;
 	}
-	.protected-by {
+	.protected-by, .tl-note {
 		font-size: 12px;
 	}
 }
 .timeline-icon:empty {
-	margin-top: -20px !important;
+	margin-top: -23px !important;
 }
 .panel .timeline-label {
 	border-radius: 5px;
 }
 
+.timeline-element {
+	margin: 0 0 0 90px;
+	.tl-note {
+		font-size: 12px;
+		margin-bottom: 0;
+	}
+}
 
 div.helmet-crop {
 	width: 50px;
@@ -518,6 +537,16 @@ span.hallleader {
 		float: right;
 	}
 }
+.champ-brack-box {
+	h3 {
+		margin-top: 108px;
+		text-align: center;
+	}
+	h4 {
+		text-align: center;
+	}
+}
+
 .location-box {
 	border-top: 1px solid #3b4146;
 // 	margin-top: 15px;
@@ -546,8 +575,8 @@ img.widget-bg.team-helmet-image {
 }
 
 .panel-body.probowl {
-	max-height: 500px;
-	overflow-y: scroll; 
+	//max-height: 600px;
+	//overflow-y: scroll; 
 	margin: 5px;
 	.pro-rows {
 		text-align: left;
@@ -606,5 +635,21 @@ img.widget-bg.team-helmet-image {
 }
 
 .awards-team {
-	margin-bottom: 20px;
+	//margin-bottom: 20px;
 }
+
+.timeline-time {
+	margin-left: 70px;
+	font-weight: 800;
+	font-size: 14px !important;
+	color: #5fa2dd !important;
+	margin-top: 10px !important;
+}
+.timeline-icon.val0 {
+	display: none;
+}
+
+.font-italic {
+	font-style: italic !important;
+}
+

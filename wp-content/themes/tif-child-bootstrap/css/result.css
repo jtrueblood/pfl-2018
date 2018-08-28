@@ -121,6 +121,12 @@ body.page-template-tables #content-container {
 .page-id-70 .widget-header {
   min-height: 175px;
 }
+.page-id-62 .panel {
+  min-height: 650px;
+}
+.page-id-62 .dataTables_info {
+  text-align: center;
+}
 .text-white {
   color: #ffffff;
 }
@@ -275,7 +281,7 @@ h4.protection-season {
   margin-left: 15px;
 }
 .protections .panel .panel-body img {
-  border-radius: 40px;
+  max-width: 50px;
 }
 .protections .panel .panel-body.QB {
   border-left: 5px solid #5aaedc;
@@ -290,8 +296,7 @@ h4.protection-season {
   border-left: 5px solid #995b92;
 }
 .timeline {
-  margin-top: 30px;
-  margin-left: -15px;
+  margin-left: -20px;
 }
 .playoff-wrapper {
   width: 100%;
@@ -308,6 +313,7 @@ h4.protection-season {
 .timeline-label {
   padding: 15px !important;
   font-size: 15px;
+  margin-bottom: 10px;
 }
 .timeline-label.no-label {
   background-color: transparent !important;
@@ -323,14 +329,22 @@ h4.protection-season {
 .timeline-label p {
   margin-bottom: 0;
 }
-.timeline-label .protected-by {
+.timeline-label .protected-by,
+.timeline-label .tl-note {
   font-size: 12px;
 }
 .timeline-icon:empty {
-  margin-top: -20px !important;
+  margin-top: -23px !important;
 }
 .panel .timeline-label {
   border-radius: 5px;
+}
+.timeline-element {
+  margin: 0 0 0 90px;
+}
+.timeline-element .tl-note {
+  font-size: 12px;
+  margin-bottom: 0;
 }
 div.helmet-crop {
   width: 50px;
@@ -418,6 +432,13 @@ span.hallleader {
 .boxbrack .floatright {
   float: right;
 }
+.champ-brack-box h3 {
+  margin-top: 108px;
+  text-align: center;
+}
+.champ-brack-box h4 {
+  text-align: center;
+}
 .location-box {
   border-top: 1px solid #3b4146;
   padding-top: 5px;
@@ -440,8 +461,6 @@ img.widget-bg.team-helmet-image {
   margin-bottom: 0px;
 }
 .panel-body.probowl {
-  max-height: 500px;
-  overflow-y: scroll;
   margin: 5px;
 }
 .panel-body.probowl .pro-rows {
@@ -489,6 +508,16 @@ img.widget-bg.team-helmet-image {
 .panel.season-standing {
   background-color: rgba(255, 255, 255, 0.9);
 }
-.awards-team {
-  margin-bottom: 20px;
+.timeline-time {
+  margin-left: 70px;
+  font-weight: 800;
+  font-size: 14px !important;
+  color: #5fa2dd !important;
+  margin-top: 10px !important;
+}
+.timeline-icon.val0 {
+  display: none;
+}
+.font-italic {
+  font-style: italic !important;
 }

@@ -334,8 +334,14 @@ function linktoplayerpage($pid, $all){
 							
 							<div class="panel panel-bordered panel-dark">
 								<div class="panel-heading">
-									<div class="panel-control">
-										<em><small class="text-muted">Location: </small>'.$stadium.'</em>
+									<div class="panel-control">';
+// 										alter CMN stadium name based on year
+										if($stadium == 'Spankoni Center'){
+											if($year_sel <= 2004){
+												$stadium = 'The Gonad Bowl';
+											}
+										}
+										echo '<em><small class="text-muted">Location: </small>'.$stadium.'</em>
 									</div>
 							</div>';
 									

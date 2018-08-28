@@ -1953,14 +1953,15 @@ echo $printit;
 // function to return player data from MFL
 
 function get_mfl_player_details($mflid){
-	$year = 2017;
+
 	$lid = 38954;
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
-	 // CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=players&DETAILS=&SINCE=&PLAYERS=$mflid&JSON=1",
+	
+			
 	 
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_URL => "http://www58.myfantasyleague.com/2018/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
@@ -1974,6 +1975,7 @@ function get_mfl_player_details($mflid){
 	));
 	
 	$mflplayerinfo = curl_exec($curl);
+	
 	$err = curl_error($curl);
 	
 	curl_close($curl);
@@ -1986,7 +1988,9 @@ function get_mfl_player_details($mflid){
 	
 	$mflguy = json_decode($mflplayerinfo, true);
 	
+	
 	return $mflguy['players']['player'];
+	
 
 }
 

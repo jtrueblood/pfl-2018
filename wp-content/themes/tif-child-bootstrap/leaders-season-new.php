@@ -226,6 +226,93 @@ function insert_wp_number_ones_pk(){
 }
 insert_wp_number_ones_pk();
 
+
+
+// start PVQ calc
+foreach ($qb_leaders as $key => $val){
+	$qb_pvq_build[$val['id']] = $val['points'];
+	if($val['games'] > 7){
+		$qb_ppg_build[$val['id']] = $val['points'] / $val['games'];
+	}
+}
+$qb_tots = array_sum($qb_pvq_build);
+
+foreach ($rb_leaders as $key => $val){
+	$rb_pvq_build[$val['id']] = $val['points'];
+	if($val['games'] > 7){
+		$rb_ppg_build[$val['id']] = $val['points'] / $val['games'];
+	}
+}
+$rb_tots = array_sum($rb_pvq_build);
+
+foreach ($wr_leaders as $key => $val){
+	$wr_pvq_build[$val['id']] = $val['points'];
+	if($val['games'] > 7){
+		$wr_ppg_build[$val['id']] = $val['points'] / $val['games'];
+	}
+}
+$wr_tots = array_sum($wr_pvq_build);
+
+foreach ($pk_leaders as $key => $val){
+	$pk_pvq_build[$val['id']] = $val['points'];
+	if($val['games'] > 7){
+		$pk_ppg_build[$val['id']] = $val['points'] / $val['games'];
+	}
+}
+$pk_tots = array_sum($pk_pvq_build);
+
+$all_tots = array(
+	'QB' => $qb_tots,
+	'RB' => $rb_tots,
+	'WR' => $wr_tots,
+	'PK' => $pk_tots
+);
+	
+//$all_high  = array_sum($all_tots);	
+$all_high = max($all_tots);
+
+$qb_rat = $all_high / $qb_tots;
+$rb_rat = $all_high / $rb_tots;
+$wr_rat = $all_high / $wr_tots;
+$pk_rat = $all_high / $pk_tots;
+
+$all_rats = array(
+	'QB' => $qb_rat,
+	'RB' => $rb_rat,
+	'WR' => $wr_rat,
+	'PK' => $pk_rat
+);
+
+foreach($qb_pvq_build as $key => $val){
+	$qb_mults[$key] = $val * $qb_rat;
+}
+
+foreach($rb_pvq_build as $key => $val){
+	$rb_mults[$key] = $val * $rb_rat;
+}
+
+foreach($wr_pvq_build as $key => $val){
+	$wr_mults[$key] = $val * $wr_rat;
+}
+
+foreach($pk_pvq_build as $key => $val){
+	$pk_mults[$key] = $val * $pk_rat;
+}
+
+$merge_mults = array_merge($qb_mults, $rb_mults, $wr_mults, $pk_mults);
+arsort($merge_mults);
+
+$bestval = reset($merge_mults);
+
+foreach ($merge_mults as $key => $val){
+	$final_pvq[$key] = $val / $bestval;
+}
+// end PVQ calc
+
+// Calc PPG -- get arrays of positions player in loops above (at least 7 games played)
+$merge_ppgs = array_merge($qb_ppg_build, $rb_ppg_build, $wr_ppg_build, $pk_ppg_build);
+arsort($merge_ppgs);
+
 ?>
 <?php include_once('main-nav.php'); ?>
 <div class="boxed">
@@ -282,11 +369,133 @@ insert_wp_number_ones_pk();
 								<div class="col-xs-24 col-sm-6">
 									<button class="btn btn-warning" id="yearbtn">Submit</button>
 								</div>
+								
+								</div>
 							</div>
-							<!--===================================================-->
+								
+							</div>
+								
+							<!-- PVQ PANEL -->
+							<div class="panel">
+								<div class="panel-heading">
+									<h2 class="panel-title">Player Value Quotient</h2>
+									
+								</div>
+								<div class="panel-body">
+									<p class="">PVQ is a custom PFL Stat that looks at a player's individual value where scoring is leveled regardless of position.</p>
+									<div class="table-responsive">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Player</th>
+													<th>Pos</th>
+													<th>PVQ</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													
+													$rank = 1;
+													foreach ($final_pvq as $key => $getpvq){
+														
+														$keyname = substr($key, 0, -4);
+														$name = get_player_name($keyname);
+														$pos = substr($keyname, -2);
+														
+														$pvqscore = number_format($getpvq, 3, '.', '');
+														if ($rank == 1){
+															echo '<tr class="top-scorer">';
+														} else {
+															echo '<tr>';
+														}
+														echo '<td>'.$rank.'.</td>';
+														echo '<td><a href="/player/?id='.$name.'" class="btn-link">'.$name['first'].' '.$name['last'].'</a></td>';
+														echo '<td>'.$pos.'</td>';
+														echo '<td>'.$pvqscore.'</td>';
+														echo '</tr>';
+													
+														if($rank == 10){
+															break;
+														}
+														
+														$rank++;
+														
+													}
+
+													?>
+											</tbody>
+										</table>
+									
+									</div>
+								
+								</div>
+		
+							</div>
 							
+							<!-- PPG PANEL -->
+							<div class="panel">
+								<div class="panel-heading">
+									<h2 class="panel-title">Points Per Game <small>-- Minimum 7 Games Played</small></h2>
+									
+								</div>
+								<div class="panel-body">
+									
+									<div class="table-responsive">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Player</th>
+													<th>Pos</th>
+													<th>PPG</th>
+												</tr>
+											</thead>
+											<tbody>
+												<?php
+													
+// 													printr($merge_ppgs, 0);
+													
+													$rank = 1;
+													foreach ($merge_ppgs as $key => $get){
+														
+														$keyname = substr($key, 0, -4);
+														$name = get_player_name($keyname);
+														$pos = substr($keyname, -2);
+														
+														$ppgscore = number_format(round($get, 1), 1);
+														if ($rank == 1){
+															echo '<tr class="top-scorer">';
+														} else {
+															echo '<tr>';
+														}
+														echo '<td>'.$rank.'.</td>';
+														echo '<td><a href="/player/?id='.$name.'" class="btn-link">'.$name['first'].' '.$name['last'].'</a></td>';
+														echo '<td>'.$pos.'</td>';
+														echo '<td>'.$ppgscore.'</td>';
+														echo '</tr>';
+													
+														if($rank == 10){
+															break;
+														}
+														
+														$rank++;
+														
+													}
+
+													?>
+											</tbody>
+										</table>
+									
+									</div>
+								
+								</div>
+		
 							</div>
-						</div>
+
+							
+							
+							
 							
 					</div>
 					
@@ -294,83 +503,9 @@ insert_wp_number_ones_pk();
 					<!-- Leaders By All -->
 					<div class="col-xs-24 col-sm-24 eq-box-sm">
 							
-							<?php 
-							    	// figure out this logic with new array
-									
-									?>
-									<div class="col-xs-24 col-sm-12 col-md-6">
-										<div class="panel">							
-											<div class="panel-heading">
-												<h2 class="panel-title">Overall Points</h2>
-											</div>
-											<div class="panel-body">
-												<div class="table-responsive">
-													<table class="table table-striped">
-														<thead>
-															<tr>
-																<th></th><th>Player</th><th>Pos</th><th>Points</th>
-															</tr>
-														</thead>
-														<tbody>
-														 	TABLE HERE	
-														</tbody>
-													</table>
-												</div>
-											</div>
-										</div>
-									</div>
-
+					</div>
 	
-									<div class="col-xs-24 col-sm-12 col-md-6">
-										<div class="panel">
-											<div class="panel-heading">
-												<h2 class="panel-title">Player Value Quotient</h2>
-											</div>
-											<div class="panel-body">
-												<div class="table-responsive">
-													<table class="table table-striped">
-														<thead>
-															<tr>
-																<th></th>
-																<th>Player</th>
-																<th>Pos</th>
-																<th>PVQ</th>
-															</tr>
-														</thead>
-														<tbody>
-															<?php
-// 																printr($currentpvq, 0);
-/*
-																$rank = 1;
-																foreach ($currentpvq as $key => $getpvq){
-																	$first = $playersassoc[$key][0];
-																	$last = $playersassoc[$key][1];
-																	$pos = $playersassoc[$key][2];
-																	$pvqscore = number_format($getpvq, 1, '.', '');
-																	if ($rank == 1){
-																		echo '<tr class="top-scorer">';
-																	} else {
-																		echo '<tr>';
-																	}
-																	echo '<td>'.$rank.'.</td>';
-																	echo '<td><a href="/player/?id='.$key.'" class="btn-link">'.$first.' '.$last.'</a></td>';
-																	echo '<td>'.$pos.'</td>';
-																	echo '<td>'.$pvqscore.'</td>';
-																	echo '</tr>';
-																	$rank++;
-																}
-*/
-																?>
-														</tbody>
-													</table>
-												
-												</div>
-											
-											</div>
-										
-										</div>
-									</div>
-
+									
 
 <?php session_destroy(); ?>
 		

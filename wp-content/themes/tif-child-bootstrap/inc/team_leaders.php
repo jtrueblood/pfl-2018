@@ -1,5 +1,5 @@
 <?php  
-//printr($arr_taward, 0);	
+//printr($careerstats_team, 1);	
 
 foreach ($careerstats_team as $get){
 	$posget = $get['pid'];
@@ -27,6 +27,8 @@ foreach ($careerstats_team as $get){
 		'w' => $get['wins'],
 		'l' => $get['losses']
 	);
+	
+	$all_highs[$get['pid']] = $get['high'];
 }
 
 foreach($for_ppg as $key => $value){
@@ -47,11 +49,12 @@ arsort($all_wins);
 arsort($all_games);
 arsort($all_ppg);
 arsort($all_win_per);
+arsort($all_highs);
 
 ?>
 <div class="panel">
 	<div class="panel-heading">
-    	<h3 class="panel-title">Team All-Time Leaders</h3>
+    	<h3 class="panel-title">Team All-Time Leaders <small>-- Min 15 Games Played for <?php echo $teamids[$teamid];?></small></h3>
 	</div>
 	<div class="panel-body text-center">
 		
@@ -68,10 +71,12 @@ arsort($all_win_per);
 			
 */
 		
+		echo '<div class="row">';
+		
 		//quarterbacks points		
 		if(isset($qbs_pts)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
 					echo '<h4>Quarterbacks</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
@@ -106,8 +111,8 @@ arsort($all_win_per);
 		
 		// runningbacks points
 		if(isset($rbs_pts)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
 					echo '<h4>Runningbacks</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
@@ -143,8 +148,8 @@ arsort($all_win_per);
 
 		// receiver points
 		if(isset($wrs_pts)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
 					echo '<h4>Wide Receivers</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
@@ -176,12 +181,15 @@ arsort($all_win_per);
 				echo '</div>';
 			echo '</div>';		
 		}
-
+		
+		echo '</div>';
+		
+		echo '<div class="row">';
 
 		// kicker points
 		if(isset($pks_pts)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
 					echo '<h4>Kickers</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
@@ -217,8 +225,8 @@ arsort($all_win_per);
 		
 		//games played
 		if(isset($all_games)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
 					echo '<h4>Games Played</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
@@ -253,9 +261,9 @@ arsort($all_win_per);
 		
 		// points per game
 		if(isset($all_ppg)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
-					echo '<h4>Points Per Game <small>(15 game min)</small></h4>';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
+					echo '<h4>Points Per Game</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
 						<thead>
@@ -287,10 +295,16 @@ arsort($all_win_per);
 			echo '</div>';		
 		}
 
+
+		echo '</div>';
+		
+		echo '<div class="row">';
+		
+		
 		// total wins
 		if(isset($all_wins)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
 					echo '<h4>Wins With Team</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
@@ -325,9 +339,9 @@ arsort($all_win_per);
 		
 		// win percentage
 		if(isset($all_win_per)){
-			echo '<div class="row awards-team">';
-				echo '<div class="col-xs-24">';
-					echo '<h4>Winning Percentage <small>(15 game min)</small></h4>';
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
+					echo '<h4>Winning Percentage</h4>';
 					
 					echo' <table id="" class="table table-hover stripe">
 						<thead>
@@ -352,6 +366,42 @@ arsort($all_win_per);
 							}				
 						}
 						
+						echo '</table>';
+					
+				echo '</div>';
+			echo '</div>';		
+		}
+		
+		
+		// high scores
+		if(isset($all_highs)){
+			echo '<div class="awards-team">';
+				echo '<div class="col-xs-24 col-sm-8">';
+					echo '<h4>High Scores on Team</h4>';
+					
+					echo' <table id="" class="table table-hover stripe">
+						<thead>
+							<tr>
+								<th class="text-left">Name</th>
+								<th class="text-right">High</th>
+							</tr>
+						</thead>';
+						
+						$i = 0;
+						foreach ($all_highs as $key => $val){
+							
+							$name = get_player_name($key);
+							
+							echo '<tr>
+								<td class="text-left">'.$name['first'].' '.$name['last'].'</td>
+								<td class="text-right">'.$val.'</td>
+							</tr>';
+							$i++;
+							if ($i == 5){
+								break;
+							}				
+						}
+						
 						
 						echo '</table>';
 					
@@ -359,7 +409,8 @@ arsort($all_win_per);
 			echo '</div>';		
 		}
 
-
+		
+		echo '</div>';
 		
 		?>
 		

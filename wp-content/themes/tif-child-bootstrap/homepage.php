@@ -23,7 +23,8 @@ foreach ($playersassoc as $key => $value){
 $randomize = array_rand($playersid);
 
 $randomplayer = $playersid[$randomize];
-//$randomplayer = '2001TomlRB';
+//$randomplayer = '2009AverWR';
+
 
 $featuredplayer = $playersassoc[$randomplayer];
 $first = $featuredplayer[0];

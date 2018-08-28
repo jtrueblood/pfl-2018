@@ -18,6 +18,7 @@ $team_all_ids = get_teams();
 $seasons = the_seasons();
 $players = get_players_assoc();
 $champs = get_champions();
+$thisteam = get_team_results('wp_team_'.$teamid);
 //$player = get_player_data('2004BreeQB');
 //$player = get_raw_player_data_team('2004BreeQB', $teamid);
 
@@ -104,7 +105,7 @@ foreach ($playersall as $key => $val){
 			
 			<?php include_once('inc/team_awards.php');?>	
 			
-			
+			<?php include_once('inc/team_probowl_selections.php');?>
 		</div>
 		
 		
@@ -115,17 +116,10 @@ foreach ($playersall as $key => $val){
 			
 			<!-- Standings -->
 			<?php include_once('inc/team_standings.php');?>
+		
 			
-			<div class="row">
-				<div class="col-xs-24 col-sm-12">
-					<?php include_once('inc/team_probowl_selections.php');?>
-				</div>
-				
-				<div class="col-xs-24 col-sm-12">
-					<!-- hold -->
-				</div>
+			<?php include_once('inc/team_leaders.php');?>
 			
-			</div>
 						
 		</div>
 	
@@ -135,8 +129,8 @@ foreach ($playersall as $key => $val){
 				
 				<?php include_once('inc/teams_select.php');?>
 				
-				<?php include_once('inc/team_leaders.php');?>
-						
+				<!-- HISTORY TIMELINE -->
+				<?php include_once('inc/teams_timeline.php');?>	
 				
 				
 		</div>

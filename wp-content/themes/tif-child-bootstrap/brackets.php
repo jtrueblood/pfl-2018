@@ -44,7 +44,7 @@ foreach ($stand as $key => $value){
 
 //$testget = get_playoff_points_by_team_year(1991, 'BUL', 15);
 
-printr($champions[2017], 0);
+//printr($champions[2017], 0);
 //printr($matchupteams[1991], 0);
 //printr($testget, 0);
 
@@ -66,13 +66,13 @@ printr($champions[2017], 0);
 				
 				<!--Page content-->
 				<div id="page-content">
-					
+					<div class="row">
 					<?php 
 					foreach ($matchupteams as $key => $value){
 							
-						echo '<div class="row">';
+						
 	
-							echo '<div class="col-xs-24 eq-box-sm">';
+							echo '<div class="col-xs-24 col-md-12 eq-box-sm">';
 								echo '<div class="panel panel-bordered panel-dark">';
 									echo '<div class="panel-heading">';
 										echo '<div class="panel-control">
@@ -88,7 +88,7 @@ printr($champions[2017], 0);
 												// hold column
 											echo '</div>';
 											
-											echo '<div class="col-xs-8">';
+											echo '<div class="col-xs-10">';
 												
 												
 												echo '<h3>Playoff Round</h3>';
@@ -129,7 +129,7 @@ printr($champions[2017], 0);
 													echo '<div class="boxbrack vert-align">';
 														
 														foreach ($cybpb as $k => $v){
-															echo '<h4><img src="'.get_stylesheet_directory_uri().'/img/'.$v['team'].'-bar.png" class="brackethelm"/>'.$teamids[$v['team']].'<span class="floatright">'.$v['pb_score'].'</span></h4>';
+															echo '<h4>'.$teamids[$v['team']].'<span class="floatright">'.$v['pb_score'].'</span></h4>';
 														}
 														
 													echo '</div>';
@@ -144,16 +144,12 @@ printr($champions[2017], 0);
 */
 											
 											
-											echo '<div class="col-xs-7">';
-											
+											echo '<div class="col-xs-4 champ-brack-box">';
 											
 												echo '<h3>PFL Champion <span class="text-muted">'.$key.'</span></h3>';
-													
-													echo '<div class="boxbrack vert-align-champ">';
-														echo '<h4><img src="'.get_stylesheet_directory_uri().'/img/'.$champions[$key]['winner'].'-bar.png" class="brackethelm"/>'.$teamids[$champions[$key]['winner']].'</h4>';
-													echo '</div>';
-													
-												echo '</div>';
+												echo '<h4>'.$teamids[$champions[$key]['winner']].'</h4>';
+												
+											echo '</div>';
 											
 											
 										echo '</div>';
@@ -162,12 +158,12 @@ printr($champions[2017], 0);
 								echo '</div>';		
 							echo '</div>';			
 					
-						echo '</div>';
+						
 					
 					}
 				?>
 					
-					
+					</div><!-- end row -->	
 				</div><!--End page content-->
 
 			</div><!--END CONTENT CONTAINER-->

@@ -375,7 +375,7 @@ foreach($buildtheyears as $season ){
 
 			
 <!--CONTENT CONTAINER-->
-<div class="boxed add-to-top">
+<div class="boxed">
 
 <!--CONTENT CONTAINER-->
 <!--===================================================-->
@@ -391,7 +391,7 @@ foreach($buildtheyears as $season ){
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-5 left-column">
 			<div class="panel widget">
-				<div class="widget-header bg-purple">
+				<div class="widget-header">
 					<img src="<?php echo get_stylesheet_directory_uri();?>/img/players/<?php echo $playerid; ?>.jpg" class="widget-bg img-responsive">
 
 				</div>
@@ -420,11 +420,13 @@ foreach($buildtheyears as $season ){
 								
 								$teamall = get_player_record($playerid);
 								//printr($teamall, 0);
-								$teams = array_unique($teamall);
-								foreach ($teams as $printteams) { 
-									$teamList .= $prefix . '' . $teamids[$printteams];
-									$prefix = ', ';
-								} 
+								if(isset($teamall)){
+									$teams = array_unique($teamall);
+									foreach ($teams as $printteams) { 
+										$teamList .= $prefix . '' . $teamids[$printteams];
+										$prefix = ', ';
+									} 
+								}
 								
 								echo '<p class="text-muted teams-list">'.$teamList.'</p>';
 								
@@ -1003,9 +1005,22 @@ foreach($buildtheyears as $season ){
 															}
 															
 															if ($phomeaway == 'H'){
-																$gametable .= '<td><span class="text-bold ">'.$teaminfo[strtoupper($pteam)]['stadium'].'</span></td></tr>';
+																$ishome = $teaminfo[strtoupper($pteam)]['stadium'];
+																// 	alter CMN stadium name based on year
+																if ($ishome == 'Spankoni Center'){
+																	if($pyear <= 2004){
+																		$ishome = 'The Gonad Bowl';
+																	}
+																}
+																$gametable .= '<td><span class="text-bold ">'.$ishome.'</span></td></tr>';
 															} else {
-																$gametable .= '<td>'.$teaminfo[strtoupper($pversus)]['stadium'].'</td></tr>';
+																$isaway = $teaminfo[strtoupper($pversus)]['stadium'];
+																if ($isaway == 'Spankoni Center'){
+																	if($pyear <= 2004){
+																		$isaway = 'The Gonad Bowl';
+																	}
+																}
+																$gametable .= '<td>'.$isaway.'</td></tr>';
 															}
 						
 														$u++;
@@ -1171,7 +1186,7 @@ foreach($buildtheyears as $season ){
 								<!-- post the years -->
 								<div class="timeline-entry">
 									<div class="timeline-stat">
-								        <div class="timeline-icon"></div>
+								        <div class="timeline-icon <?php echo 'val'.$count; ?>"></div>
 								        <div class="timeline-time"><?php echo $key; ?></div> 
 							        </div>
 									

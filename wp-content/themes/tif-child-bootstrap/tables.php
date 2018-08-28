@@ -56,7 +56,7 @@ $ATK = $wpdb->get_results("select * from wp_team_ATK", ARRAY_N);
 $HAT = $wpdb->get_results("select * from wp_team_HAT", ARRAY_N);
 $DST = $wpdb->get_results("select * from wp_team_DST", ARRAY_N);
 
-$allteams = array('ETS' => $ETS, 'PEP' => $PEP, 'WRZ' => $WRZ, 'CMN' => $CMN, 'BUL' => $BUL, 'SNR' => $SNR, 'TSG' => $TSG, 'SON' => $SON, 'HAT' => $HAT, 'DST' => $DST, 'ATK' => $ATK, 'PHR' => $PHR, 'MAX' => $MAX);
+$allteams = array('ETS' => $ETS, 'PEP' => $PEP, 'WRZ' => $WRZ, 'CMN' => $CMN, 'BUL' => $BUL, 'SNR' => $SNR, 'TSG' => $TSG, 'SON' => $SON, 'HAT' => $HAT, 'DST' => $DST, 'ATK' => $ATK, 'PHR' => $PHR, 'MAX' => $MAX, 'RBS' => $RBS, 'BST' => $BST);
 
 
 $champions = $wpdb->get_results("select * from wp_champions", ARRAY_N);
@@ -65,7 +65,7 @@ $champions = $wpdb->get_results("select * from wp_champions", ARRAY_N);
 
 $playersassoc = get_players_assoc();
 
-
+//printr($PEP, 1);
 
 /*
 $me = get_player_name('2004BreeQB');
@@ -140,7 +140,7 @@ foreach ($theyears as $getstandings){
 // build arrays needed to display team points and win related tables
 function totalteampoints($TEAM){
 	foreach ($TEAM as $getinfo){
-		if($getinfo[9] > 0){
+		if($getinfo[9] >= 0){
 			$winloss = 1;
 		} else {
 			$winloss = 0;
@@ -190,7 +190,7 @@ $getTSG = totalteampoints($TSG);
 $getDST = totalteampoints($DST);
 
 
-$allteamget = array('ETS' => $getETS, 'PEP' => $getPEP, 'WRZ' => $getWRZ, 'CMN' => $getCMN, 'BUL' => $getBUL, 'SNR' => $getSNR, 'TSG' => $getTSG, 'SON' => $getSON, 'HAT' => $getHAT, 'DST' => $getDST, 'ATK' => $getATK, 'PHR' => $getPHR, 'MAX' => $getMAX);
+$allteamget = array('ETS' => $getETS, 'PEP' => $getPEP, 'WRZ' => $getWRZ, 'CMN' => $getCMN, 'BUL' => $getBUL, 'SNR' => $getSNR, 'TSG' => $getTSG, 'SON' => $getSON, 'HAT' => $getHAT, 'DST' => $getDST, 'ATK' => $getATK, 'PHR' => $getPHR, 'MAX' => $getMAX, 'RBS' => $getRBS, 'BST' => $getBST);
 
 /*
 printr($CMN, 0);
@@ -209,10 +209,7 @@ foreach ($allteamget as $key => $value){
 	$alldif[$key] = $value[7];
 }
 
-/*
-printr($allpoints, 0);
-die();
-*/
+//printr($allwins, 1);
 
 arsort($allpoints);
 arsort($allwins);
@@ -372,6 +369,15 @@ arsort($playoff_player_highs);
 
 //printr($playoff_player_highs, 1);
 
+// game streaks
+$streaks = $wpdb->get_results("select pid, gamestreak from wp_allleaders", ARRAY_N);
+foreach ($streaks as $value){
+	$player_streaks[$value[0]] = $value[1];
+}
+
+arsort($player_streaks);
+
+//printr($player_streaks, 0);
 
 ?>
 
@@ -393,6 +399,7 @@ arsort($playoff_player_highs);
 			
 			<div class="col-xs-24">
 				<h4>Team Data - Regular Season</h4>
+				<p>This page requires the use of some transients.  If you see an error try loading a leaders by season page.</p>
 				<hr>
 			</div>
 			
@@ -662,7 +669,6 @@ arsort($playoff_player_highs);
 				$labels = array('Player', 'Points');	
 				tablehead('Top Individual Game Scores', $labels);	
 				
-//				$b = 1;
 				foreach ($toppoints as $key => $value){
 					
 					$highplayer = substr($key , 0, -6);
@@ -672,13 +678,10 @@ arsort($playoff_player_highs);
 					
 					$name = get_player_name($highplayer);
 					
-// 					if ($highpos == 'RB'){
 						if ($value >= 30){
 							$toppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
 							$toppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
 						}
-// 					}
-//					$b++;
 					
 				}
 				
@@ -688,10 +691,42 @@ arsort($playoff_player_highs);
 			
 				
 				?>	
-				
-			
+
 			</div>
 			
+			<!-- CONSECUTIVE GAME STREAKS -->
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				$labels = array('Player', 'Games');	
+				tablehead('Consecutive Games Streak', $labels);	
+				
+				
+				$b = 1;
+				
+				
+					foreach ($player_streaks as $key => $value){
+						
+						$n = get_player_name($key);
+						
+						$streakprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>';
+						$streakprint .='<td class="min-width text-center">'.$value.'</td>';
+						
+						if($b == 20){
+							break;
+						}
+						
+						$b++;
+						
+						
+					}
+				
+				
+				echo $streakprint;
+				
+				tablefoot('Games in a row where a player did not miss an appearance due to benching, injury or suspension.');	
+				?>	
+				
+			</div>
 			
 			
 			<!-- NEW SECTION -->

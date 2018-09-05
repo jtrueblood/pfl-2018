@@ -26,7 +26,7 @@ $("#nextplayerbtn").click(function() {
 
  $('.leader-table').DataTable( {
         "order": [[ 3, "desc" ]],
-        "lengthMenu": [[10, 25, 50, 100, 200, -1], [10, 25, 50, 100, 200, "All"]]
+        "lengthMenu": [[25, 50, 100, 200, -1], [25, 50, 100, 200, "All"]]
  } );
  
   $('.leaders-season').DataTable( {
@@ -119,7 +119,13 @@ $('.seasonbar').sparkline('html',
 		barColor: '#5fa2dd', 
 		height: '100px', 
 		barWidth: '16px', 
-		barSpacing:'5px' 
+		barSpacing:'5px',
+		yAxis: [{
+	        max: 200,
+	        title: {
+	            text: 'Points'
+	        }
+	    }] 
 		
 	}); 
 	
@@ -162,9 +168,6 @@ $("img.player-image").error(function () {
     $(this).hide();
     //or $(this).css({visibility:"hidden"}); 
 });
-
-
-
 
 	   
 	        

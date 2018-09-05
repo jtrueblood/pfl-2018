@@ -68,7 +68,12 @@
 										if ($first == 'No Protection'){	
 											echo 'No Protection';
 										 } else {
-											 echo '<img src="https://posse-football.dev/wp-content/themes/tif-child-bootstrap/img/players/'.$playerid.'.jpg" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position; 
+											$playerimgobj = get_attachment_url_by_slug($playerid);
+											$imgid =  attachment_url_to_postid( $playerimgobj );
+											$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
+											$playerimg = $image_attributes[0];
+											 
+											 echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position; 
 										 }?>
 										</div>
 									</div>

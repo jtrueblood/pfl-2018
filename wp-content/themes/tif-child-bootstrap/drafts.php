@@ -81,7 +81,7 @@
 						<!-- start sidebar -->
 						
 						<div class="col-xs-24 col-sm-8">
-							<?php selectseason(); ?>	
+							<?php selectseason(); ?>							
 						</div>
 							
 								

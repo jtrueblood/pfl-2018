@@ -47,7 +47,15 @@
 				<div class="col-xs-24 col-sm-12 col-md-6 eq-box-sm">	
 					<div class="panel widget">
 						<div class="widget-header bg-light">
-							<img class="widget-bg img-responsive" src="<?php echo get_stylesheet_directory_uri();?>/img/players/<?php echo $rotyid; ?>.jpg" alt="Image">
+							
+							<?php
+							$playerimgobj = get_attachment_url_by_slug($rotyid);
+							$imgid =  attachment_url_to_postid( $playerimgobj );
+							$image_attributes = wp_get_attachment_image_src($imgid, array( 400, 400 ));	
+							$playerimg = $image_attributes[0];
+							?>
+							
+							<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image">
 						</div>
 						<div class="widget-body text-center bg-primary">
 							<img alt="Profile Picture" class="widget-img img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $rotypos; ?>.jpg">

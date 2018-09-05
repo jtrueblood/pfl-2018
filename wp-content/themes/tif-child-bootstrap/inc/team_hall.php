@@ -7,9 +7,15 @@
 		
 		<?php 
 		foreach ($award_hall as $key => $val){
+			
+			$playerimgobj = get_attachment_url_by_slug($val['pid']);
+			$imgid =  attachment_url_to_postid( $playerimgobj );
+			$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
+			$playerimg = $image_attributes[0];
+
 			echo '<div class="row hall-for-teams">';
 				echo '<div class="col-xs-24 col-sm-6">';
-					echo '<a href="/player/?id='.$val['pid'].'"><img src="'.get_stylesheet_directory_uri().'/img/players/'.$val['pid'].'.jpg" class="img-responsive"/></a>';
+					echo '<a href="/player/?id='.$val['pid'].'"><img src="'.$playerimg.'" class="img-responsive"/></a>';
 				echo '</div>';
 				echo '<div class="col-xs-24 col-sm-16">';
 					echo '<h4><a href="/player/?id='.$val['pid'].'">'.$val['first'].' '.$val['last'].'</a></h4>';

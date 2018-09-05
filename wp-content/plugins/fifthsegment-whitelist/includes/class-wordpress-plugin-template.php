@@ -178,7 +178,7 @@ function my_login_logo_url_title() {
 	}
 	
 	function css_maker(){
-		$content = file_get_contents($this->assets_dir.'/css/loginpagev2.css');
+		$content = file_get_contents($this->assets_dir.'/css/secondary.css');
 		// print $this->assets_dir.'css/loginpage.css';
 		header("Content-type: text/css", true);
 		header("X-Content-Type-Options: nosniff");
@@ -663,7 +663,7 @@ function my_login_logo_url_title() {
 			// echo 'Welcome, registered user!';
 		} else {
 			$url = get_site_url().'/?FSEG-Roadblock';
-			print $url;
+			// print $url;
 			wp_redirect( $url );
 		}
 

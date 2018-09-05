@@ -83,18 +83,46 @@ arsort($rb_number_one, SORT_NUMERIC);
 arsort($wr_number_one, SORT_NUMERIC);
 arsort($pk_number_one, SORT_NUMERIC);
 
+// displays the #1 leaders for each position by year.
 $qb_one[key($qb_number_one)] = $qb_number_one[key($qb_number_one)];
 $rb_one[key($rb_number_one)] = $rb_number_one[key($rb_number_one)];
 $wr_one[key($wr_number_one)] = $wr_number_one[key($wr_number_one)];
 $pk_one[key($pk_number_one)] = $pk_number_one[key($pk_number_one)];
 
-//printr($pk_one, 0);
+//printr($qb_number_one, 0);
+
+$qb_avg = array_sum($qb_number_one)/count($qb_number_one);
+$rb_avg = array_sum($rb_number_one)/count($rb_number_one);
+$wr_avg = array_sum($wr_number_one)/count($wr_number_one);
+$pk_avg = array_sum($pk_number_one)/count($pk_number_one);
+
+$season_pos_values = array(
+	'QB' => array (
+		'avg' => $qb_avg,
+		'high' => reset($qb_number_one)
+	),
+	'RB' => array (
+		'avg' => $rb_avg,
+		'high' => reset($rb_number_one)
+	),
+	'WR' => array (
+		'avg' => $wr_avg,
+		'high' => reset($wr_number_one)
+	),
+	'PK' => array (
+		'avg' => $pk_avg,
+		'high' => reset($pk_number_one)
+	),
+);
+
+//printr($season_pos_values, 0);
 
 // the following 4 functions get the #1 player for this season and inserts it into a table to be stored and used for player pages.
 function insert_wp_number_ones_qb(){
 	global $qb_one;		
 	global $yearid;
 	global $wpdb;
+	global $qb_avg;
 	
 	$id = 'qb'.$yearid;
 	
@@ -107,13 +135,16 @@ function insert_wp_number_ones_qb(){
 	$inserted = $wpdb->insert(
 		 'wp_number_ones',
 	     array(
+		    'year' => $yearid, 
 	        'id' => $id,
+	        'pos' => 'QB',
 	        'playerid' => $key,
 	        'points' => $value,
+	        'avg' => $qb_avg,
 	        'teams' => $teams[$yearid][0]
 	     ),
 		 array( 
-			'%s','%s','%d','%s'
+			'%d','%s','%s','%s','%d','%f','%s'
 		 )
 		);
 		}
@@ -129,6 +160,7 @@ function insert_wp_number_ones_rb(){
 	global $rb_one;		
 	global $yearid;
 	global $wpdb;
+	global $rb_avg;
 	
 	$id = 'rb'.$yearid;
 	
@@ -141,13 +173,16 @@ function insert_wp_number_ones_rb(){
 	$inserted = $wpdb->insert(
 		 'wp_number_ones',
 	     array(
+		    'year' => $yearid,
 	        'id' => $id,
+	        'pos' => 'RB',
 	        'playerid' => $key,
 	        'points' => $value,
+	        'avg' => $rb_avg,
 	        'teams' => $teams[$yearid][0]
 	     ),
 		 array( 
-			'%s','%s','%d','%s'
+			'%d','%s','%s','%s','%d','%f','%s'
 		 )
 		);
 		}
@@ -163,6 +198,7 @@ function insert_wp_number_ones_wr(){
 	global $wr_one;		
 	global $yearid;
 	global $wpdb;
+	global $wr_avg;
 	
 	$id = 'wr'.$yearid;
 	
@@ -175,13 +211,16 @@ function insert_wp_number_ones_wr(){
 	$inserted = $wpdb->insert(
 		 'wp_number_ones',
 	     array(
+		    'year' => $yearid,
 	        'id' => $id,
+	        'pos' => 'WR',
 	        'playerid' => $key,
 	        'points' => $value,
+	        'avg' => $wr_avg,
 	        'teams' => $teams[$yearid][0]
 	     ),
 		 array( 
-			'%s','%s','%d','%s'
+			'%d','%s','%s','%s','%d','%f','%s'
 		 )
 		);
 		}
@@ -197,6 +236,7 @@ function insert_wp_number_ones_pk(){
 	global $pk_one;		
 	global $yearid;
 	global $wpdb;
+	global $pk_avg;
 	
 	$id = 'pk'.$yearid;
 	
@@ -209,13 +249,16 @@ function insert_wp_number_ones_pk(){
 	$inserted = $wpdb->insert(
 		 'wp_number_ones',
 	     array(
+		    'year' => $yearid, 
 	        'id' => $id,
+	        'pos' => 'PK',
 	        'playerid' => $key,
 	        'points' => $value,
+	        'avg' => $pk_avg,
 	        'teams' => $teams[$yearid][0]
 	     ),
 		 array( 
-			'%s','%s','%d','%s'
+			'%d','%s','%s','%s','%d','%f','%s'
 		 )
 		);
 		}

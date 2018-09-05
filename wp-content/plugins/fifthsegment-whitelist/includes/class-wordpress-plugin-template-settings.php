@@ -137,6 +137,21 @@ class WordPress_Plugin_Template_Settings {
 	public function whitelist_add(){
 		global $wpdb;
 		$email = $_GET["email"];
+		$emailst = substr_count( $email , ',' ) ;
+		if ( $emailst > 0 ){
+			$emails = explode( ',', $email);
+			foreach ($emails as $curemail) {
+				$curemail = trim( $curemail );
+				$curemail = str_replace(' ', '', $curemail);
+				if ( is_email($curemail) ){
+
+					$this->whitelist_add_byemail($curemail);
+				}
+			}
+			return;
+		}
+		if ( $this->check_if_email_exists( $email ) )
+			return;
 		// $email = mysql_real_escape_string($email);
 		$table_name = $wpdb->prefix . "authusers"; 
 		$sql = 'INSERT INTO '.$table_name.' (`email`) VALUES ("'.$email.'");';
@@ -147,9 +162,31 @@ class WordPress_Plugin_Template_Settings {
 		$this->displayMessage($msg);
 	}
 
+	public function check_if_email_exists( $email ){
+		global $wpdb;
+		$table_name = $wpdb->prefix . "authusers"; 
+		$form_email = filter_var($email, FILTER_SANITIZE_EMAIL); 
+		$form_email = strtolower($form_email);
+
+		$db_email = $wpdb->get_var( $wpdb->prepare( 
+			 "
+			  SELECT email 
+			  FROM $table_name 
+			  WHERE LOWER(email) = %s
+			 ", 
+		 	$form_email
+		 ));
+
+		if (strtolower($db_email)==strtolower($form_email) ){
+			return true;
+		}
+		return false;
+	}
+
 	public function whitelist_add_byemail($email){
 		global $wpdb;
-
+		if ( $this->check_if_email_exists( $email ) )
+			return;
 		// $email = mysql_real_escape_string($email);
 		$table_name = $wpdb->prefix . "authusers"; 
 		$sql = 'INSERT INTO '.$table_name.' (`email`) VALUES ("'.$email.'");';
@@ -164,12 +201,15 @@ class WordPress_Plugin_Template_Settings {
 
 	public function whitelist_display(){
 		global $wpdb;
-		if ($_GET["action"]=="remove"){
-			$this->whitelist_remove();
+		if ( isset($_GET['action'])){
+			if ($_GET["action"]=="remove"){
+				$this->whitelist_remove();
+			}
+			if ($_GET["action"]=="add"){
+				$this->whitelist_add();
+			}
 		}
-		if ($_GET["action"]=="add"){
-			$this->whitelist_add();
-		}
+
 		$table_name = $wpdb->prefix . "authusers"; 
 		$results = $wpdb->get_results( 'SELECT count(*) as cnt FROM '.$table_name );
 		$results = $results[0];
@@ -231,10 +271,11 @@ class WordPress_Plugin_Template_Settings {
 		 	$plink1 = remove_query_arg( 'Submit' , $plink1);
 		 	$plink1 = remove_query_arg( 'email' , $plink1);
 		 	// $plink2 = add_query_arg( array( 'page_no' => $y ) );
-		 	if ($y == $_GET["page_no"])
+		 	if (isset($_GET['page_no']) && $y == $_GET["page_no"]){
 		 		$html.="<b><a href='".$plink1."'>".($y+1)."</a></b>&nbsp";
-		 	else
+		 	}	else{
 		 		$html.="<a href='".$plink1."'>".($y+1)."</a>&nbsp";
+		 	}
 		 }
 		 print $html;
 		// }
@@ -404,6 +445,7 @@ class WordPress_Plugin_Template_Settings {
 					'description'	=> __( 'Enable Captcha', 'wordpress-plugin-template' ),
 					'type'			=> 'checkbox',
 					'default'		=> 'checked',
+					'placeholder'		=> '',
 					// 'placeholder'	=> __( 'Lost Password Link', 'wordpress-plugin-template' )
 				),
 				array(
@@ -414,6 +456,7 @@ class WordPress_Plugin_Template_Settings {
 					'default'		=> 'checked',
 					'display_if'	=> 'checkbox_enablehardmode',
 					'display_if_msg'	=> 'Disabled because Hard Mode is currently enabled.',
+					'placeholder'		=> '',
 					// 'placeholder'	=> __( 'Lost Password Link', 'wordpress-plugin-template' )
 				),
 				array(
@@ -422,6 +465,7 @@ class WordPress_Plugin_Template_Settings {
 					'description'	=> __( 'Allow only existing Wordpress Users to login with their email address', 'wordpress-plugin-template' ),
 					'type'			=> 'checkbox',
 					'default'		=> '',
+					'placeholder'		=> '',
 
 					// 'placeholder'	=> __( 'Lost Password Link', 'wordpress-plugin-template' )
 				),
@@ -465,7 +509,7 @@ class WordPress_Plugin_Template_Settings {
 		$options = $this->getCustomOptions();
 		if (!empty($options)) {
 			foreach ($options as $key => $arr) {
-				if (is_array($arr) && count($arr > 1)) {
+				if ( is_array($arr) && sizeof($arr) > 1 ) {
 					add_option($key, $arr[1]);
 				}
 			}

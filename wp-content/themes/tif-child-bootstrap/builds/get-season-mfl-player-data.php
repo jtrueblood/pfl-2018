@@ -16,7 +16,7 @@ $thestarters = $_SESSION['mfl/thestarters'];
 */
 
 $year = 2017;
-$week = 16; // change this to 1 to 14 and reload page to build all of the week needed starters
+$week = 1; // change this to 1 to 14 and reload page to build all of the week needed starters
 $lid = 38954;
 $mflid = $_GET['id'];
 $mflid_str = strval($mflid);
@@ -32,6 +32,8 @@ $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11',
 
 //printr($weeks, 0);
 
+
+//. NEED TO REPLACE THESE TRANSIENTS WITH WPDB OPTION DATA ...............................................
 get_cache('mfl/mflteamids', 0);	
 $mflteamids = $_SESSION['mfl/mflteamids'];
 

@@ -1,13 +1,13 @@
 <?php
 /*
  * Plugin Name: FifthSegment Whitelist
- * Version: 2.8
+ * Version: 3.5
  * Plugin URI: http://www.fifthsegment.com/
  * Description: This plugin creates a Roadblock on your Wordpress site, allowing only people on the list to pass through
  * Author: Abdullah Irfan
  * Author URI: http://www.abdullahirfan.com/
  * Requires at least: 3.9
- * Tested up to: 4.4
+ * Tested up to: 4.6
  *
  *
  * @package WordPress

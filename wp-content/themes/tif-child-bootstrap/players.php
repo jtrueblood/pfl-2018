@@ -15,6 +15,8 @@
 // $playerid = '2011SproRB';
 $playerid = $_GET['id'];
 
+
+
 $year = date("Y");
 
 $teamids = $_SESSION['teamids'];
@@ -122,11 +124,16 @@ $justchamps = get_just_champions();
 $table = get_table('playoffs');
 
 // sets an enhanced value for players with more complex careers.  It displays tables, timelines, etc
-if ($careerdata['seasons'] > 3){
+
+if ($careerdata['seasons'] > 2){
 		$enhanced = 1;
 	} else {
 		$enhanced = 0;
-}	
+}
+
+	
+
+
 
 
 // get Posse Bowl Apperances
@@ -277,11 +284,14 @@ if(!empty($protections)){
 	}
 }
 
+//printr($build_draft, 0);
 
 // get first and last player years in an array
 $first = $playseasons[0];
-$last = end($playseasons);
-while ($first != ($last + 1)){
+
+$last = end($playseasons) + 1;
+
+while ($first != $last){
 	$buildtheyears[] = $first;
 	$first++;
 } 
@@ -392,7 +402,17 @@ foreach($buildtheyears as $season ){
 		<div class="col-xs-24 col-sm-5 left-column">
 			<div class="panel widget">
 				<div class="widget-header">
-					<img src="<?php echo get_stylesheet_directory_uri();?>/img/players/<?php echo $playerid; ?>.jpg" class="widget-bg img-responsive">
+					
+					<?php
+					
+						$playerimgobj = get_attachment_url_by_slug($playerid);
+						$imgid =  attachment_url_to_postid( $playerimgobj );
+						$image_attributes = wp_get_attachment_image_src($imgid, array( 400, 400 ));	
+						echo '<img src="'.$image_attributes[0].'" class="widget-bg img-responsive">';
+						
+						//printr($image_attributes, 0);
+						
+					?>
 
 				</div>
 				<div class="widget-body text-center">
@@ -899,48 +919,145 @@ foreach($buildtheyears as $season ){
 									<!-- End Striped Table -->
 								</div>
 								
+				
+							<!-- Try the Highchart-->
+							<?php //printr($pointarray, 0);
+							
 								
-							<!-- TABLE END -->
-								
-							<!-- Season Data Chart -->
-							<?php if( $enhanced == 1) { ?>
-							<div class="panel hidden-xs">
-								<h4 class="text-thin">Points Over PFL Lifetime</h4>
-								<hr>
-								<span class="seasonbar">
-									
-									<?php
-										//printr($pointarray, 1); 
-										$seasons = the_seasons();
-										
-										$prefixc = '';
-										foreach ($seasons as $printchart){
-											$chartList .= $prefixc . '' . $pointarray[$printchart];
-											$prefixc = ', ';
-										}
-										
-										echo $chartList;
-										
-									?>
-								</span><br/>
-									
-									<?php foreach ($seasons as $key => $printchart){
-										$trimyear = substr($printchart, -2);
-										echo '<span class="labelchart">'.$trimyear.'</span>';
-										//echo '&bull;';
+							if($enhanced == 1){	
+								$seasons = the_seasons();
+								foreach ($seasons as $value){
+									if (empty($pointarray[$value])){
+										$theval = 0; 
+									} else {
+										$theval = $pointarray[$value];
 									}
-									?>
+									$playerchartpts[$value] = $theval;
+								}
+								
+								// get avarage arrays
+								
+								foreach($number_ones as $key => $item){
+								   $arr_t_ones[$item['pos']][$key] = $item;
+								}
+								
+								$qb_for_chart = $arr_t_ones['QB'];
+								$rb_for_chart = $arr_t_ones['RB'];
+								$wr_for_chart = $arr_t_ones['WR'];
+								$pk_for_chart = $arr_t_ones['PK'];
+								
+								if($playerposition == 'QB'){
+									foreach ($qb_for_chart as $value){
+										$chart_data[$value['year']] = array(
+											'high' => $value['points'],
+											'avg' => $value['avg']	
+										);
+									}
+								}
+								
+								if($playerposition == 'RB'){
+									foreach ($rb_for_chart as $value){
+										$chart_data[$value['year']] = array(
+											'high' => $value['points'],
+											'avg' => $value['avg']	
+										);
+									}
+								}
+								
+								if($playerposition == 'WR'){
+									foreach ($wr_for_chart as $value){
+										$chart_data[$value['year']] = array(
+											'high' => $value['points'],
+											'avg' => $value['avg']	
+										);
+									}
+								}
+								
+								if($playerposition == 'PK'){
+									foreach ($pk_for_chart as $value){
+										$chart_data[$value['year']] = array(
+											'high' => $value['points'],
+											'avg' => $value['avg']	
+										);
+									}
+								}
+								
+ 								//printr($chart_data, 0);
+							?>
+							<script type="text/javascript">
+							jQuery(document).ready(function() {
+								Highcharts.chart('testhighchart', {
+								title: {
+								        text: 'Career Points'
+								    },
+								    xAxis: {
+								        categories: [<?php 
+									        foreach ($playerchartpts as $key => $value){
+										        echo $key.',';
+									        } 
+									    ?>]
+								    },
+								    labels: {
+								        items: [{
+								            html: '',
+								            style: {
+								                top: '18px',
+								                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+								            }
+								        }]
+								    },
+								    series: [{
+								        type: 'column',
+								        name: 'Player Points',
+								        data: [<?php 
+									        foreach ($playerchartpts as $value){
+										        echo $value.',';
+									        } 
+									    ?>]
+								    },
+								    	{
+								        type: 'spline',
+								        name: 'Position Average',
+								        color: '#a1a1a1',
+								        data: [<?php 
+									        foreach ($chart_data as $key => $value){
+										        echo $value['avg'].',';
+									        } 
+									    ?>],
+								        marker: {
+								            lineWidth: 2,
+								            lineColor: '#a1a1a1',
+								            fillColor: 'white'
+								        }
+								    },
+								    	{
+								        type: 'spline',
+								        name: 'Position High Value',
+								        color: '#eaa642',
+								        data: [<?php 
+									        foreach ($chart_data as $key => $value){
+										        echo $value['high'].',';
+									        } 
+									    ?>],
+								        marker: {
+								            lineWidth: 2,
+								            lineColor: '#eaa642',
+								            fillColor: 'white'
+								        }
+								    }]
+								});	
+							});	
+							</script>
+							
+							<div class="panel hidden-xs">
+								<div id="testhighchart"></div> 
 							</div>
-							<?php } else {
-								echo null;	
-							} ?>
-							
-							
-							<!-- End Data Chart -->	
-							
-							
+							<?php } ?>
 							
 						</div>
+						
+						
+						
 						<div id="demo-tabs-box-2" class="tab-pane fade">
 <!-- 							<h5 class="text-thin">Game Summary</h5> -->
 							<!-- Striped Table -->
@@ -1383,6 +1500,10 @@ foreach($buildtheyears as $season ){
 		
 </div>
 </div>
+
+
+
+
 
 
 <?php get_footer(); ?>

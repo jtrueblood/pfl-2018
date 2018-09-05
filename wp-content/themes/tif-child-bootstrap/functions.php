@@ -33,6 +33,10 @@ function tif_styles() {
 // add_action( 'wp_enqueue_scripts', 'tif_scripts' );
 add_action( 'wp_enqueue_scripts', 'tif_styles' );
 
+//custom image sizes
+add_image_size( 'player-mini', 50, 50, true );
+
+
 /* Vars used commonly in functions */
 session_start();
 $season == date("Y");
@@ -53,7 +57,7 @@ add_filter( 'filesystem_method', create_function( '$a', 'return "direct";' ) );
 	}
 }
 
-
+add_image_size( 'player-card', 400, 400, array( 'center', 'top' ) );
 
 /* clean print_r */
 
@@ -75,6 +79,26 @@ function printrlabel($data, $label) {
    print_r($data);
    echo '</pre>';
 }
+
+
+function check_if_image($image_src){
+	global $wpdb;
+	$query = $wpdb->query("SELECT ID FROM wp_posts WHERE post_title = '$image_src'" );
+	return $query;	
+}
+
+function get_attachment_url_by_slug( $slug ) {
+  $args = array(
+    'post_type' => 'attachment',
+    'name' => sanitize_title($slug),
+    'posts_per_page' => 1,
+    'post_status' => 'inherit',
+  );
+  $_header = get_posts( $args );
+  $header = $_header ? array_pop($_header) : null;
+  return $header ? wp_get_attachment_url($header->ID) : '';
+}
+
 
 
 /* Get Single txt file from Cache and store as array.  0 no print, 1 for print on page */
@@ -231,7 +255,7 @@ function the_seasons(){
 	$year = date('Y');
 
 	$o = 1991;
-	while ($o < $year){
+	while ($o <= $year){
 		$theseasons[] = $o;
 		$o++;
 	}
@@ -1115,7 +1139,28 @@ function get_raw_player_data_team($pid, $team) {
 }
 
 
-
+function get_player_basic_info($pid){
+	global $wpdb;
+	$getplayer = $wpdb->get_results("select * from wp_players where p_id = '$pid'", ARRAY_N);
+	
+	foreach ($getplayer as $key => $revisequery){
+		$playerinfo[] = array( 
+			'pid' => $revisequery[0],
+			'first' => $revisequery[1], 
+			'last' => $revisequery[2], 
+			'position' => $revisequery[3],  
+			'rookie' => $revisequery[4],
+			'mflid' => $revisequery[5],
+			'height' => $revisequery[6],
+			'weight' => $revisequery[7],
+			'college' => $revisequery[8],
+			'number' => $revisequery[10]
+		);
+	}
+	
+	return $playerinfo;
+	
+}
 
 // used to set transient to player data array anywhere
 function set_allplayerdata_trans($pid) {
@@ -1846,9 +1891,12 @@ function get_number_ones(){
 	foreach ($get_number_ones as $revisequery){
 		$number_ones[$revisequery[0]] = array(
 			'id' => $revisequery[0],
-	        'playerid' => $revisequery[1],
-	        'points' => $revisequery[2],
-	        'teams' => $revisequery[3]
+			'year' => $revisequery[1],
+	        'playerid' => $revisequery[2],
+	        'points' => $revisequery[3],
+	        'teams' => $revisequery[4],
+	        'pos' => $revisequery[5],
+	        'avg' => $revisequery[6]
 		);
 	}
 
@@ -1901,7 +1949,13 @@ $printit .= '<div class="panel-heading">';
 					$last = $build['playerlast'];
 					$containsLetter  = preg_match('/[a-zA-Z]/',    $pid);
 					$idlength = strlen($pid);
-					$playerimg = '/wp-content/themes/tif-child-bootstrap/img/players/'.$pid.'.jpg';
+					
+					$playerimgobj = get_attachment_url_by_slug($pid);
+					$imgid =  attachment_url_to_postid( $playerimgobj );
+					$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
+					$playerimg = $image_attributes[0];
+					
+					//$playerimg = '/wp-content/themes/tif-child-bootstrap/img/players/'.$pid.'.jpg';
 					$pflmini = '/wp-content/themes/tif-child-bootstrap/img/pfl-mini-dark.jpg';
 					$position = $build['position'];
 		
@@ -1948,7 +2002,48 @@ echo $printit;
 
 }
 
+// GET MFL player id by passing PFL id and vise versa
+function playerid_mfl_to_pfl(){
+	global $wpdb;
+	$query = $wpdb->get_results("SELECT p_id, mflid FROM wp_players" );
+	
+	foreach ($query as $val){
+		if(!empty($val->mflid)){
+			$theids[$val->mflid] = $val->p_id;
+		}
+	}
+	arsort($theids);
+	return $theids ;	
+}
 
+function playerid_pfl_to_mfl(){
+	global $wpdb;
+	$query = $wpdb->get_results("SELECT p_id, mflid FROM wp_players" );
+	
+	foreach ($query as $val){
+		if(!empty($val->p_id)){
+			$theids[$val->p_id] = $val->mflid;
+		}
+	}
+	ksort($theids);
+	return $theids ;	
+}
+
+// convert MFL team id to PFL team id
+function teamid_mfl_to_name(){
+	
+	global $wpdb;
+	$query = $wpdb->get_results("SELECT team_int, mfl_team_id FROM wp_teams" );
+	
+	foreach ($query as $val){
+		if(!empty($val->mfl_team_id)){
+			$theteams[$val->mfl_team_id] = $val->team_int;
+		}
+	}
+	
+	return $theteams ;
+	
+}
 
 // function to return player data from MFL
 
@@ -1991,8 +2086,44 @@ function get_mfl_player_details($mflid){
 	
 	return $mflguy['players']['player'];
 	
-
 }
+
+// function to return mfl player restults by week 
+function get_weekly_mfl_player_results($mflid, $year, $week){
+	
+	$curl = curl_init();
+	curl_setopt_array($curl, array(
+	
+	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&YEAR=$year&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_RETURNTRANSFER => true,
+	  CURLOPT_ENCODING => "",
+	  CURLOPT_MAXREDIRS => 10,
+	  CURLOPT_TIMEOUT => 30,
+	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+	  CURLOPT_CUSTOMREQUEST => "GET",
+	  CURLOPT_HTTPHEADER => array(
+	    "Cache-Control: no-cache",
+	    "Postman-Token: 12d23246-b5e0-73c0-4b72-2d5c0ea6d955"
+	  ),
+	));
+	
+	$mflplayerscore = curl_exec($curl);
+	$err = curl_error($curl);
+	curl_close($curl);
+	$mflscores = json_decode($mflplayerscore, true);
+	
+	$playerscores = $mflscores['playerScores']['playerScore'];
+	
+	if(isset($playerscores)){
+		foreach ($playerscores as $value){
+				$score[$value['week']] = $value['score'];
+		}
+	}
+	
+	return $score[$week];
+	
+}
+
 
 
 function get_boxscore_cache($weekvar){

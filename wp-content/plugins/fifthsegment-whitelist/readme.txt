@@ -2,8 +2,8 @@
 Contributors: fifthsegment
 Tags: wordpress, plugin, whitelist, roadblock, email whitelist, email, password protected, members, only, members only, 
 Requires at least: 3.9
-Tested up to: 4.4
-Stable tag: 2.8
+Tested up to: 4.7
+Stable tag: 3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,15 @@ Remove all your captcha keys from the plugin settings and it will be disabled.
 Yes, you can do that by going into the Users section of your Wordpress admin area and removing them. You can also do it by removing their email from the whitelist.
 
 == Changelog ==
+= 3.5 =
+* 2017-01-4
+* Added support for importing multiple email addresses
+* Fixed output header issue
+
+= 3.4 =
+* 2016-10-4
+* Fixed UI
+
 = 2.8 =
 * 2015-12-30
 * Updated More Addons

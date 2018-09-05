@@ -772,9 +772,228 @@ arsort($player_streaks);
 				
 				?>	
 				
-	
+				</div>
 		
 		</div>
+		
+		
+		<?php
+		$number_ones = get_number_ones();
+		foreach ($number_ones as $key => $value){			
+			$season = substr($value['id'], -4);
+			$player_number_ones[$key] = array(
+				'season' => $season,
+				'points' => $value['points'],
+				'team' => $value['teams']
+			);
+		}
+	
+		$seasons = the_seasons();
+			foreach ($seasons as $value){
+				if (empty($pointarray[$value])){
+					$theval = 0; 
+				} else {
+					$theval = $pointarray[$value];
+				}
+				$playerchartpts[$value] = $theval;
+			}
+			
+			// get avarage arrays
+			
+			foreach($number_ones as $key => $item){
+			   $arr_t_ones[$item['pos']][$key] = $item;
+			}
+			
+			$qb_for_chart = $arr_t_ones['QB'];
+			$rb_for_chart = $arr_t_ones['RB'];
+			$wr_for_chart = $arr_t_ones['WR'];
+			$pk_for_chart = $arr_t_ones['PK'];
+			
+			foreach ($qb_for_chart as $value){
+				$qb_chart_data[$value['year']] = array(
+					'high' => $value['points'],
+					'avg' => $value['avg']	
+				);
+			}
+
+			foreach ($rb_for_chart as $value){
+				$rb_chart_data[$value['year']] = array(
+					'high' => $value['points'],
+					'avg' => $value['avg']	
+				);
+			}
+
+			foreach ($wr_for_chart as $value){
+				$wr_chart_data[$value['year']] = array(
+					'high' => $value['points'],
+					'avg' => $value['avg']	
+				);
+			}
+
+			foreach ($pk_for_chart as $value){
+				$pk_chart_data[$value['year']] = array(
+					'high' => $value['points'],
+					'avg' => $value['avg']	
+				);
+			}
+
+			
+			//printr($player_number_ones, 0);
+		?>
+		<script type="text/javascript">
+		jQuery(document).ready(function() {
+			Highcharts.chart('playerhighchart', {
+			title: {
+			        text: 'Season Points & Average by Position'
+			    },
+			    xAxis: {
+			        categories: [<?php 
+				        foreach ($playerchartpts as $key => $value){
+					        echo $key.',';
+				        } 
+				    ?>]
+			    },
+			    labels: {
+			        items: [{
+			            html: '',
+			            style: {
+			                top: '18px',
+			                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
+			            }
+			        }]
+			    },
+			    series: [{
+			        type: 'spline',
+			        name: 'QB Average',
+			        color: '#cadeef',
+			        data: [<?php 
+				        foreach ($qb_chart_data as $key => $value){
+					        echo $value['avg'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#cadeef',
+			            fillColor: 'white'
+			        }
+			    },
+			    	{
+			        type: 'spline',
+			        name: 'QB High Value',
+			        color: '#3f88c5',
+			        data: [<?php 
+				        foreach ($qb_chart_data as $key => $value){
+					        echo $value['high'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#3f88c5',
+			            fillColor: 'white'
+			        }
+			    },
+			    {
+			        type: 'spline',
+			        name: 'RB Average',
+			        color: '#f2b9b9',
+			        data: [<?php 
+				        foreach ($rb_chart_data as $key => $value){
+					        echo $value['avg'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#f2b9b9',
+			            fillColor: 'white'
+			        }
+			    },
+			    	{
+			        type: 'spline',
+			        name: 'RB High Value',
+			        color: '#d00000',
+			        data: [<?php 
+				        foreach ($rb_chart_data as $key => $value){
+					        echo $value['high'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#d00000',
+			            fillColor: 'white'
+			        }
+			    },
+			   {
+			        type: 'spline',
+			        name: 'WR Average',
+			        color: '#dcede3',
+			        data: [<?php 
+				        foreach ($wr_chart_data as $key => $value){
+					        echo $value['avg'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#dcede3',
+			            fillColor: 'white'
+			        }
+			    },
+			    	{
+			        type: 'spline',
+			        name: 'WR High Value',
+			        color: '#82c09a',
+			        data: [<?php 
+				        foreach ($wr_chart_data as $key => $value){
+					        echo $value['high'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#82c09a',
+			            fillColor: 'white'
+			        }
+			    },
+			   {
+			        type: 'spline',
+			        name: 'PK Average',
+			        color: '#ffecbb',
+			        data: [<?php 
+				        foreach ($pk_chart_data as $key => $value){
+					        echo $value['avg'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#ffecbb',
+			            fillColor: 'white'
+			        }
+			    },
+			    	{
+			        type: 'spline',
+			        name: 'PK High Value',
+			        color: '#ffba08',
+			        data: [<?php 
+				        foreach ($pk_chart_data as $key => $value){
+					        echo $value['high'].',';
+				        } 
+				    ?>],
+			        marker: {
+			            lineWidth: 2,
+			            lineColor: '#ffba08',
+			            fillColor: 'white'
+			        }
+			    }]
+			});	
+		});	
+		</script>
+		
+		<div class="col-xs-24">
+		<div class="panel hidden-xs">
+			<div id="playerhighchart"></div> 
+		</div>
+		
+		</div>
+		
+		
 		</div>
 	</div>
 	<!--===================================================-->

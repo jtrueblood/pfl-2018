@@ -10,16 +10,20 @@
 
 
 <?php 
+/*
 $temmmmm = get_team_results_expanded('ETS');
 printr($temmmmm, 0);
+*/
 	
 $year = 2017;
 $week = 14;
 $lid = 38954;
 $apikey = 'aRNp1sySvuKox1emO1HIZDYeFbox';
 
+/*
 $mflplayer = 10276;
 $pflplayer = '2011IngrRB';
+*/
 
 $teammflid = array(
 	'0001' => 'TSG',

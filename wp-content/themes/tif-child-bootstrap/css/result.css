@@ -119,7 +119,7 @@ body.page-template-tables #content-container {
   padding-top: 65px;
 }
 .page-id-70 .widget-header {
-  min-height: 175px;
+  min-height: 208px;
 }
 .page-id-62 .panel {
   min-height: 650px;
@@ -195,6 +195,14 @@ body.page-template-builds li.list-group-item {
 }
 .page-template-players .left-column .widget-body {
   padding: 35px 15px 25px;
+}
+.dataTables_length {
+  width: 50%;
+  float: left;
+  margin-left: 8px;
+}
+.dataTables_filter {
+  margin-right: 8px;
 }
 .page-template-players .left-column .widget-body.probowl {
   padding-top: 15px;
@@ -444,14 +452,37 @@ span.hallleader {
   padding-top: 5px;
   display: block;
 }
-.team-hel-panel {
-  padding-bottom: 20px;
+.panel.team-hel-panel {
+  padding-bottom: 1px;
+  margin-bottom: 0;
+}
+.panel.team-hel-panel h5 {
+  margin-top: 25px;
 }
 img.widget-bg.team-helmet-image {
   min-width: 0;
   min-height: 0;
-  height: 125px;
-  left: 10px;
+  height: 220px;
+  left: -15px;
+  top: -50px;
+}
+.team-name {
+  width: 40%;
+  display: inline-block;
+  float: right;
+  margin-top: 25px;
+}
+.team-name p {
+  color: #ffffff;
+  margin-bottom: 0;
+}
+.team-name h2 {
+  font-size: 30px;
+  color: #ffffff;
+  margin: 0;
+}
+.team-name.wide-team-name {
+  width: 55%;
 }
 .hall-for-teams {
   text-align: left;
@@ -520,4 +551,22 @@ img.widget-bg.team-helmet-image {
 }
 .font-italic {
   font-style: italic !important;
+}
+#sankeydivisions {
+  min-width: 300px;
+  max-width: 800px;
+  height: 600px;
+  margin: 1em auto;
+  border: 1px solid silver;
+}
+#csv {
+  display: none;
+}
+.ring-of-honor {
+  padding: 10px;
+  text-align: center;
+}
+.ring-of-honor .honored {
+  display: inline-block;
+  padding: 0 5px;
 }

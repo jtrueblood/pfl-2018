@@ -62,9 +62,9 @@ function get_leaders_page($array){
 		$yearcheck = $esea - 1;
 		
 		if($lastsea >= $yearcheck){
-			$isactive = 1;
+			$isactive = '<i class="fa fa-circle"></i>';
 		} else {
-			$isactive = 0;
+			$isactive = '';
 		}
 		
 		$rank = $key + 1;

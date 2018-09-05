@@ -100,9 +100,9 @@ foreach ($playersall as $key => $val){
 		<div class="col-xs-24 col-sm-6 left-column">
 			
 			<?php include_once('inc/team_helmet_name.php');?>
-				
-			<?php include_once('inc/team_hall.php');?>	
 			
+			<?php include_once('inc/team_retired_nos.php');?>
+				
 			<?php include_once('inc/team_awards.php');?>	
 			
 			<?php include_once('inc/team_probowl_selections.php');?>
@@ -113,26 +113,23 @@ foreach ($playersall as $key => $val){
 		
 		<div class="col-xs-24 col-sm-12">
 		
-			
 			<!-- Standings -->
 			<?php include_once('inc/team_standings.php');?>
 		
-			
 			<?php include_once('inc/team_leaders.php');?>
-			
 						
 		</div>
 	
 	
 		<!-- SELECT DROPDOWN -->
-		<div class="hidden-xs hidden-sm col-md-6">
+		<div class="hidden-xs hidden-sm col-md-6">	
 				
-				<?php include_once('inc/teams_select.php');?>
-				
-				<!-- HISTORY TIMELINE -->
-				<?php include_once('inc/teams_timeline.php');?>	
-				
-				
+			<?php include_once('inc/teams_select.php');?>
+			
+			<?php include_once('inc/team_hall.php');?>	
+			
+			<?php include_once('inc/teams_timeline.php');?>	
+							
 		</div>
 
 		

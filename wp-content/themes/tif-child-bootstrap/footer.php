@@ -83,6 +83,14 @@
     
     <!--Foo Table-->
     <script src="<?php echo get_stylesheet_directory_uri();?>/plugins/fooTable/js/footable.js" type="text/javascript"></script>	
+    
+    
+    <!-- HIGH CHARTS CDN -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/export-data.js"></script>
+	<script src="https://code.highcharts.com/modules/sankey.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 
 <?php wp_footer(); ?>    
   

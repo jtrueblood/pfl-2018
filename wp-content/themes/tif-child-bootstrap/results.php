@@ -49,14 +49,6 @@ $prev_week = $nextweek[$weekvar - 1][1];
 $next_year = $nextweek[$weekvar + 1][0];
 $next_week = $nextweek[$weekvar + 1][1];
 
-
-
-/*
-printr($nextweek, 0);
-die();
-*/
-
-
 $teamarrays = array (
 	'RBS' => $RBS, 
 	'ETS' => $ETS,
@@ -266,8 +258,10 @@ function linktoplayerpage($pid, $all){
 					</div>
 					
 								
-						<?php
-					$w = 1;	
+				<?php
+				$w = 1;	
+					
+				if(isset($schedulewk)){
 					foreach ($schedulewk as $key => $value){
 							
 							$hometeam = $key;
@@ -511,7 +505,10 @@ function linktoplayerpage($pid, $all){
 								}
 								$w++;
 								
-						} // END THE FOREACH				
+						} // END THE FOREACH	
+					} else {  // END IF ISSET
+						echo '<h3>WEEK NOT FOUND</h3>';
+					}		
 						?>
 							
 					
@@ -528,8 +525,6 @@ function linktoplayerpage($pid, $all){
 		
 		
 </div> 
-
-<?php session_destroy(); ?>
 		
 </div>
 </div>

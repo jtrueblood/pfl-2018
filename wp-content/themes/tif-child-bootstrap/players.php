@@ -857,7 +857,8 @@ foreach($buildtheyears as $season ){
 																			$ippg = number_format(($ipoints / $igames), 1);
 																			$ihigh = $playerseasonstats['high'];
 																			$theteams = $playerseasonstats['teams'];
-																			$steams = array_unique($theteams);
+																			$iteams = array_unique($theteams);
+																			$steams = array_values($iteams);
 																			$teamsplayer = array($steams[0],$steams[1],$steams[2],$steams[3]);
 																			$yearsplayed[] = $printyear;
 																		
@@ -990,7 +991,14 @@ foreach($buildtheyears as $season ){
 								title: {
 								        text: 'Career Points'
 								    },
-								    xAxis: {
+								    xAxis: {	    
+								    crosshair: true,
+								    allowDecimals: false,
+								    labels: {
+							            align: 'right',
+							            reserveSpace: true,
+							            rotation: 270
+							        },
 								        categories: [<?php 
 									        foreach ($playerchartpts as $key => $value){
 										        echo $key.',';
@@ -1003,7 +1011,8 @@ foreach($buildtheyears as $season ){
 								            style: {
 								                top: '18px',
 								                color: (Highcharts.theme && Highcharts.theme.textColor) || 'black'
-								            }
+								            },
+								             
 								        }]
 								    },
 								    series: [{
@@ -1129,12 +1138,23 @@ foreach($buildtheyears as $season ){
 																		$ishome = 'The Gonad Bowl';
 																	}
 																}
+																// 	alter ETS stadium name based on year
+																if ($ishome == 'The Woodshed'){
+																	if($pyear <= 2017){
+																		$ishome = 'Hutchence Field';
+																	}
+																}
 																$gametable .= '<td><span class="text-bold ">'.$ishome.'</span></td></tr>';
 															} else {
 																$isaway = $teaminfo[strtoupper($pversus)]['stadium'];
 																if ($isaway == 'Spankoni Center'){
 																	if($pyear <= 2004){
 																		$isaway = 'The Gonad Bowl';
+																	}
+																}
+																if ($isaway == 'The Woodshed'){
+																	if($pyear <= 2017){
+																		$isaway = 'Hutchence Field';
 																	}
 																}
 																$gametable .= '<td>'.$isaway.'</td></tr>';

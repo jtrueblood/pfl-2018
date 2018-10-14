@@ -570,3 +570,11 @@ img.widget-bg.team-helmet-image {
   display: inline-block;
   padding: 0 5px;
 }
+.stadium {
+  background-position: center top;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.stadium-img-class {
+  padding-top: 150px !important;
+}

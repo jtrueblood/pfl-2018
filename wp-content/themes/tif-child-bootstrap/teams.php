@@ -23,6 +23,7 @@ $thisteam = get_team_results('wp_team_'.$teamid);
 //$player = get_raw_player_data_team('2004BreeQB', $teamid);
 
 
+
 foreach ($seasons as $year){
 	$stand[$year] = get_standings_by_team($year, $teamid); 
 }
@@ -115,6 +116,8 @@ foreach ($playersall as $key => $val){
 		
 			<!-- Standings -->
 			<?php include_once('inc/team_standings.php');?>
+			
+			<?php include_once('inc/team_points_wins_chart.php');?>
 		
 			<?php include_once('inc/team_leaders.php');?>
 						
@@ -126,10 +129,18 @@ foreach ($playersall as $key => $val){
 				
 			<?php include_once('inc/teams_select.php');?>
 			
+			<?php include_once('inc/team_stadium.php');?>
+			
 			<?php include_once('inc/team_hall.php');?>	
 			
 			<?php include_once('inc/teams_timeline.php');?>	
 							
+		</div>
+		
+		<div class="hidden-xs col-xs-24">
+		
+			<?php include_once('inc/team_chart_streak.php');?>
+		
 		</div>
 
 		

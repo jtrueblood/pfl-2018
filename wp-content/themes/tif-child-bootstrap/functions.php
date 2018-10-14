@@ -49,6 +49,14 @@ $_SESSION['teamids'] = $teamids;
 $mydb = new wpdb('root','root','pflmicro','localhost');
 
 
+if( function_exists('acf_add_options_page') ) {
+
+$args = array('title' => 'Options');
+	
+	acf_add_options_page($args);
+	
+}
+
 /* allow plugin updates on localhost */
 if ( is_admin() ) {
 add_filter( 'filesystem_method', create_function( '$a', 'return "direct";' ) );
@@ -215,6 +223,7 @@ function allplayerdata_trans($pid) {
 
 
 // retrieve team array from transient. -- these team transinets are set in the homepage
+
 function get_team_data_trans($teamid) {
 	$transient = get_transient( $teamid.'_trans' );
 	if( ! empty( $transient ) ) {
@@ -224,7 +233,9 @@ function get_team_data_trans($teamid) {
   	}
 }
 
+
 // set team array as a transient
+
 function set_team_trans() {
   $transient = get_transient( 'team_trans' );
   if( ! empty( $transient ) ) {
@@ -237,7 +248,9 @@ function set_team_trans() {
 
 }
 
+
 // set masterschedule array as a transient
+
 function set_schedule_trans() {
   $transient = get_transient( 'schedule_trans' );
   if( ! empty( $transient ) ) {
@@ -249,6 +262,7 @@ function set_schedule_trans() {
   }
 
 }
+
 
 // simple get functions
 function the_seasons(){
@@ -507,12 +521,14 @@ function getallteamids($theweek, $matchup, $franchise){
 	return $teamid;
 }
 
+/*
 function getallteamcache ($team){
 	get_cache('team/'.$team.'_f', 0);	
 	$build = $_SESSION['team/'.$team.'_f'];
 	
 	return $build;
 }
+*/
 
 
 // requires 'playersassoc' cache added to page
@@ -1177,6 +1193,7 @@ function set_allplayerdata_trans($pid) {
 }
 
 // set transient for team data
+/*
 function set_team_data_trans($teamid) {
   $transient = get_transient( $teamid.'_trans' );
   if( ! empty( $transient ) ) {
@@ -1188,6 +1205,7 @@ function set_team_data_trans($teamid) {
   }
   
 }
+*/
 
 
 // gets the stats for a player for a specific season
@@ -1367,9 +1385,23 @@ function get_team_results($team){
 			'id' => $revisequery[0], 
 			'season' => $revisequery[1], 
 			'week' => $revisequery[2], 
-			'versus' => $revisequery[3],  
-			'home' => $revisequery[4],
-			'points' => $revisequery[5]
+			'team_int' => $revisequery[3],  
+			'points' => $revisequery[4],
+			'versus' => $revisequery[5],
+			'versus_pts' => $revisequery[6],
+			'home_away' => $revisequery[7],
+			'stadium' => $revisequery[8],
+			'result' => $revisequery[9],
+			'qb1' => $revisequery[10],
+			'rb1' => $revisequery[11],
+			'wr1' => $revisequery[12],
+			'pk1' => $revisequery[13],
+			'overtime' => $revisequery[14],
+			'qb2' => $revisequery[15],
+			'rb2' => $revisequery[16],
+			'wr2' => $revisequery[17],
+			'pk2' => $revisequery[18],
+			'extra_ot' => $revisequery[19]
 		);
 	}
 	
@@ -1828,6 +1860,9 @@ function insert_wp_season_leaders($pid){
 		global $wpdb;
 			
 	 	foreach ($clean as $key => $value){
+		 	
+		 	$delid = $value['id'];
+		 	$delete = $wpdb->query("delete from wp_season_leaders where id = '$delid'");
 		 	
 		 	$testarray = $clean[$key];
 		 	

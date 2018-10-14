@@ -107,7 +107,20 @@ usort($toppoints, function($a, $b) {
 });
 */
 
+// get playoff data by players
+$playoffs = get_postseason();					
+foreach($playoffs as $key => $item){
+   $arr_playoff[$item['playerid']][$key] = $item;
+}
+ksort($arr_playoff, SORT_NUMERIC);
 
+foreach ($arr_playoff as $key => $player){
+	$points = array();
+	foreach ($player as $item){
+		$points[] = $item['score'];
+		$new_playoff_array[$key] = array_sum($points);
+	}
+}
 
 
 function local_all_team_data_trans() {
@@ -773,6 +786,46 @@ arsort($player_streaks);
 				?>	
 				
 				</div>
+				
+				
+				<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php
+					
+					arsort($new_playoff_array);
+					
+					//printr($new_playoff_array, 0); 
+
+					$labels = array('Player','Total Points');	
+					tablehead('Post Season Individual Career Points', $labels);	
+					
+					
+					$c = 1;
+					foreach ($new_playoff_array as $key => $value){
+						
+						$name = get_player_name($key);
+						
+						$plpostprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
+						$plpostprint .='<td class="text-right">'.$value.'</td></tr>';
+						
+						if($c == 20){
+							break;
+						}
+						
+						$c++;
+						
+					}
+					
+					echo $plpostprint;
+					
+					tablefoot('-- Top 20 Players');	
+				
+
+				
+				?>	
+				
+				</div>
+
+				
 		
 		</div>
 		

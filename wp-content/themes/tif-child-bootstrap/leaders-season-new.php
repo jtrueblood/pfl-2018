@@ -13,6 +13,7 @@
 //echo $geturl;
 //$yearid = 1998;
 $yearid = $_GET['id'];
+$yearis = date('Y');
 	
 $theyears = the_seasons();
 $playersassoc = get_players_assoc ();
@@ -89,7 +90,7 @@ $rb_one[key($rb_number_one)] = $rb_number_one[key($rb_number_one)];
 $wr_one[key($wr_number_one)] = $wr_number_one[key($wr_number_one)];
 $pk_one[key($pk_number_one)] = $pk_number_one[key($pk_number_one)];
 
-//printr($qb_number_one, 0);
+//printr($wr_number_one, 0);
 
 $qb_avg = array_sum($qb_number_one)/count($qb_number_one);
 $rb_avg = array_sum($rb_number_one)/count($rb_number_one);
@@ -269,20 +270,26 @@ function insert_wp_number_ones_pk(){
 }
 insert_wp_number_ones_pk();
 
-
+if ($yearid == $yearis){
+	$gamelimit = 1;
+} else {
+	$gamelimit = 7;
+}
 
 // start PVQ calc
 foreach ($qb_leaders as $key => $val){
 	$qb_pvq_build[$val['id']] = $val['points'];
-	if($val['games'] > 7){
+	if($val['games'] > $gamelimit){
 		$qb_ppg_build[$val['id']] = $val['points'] / $val['games'];
 	}
 }
 $qb_tots = array_sum($qb_pvq_build);
 
+//printr($qb_leaders, 0);
+
 foreach ($rb_leaders as $key => $val){
 	$rb_pvq_build[$val['id']] = $val['points'];
-	if($val['games'] > 7){
+	if($val['games'] > $gamelimit){
 		$rb_ppg_build[$val['id']] = $val['points'] / $val['games'];
 	}
 }
@@ -290,7 +297,7 @@ $rb_tots = array_sum($rb_pvq_build);
 
 foreach ($wr_leaders as $key => $val){
 	$wr_pvq_build[$val['id']] = $val['points'];
-	if($val['games'] > 7){
+	if($val['games'] > $gamelimit){
 		$wr_ppg_build[$val['id']] = $val['points'] / $val['games'];
 	}
 }
@@ -298,7 +305,7 @@ $wr_tots = array_sum($wr_pvq_build);
 
 foreach ($pk_leaders as $key => $val){
 	$pk_pvq_build[$val['id']] = $val['points'];
-	if($val['games'] > 7){
+	if($val['games'] > $gamelimit){
 		$pk_ppg_build[$val['id']] = $val['points'] / $val['games'];
 	}
 }
@@ -479,7 +486,7 @@ arsort($merge_ppgs);
 							<!-- PPG PANEL -->
 							<div class="panel">
 								<div class="panel-heading">
-									<h2 class="panel-title">Points Per Game <small>-- Minimum 7 Games Played</small></h2>
+									<h2 class="panel-title">Points Per Game <small>-- Minimum <?php echo $gamelimit; ?> Games Played</small></h2>
 									
 								</div>
 								<div class="panel-body">
@@ -497,7 +504,7 @@ arsort($merge_ppgs);
 											<tbody>
 												<?php
 													
-// 													printr($merge_ppgs, 0);
+ 		//											printr($merge_ppgs, 0);
 													
 													$rank = 1;
 													foreach ($merge_ppgs as $key => $get){

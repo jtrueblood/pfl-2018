@@ -342,7 +342,7 @@ foreach ($weekstarters as $key => $value){
 		
 		$insert_player[$pid] = array(
 			'week_id' 	=> $year.$weekform,
-			'season'	=> $year,
+			'year'		=> $year,
 			'week'		=> $week,
 			'points'	=> $v[1],
 			'team'		=> $key,
@@ -361,7 +361,7 @@ foreach ($weekstarters as $key => $value){
 global $wpdb;
 
 if($run == 'false'){
-	echo '<h3>NO DATA INSERTED</h3>';
+	echo '<div class="row"><div class="col-sm-6"><pre><h3>NO DATA INSERTED</h3></pre></div></div>';
 }
 
 if($run == 'true'){
@@ -403,7 +403,7 @@ if($run == 'true'){
 			$key,
 			array(
 				'week_id' 	=> $pi['week_id'],
-				'season'	=> $pi['season'],
+				'year'		=> $pi['year'],
 				'week'		=> $pi['week'],
 				'points'	=> $pi['points'],
 				'team'		=> $pi['team'],
@@ -439,7 +439,7 @@ if($run == 'true'){
 						$query = $wpdb->get_results("select * from $key", ARRAY_N);
 						//var_dump($query);
 						if(empty($query)){
-							echo 'TABLE MISSING<br>';
+							echo 'TABLE MISSING --- '.$key.'<br>';
 						} 
 						
 						if(!empty($query)){                 

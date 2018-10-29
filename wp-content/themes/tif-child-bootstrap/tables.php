@@ -94,12 +94,19 @@ $allplayerdata = allplayerdata_tables_trans();
 foreach ($allplayerdata as $weeks){
 	if(!empty($weeks)){
 			foreach ($weeks as $key => $value){
-				if($value['points'] > 25){
+			if($value['points'] > 25){
 				$toppoints[$value['playerid'].$value['weekids']] = $value['points'];
+			}
+			$pos = substr($value['playerid'], -2);
+			if($pos == 'PK'){
+				if($value['points'] > 12){
+					$pktoppoints[$value['playerid'].$value['weekids']] = $value['points'];
+				}
 			}
 		}
 	}
 }
+
 /*
 
 usort($toppoints, function($a, $b) {
@@ -240,16 +247,10 @@ foreach ($allteams as $key => $value){
 
 arsort($gamediffs);
 
-
-
 /*
 printr($gamediffs, 0);
 die();
 */
-
-
-
-
 
 // arrays for individual seasons and games
 function teamhighs($TEAM){
@@ -299,8 +300,6 @@ foreach ($allhighs as $teamkey => $gethigh){
 }
 
 arsort($sorthigh);
-
-
 
 
 function bestweek($TEAM, $myteam){
@@ -391,6 +390,48 @@ foreach ($streaks as $value){
 arsort($player_streaks);
 
 //printr($player_streaks, 0);
+
+$playerids = just_player_ids();
+
+
+foreach($playerids as $pl){
+	$player_stats = get_player_career_stats($pl);
+	$topseasonscores[$pl] = $player_stats['yeartotal']; 
+}
+
+foreach($topseasonscores as $key => $item){
+	$pos = substr($key, -2);
+	if(isset($item)){
+		foreach($item as $subkey => $value){
+			if($pos == 'QB'){
+				if($value > 100){
+					$highseas_qb[$key.$subkey] = $value;
+				}
+			}
+			if($pos == 'RB'){
+				if($value > 100){
+					$highseas_rb[$key.$subkey] = $value;
+				}
+			}
+			if($pos == 'WR'){
+				if($value > 100){
+					$highseas_wr[$key.$subkey] = $value;
+				}
+			}
+			if($pos == 'PK'){
+				if($value > 75){
+					$highseas_pk[$key.$subkey] = $value;
+				}
+			}
+		}
+	}
+}
+
+arsort($highseas_qb);
+arsort($highseas_rb);
+arsort($highseas_wr);
+arsort($highseas_pk);
+
 
 ?>
 
@@ -652,7 +693,7 @@ arsort($player_streaks);
 					$plperc = $value / $opps;
 					
 					$postprint .='<tr><td>'.$teamlist[$key].'</td>';
-					$postprint .='<td class="min-width text-center">'.$value.' / '.$opps.'</td>';
+					$postprint .='<td class="min-width text-center">'.$value.' / '.number_format($opps, 1).'</td>';
 					$postprint .='<td class="min-width text-right">'.number_format($plperc, 3).'</td></tr>';
 					$b++;
 					
@@ -671,13 +712,283 @@ arsort($player_streaks);
 			<div class="col-xs-24">
 				<h4>Player Data - Regular Season</h4>
 				<hr>
-				
-				
-				<div class="col-xs-24 col-sm-12 col-md-6">
+			
+			<!-- QB Game Scores -->	
+			<div class="col-xs-24 col-sm-12 col-md-6">
 				<?php 
 				arsort($toppoints);
 				
+				$labels = array('Player', 'Points');	
+				tablehead('QB Individual Game Scores', $labels);	
 				
+				foreach ($toppoints as $key => $value){
+					
+					$highplayer = substr($key , 0, -6);
+					$highpos = substr($highplayer, -2);
+					$highweek= substr($key , -2);
+					$highyear = substr($key , -6, -2);
+					
+					$name = get_player_name($highplayer);
+					
+					if($highpos == 'QB'){
+						$qbtoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+						$qbtoppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+					}	
+				}
+				
+				echo $qbtoppointsprint;
+				
+				tablefoot('26 Points or More');	
+				
+				?>	
+
+			</div>
+			
+			<!-- RB Game Scores -->	
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+
+				
+				$labels = array('Player', 'Points');	
+				tablehead('RB Individual Game Scores', $labels);	
+				
+				foreach ($toppoints as $key => $value){
+					
+					$highplayer = substr($key , 0, -6);
+					$highpos = substr($highplayer, -2);
+					$highweek= substr($key , -2);
+					$highyear = substr($key , -6, -2);
+					
+					$name = get_player_name($highplayer);
+					if($value > 28){
+						if($highpos == 'RB'){
+							$rbtoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+							$rbtoppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+						}	
+					}
+				}
+				
+				echo $rbtoppointsprint;
+				
+				tablefoot('29 Points or More');	
+				
+				?>	
+
+			</div>
+			
+			<!-- WR Game Scores -->	
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+
+				$labels = array('Player', 'Points');	
+				tablehead('WR Individual Game Scores', $labels);	
+				
+				foreach ($toppoints as $key => $value){
+					
+					$highplayer = substr($key , 0, -6);
+					$highpos = substr($highplayer, -2);
+					$highweek= substr($key , -2);
+					$highyear = substr($key , -6, -2);
+					
+					$name = get_player_name($highplayer);
+					
+					if($highpos == 'WR'){
+						$wrtoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+						$wrtoppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+					}	
+				}
+				
+				echo $wrtoppointsprint;
+				
+				tablefoot('26 Points or More');	
+				
+				?>	
+
+			</div>
+			
+			<!-- PK Game Scores -->	
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				arsort($pktoppoints);
+				
+				$labels = array('Player', 'Points');	
+				tablehead('PK Individual Game Scores', $labels);	
+				
+				foreach ($pktoppoints as $key => $value){
+					
+					$highplayer = substr($key , 0, -6);
+					$highpos = substr($highplayer, -2);
+					$highweek= substr($key , -2);
+					$highyear = substr($key , -6, -2);
+					
+					$name = get_player_name($highplayer);
+					
+					if($highpos == 'PK'){
+						$pktoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+						$pktoppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+					}	
+				}
+				
+				echo $pktoppointsprint;
+				
+				tablefoot('13 Points or More');	
+				
+				?>	
+
+			</div>
+			
+			</div>
+			
+			
+			<div class="col-xs-24">
+			
+				<!-- QB Season Scores -->	
+				<div class="col-xs-24 col-sm-12 col-md-6">
+					<?php 
+					
+					$labels = array('Player', 'Points');	
+					tablehead('QB Single Season Score', $labels);	
+					
+					$w = 0;
+					foreach ($highseas_qb as $key => $value){
+						
+						$rplayer = substr($key , 0, -4);
+						$rpos = substr($highplayer, -2);
+						$ryear = substr($key , -4);
+						
+						$name = get_player_name($rplayer);
+						
+							$seas_qb_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
+							$seas_qb_print .='<td class="min-width text-right">'.$value.'</td></tr>';
+					
+						if($w == 20){
+							break;
+						}
+						
+						$w++;
+					}
+
+					echo $seas_qb_print;
+					
+					tablefoot('Top 20 Seasons');	
+					
+					?>	
+	
+				</div>	
+				
+				<!-- RB Season Scores -->	
+				<div class="col-xs-24 col-sm-12 col-md-6">
+					<?php 
+					
+					$labels = array('Player', 'Points');	
+					tablehead('RB Single Season Score', $labels);	
+					
+					$w = 0;
+					foreach ($highseas_rb as $key => $value){
+						
+						$rplayer = substr($key , 0, -4);
+						$rpos = substr($highplayer, -2);
+						$ryear = substr($key , -4);
+						
+						$name = get_player_name($rplayer);
+						
+							$seas_rb_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
+							$seas_rb_print .='<td class="min-width text-right">'.$value.'</td></tr>';
+					
+						if($w == 20){
+							break;
+						}
+						
+						$w++;
+					}
+
+					echo $seas_rb_print;
+					
+					tablefoot('Top 20 Seasons');	
+					
+					?>	
+	
+				</div>	
+				
+				
+				<!-- WR Season Scores -->	
+				<div class="col-xs-24 col-sm-12 col-md-6">
+					<?php 
+					
+					$labels = array('Player', 'Points');	
+					tablehead('WR Single Season Score', $labels);	
+					
+					$w = 0;
+					foreach ($highseas_wr as $key => $value){
+						
+						$rplayer = substr($key , 0, -4);
+						$rpos = substr($highplayer, -2);
+						$ryear = substr($key , -4);
+						
+						$name = get_player_name($rplayer);
+						
+							$seas_wr_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
+							$seas_wr_print .='<td class="min-width text-right">'.$value.'</td></tr>';
+					
+						if($w == 20){
+							break;
+						}
+						
+						$w++;
+					}
+
+					echo $seas_wr_print;
+					
+					tablefoot('Top 20 Seasons');	
+					
+					?>	
+	
+				</div>
+				
+				
+				<!-- PK Season Scores -->	
+				<div class="col-xs-24 col-sm-12 col-md-6">
+					<?php 
+					
+					$labels = array('Player', 'Points');	
+					tablehead('PK Single Season Score', $labels);	
+					
+					$w = 0;
+					foreach ($highseas_pk as $key => $value){
+						
+						$rplayer = substr($key , 0, -4);
+						$rpos = substr($highplayer, -2);
+						$ryear = substr($key , -4);
+						
+						$name = get_player_name($rplayer);
+						
+							$seas_pk_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
+							$seas_pk_print .='<td class="min-width text-right">'.$value.'</td></tr>';
+					
+						if($w == 20){
+							break;
+						}
+						
+						$w++;
+					}
+
+					echo $seas_pk_print;
+					
+					tablefoot('Top 20 Seasons');	
+					
+					?>	
+	
+				</div>		
+				
+				
+						
+			</div>
+			
+			
+			<div class="col-xs-24">
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
 				
 				$labels = array('Player', 'Points');	
 				tablehead('Top Individual Game Scores', $labels);	
@@ -690,17 +1001,15 @@ arsort($player_streaks);
 					$highyear = substr($key , -6, -2);
 					
 					$name = get_player_name($highplayer);
-					
-						if ($value >= 30){
-							$toppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
-							$toppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
-						}
-					
+					if($value >= 30){
+						$toppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+						$toppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';	
+					}
 				}
 				
 				echo $toppointsprint;
 				
-				tablefoot('-- Score of 30+');	
+				tablefoot('');	
 			
 				
 				?>	
@@ -754,7 +1063,6 @@ arsort($player_streaks);
 				$labels = array('Player', 'Season', 'Points');	
 				tablehead('Top Individual Playoff Scores', $labels);	
 				
-				
 				foreach ($playoff_player_highs as $key => $value){
 					
 					$highguy = substr($key , 0, -6);
@@ -770,17 +1078,17 @@ arsort($player_streaks);
 					
 					$name = get_player_name($highguy);
 					
-						if ($value >= 20){
+						if ($value >= 25){
 							$topplayptsprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
 							$topplayptsprint .='<td>'.$highweek.', '.$highyear.'</td>';
 							$topplayptsprint .='<td class="min-width text-right">'.$value.'</td></tr>';
 						}
-					
+	
 				}
 				
 				echo $topplayptsprint;
 				
-				tablefoot('-- Score of 20+');	
+				tablefoot('-- Score of 25+');	
 			
 				
 				?>	

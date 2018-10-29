@@ -85,6 +85,25 @@ $teamlist = array(
 	'DST' => 'Destruction'	
 );
 
+function insertslams($array){
+												
+	global $wpdb;
+	$arr = $array;
+
+	$insertarr = $wpdb->insert(
+		 'wp_grandslams',
+	     array(
+		    'id' 		=> $arr['id'],
+			'weekid' 	=> $arr['weekid'],
+			'teamid' 	=> $arr['teamid']
+		),
+		 array( 
+			'%s','%d','%s' 
+		 )
+	);
+	
+}
+
 // get arrat of all team / all week data and index the values
 foreach ($teamarrays as $key => $value){
 	foreach ($value as $week){
@@ -321,7 +340,47 @@ function linktoplayerpage($pid, $all){
 							$a_pk2_data = get_player_week($a_pk2, $weekvar);
 							
 							$is_extra_ot = $getwk[$hometeam]['overtime']['extra_ot'];
-					
+							
+							$grandslam01 = '';
+							$grandslam02 = '';
+							
+							if($h_qb1_data['points'] >= 10){
+								if($h_rb1_data['points'] >= 10){
+									if($h_wr1_data['points'] >= 10){
+										if($h_pk1_data['points'] >= 10){
+											$grandslam02 = 'GRANDSLAM';
+										}
+									}
+								}
+							}
+							if($a_qb1_data['points'] >= 10){
+								if($a_rb1_data['points'] >= 10){
+									if($a_wr1_data['points'] >= 10){
+										if($a_pk1_data['points'] >= 10){
+											$grandslam01 = 'GRANDSLAM';
+										}
+									}
+								}
+							}
+							
+							if($h_qb2_data['points'] >= 10){
+								if($h_rb2_data['points'] >= 10){
+									if($h_wr2_data['points'] >= 10){
+										if($h_pk2_data['points'] >= 10){
+											$grandslam02 = 'GRANDSLAM';
+										}
+									}
+								}
+							}
+							if($a_qb2_data['points'] >= 10){
+								if($a_rb2_data['points'] >= 10){
+									if($a_wr2_data['points'] >= 10){
+										if($a_pk2_data['points'] >= 10){
+											$grandslam01 = 'GRANDSLAM';
+										}
+									}
+								}
+							}
 							
 							// Display the Boxes Here...		
 							echo '<div class="col-xs-24 col-sm-12 col-md-8">
@@ -476,12 +535,24 @@ function linktoplayerpage($pid, $all){
 										
 										echo '<br>';
 										
-										if ($grandslam01 == 1){
+										if (!empty($grandslam02)){
 											echo '<span class="text-bold">GRANDSLAM</span> for the '.$hometeam_full.'!<br> ';
+											$insertarr = array(
+												'id' => $weekvar.$hometeam,
+												'weekid' => $weekvar,
+												'teamid' => $hometeam
+											);
+											insertslams($insertarr);
 										}
 										
-										if ($grandslam02 == 1){
+										if (!empty($grandslam01)){
 											echo '<span class="text-bold">GRANDSLAM</span> for the '.$awayteam_full.'!<br> ';
+											$insertarr = array(
+												'id' => $weekvar.$awayteam,
+												'weekid' => $weekvar,
+												'teamid' => $awayteam
+											);
+											insertslams($insertarr);
 										}
 										
 										echo '<p></p><i>'.$weeknotes[$hometeam].'</i>'; 
@@ -491,7 +562,9 @@ function linktoplayerpage($pid, $all){
 									
 									// tooltip....
 									//echo '<a class="add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Tooltip on top">Tooltip on top</a>';
-									
+/*
+						
+*/
 									echo '</div> 
 										</div>
 									</div>

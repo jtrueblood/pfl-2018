@@ -107,6 +107,9 @@ foreach ($playersall as $key => $val){
 			<?php include_once('inc/team_awards.php');?>	
 			
 			<?php include_once('inc/team_probowl_selections.php');?>
+			
+			<?php include_once('inc/team_head_to_head.php');?>
+			
 		</div>
 		
 		
@@ -120,6 +123,8 @@ foreach ($playersall as $key => $val){
 			<?php include_once('inc/team_points_wins_chart.php');?>
 		
 			<?php include_once('inc/team_leaders.php');?>
+			
+			<?php include_once('inc/team_playoffs.php');?>
 						
 		</div>
 	

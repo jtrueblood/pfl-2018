@@ -1068,7 +1068,6 @@ foreach($buildtheyears as $season ){
 						
 						
 						<div id="demo-tabs-box-2" class="tab-pane fade">
-<!-- 							<h5 class="text-thin">Game Summary</h5> -->
 							<!-- Striped Table -->
 									<!--===================================================-->
 										<div class="table-responsive">
@@ -1082,11 +1081,12 @@ foreach($buildtheyears as $season ){
 														<th class="text-center">Versus</th>
 														<th class="text-center">Result</th>
 														<th class="hidden-xs">Location</th>
+														<th class="hidden-xs" width="20">OT</th>
 													</tr>
 												</thead>
 												<tbody>
 												<?php 												
- 													
+ 														$playerot = get_player_overtime($playerid);
 														$u = -1;
 														
  														//printr($weeklydata,0);
@@ -1108,6 +1108,7 @@ foreach($buildtheyears as $season ){
 															$presult = $printplayer['win_loss'];
 															$phomeaway = $printplayer['home_away'];
 															$plocation = $printplayer['location'];
+															$checkot = $playerot[$weekids];
 														
 															
 															if ($pyear != $checkyear){
@@ -1144,7 +1145,7 @@ foreach($buildtheyears as $season ){
 																		$ishome = 'Hutchence Field';
 																	}
 																}
-																$gametable .= '<td><span class="text-bold ">'.$ishome.'</span></td></tr>';
+																$gametable .= '<td><span class="text-bold ">'.$ishome.'</span></td>';
 															} else {
 																$isaway = $teaminfo[strtoupper($pversus)]['stadium'];
 																if ($isaway == 'Spankoni Center'){
@@ -1157,7 +1158,13 @@ foreach($buildtheyears as $season ){
 																		$isaway = 'Hutchence Field';
 																	}
 																}
-																$gametable .= '<td>'.$isaway.'</td></tr>';
+																$gametable .= '<td>'.$isaway.'</td>';
+															}
+															
+															if ($checkot == 1){
+																$gametable .= '<td width="20px"><span class="text-semibold"><i class="fa fa-circle"></i></span></td></tr>';
+															} else {
+																$gametable .= '<td width="20px"></td></tr>';
 															}
 						
 														$u++;

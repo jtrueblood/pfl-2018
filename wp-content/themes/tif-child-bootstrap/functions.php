@@ -786,6 +786,30 @@ function get_overtime(){
 	return $theot;
 }
 
+function get_player_overtime($pid){
+	$playerpos = substr($pid, -2);
+	
+	global $wpdb;
+	$getplayerovertime = $wpdb->get_results("select * from wp_overtime", ARRAY_N);
+	
+	foreach ($getplayerovertime as $revisequery){
+		
+			$weekid = substr($revisequery[0], 0, 6);		
+			if ($revisequery[3] == $pid){ $playerot[$weekid] = 1; } 
+			if ($revisequery[4] == $pid){ $playerot[$weekid] = 1; }  
+			if ($revisequery[5] == $pid){ $playerot[$weekid] = 1; } 
+			if ($revisequery[6] == $pid){ $playerot[$weekid] = 1; } 
+			if ($revisequery[7] == $pid){ $playerot[$weekid] = 1; } 
+			if ($revisequery[8] == $pid){ $playerot[$weekid] = 1; } 
+			if ($revisequery[9] == $pid){ $playerot[$weekid] = 1; } 
+			if ($revisequery[10] == $pid){ $playerot[$weekid] = 1; } 
+	
+	}
+	
+	return $playerot;
+	
+}
+
 function get_protections(){
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_protections", ARRAY_N);
@@ -990,6 +1014,29 @@ function get_postseason(){
 	
 	global $wpdb;
 	$getplayoffs = $wpdb->get_results("select * from wp_playoffs", ARRAY_N);
+	
+	foreach ($getplayoffs as $revisequery){
+		$playoffs[] = array(
+			'playoffid' => $revisequery[0], 
+			'year' => $revisequery[1], 
+			'week' => $revisequery[2], 
+			'playerid' => $revisequery[3],  
+			'score' => $revisequery[4],
+			'team' => $revisequery[5],
+			'versus' => $revisequery[6],
+			'overtime' => $revisequery[7],
+			'result' => $revisequery[8]
+		);
+	}
+	
+	return $playoffs;
+}
+
+// returns just team info for playoffs and possebowl
+function get_team_postseason($team){
+	
+	global $wpdb;
+	$getplayoffs = $wpdb->get_results("select * from wp_playoffs where team = '$team'", ARRAY_N);
 	
 	foreach ($getplayoffs as $revisequery){
 		$playoffs[] = array(
@@ -1292,6 +1339,21 @@ function gettheweek ($pid){
 	return $weeks;
 }
 
+// returns an the points of a player on a given week.
+function get_one_player_week ($pid, $weekid){
+	$data_array = get_player_data($pid);
+	
+	if(!empty($data_array )){
+		foreach ($data_array as $get){
+			$week[$get['weekids']] = $get['points'];
+		}
+		return $week[$weekid];
+	} else {
+		return 'did not play';
+	}
+	
+}
+
 // gets consecutive game streak of player. returns a sum of games played.  They are allowed to miss one but once they miss two in a row the streak is broken.
 function get_player_game_streak($pid){
 	$theseasons = the_seasons();
@@ -1428,7 +1490,10 @@ function get_teams(){
 			'team' => $revisequery[1], 
 			'owner' => $revisequery[2], 
 			'stadium' => $revisequery[3],  
-			'int' => $revisequery[4]
+			'int' => $revisequery[4],
+			'mfl_team_id' => $revisequery[5],
+			'first_season' => $revisequery[6], 
+			'folded' => $revisequery[7] 
 		);
 	}
 	
@@ -1526,9 +1591,17 @@ function get_player_career_stats($pid){
 			$pointsarray[] = $get['points'];
 			$yeararray[] = $get['year'];
 			$gamearray[] = $get['win_loss'];
-	
+			
 		}
 		
+		foreach ($data_array as $key => $value){
+		
+			$sort_flat[$value['year']][] = $value['points'];
+		}
+		
+		foreach ($sort_flat as $key => $value){
+			$new_sort_flat[$key] = array_sum($value);
+		}
 		
 		$indyears = array_unique($yeararray);
 		
@@ -1551,7 +1624,8 @@ function get_player_career_stats($pid){
 			'low' => $low,
 			'wins' => $wins,
 			'loss' => $loss,
-			'years' => $indyears
+			'years' => $indyears,
+			'yeartotal' => $new_sort_flat
 			
 		);
 		
@@ -1939,6 +2013,23 @@ return $number_ones;
 
 }
 
+// get all grandslams.  slams are save on the weekly results pages to wp_grandslams
+function get_grandslams(){
+	
+	global $wpdb;
+	$get_slams = $wpdb->get_results("select * from wp_grandslams", ARRAY_N);
+	
+	foreach ($get_slams as $revisequery){
+		$slams[$revisequery[0]] = array(
+			'weekid' => $revisequery[1],
+	        'teamid' => $revisequery[2]
+		);
+	}
+
+	return $slams;
+
+}
+
 
 // print season draft table
 function getdraft($year, $array){
@@ -2317,9 +2408,45 @@ function get_player_name($playerid){
 	return $name;
 }
 
+// gets basic team table 
+function get_team_results_by_week($team, $weekid){
+	global $wpdb;
+	
+	$getteam = $wpdb->get_results("select * from wp_team_$team where id = '$weekid'", ARRAY_N);
+	foreach ($getteam as $revisequery){
+		$byweekteam[$revisequery[0]] = array(
+			'id' => $revisequery[0], 
+			'season' => $revisequery[1], 
+			'week' => $revisequery[2], 
+			'team_int' => $revisequery[3],  
+			'points' => $revisequery[4],
+			'versus' => $revisequery[5],
+			'versus_pts' => $revisequery[6],
+			'home_away' => $revisequery[7],
+			'stadium' => $revisequery[8],
+			'result' => $revisequery[9],
+			'qb1' => $revisequery[10],
+			'rb1' => $revisequery[11],
+			'wr1' => $revisequery[12],
+			'pk1' => $revisequery[13],
+			'overtime' => $revisequery[14],
+			'qb2' => $revisequery[15],
+			'rb2' => $revisequery[16],
+			'wr2' => $revisequery[17],
+			'pk2' => $revisequery[18],
+			'extra_ot' => $revisequery[19]
+		);
+	}
+	
+	return $byweekteam;
+}
 
-
-
+// get the total number of regular season games played
+function get_total_games_played(){
+	$teams = get_teams();
+	$seasons = the_seasons();
+	
+}
 
 
 

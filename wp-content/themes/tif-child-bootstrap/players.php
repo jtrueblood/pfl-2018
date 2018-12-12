@@ -407,7 +407,7 @@ foreach($buildtheyears as $season ){
 					
 						$playerimgobj = get_attachment_url_by_slug($playerid);
 						$imgid =  attachment_url_to_postid( $playerimgobj );
-						$image_attributes = wp_get_attachment_image_src($imgid, array( 400, 400 ));	
+						$image_attributes = wp_get_attachment_image_src($imgid, 'thumbnail');	
 						echo '<img src="'.$image_attributes[0].'" class="widget-bg img-responsive">';
 						
 						//printr($image_attributes, 0);

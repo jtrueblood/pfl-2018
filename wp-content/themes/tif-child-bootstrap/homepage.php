@@ -281,7 +281,7 @@ function createnewplayer($array){
 										<a href="http://www58.myfantasyleague.com/2016/home/38954#0" target="_blank">MFL Website 2016</a><br>
 										<a href="http://www58.myfantasyleague.com/2015/home/47099#0" target="_blank">MFL Website 2015</a><br>
 										<hr>
-										<a href="/builds/build-mfl-weekly/?Y=2017&W=1&SQL=false">Run MFL Weekly Data Insert</a>
+										<a href="/builds/build-mfl-weekly/?Y=2018&W=1&SQL=false">Run MFL Weekly Data Insert</a>
 									</div>
 								</div>
 							</div>

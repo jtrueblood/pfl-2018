@@ -13,6 +13,8 @@
 	$awardid = get_field('award_id' );
 	
 	$award = get_award('Hall of Fame Inductee', 2);	
+	
+	$teams = get_teams();
 
 /*	
 	$get = get_player_career_stats('2000GarcQB');
@@ -52,11 +54,13 @@
 						echo 'Rookie of the Year';
 					}
 				}	
+				?>
+					
+				<!-- start new layout -->
+				<?php
+					$i = 0;	
 				
-				
-			$r = 1;
-			foreach ($award as $hall){
-				
+				foreach ($award as $hall){	
 				$hallyear = $hall['year'];
 				$hallfirst = $hall['first'];
 				$halllast = $hall['last'];
@@ -70,6 +74,10 @@
 				$playerchamps = array();
 				$printawards = array();
 				
+				$playerimgobj = get_attachment_url_by_slug($hallid);
+				$imgid =  attachment_url_to_postid( $playerimgobj );
+				$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
+				$playerimg = $image_attributes[0];
 				
 				$justchamps = get_just_champions();
 									
@@ -96,32 +104,24 @@
 				
 				$number_ones = get_number_ones();
 				
-				
-				
-				
-			if ($r % 4 == 0){ echo '<div class="row">'; }	
-			?>
-				
-			<div class="col-xs-24 col-sm-12 col-md-6 eq-box-sm">	
-				<div class="panel widget">
-					<div class="widget-header bg-light">
-						<?php
-							$playerimgobj = get_attachment_url_by_slug($hallid);
-							$imgid =  attachment_url_to_postid( $playerimgobj );
-							$image_attributes = wp_get_attachment_image_src($imgid, array( 400, 400 ));	
-							$playerimg = $image_attributes[0];
-						?>
-						
-						<img class="widget-bg img-responsive" src="<?php echo $playerimg; ?>" alt="Image">
-					</div>
-					<div class="widget-body text-center bg-grey">
-						<img alt="Profile Picture" class="widget-img img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $hallpos; ?>.jpg">
-						<h4 class="mar-no text-center"><?php echo '<a href="/player?id='.$hallid.'">'.$hallfirst.' '.$halllast.'</a>'; ?></h4>
-						<p class="text-muted text-center mar-btm"><?php echo $teamfull; ?></p>
-						<span class="text-lg"><?php 
-							echo $hallyear.' Hall of Fame Inductee'; 
-						?> </span>
-								<div class="table-responsive mar-top">
+				$modulus = 3;
+					
+					if ($i % $modulus == 0){
+						echo '<div class="row">';
+					}	
+					
+					echo '<div class="col-sm-12 col-lg-8 eq-box-sm">';
+						echo '<div class="panel panel-bordered panel-dark">';
+							echo '<div class="panel-heading">';
+								echo '<h3 class="panel-title">'.$hallyear.' Hall of Fame Inductee</h3>';
+							echo '</div>';
+							
+							echo '<div class="panel-body">';
+								echo '<span class="text-2x text-bold"><a href="/player?id='.$hallid.'">'.$hallfirst.' '.$halllast.'</a></span>&nbsp;'.$hallpos;
+							//echo '<a href="/player/?id='.$val['pid'].'"><img src="'.$playerimg.'" class="img-responsive"/></a>';
+							echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
+							?>
+							<div class="table-responsive mar-top">
 									
 								<table class="table table-striped">
 								<tbody>
@@ -139,7 +139,7 @@
 								</tr>
 								<tr>
 									<td class="text-left">Points Per Game</td>
-									<td><span class="text-bold"><?php echo $career['ppg']; ?></span></td>
+									<td><span class="text-bold"><?php echo number_format($career['ppg'], 1); ?></span></td>
 								</tr>
 								<tr>
 									<td class="text-left">Career High</td>
@@ -147,7 +147,6 @@
 								</tr>
 								<?php if(!empty($printawards)){
 									asort($printawards);
-									
 									
 									?>
 								<tr>
@@ -188,7 +187,7 @@
 											$stpts = $value['points'];
 											$stteam = $value['team'];
 											
-											echo $stid.' - '.$stteam.' | '.$stpts.' Pts';
+											echo $stid.' - '.$teams[$stteam]['team'].' | '.$stpts.' Pts';
 											echo '<br>';
 											
 											
@@ -208,7 +207,7 @@
 									<td class="text-left">Posse Bowl Appearances</td>
 									<td><span class="text-bold">
 										<?php foreach($pbapps as $key => $value){
-												echo $key.' - '.$value.'<br>';
+												echo $key.' - '.$teams[$value]['team'].'<br>';
 											}
 										?>	
 									</span></td>
@@ -221,7 +220,7 @@
 									<td class="text-left">PFL Championships</td>
 									<td><span class="text-bold">
 										<?php foreach($playerchamps as $key => $value){
-												echo $key.' - '.$value.'<br>';
+												echo $key.' - '.$teams[$value]['team'].'<br>';
 											}
 										?>	
 									</span></td>
@@ -233,25 +232,18 @@
 								
 								</tbody>
 								</table>
-								
-								
-<!--
-								<?php printr($pbapps, 0); ?>
-								<?php printr($playerchamps, 0); ?>
--->
-								
-								</div>
-					</div>
-				</div>
-			</div>
-			
+								<?php
+							$i++;
+							
+						echo '</div>';
+					echo '</div>';
 					
-			<?php 
-				if ($r % 4 == 0){ echo '</div>'; }
-				$r++;
-				
-				} ?>	
+					echo '</div>';
+					echo '</div>';
+					if ($i % $modulus == 0){echo '</div>';} /* close 'row' every 3rd time through the loop */
 					
+					} ?>
+					<!-- end new layout -->
 					
 				</div>
 				<!--End page content-->

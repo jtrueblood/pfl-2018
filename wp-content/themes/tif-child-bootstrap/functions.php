@@ -810,6 +810,15 @@ function get_player_overtime($pid){
 	
 }
 
+function get_player_rookie_years(){
+	$playerassoc = just_player_ids();
+	foreach ($playerassoc as $val){
+		$get = get_player_career_stats($val); 
+		$rookieyears[$val] = $get['years'][0];
+	}
+	return $rookieyears;
+}
+
 function get_protections(){
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_protections", ARRAY_N);
@@ -1043,7 +1052,8 @@ function get_team_postseason($team){
 			'playoffid' => $revisequery[0], 
 			'year' => $revisequery[1], 
 			'week' => $revisequery[2], 
-			'playerid' => $revisequery[3],  
+			'playerid' => $revisequery[3],
+			'position' => substr($revisequery[3], -2),   
 			'score' => $revisequery[4],
 			'team' => $revisequery[5],
 			'versus' => $revisequery[6],
@@ -1055,6 +1065,17 @@ function get_team_postseason($team){
 	return $playoffs;
 }
 
+function get_team_postseason_by_game($team){
+	$postseason = get_team_postseason($team);
+	
+	if(isset($postseason)){
+		foreach ($postseason as $key => $item){
+			$byyear[$item['year'].$item['week']] = $item['result'];
+		}
+	}
+		
+	return $byyear;
+}
 
 function get_playoff_points_by_team_year($year, $team, $week){
 	global $wpdb;
@@ -1152,6 +1173,17 @@ function get_award_hall(){
 	
 	return $hallids;
 }
+
+// get hall of fame inductees only
+function get_award_rookie(){
+	global $wpdb;
+	$getrook = $wpdb->get_results("select * from wp_awards WHERE award = 'Rookie of the Year'", ARRAY_N);
+	foreach ($getrook as $val){
+		$rookids[$val[8]] = $val[2];
+	}
+	return $rookids;
+}
+
 
 // gets the weekly stats from the player table
 function get_player_data($pid) {
@@ -1603,6 +1635,14 @@ function get_player_career_stats($pid){
 			$new_sort_flat[$key] = array_sum($value);
 		}
 		
+		foreach ($sort_flat as $key => $value){
+			$new_sort_flat_games[$key] = count($value);
+		}
+		
+		foreach ($sort_flat as $key => $value){
+			$new_sort_flat_ppg[$key] = array_sum($value) / count($value);
+		}
+		
 		$indyears = array_unique($yeararray);
 		
 		$points = array_sum($pointsarray);
@@ -1625,7 +1665,9 @@ function get_player_career_stats($pid){
 			'wins' => $wins,
 			'loss' => $loss,
 			'years' => $indyears,
-			'yeartotal' => $new_sort_flat
+			'yeartotal' => $new_sort_flat,
+			'gamesbyseason' => $new_sort_flat_games,
+			'ppgbyseason' => $new_sort_flat_ppg
 			
 		);
 		
@@ -2447,6 +2489,19 @@ function get_total_games_played(){
 	$seasons = the_seasons();
 	
 }
+
+function get_team_points($team){
+	global $wpdb;
+	
+	$getteam = $wpdb->get_results(" select * from wp_team_$team ", ARRAY_N);
+	foreach ($getteam as $revisequery){
+		$teampoints[$revisequery[0]] = $revisequery[4];
+	}
+	
+	return $teampoints;
+
+}
+
 
 
 

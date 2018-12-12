@@ -437,9 +437,7 @@ function linktoplayerpage($pid, $all){
 						echo checkfornone ($a_pk1_data['first']).' '.$a_pk1_data['last'].'<span class="pull-right">'.$a_pk1_data['points'].'</span><br>';
 						
 						
-						echo '</div>';		
-				
-								
+						echo '</div>';				
 								
 					//overtime area 
 					
@@ -556,6 +554,26 @@ function linktoplayerpage($pid, $all){
 										}
 										
 										echo '<p></p><i>'.$weeknotes[$hometeam].'</i>'; 
+										
+										// check if kicker outscores all other players on team
+										
+											if ($h_pk1_data['points'] > $h_qb1_data['points']){
+												if ($h_pk1_data['points'] > $h_rb1_data['points']){
+													if ($h_pk1_data['points'] > $h_wr1_data['points']){
+														echo 'TRUE_HOME!';
+													}
+												}
+											}
+										
+										
+											if ($a_pk1_data['points'] > $a_qb1_data['points']){
+												if ($a_pk1_data['points'] > $a_rb1_data['points']){
+													if ($a_pk1_data['points'] > $a_wr1_data['points']){
+														echo 'TRUE_AWAY!';
+													}
+												}
+											}
+										
 										
 
 									// end notes area

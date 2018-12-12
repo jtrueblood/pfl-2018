@@ -29,14 +29,14 @@ $teamlist = array(
 
 $theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN', 'BUL', 'SNR', 'TSG', 'RBS', 'BST','DST');
 $firstyear = 1991;
-$currentyear = date("Y");
+$currentyear = date('Y');
 
-while ($firstyear < $currentyear){
+while ($firstyear <= $currentyear){
 	$theyears[] = $firstyear;
 	$firstyear++;
 }
 
-
+//printr($theyears, 0);
 
 $mydb = new wpdb('root','root','local','localhost');
 	
@@ -89,7 +89,6 @@ function allplayerdata_tables_trans() {
 }
 
 $allplayerdata = allplayerdata_tables_trans();
-
 
 foreach ($allplayerdata as $weeks){
 	if(!empty($weeks)){
@@ -148,14 +147,47 @@ $all_team_transient = local_all_team_data_trans();
 
 //printr($teamarray, 0);
 
-/*
-$k = 0;
-foreach ($theyears as $getstandings){
-	echo $getstandings;
-	get_cache('standings/stand'.$getstandings, 0);
-	$stand[$getstandings] = $_SESSION['standings/stand'.$getstandings];
+foreach ($theyears as $year){
+	$get = get_standings($year);
+	//$store[$year] = $get;
+	foreach ($get as $val){
+		$games = $val['divwin'] + $val['divloss'];
+		if ($games > 0){
+			$winpert = $val['divwin'] / $games;
+			$allstandings[$val['teamid'].$year] = array(
+			'divwin' => $val['divwin'],
+			'divloss' => $val['divloss'],
+			'div' => $val['division'],
+			'winper' => number_format($winpert, 3)
+			);
+		}
+	}
 }
-*/
+
+uasort($allstandings, function($a, $b) {
+    return $b['winper'] <=> $a['winper'];
+});
+
+//printr($allstandings, 1);
+$rookieyears = get_player_rookie_years();
+
+foreach ($rookieyears as $key => $value){
+	$grab = get_player_season_stats($key, $value);
+	if(isset($grab)){
+		$rookieseason[$key] = array(
+			'points' => $grab['points'],
+			'games' => $grab['games'],
+			'high' => $grab['high'],
+			'teams' => array_unique($grab['teams'])	
+		);
+	}
+}
+
+uasort($rookieseason, function($a, $b) {
+    return $b['points'] <=> $a['points'];
+});
+
+//printr($rookieseason, 1);
 
 // build arrays needed to display team points and win related tables
 function totalteampoints($TEAM){
@@ -432,6 +464,28 @@ arsort($highseas_rb);
 arsort($highseas_wr);
 arsort($highseas_pk);
 
+foreach ($playersassoc as $key => $value){
+	$get = get_player_career_stats($key);
+	$ppgseason[$key] = $get['ppgbyseason'];
+	$ppggames[$key] = $get['gamesbyseason'];
+}
+
+
+foreach ($ppgseason as $key => $value){
+	if(isset($value)){
+		foreach ($value as $year => $ppg){
+			$checknumgames = $ppggames[$key][$year];
+			if($checknumgames >= 8){
+				$totalppggame[$key.$year] = $ppg;
+			}
+		}
+	}
+}
+
+arsort($totalppggame);
+
+
+//printr($totalppggame, 1);
 
 ?>
 
@@ -627,6 +681,115 @@ arsort($highseas_pk);
 				
 			</div>
 			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+			
+			<?php 
+				$teampoints = get_team_points('SNR');
+
+				foreach ($theteams as $team){
+					$teamjustpts[$team] = get_team_points($team);
+				}
+								
+				foreach ($theteams as $t){
+					$store = array();
+					foreach ($teamjustpts[$t] as $key => $value){
+							
+							if($value >= 50){
+								$store[] = $key;
+								$j++;
+								$consec[$t][$key] = $j;		
+							} else {
+								$j = 0;
+								$consec[$t][$key] = $j;	
+							}
+							$count[$t] = count($store);			
+					}
+					
+				}	
+				arsort($count, SORT_NUMERIC);
+
+				
+				$labels = array('Team', 'Count');	
+				tablehead('Number of 50+ Point Games', $labels);	
+				
+				$b = 1;
+				foreach ($count as $key => $value){
+					
+						$fiftyprint .='<tr><td>'.$b.'. '.$teamids[$key].'</td>';
+						$fiftyprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+						$b++;
+				}
+				
+				echo $fiftyprint;
+
+				
+				tablefoot('Regular Season Only');	
+
+			?>
+			
+			</div>
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					foreach ($consec as $key => $value){
+						$conseccount[$key] = max($value);
+					}
+					arsort($conseccount, SORT_NUMERIC);
+					//printr($conseccount, 0);
+				
+					$labels = array('Team', 'Count');	
+					tablehead('Consecutive 50+ Point Games', $labels);	
+					
+					$b = 1;
+					foreach ($conseccount as $key => $value){
+						
+							$fiftyconprint .='<tr><td>'.$b.'. '.$teamids[$key].'</td>';
+							$fiftyconprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+							$b++;
+					}
+					
+					echo $fiftyconprint;
+	
+					
+					tablefoot('Regular Season Only');	
+					
+				?>
+				
+			</div>
+			
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					$labels = array('Year', 'Team', 'Rec', 'W%', 'Div');	
+					tablehead('Best Division Record', $labels);	
+				
+					$n = 0;
+					foreach ($allstandings as $key => $value){
+						$teamo = substr($key, 0, 3);
+						$yearo = substr($key, 3, 4); 
+							$printdivs .='<tr><td>'.$yearo.'</td>';
+							$printdivs .='<td>'.$teamids[$teamo].'</td>';
+							$printdivs .='<td>'.$value['divwin'].'-'.$value['divloss'].'</td>';
+							$printdivs .='<td>'.$value['winper'].'</td>';
+							$printdivs .='<td>'.$value['div'].'</td></tr>';
+						$n++;
+						if($n == 15){
+							break;
+						}
+					}
+
+					echo $printdivs;
+						
+					tablefoot('Top 15 Regular Season');	
+					
+				?>
+				
+			</div>
+			
+			
+			
 			
 			
 
@@ -706,6 +869,75 @@ arsort($highseas_pk);
 				
 			</div>
 			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+			<?php 
+				foreach ($theteams as $team){
+					$teampost = get_team_postseason_by_game($team); 
+					
+					if(isset($teampost)){
+						$w = 0; $l = 0;
+						foreach ($teampost as $key => $value){
+							if ($value == 0){
+								$l++;
+							} 
+							if ($value == 1){
+								$w++;
+							}
+						}
+						
+						
+						$posseasongames = count($teampost);
+						
+							$postseasonwins = array_sum($teampost);
+							$avg = number_format(($postseasonwins / $posseasongames), 3);
+						
+						$allposty[] = array(
+							'team' => $team,
+							'wins' => $w,
+							'loss' => $l,
+							'games' => $posseasongames,
+							'avg' => $avg
+						);
+					
+						}	else {
+							$allposty[] = array(
+								'team' => $team,
+								'wins' => 0,
+								'loss' => 0,
+								'games' => 0,
+								'avg' => 0
+							);
+						}
+					} 
+					
+					foreach ($allposty as $key => $value){
+						$posty[$value['avg'].$value['team']] = $value;
+					}
+					krsort($posty);
+				
+				//printr($posty, 0);
+				
+				$labels = array('Team', 'Record', 'Win Per');	
+				tablehead('Postseason Winning Percentage', $labels);	
+				
+				foreach ($posty as $key => $value){
+					if($value['games'] != 0){
+						$record = $value['wins'].' - '.$value['loss'];
+					
+						$psprint .='<tr><td>'.$teamlist[$value['team']].'</td>';
+						$psprint .='<td class="text-center">'.$record.'</td>';
+						$psprint .='<td class="text-center">'.$value['avg'].'</td></tr>';
+							
+					}
+
+				}
+				
+				echo $psprint;
+				
+				tablefoot('');	
+				
+			?>
+			</div>
 			
 			
 			<!-- NEW SECTION -->
@@ -1048,6 +1280,95 @@ arsort($highseas_pk);
 				tablefoot('Games in a row where a player did not miss an appearance due to benching, injury or suspension.');	
 				?>	
 				
+			</div>
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php
+			$labels = array('Player', 'Season', 'PPG');	
+				tablehead('Highest PPG in a Single Season', $labels);	
+				
+				
+				$b = 1;
+				
+					foreach ($totalppggame as $key => $value){
+						
+						$pid = substr($key, 0, -4);
+						$sea = substr($key, -4);
+						
+						$n = get_player_name($pid);
+						
+						$pppprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
+						$pppprint .='<td>'.$sea.'</td>'; 
+						$pppprint .='<td class="min-width text-center">'.number_format($value, 1).'</td></tr>';
+						
+						if($b == 20){
+							break;
+						}
+						
+						$b++;
+						
+						
+					}
+				
+				
+				echo $pppprint;
+				
+				tablefoot('Minimum 8 Games Played');		
+				
+			
+			?>
+			</div>
+			
+			<div class="row">
+			</div>
+			
+			<div class="col-xs-24 col-sm-12 col-md-8">
+				<?php
+				$ro = get_award_rookie();	
+					
+				$labels = array('Player', 'Season', 'Points', 'Games', 'PPG', 'Teams', 'ROTY');	
+				tablehead('Best Rookie Seasons', $labels);	
+				
+				
+				$b = 1;
+				
+					foreach ($rookieseason as $key => $value){
+						
+						
+						
+						$awardcheck = '';
+						$sea = substr($key, 0, 4);
+						
+						if($ro[$key] == $sea){
+							$checkrook = '<i class="fa fa-circle"></i>';
+						} else {
+							$checkrook = '';
+						} 
+						
+						$n = get_player_name($key);
+						$rookppg = $value['points'] / $value['games'];
+						
+						$rookprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
+						$rookprint .='<td class="min-width text-center">'.$sea.'</td>'; 
+						$rookprint .='<td class="min-width text-center">'.$value['points'].'</td>';
+						$rookprint .='<td class="min-width text-center">'.$value['games'].'</td>';
+						$rookprint .='<td class="min-width text-center">'.number_format($rookppg, 1).'</td>';
+						$rookprint .='<td class="min-width text-center">'.$value['teams'][0].'</td>';
+						$rookprint .='<td class="min-width text-center">'.$checkrook.'</td></tr>';
+						
+						if($b == 20){
+							break;
+						}
+						
+						$b++;			
+						
+					}
+
+				echo $rookprint;
+				
+				tablefoot('<i class="fa fa-circle"></i> = PFL Rookie of the Year');		
+				
+			?>
 			</div>
 			
 			

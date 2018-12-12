@@ -7,8 +7,9 @@
 
 <!-- Make the required arrays and cached files availible on the page -->
 <?php 
-	$season = 2015;
+	$season = 2017;
 	
+/*
 	get_cache('probowl', 0);	
 	$probowl = $_SESSION['probowl'];
 		
@@ -29,11 +30,14 @@
 			'dgas_mgr' => $revisequery[7]
 		);
 	}
+*/
 	
 // 	printr($probowldata, 1);
 	
-	$getproboxes = $mydb->get_results("select * from probowlbox", ARRAY_N);
-
+	$getproboxes = $wpdb->get_results("select * from wp_probowlbox", ARRAY_N);
+	
+	//printr($getproboxes, 1);
+	
 	foreach ($getproboxes  as $revisequery){
 		$proboxes[$revisequery[0]] = array(
 			'id' => $revisequery[0], 
@@ -61,7 +65,7 @@
 	// get an associative array of all players
 	$players = get_players_assoc();
 	
-// 	printr($players, 1);
+ 	printr($proboxes, 1);
 	
 	$promvp = get_award('Pro Bowl MVP', 2);
 ?>

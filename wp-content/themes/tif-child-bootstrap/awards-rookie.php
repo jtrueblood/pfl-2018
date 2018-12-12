@@ -44,7 +44,7 @@
 					
 				?>	
 										
-				<div class="col-xs-24 col-sm-12 col-md-6 eq-box-sm">	
+				<div class="col-xs-24 col-sm-6 col-md-4 eq-box-sm">	
 					<div class="panel widget">
 						<div class="widget-header bg-light">
 							

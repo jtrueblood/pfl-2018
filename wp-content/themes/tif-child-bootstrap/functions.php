@@ -1653,6 +1653,8 @@ function get_player_career_stats($pid){
 		$low = min($pointsarray);
 		$wins = array_sum($gamearray);
 		$loss = $games - $wins; 
+		$highseapts = max($new_sort_flat);		
+		$maxseason = array_keys($new_sort_flat, max($new_sort_flat));
 		
 		$carrer_stats = array(
 			'pid' => $pid,
@@ -1664,6 +1666,8 @@ function get_player_career_stats($pid){
 			'low' => $low,
 			'wins' => $wins,
 			'loss' => $loss,
+			'highseasonpts' => $highseapts,
+			'highseason' => $maxseason[0],
 			'years' => $indyears,
 			'yeartotal' => $new_sort_flat,
 			'gamesbyseason' => $new_sort_flat_games,

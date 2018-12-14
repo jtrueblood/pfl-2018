@@ -161,12 +161,32 @@ foreach ($theyears as $year){
 			'winper' => number_format($winpert, 3)
 			);
 		}
+		$allteampoints[$year][$val['teamid']] = $val['pts'];
 	}
 }
 
 uasort($allstandings, function($a, $b) {
     return $b['winper'] <=> $a['winper'];
 });
+
+// get team point winners
+foreach ($allteampoints as $year => $value){
+	arsort($value);
+	$teamint0 = key($value);
+	$teamint1 = array_keys($value)[1];
+	rsort($value);
+	$points0 = $value[0];
+	$points1 = $value[1];
+
+	$teampointleaders[$year] = array(
+		'team' => $teamint0,
+		'points' => $points0,
+		'secondteam' => $teamint1,
+		'secondpoints' => $points1
+	);
+}
+
+//printr($teampointleaders, 1);
 
 //printr($allstandings, 1);
 $rookieyears = get_player_rookie_years();
@@ -788,6 +808,33 @@ arsort($totalppggame);
 				
 			</div>
 			
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					//printr($teampointleaders, 0);
+					
+					$labels = array('Year', 'Team', 'Points');	
+					tablehead('Team Point Winners', $labels);	
+				
+					foreach ($teampointleaders as $key => $value){
+							$printteapte .='<tr><td>'.$key.'</td>';
+							if($value['points'] != $value['secondpoints'] ){
+								$printteapte .='<td>'.$teamids[$value['team']].'</td>';
+								$printteapte .='<td>'.$value['points'].'</td></tr>';
+							} else {
+								$printteapte .='<td>'.$teamids[$value['team']].' / '.$teamids[$value['secondteam']].'</td>';
+								$printteapte .='<td>'.$value['points'].'</td></tr>';
+							}
+					}
+
+					echo $printteapte;
+						
+					tablefoot('');	
+					
+				?>
+				
+			</div>
 			
 			
 			

@@ -125,7 +125,9 @@ function insert_wp_number_ones_qb(){
 	global $wpdb;
 	global $qb_avg;
 	
-	$id = 'qb'.$yearid;
+	
+	// if more then 1 player tied for first, manually enter the info in wp_number_ones table and make the id TEA0000b with the b, c, d etc. at end
+	$id = 'qb'.$yearid.'a';
 	
 	//remove the row for the player if it exsists
 	$delete = $wpdb->query("delete from wp_number_ones where id = '$id'");
@@ -163,7 +165,7 @@ function insert_wp_number_ones_rb(){
 	global $wpdb;
 	global $rb_avg;
 	
-	$id = 'rb'.$yearid;
+	$id = 'rb'.$yearid.'a';
 	
 	//remove the row for the player if it exsists
 	$delete = $wpdb->query("delete from wp_number_ones where id = '$id'");
@@ -201,7 +203,7 @@ function insert_wp_number_ones_wr(){
 	global $wpdb;
 	global $wr_avg;
 	
-	$id = 'wr'.$yearid;
+	$id = 'wr'.$yearid.'a';
 	
 	//remove the row for the player if it exsists
 	$delete = $wpdb->query("delete from wp_number_ones where id = '$id'");
@@ -239,7 +241,7 @@ function insert_wp_number_ones_pk(){
 	global $wpdb;
 	global $pk_avg;
 	
-	$id = 'pk'.$yearid;
+	$id = 'pk'.$yearid.'a';
 	
 	//remove the row for the player if it exsists
 	$delete = $wpdb->query("delete from wp_number_ones where id = '$id'");
@@ -385,14 +387,16 @@ arsort($merge_ppgs);
 					<div class="col-xs-24 col-sm-18 eq-box-sm">
 							
 							<?php 
-									echo '<div class="row">';
+							echo '<div class="row">';
 									
-									leadersbyseason($qb_leaders, $yearid, 'Quarterbacks');
-									leadersbyseason($rb_leaders, $yearid, 'Runningbacks');
-									leadersbyseason($wr_leaders, $yearid, 'Wide Receivers');
-									leadersbyseason($pk_leaders, $yearid, 'Kickers');
+								leadersbyseason($qb_leaders, $yearid, 'Quarterbacks');
+								leadersbyseason($rb_leaders, $yearid, 'Runningbacks');
 							
-									
+							echo '</div>';
+							echo '<div class="row">';
+							
+									leadersbyseason($wr_leaders, $yearid, 'Wide Receivers');
+									leadersbyseason($pk_leaders, $yearid, 'Kickers');	
 							?>
 							</div>
 					</div>

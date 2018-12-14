@@ -15,7 +15,7 @@ $number_ones = get_number_ones();
 
 if(isset($number_ones)){
 	foreach($number_ones as $key => $item){
-	   $newkey = substr($key, -4); 
+	   $newkey = substr($key, 2, -1); 
 	   if($item['teams'] == $teamid){	
 	   		$ones[$newkey][] = $item;
 	   	}

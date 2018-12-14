@@ -7,32 +7,9 @@
 
 <!-- Make the required arrays and cached files availible on the page -->
 <?php 
-	$season = 2017;
-	
-/*
-	get_cache('probowl', 0);	
-	$probowl = $_SESSION['probowl'];
-		
-	$mydb = new wpdb('root','root','pflmicro','localhost');
-	
-	$getpros = $mydb->get_results("select * from probowl", ARRAY_N);
-	
-	$buildpros = array();
-	foreach ($getpros  as $revisequery){
-		$probowldata[$revisequery[0]] = array(
-			'id' => $revisequery[0], 
-			'year' => $revisequery[1], 
-			'winner' => $revisequery[2], 
-			'host' => $revisequery[3],  
-			'egad_pts' => $revisequery[4],
-			'dgas_pts' => $revisequery[5],
-			'egad_mgr' => $revisequery[6],
-			'dgas_mgr' => $revisequery[7]
-		);
-	}
-*/
-	
-// 	printr($probowldata, 1);
+	$season = 2018;
+	$promvp = get_award('Pro Bowl MVP', 2);
+ 	//printr($probowldata, 0);
 	
 	$getproboxes = $wpdb->get_results("select * from wp_probowlbox", ARRAY_N);
 	
@@ -53,21 +30,30 @@
 	}
 	
 	//regroup boxscores by year	
-	foreach($proboxes as $key => $item)
-	{
-	   $arr[$item['year']][$key] = $item;
+	foreach($proboxes as $key => $item){
+	   $probowldata[$item['year']][$item['playerid']] = $item;
 	}
 	
-	ksort($arr, SORT_NUMERIC);
-	
-	
-	
+	ksort($probowldata, SORT_NUMERIC);
 	// get an associative array of all players
-	$players = get_players_assoc();
+	$pname = get_players_assoc();
 	
- 	printr($proboxes, 1);
+	// probowl details
+	$getprobowl = $wpdb->get_results("select * from wp_probowl", ARRAY_N);
 	
-	$promvp = get_award('Pro Bowl MVP', 2);
+	foreach ($getprobowl as $value){
+		$probowldetails[$value[1]] = array(
+			'winner' => $value[2],	
+			'host' => $value[3],
+			'egad' => $value[4],
+			'dgas' => $value[5],
+			'mvp' => $promvp[$value[1]]['pid']
+		);
+	}
+	//printr($probowldetails, 1);
+	
+	
+	
 ?>
 
 <?php get_header(); ?>
@@ -87,84 +73,127 @@
 				<div id="page-content">
 			
 					<?php
-				foreach ($probowldata as $get){	
+				foreach ($probowldetails as $key => $value){	
 						// get the first row
 					
-					echo '<div class="col-sm-12 col-lg-12 eq-box-sm pro-bowl-box">';
+					echo '<div class="col-xs-24 col-sm-12 eq-box-sm pro-bowl-box">';
 						echo '<div class="panel panel-bordered panel-dark">';
 							echo '<div class="panel-heading">';
-							echo '<h3 class="panel-title"><span class="text-bold">'.$get['year'].'</span> Pro Bowl</h3>';
+							echo '<h3 class="panel-title"><span class="text-bold">'.$key.'</span> Pro Bowl</h3>';
 							echo '</div>';
 							echo '<div class="panel-body">';
-							if ($get['egad_pts'] > $get['dgas_pts']){
-								echo '<span class="text-2x text-bold">EGAD </span>  <span class="text-2x text-bold pull-right">'.$get['egad_pts'].'</span><br>';
-								echo '<span class="text-2x text-thin">DGAS </span>  <span class="text-2x text-thin pull-right">'.$get['dgas_pts'].'</span>';
+							if ($value['egad'] > $value['dgas']){
+								echo '<span class="text-2x text-bold">EGAD </span>  <span class="text-2x text-bold pull-right">'.$value['egad'].'</span><br>';
+								echo '<span class="text-2x text-thin">DGAS </span>  <span class="text-2x text-thin pull-right">'.$value['dgas'].'</span>';
 							}  else {
-								echo '<span class="text-2x text-bold">DGAS </span>  <span class="text-2x text-bold pull-right">'.$get['dgas_pts'].'</span><br>';
-								echo '<span class="text-2x text-thin">EGAD </span>  <span class="text-2x text-thin pull-right">'.$get['egad_pts'].'</span>';
+								echo '<span class="text-2x text-bold">DGAS </span>  <span class="text-2x text-bold pull-right">'.$value['dgas'].'</span><br>';
+								echo '<span class="text-2x text-thin">EGAD </span>  <span class="text-2x text-thin pull-right">'.$value['egad'].'</span>';
 							} 
+?>
+							<div class="row">
+								<hr/>
+										<?php 
+											$probowlyearteam = array();
+											foreach($probowldata[$key] as $key => $item){
+											   $probowlyearteam[$item['league']][] = $item;
+											}
+											ksort($probowlyearteam, SORT_NUMERIC);
+	
+										?>
+		
+										<div class="col-xs-24 col-sm-12">
+											<div class="row">
+												<?php 
+													$probowlegad = array(); 
+													foreach($probowlyearteam['EGAD'] as $key => $item){
+													   $probowlegad[$item['pos']][] = $item;
+													}
+													//printr($probowlegad, 0);
+												
+												$labels = array('Player', 'Team', 'Starter', 'Points');	
+												tablehead('EGAD Boxscore', $labels);	
+												
+												$egad = '';
+												foreach ($probowlegad as $val){
+													foreach ($val as $key => $valued){
+														$egad .= '<tr><td>'.$pname[$valued['playerid']][0].' '.$pname[$valued['playerid']][1].'</td>';
+														$egad .= '<td class="min-width">'.$valued['team'].'</td>';
+														if($valued['starter'] == 0){
+															$egad .= '<td class="min-width text-center"><i class="fa fa-circle"></i></td>';
+														} else {
+															$egad .= '<td class="min-width"></td>';
+														}
+														if($valued['pointsused'] == 1){
+															$egad .= '<td class="min-width text-right"><strong>'.$valued['points'].'</strong></td></tr>';
+														} else {
+															$egad .= '<td class="min-width text-right">'.$valued['points'].'</td></tr>';
+														}
+													}
+												}
+												
+												echo $egad;
 
-								echo '<div class="row">';
-									echo '<hr/>
-									<div class="col-xs-24"><h5>Boxscores</h5></div>';
+												tablefoot('');
+												
+												?>
+												
+
+											</div>
+										</div>		
 										
-										$myyear = $arr[$get['year']];
+										<div class="col-xs-24 col-sm-12">
+											<div class="row">
+												<?php 
+													$probowldgas = array(); 
+													foreach($probowlyearteam['DGAS'] as $key => $item){
+													   $probowldgas[$item['pos']][] = $item;
+													}
+													//printr($probowldgas, 0);
+													
+													$labels = array('Player', 'Team', 'Starter', 'Points');	
+													tablehead('DGAS Boxscore', $labels);	
+													
+													$dgas = '';
+													foreach ($probowldgas as $val){
+														foreach ($val as $key => $valued){
+															$dgas .= '<tr><td>'.$pname[$valued['playerid']][0].' '.$pname[$valued['playerid']][1].'</td>';
+															$dgas .= '<td class="min-width">'.$valued['team'].'</td>';
+															if($valued['starter'] == 0){
+															$dgas .= '<td class="min-width text-center"><i class="fa fa-circle"></i></td>';
+															} else {
+																$dgas .= '<td class="min-width"></td>';
+															}
+															if($valued['pointsused'] == 1){
+																$dgas .= '<td class="min-width text-right"><strong>'.$valued['points'].'</strong></td></tr>';
+															} else {
+																$dgas .= '<td class="min-width text-right">'.$valued['points'].'</td></tr>';
+															}
+														}
+													}
+													
+													echo $dgas;
+	
+													tablefoot('');
+												
+												?>
+												
+											</div>
+										</div>		
 										
-									
-// 										printr($myyear, 0);
-										
-										echo '<div class="col-xs-24 col-sm-12">';
-											foreach ($myyear as $year){
-												if($year['league'] == 'EGAD'){
-												$id = $year['playerid'];	
-												echo '<div class="col-xs-18 to-the-left">';
-													if($year['starter'] == 1){ echo '<span class="text-bold">';}
-														echo $players[$id][0].' '.$players[$id][1].' ('.$year['team'].')';
-													if($year['starter'] == 1){ echo '</span>';}
-												echo '</div>';
-												echo '<div class="col-xs-6">';
-												    if($year['pointsused'] == 1){ echo '<span class="text-bold text-underline">';}
-														echo $year['points'];
-													if($year['pointsused'] == 1){ echo '</span>';}
-												echo '</div>';
-												}
-											}
-										echo '</div>';	
-										
-										echo '<div class="col-xs-24 col-sm-12">';
-											foreach ($myyear as $year){
-												if($year['league'] == 'DGAS'){
-												$id = $year['playerid'];
-												echo '<div class="col-xs-18 to-the-left">';
-													if($year['starter'] == 1){ echo '<span class="text-bold">';}
-														echo $players[$id][0].' '.$players[$id][1].' ('.$year['team'].')';
-													if($year['starter'] == 1){ echo '</span>';}
-												echo '</div>';
-												echo '<div class="col-xs-6">';
-													if($year['pointsused'] == 1){ echo '<span class="text-bold text-underline">';}
-														echo $year['points'];
-													if($year['pointsused'] == 1){ echo '</span>';}
-												echo '</div>';
-												}
-											}
-										echo '</div>';	
-											
-									
-						
-										
-							
-								echo '</div>';	
+								</div>	
 								
-							echo '</div>';
+							</div>
 							
-							$theman = $promvp[$get['year']];
+							<?php
+							$theman = $value['mvp'];
 								
-							echo '<hr><div class="row"><div class="pro-mvp">Game MVP: <span class="text-bold text-dark">'.$theman['first'].' '.$theman['last'].'</span>, '.$theman['team'].'</div></div>';
+							echo '<hr><div class="row"><div class="pro-mvp">Game MVP: <span class="text-bold text-dark">'.$pname[$theman][0].' '.$pname[$theman][1].'</div></div>';
 						
 						echo '</div>';
 					echo '</div>';
 					
 				}	
+				
 				?>
 
 
@@ -179,7 +208,6 @@
 		
 </div> 
 
-<?php session_destroy(); ?>
 		
 </div>
 </div>

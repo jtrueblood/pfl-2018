@@ -9,23 +9,7 @@
 
 <?php get_header(); 
 
-$teamlist = array(
-	'RBS' => 'Red Barons',
-	'ETS' => 'Euro-Trashers',
-	'PEP' => 'Peppers',
-	'WRZ' => 'Space Warriorz',
-	'CMN' => 'C-Men',
-	'BUL' => 'Raging Bulls',
-	'SNR' => 'Sixty Niners',
-	'TSG' => 'Tsongas',
-	'BST' => 'Booty Bustas',
-	'MAX' => 'Mad Max',
-	'PHR' => 'Paraphernalia',
-	'SON' => 'Rising Son',
-	'ATK' => 'Melmac Attack',
-	'HAT' => 'Jimmys Hats',
-	'DST' => 'Destruction'	
-);
+$teamlist = teamlist();
 
 $theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN', 'BUL', 'SNR', 'TSG', 'RBS', 'BST','DST');
 $firstyear = 1991;

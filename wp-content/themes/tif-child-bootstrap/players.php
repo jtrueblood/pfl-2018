@@ -638,7 +638,7 @@ foreach($buildtheyears as $season ){
 							<div class="pad-all text-center">
 								<span class="text-2x text-thin"><?php 
 									if(!empty($careerdata['ppg'])){
-										echo $careerdata['ppg'];
+										echo number_format($careerdata['ppg'], 1);
 									} else {
 										echo '0.0';
 									}
@@ -1222,7 +1222,7 @@ foreach($buildtheyears as $season ){
 															);
 														}
 														
-														//printr($pbteams_index, 0);
+// 														printr($pbteams_index, 0);
 														
 														$checkyear = $rookieyear - 1;
 														

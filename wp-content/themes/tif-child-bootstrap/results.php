@@ -16,6 +16,12 @@ $weekvar = $year_sel.$week_sel;
 
 $namenum = 15;
 
+// get options from option page
+$get_update_pdf = get_field('update_pdfs', 'options');
+foreach ($get_update_pdf as $val){
+	$update_pdf[$val['week_id']] = $val['pdf_file'];
+}
+
 
 $wpdb = new wpdb('root','root','local','localhost');
 $mydb = new wpdb('root','root','pflmicro','localhost');
@@ -584,11 +590,14 @@ function linktoplayerpage($pid, $all){
 						
 */
 									echo '</div> 
-										</div>
+										</div>';
+										?>
+
 									</div>
 									
-								</div>';
+								</div>
 								
+								<?php
 								// clearfix on different device sizes
 								// clearfix on different device sizes
 								if($w % 3 == 0){
@@ -596,12 +605,31 @@ function linktoplayerpage($pid, $all){
 								}
 								$w++;
 								
-						} // END THE FOREACH	
+						} // END THE FOREACH ?>
+						<div class="col-xs-24 col-md-8">
+							<div class="panel panel-bordered panel-dark">
+								<div class="panel-body">
+									
+										<?php $week_update_url = $update_pdf[$weekvar];
+										if (isset($week_update_url)){
+											echo '<h4><a href="'.$week_update_url .'" target="_blank">PDF Update - '.$week_sel.', '.$year_sel.'</a></h4><p>(flipper)</p>';
+										} else {
+											echo '<h4>No Printed Update Found</h4>';
+										} ?>
+								
+								</div>
+							</div>
+						</div>	
+					
+					<?php		
 					} else {  // END IF ISSET
 						echo '<h3>WEEK NOT FOUND</h3>';
-					}		
-						?>
-							
+					}		  
+
+					?>
+
+						
+
 					
 					
 				</div><!--End page content-->

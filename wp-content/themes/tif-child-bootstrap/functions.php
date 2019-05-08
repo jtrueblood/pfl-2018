@@ -1163,6 +1163,30 @@ function get_player_award($pid){
 	return $awardinfo;
 }
 
+// get award data by player id
+function get_season_award($year){
+	global $wpdb;
+	$getawardsea = $wpdb->get_results("select * from wp_awards WHERE year = '$year'", ARRAY_N);
+	
+	foreach ($getawardsea as $key => $revisequery){
+		$awardsea[] = array(
+			'awardid' => $revisequery[0], 
+			'award' => $revisequery[1], 
+			'year' => $revisequery[2], 
+			'first' => $revisequery[3],  
+			'last' => $revisequery[4],
+			'team' => $revisequery[5],
+			'position' => $revisequery[6],
+			'owner' => $revisequery[7],
+			'pid' => $revisequery[8],
+			'gamepoints' => $revisequery[9]
+		);
+	}
+	
+	return $awardsea;
+}
+
+
 // get hall of fame inductees only
 function get_award_hall(){
 	global $wpdb;
@@ -1784,7 +1808,7 @@ function probowl_boxscores(){
 	return $probowlbox;
 }
 
-// get probowl boxscore
+// get drafts
 function get_drafts(){
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_drafts", ARRAY_N);
@@ -1808,6 +1832,30 @@ function get_drafts(){
 	}
 	
 	return $drafts;
+}
+
+function get_drafts_by_year($season){
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_drafts where year = '$season'", ARRAY_N);
+	
+	foreach ($get as $getdraft){
+		$draftsyear[$getdraft[0]] = array(
+			'key' => $getdraft[0], 
+			'round' => $getdraft[2],	
+			'pick' => $getdraft[3],	
+			'overall' => $getdraft[4],
+			'playerfirst' => $getdraft[7],
+			'playerlast' => $getdraft[8],	
+			'position' => $getdraft[9],
+			'playerid' => $getdraft[10],	
+			'orteam' => $getdraft[5],	
+			'acteam' => $getdraft[6],	
+			'tradeid' => $getdraft[11],
+			'tradehappened' => $tradehappened
+		);
+	}
+	
+	return $draftsyear;
 }
 
 function get_drafts_player($pid){
@@ -2035,7 +2083,26 @@ return $leaders_all;
 
 }
 
-
+function teamlist(){
+	$teamlist = array(
+		'RBS' => 'Red Barons',
+		'ETS' => 'Euro-Trashers',
+		'PEP' => 'Peppers',
+		'WRZ' => 'Space Warriorz',
+		'CMN' => 'C-Men',
+		'BUL' => 'Raging Bulls',
+		'SNR' => 'Sixty Niners',
+		'TSG' => 'Tsongas',
+		'BST' => 'Booty Bustas',
+		'MAX' => 'Mad Max',
+		'PHR' => 'Paraphernalia',
+		'SON' => 'Rising Son',
+		'ATK' => 'Melmac Attack',
+		'HAT' => 'Jimmys Hats',
+		'DST' => 'Destruction'	
+	);
+	return $teamlist;
+}
 
 
 function get_number_ones(){
@@ -2173,6 +2240,28 @@ $printit .= '</div>';
 echo $printit;
 
 }
+
+// Points	
+function get_season_leaders($yearval){
+	
+	global $wpdb;
+	$get_season_leaders = $wpdb->get_results("select * from wp_season_leaders where season = '$yearval'", ARRAY_N);
+	
+	foreach ($get_season_leaders as $revisequery){
+		$season_leaders_all[$revisequery[0]] = array(
+			'id' => $revisequery[0],
+			'playerid' => $revisequery[1],
+			'season' => $revisequery[2],
+			'points' => $revisequery[3],
+			'games' => $revisequery[4],
+			'position' => substr($revisequery[0], 8, 2)
+		);
+	}
+
+return $season_leaders_all;
+
+}
+
 
 // GET MFL player id by passing PFL id and vise versa
 function playerid_mfl_to_pfl(){
@@ -2508,6 +2597,24 @@ function get_team_points($team){
 
 
 
+// Adds ACF Options Page to the backend
+if (function_exists('acf_add_options_page')) {
+	acf_add_options_page();
+}
+// Changes ACF Options page title on backend menu
+if (function_exists('acf_set_options_page_title')) {
+	acf_set_options_page_title(__('Theme Options'));
+}
+// Changes ACF Options page backend menu order
+function custom_menu_order( $menu_ord ) {
+	if (!$menu_ord) return true;
+	$menu = 'acf-options';
+	$menu_ord = array_diff($menu_ord, array($menu));
+	array_splice($menu_ord, 1, 0, array($menu));
+	return $menu_ord;
+}
+add_filter('custom_menu_order', 'custom_menu_order');
+add_filter('menu_order', 'custom_menu_order');
 
 
 

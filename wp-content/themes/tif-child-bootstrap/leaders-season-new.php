@@ -26,25 +26,7 @@ $playerids = just_player_ids_with_position();
 
 
 
-// Points	
-function get_season_leaders($yearval){
-	
-	global $wpdb;
-	$get_season_leaders = $wpdb->get_results("select * from wp_season_leaders where season = '$yearval'", ARRAY_N);
-	
-	foreach ($get_season_leaders as $revisequery){
-		$season_leaders_all[$revisequery[0]] = array(
-			'id' => $revisequery[0],
-			'playerid' => $revisequery[1],
-			'season' => $revisequery[2],
-			'points' => $revisequery[3],
-			'games' => $revisequery[4]
-		);
-	}
 
-return $season_leaders_all;
-
-}
 
 $get_season_leaders = get_season_leaders($yearid);
 //printr($get_season_leaders, 0);

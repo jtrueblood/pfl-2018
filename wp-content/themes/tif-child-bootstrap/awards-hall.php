@@ -183,7 +183,7 @@
 									<td class="text-left">Position Scoring Titles</td>
 									<td><span class="text-bold">
 										<?php foreach ($player_number_ones as $value){
-											$stid = substr($value['id'], -4);
+											$stid = substr($value['id'], 2, 4);
 											$stpts = $value['points'];
 											$stteam = $value['team'];
 											
@@ -244,6 +244,8 @@
 					
 					} ?>
 					<!-- end new layout -->
+					
+					
 					
 				</div>
 				<!--End page content-->

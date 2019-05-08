@@ -578,3 +578,22 @@ img.widget-bg.team-helmet-image {
 .stadium-img-class {
   padding-top: 150px !important;
 }
+#seasondraft {
+  height: 500px;
+  overflow-y: scroll;
+}
+#seasonawards .widget-header {
+  min-height: 100px;
+}
+#seasonawards .widget-body {
+  min-height: 100px;
+  color: #515151;
+  padding-top: 20px;
+}
+#seasonawards .widget-body p {
+  color: #515151;
+}
+#seasonawards .ooty-season .widget-bg {
+  top: -30px;
+  background-color: #f9f9f9;
+}

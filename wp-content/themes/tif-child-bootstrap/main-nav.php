@@ -56,9 +56,10 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
+												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2018">Seasons</a></li>
 												<li class="<?php ifbodyclass (252, 'active-link'); ?>"><a href="/protections">Protections By Year</a></li>
 												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2017">Drafts by Year</a></li>
-												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2017">Standings By Year</a></li>								
+												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2018">Standings By Year</a></li>								
 												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>				
 											</ul>
 									</li>

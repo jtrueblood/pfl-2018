@@ -53,7 +53,7 @@ $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11',
 // THIS IS NOW COMMENTED OUT BECAUSE THE TRANSIENTS HAVE BEEN BUILT.  NEXT SEASON UNCOMMENT, CHANGE THE $YEAR and BUILD THE ARRAY EACH WEEK
 
 
-$jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKox1emO1HIZDYeFbox&W='.$week.'&JSON=1');
+$jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKmx1qmO1HIZDYeFbox&W='.$week.'&JSON=1');
 $weekresults = json_decode($jsonweekresults, true);	
 $matchups = $weekresults['weeklyResults'];
 

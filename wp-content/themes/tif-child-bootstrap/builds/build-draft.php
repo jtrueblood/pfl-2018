@@ -16,9 +16,10 @@ get_header();
 // 5. Recomment that section.  Save and close.
 
 
-$year = 2018;
+$year = 2019;
 $lid = 38954;
-$origorder = array('HAT','WRZ','CMN','TSG','BUL','DST','SON','PEP','SNR','ETS');
+$apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
+$origorder = array('BST','HAT','DST','WRZ','PEP','CMN','BUL','TSG','SNR','ETS');
 // --------------------------------------------
 
 
@@ -134,7 +135,6 @@ printr($newplayers, 0);
 // uncomment and reload to insert info into wp_drafts once the array looks good
 
 
-/*
 foreach($draftinsert as $arr){
 	
 	$wpdb->insert(
@@ -158,10 +158,6 @@ foreach($draftinsert as $arr){
 		 )
 	);	
 }
-*/
-
-			
-
 
 
 // pass week parameter all players by ID and Score	

@@ -20,8 +20,13 @@ $newplayoffs = get_postseason();
 $standings1991 = get_standings(1991);
 
 foreach ($theyears as $year){
-	$stand[$year] = get_standings($year);
+	$grabyear = get_standings($year);
+	if(!empty($grabyear)){
+		$stand[$year] = get_standings($year);
+	}
 }
+
+//printr($stand, 1);
 
 foreach ($stand as $key => $value){
 	foreach ($value as $val){

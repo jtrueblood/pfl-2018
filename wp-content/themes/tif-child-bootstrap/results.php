@@ -110,7 +110,26 @@ function insertslams($array){
 	
 }
 
-// get arrat of all team / all week data and index the values
+function insertpotw($y,$w,$player){
+												
+	global $wpdb;
+	$arr = $array;
+
+	$insertpoty = $wpdb->insert(
+		 'wp_player_of_week',
+	     array(
+			'weekid' 	=> $y.$w,
+			'playerid' 	=> $player
+		),
+		 array( 
+			'%s','%s' 
+		 )
+	);
+	
+}
+
+
+// get array of all team / all week data and index the values
 foreach ($teamarrays as $key => $value){
 	foreach ($value as $week){
 		$byweek[$key][$week[0]] = array(
@@ -230,6 +249,34 @@ function linktoplayerpage($pid, $all){
 	echo '<a href="/player/?id='.$pid.'" style="cursor:hand;">'.$all.'</a>';
 }
 
+function get_helmet($team, $year){
+	global $season;
+	global $wpdb;
+	$helmethistory = $wpdb->get_results("select * from wp_helmet_history where team = '$team'", ARRAY_N);
+	
+	foreach ($helmethistory as $value){
+		$helmets[$value[2]] = array(
+			'name' => $value[3],
+			'helmet' => $value[4]
+		);
+	}
+	
+	$x = 1991;
+	
+	while ($x < $season){
+		if (isset($helmets[$x])){
+		 	$myhelmets[$x] = $helmets[$x];
+		 	$active = $helmets[$x];
+		} else {
+			$myhelmets[$x] = $active;
+		} 
+		$x++;
+	}
+	
+	return $myhelmets[$year];
+	
+}
+
 //printr($weeknotes, 0);
 
 ?>
@@ -243,17 +290,42 @@ function linktoplayerpage($pid, $all){
 				
 				<!--Page content-->
 				<div id="page-content">
-					<div id="page-title">
-						<?php while (have_posts()) : the_post(); ?>
-						<?php endwhile; wp_reset_query(); ?>	
-					</div>
-					
+								
 					<div class="row">
 						
+						<div class="col-xs-24 col-sm-12 col-md-8">
+							<div id="page-title">
+						<?php echo '<h2>Week '.$week_sel.', '.$year_sel.'</h2>'; ?>	
+						</div>
+						
+						</div>					
+						
+						<div class="col-xs-24 col-sm-12 col-md-8">
+							<p>
+								<?php if ($week_sel == '14'){ ?>
+										<a href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">Prev Week</a>
+											&emsp;|&emsp;
+										<a href="?Y=<?php echo $year_sel + 1; ?>&W=<?php echo '01'; ?>">Next Week</a>
+								<?php } 
+									if($week_sel > 1 && $week_sel < 14) { ?>
+										<a href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">Prev Week</a>
+											&emsp;|&emsp;
+										<a href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next Week</a>
+								<?php }
+								
+									if($week_sel == '01'){ ?>
+										<a href="?Y=<?php echo $year_sel - 1; ?>&W=<?php echo '14'; ?>">Prev Week</a>
+											&emsp;|&emsp;
+										<a href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next Week</a>
+								<?php } ?>
+							</p>
+						</div>
+						
 						<div class="col-xs-24 col-md-8">
+							
 							<select name="Words" id="comboYear"'; 
 								<option value="1991">1991</option>
-							<?php foreach($allSeasons as $select_year){ 
+									<?php foreach($allSeasons as $select_year){ 
 								echo'<option value="'.$select_year.'">'.$select_year.'</option>';    
 								}
 							?> </select> 
@@ -266,18 +338,6 @@ function linktoplayerpage($pid, $all){
 							
 													 
 							<button id="schedulebtn" class="btn btn-default btn-hover-warning">Change Week</button><br/>
-						</div>
-						
-						<div class="col-xs-24 col-sm-12 col-md-8">
-							<?php echo '<h4>Results for Week '.$week_sel.', '.$year_sel.'</h4>'; ?>
-						</div>
-						
-						<div class="col-xs-24 col-sm-12 col-md-8">
-							<p>
-							<a href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">Prev Week</a>
-							&emsp;|&emsp;
-							<a href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next Week</a>
-							</p>
 						</div>
 					
 					</div>
@@ -388,6 +448,18 @@ function linktoplayerpage($pid, $all){
 								}
 							}
 							
+							// store the week scores as an array to use for high score
+							$soredata[] = array(
+								$h_qb1, 
+								$h_rb1,
+								$h_wr1,
+								$h_pk1,
+								$a_qb1,
+								$a_rb1, 
+								$a_wr1, 
+								$a_pk1 
+							);
+							
 							// Display the Boxes Here...		
 							echo '<div class="col-xs-24 col-sm-12 col-md-8">
 							
@@ -405,43 +477,56 @@ function linktoplayerpage($pid, $all){
 							</div>';
 									
 							echo '<div class="panel-body">';
+							
+							// get team name and helmet logo by season from the wp_helmet_history table - function above
+							$get_the_helmet_home = get_helmet($hometeam, $year_sel);
+							$get_the_helmet_away = get_helmet($awayteam, $year_sel);
 									
 							if ($homepoints > $awaypoints){
-								echo '<span class="text-2x text-bold">'.$hometeam_full.'</span><span class="text-2x pull-right text-bold">'.$homepoints.'</span><br>';
-								echo '<span class="text-2x">'.$awayteam_full.'</span><span class="text-2x pull-right">'.$awaypoints.'</span><br>';
+								echo '<span class="text-2x text-bold">'.$get_the_helmet_home['name'].'</span><span class="text-2x pull-right text-bold">'.$homepoints.'</span><br>';
+								echo '<span class="text-2x">'.$get_the_helmet_away['name'].'</span><span class="text-2x pull-right">'.$awaypoints.'</span><br>';
 							} else {
-								echo '<span class="text-2x">'.$hometeam_full.'</span>  <span class="text-2x pull-right">'.$homepoints.'</span><br>';
-								echo '<span class="text-2x text-bold">'.$awayteam_full.'</span>  <span class="text-2x pull-right text-bold">'.$awaypoints.'</span><br>';
+								echo '<span class="text-2x">'.$get_the_helmet_home['name'].'</span>  <span class="text-2x pull-right">'.$homepoints.'</span><br>';
+								echo '<span class="text-2x text-bold">'.$get_the_helmet_away['name'].'</span>  <span class="text-2x pull-right text-bold">'.$awaypoints.'</span><br>';
 							}						
-					
-					
+
 							echo '<hr/><h5>Boxscores</h5>';
 					// boxscore left image
-							echo '<div class="col-xs-12 team-bar boxscorebox" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$hometeam.'-bar.png);">';
+							
+							echo '<div class="col-xs-12 team-bar boxscorebox" style="background-image:url('.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$hometeam.'-helm-right-'.$get_the_helmet_home['helmet'].'.png);">';
 							echo '</div>';
 					
 					// boxscore right image	
-							echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$awayteam.'-bar-horz.png);">';
+							
+							echo '<div class="col-xs-12 team-bar boxscorebox" style="background-image:url('.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$awayteam.'-helm-left-'.$get_the_helmet_away['helmet'].'.png);">';
 							echo '</div>';
 					
 					// boxscore left players
 						echo '<div class="col-xs-12 boxscorebox">';
-								
-						echo checkfornone ($h_qb1_data['first']).' '.$h_qb1_data['last'].'<span class="pull-right">'.$h_qb1_data['points'].'</span><br>';
-						echo checkfornone ($h_rb1_data['first']).' '.$h_rb1_data['last'].'<span class="pull-right">'.$h_rb1_data['points'].'</span><br>';
-						echo checkfornone ($h_wr1_data['first']).' '.$h_wr1_data['last'].'<span class="pull-right">'.$h_wr1_data['points'].'</span><br>';
-						echo checkfornone ($h_pk1_data['first']).' '.$h_pk1_data['last'].'<span class="pull-right">'.$h_pk1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$h_qb1.'">'.checkfornone ($h_qb1_data['first']).' '.$h_qb1_data['last'].'</a><span class="pull-right">'.$h_qb1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$h_rb1.'">'.checkfornone ($h_rb1_data['first']).' '.$h_rb1_data['last'].'</a><span class="pull-right">'.$h_rb1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$h_wr1.'">'.checkfornone ($h_wr1_data['first']).' '.$h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$h_pk1.'">'.checkfornone ($h_pk1_data['first']).' '.$h_pk1_data['last'].'</a><span class="pull-right">'.$h_pk1_data['points'].'</span><br>';
+						
+/*
+						$get_the_helmet_home = get_helmet($hometeam, $year_sel);
+						printr($get_the_helmet_home, 0);
+*/
 								
 						echo '</div>';		
 					
 					// boxscore right players
 						echo '<div class="col-xs-12 boxscorebox">';
 								
-						echo checkfornone ($a_qb1_data['first']).' '.$a_qb1_data['last'].'<span class="pull-right">'.$a_qb1_data['points'].'</span><br>';
-						echo checkfornone ($a_rb1_data['first']).' '.$a_rb1_data['last'].'<span class="pull-right">'.$a_rb1_data['points'].'</span><br>';
-						echo checkfornone ($a_wr1_data['first']).' '.$a_wr1_data['last'].'<span class="pull-right">'.$a_wr1_data['points'].'</span><br>';
-						echo checkfornone ($a_pk1_data['first']).' '.$a_pk1_data['last'].'<span class="pull-right">'.$a_pk1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$a_qb1.'">'.checkfornone ($a_qb1_data['first']).' '.$a_qb1_data['last'].'</a><span class="pull-right">'.$a_qb1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$a_rb1.'">'.checkfornone ($a_rb1_data['first']).' '.$a_rb1_data['last'].'</a><span class="pull-right">'.$a_rb1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$a_wr1.'">'.checkfornone ($a_wr1_data['first']).' '.$a_wr1_data['last'].'</a><span class="pull-right">'.$a_wr1_data['points'].'</span><br>';
+						echo '<a href="/player/?id='.$a_pk1.'">'.checkfornone ($a_pk1_data['first']).' '.$a_pk1_data['last'].'</a><span class="pull-right">'.$a_pk1_data['points'].'</span><br>';
 						
+/*
+						$get_the_helmet_away = get_helmet($awayteam, $year_sel);
+						printr($get_the_helmet_away, 0);
+*/
 						
 						echo '</div>';				
 								
@@ -455,19 +540,19 @@ function linktoplayerpage($pid, $all){
 							
 									echo '<div class="col-xs-12 boxscorebox">';
 								
-										echo checkfornone ($h_qb2_data['first']).' '.$h_qb2_data['last'].'<span class="pull-right">'.$h_qb2_data['points'].'</span><br>';
-										echo checkfornone ($h_rb2_data['first']).' '.$h_rb2_data['last'].'<span class="pull-right">'.$h_rb2_data['points'].'</span><br>';
-										echo checkfornone ($h_wr2_data['first']).' '.$h_wr2_data['last'].'<span class="pull-right">'.$h_wr2_data['points'].'</span><br>';
-										echo checkfornone ($h_pk2_data['first']).' '.$h_pk2_data['last'].'<span class="pull-right">'.$h_pk2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$h_qb2.'">'.checkfornone ($h_qb2_data['first']).' '.$h_qb2_data['last'].'</a><span class="pull-right">'.$h_qb2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$h_rb2.'">'.checkfornone ($h_rb2_data['first']).' '.$h_rb2_data['last'].'</a><span class="pull-right">'.$h_rb2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$h_wr2.'">'.checkfornone ($h_wr2_data['first']).' '.$h_wr2_data['last'].'</a><span class="pull-right">'.$h_wr2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$h_pk2.'">'.checkfornone ($h_pk2_data['first']).' '.$h_pk2_data['last'].'</a><span class="pull-right">'.$h_pk2_data['points'].'</span><br>';
 								
 									echo '</div>';	
 									
 									echo '<div class="col-xs-12 boxscorebox">';
 								
-										echo checkfornone ($a_qb2_data['first']).' '.$a_qb2_data['last'].'<span class="pull-right">'.$a_qb2_data['points'].'</span><br>';
-										echo checkfornone ($a_rb2_data['first']).' '.$a_rb2_data['last'].'<span class="pull-right">'.$a_rb2_data['points'].'</span><br>';
-										echo checkfornone ($a_wr2_data['first']).' '.$a_wr2_data['last'].'<span class="pull-right">'.$a_wr2_data['points'].'</span><br>';
-										echo checkfornone ($a_pk2_data['first']).' '.$a_pk2_data['last'].'<span class="pull-right">'.$a_pk2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$a_qb2.'">'.checkfornone ($a_qb2_data['first']).' '.$a_qb2_data['last'].'</a><span class="pull-right">'.$a_qb2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$a_rb2.'">'.checkfornone ($a_rb2_data['first']).' '.$a_rb2_data['last'].'</a><span class="pull-right">'.$a_rb2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$a_wr2.'">'.checkfornone ($a_wr2_data['first']).' '.$a_wr2_data['last'].'</a><span class="pull-right">'.$a_wr2_data['points'].'</span><br>';
+										echo '<a href="/player/?id='.$a_pk2.'">'.checkfornone ($a_pk2_data['first']).' '.$a_pk2_data['last'].'</a><span class="pull-right">'.$a_pk2_data['points'].'</span><br>';
 								
 									echo '</div>';	
 								
@@ -563,25 +648,25 @@ function linktoplayerpage($pid, $all){
 										
 										// check if kicker outscores all other players on team
 										
-											if ($h_pk1_data['points'] > $h_qb1_data['points']){
-												if ($h_pk1_data['points'] > $h_rb1_data['points']){
-													if ($h_pk1_data['points'] > $h_wr1_data['points']){
-														echo 'TRUE_HOME!';
-													}
+/*
+										if ($h_pk1_data['points'] > $h_qb1_data['points']){
+											if ($h_pk1_data['points'] > $h_rb1_data['points']){
+												if ($h_pk1_data['points'] > $h_wr1_data['points']){
+													echo 'TRUE_HOME!';
 												}
 											}
-										
-										
-											if ($a_pk1_data['points'] > $a_qb1_data['points']){
-												if ($a_pk1_data['points'] > $a_rb1_data['points']){
-													if ($a_pk1_data['points'] > $a_wr1_data['points']){
-														echo 'TRUE_AWAY!';
-													}
+										}
+									
+									
+										if ($a_pk1_data['points'] > $a_qb1_data['points']){
+											if ($a_pk1_data['points'] > $a_rb1_data['points']){
+												if ($a_pk1_data['points'] > $a_wr1_data['points']){
+													echo 'TRUE_AWAY!';
 												}
 											}
+										}
+*/
 										
-										
-
 									// end notes area
 									
 									// tooltip....
@@ -606,34 +691,254 @@ function linktoplayerpage($pid, $all){
 								$w++;
 								
 						} // END THE FOREACH ?>
-						<div class="col-xs-24 col-md-8">
-							<div class="panel panel-bordered panel-dark">
-								<div class="panel-body">
-									
-										<?php $week_update_url = $update_pdf[$weekvar];
-										if (isset($week_update_url)){
-											echo '<h4><a href="'.$week_update_url .'" target="_blank">PDF Update - '.$week_sel.', '.$year_sel.'</a></h4><p>(flipper)</p>';
-										} else {
-											echo '<h4>No Printed Update Found</h4>';
-										} ?>
-								
-								</div>
-							</div>
-						</div>	
-					
-					<?php		
-					} else {  // END IF ISSET
-						echo '<h3>WEEK NOT FOUND</h3>';
-					}		  
-
-					?>
-
 						
 
-					
-					
-				</div><!--End page content-->
+						<div class="col-xs-24 col-md-8">
+							
+							<!-- PLAYER OF THE WEEK --> 
+							<!-- Calculate POTW if not previously set --> 
+							<?php 
+							$newdata = array_flatten($soredata);
+							foreach ($newdata as $v){
+								if ($v != ''){
+									$bypoints[$v] = get_one_player_week($v, $year_sel.$week_sel);
+								}
+							}
+							
+							//printr($bypoints, 0);
+							
+							$pvqmult = get_allpvqs_year();
+							
+							foreach ($bypoints as $key => $val){
+								$pos = substr($key, -2);
+								if ($pos == 'QB'){
+									$tops[$key] = $pvqmult['QB'] * $val;
+								}
+								if ($pos == 'RB'){
+									$tops[$key] = $pvqmult['RB'] * $val;
+								}
+								if ($pos == 'WR'){
+									$tops[$key] = $pvqmult['WR'] * $val;
+								}
+								if ($pos == 'PK'){
+									$tops[$key] = $pvqmult['PK'] * $val;
+								}
+							}
+							
+							arsort($tops);
+							
+							reset($tops);
+							$result = key($tops);
+							
+							//printr($tops, 0);
+							
+							?>	
+							
+							<div class="panel panel-bordered panel-dark">
+								<div class="panel-heading">
+									<div class="panel-control">
+										Player of the Week
+									</div>	
+								</div>
+								<div class="panel-body">
+									<?php 
+										
+										$potw_table = $wpdb->get_results("select * from wp_player_of_week", ARRAY_N);
+										foreach ($potw_table as $val){
+											$sel_potw[$val[0]] = $val[1];
+										}
+										$setpotw = $sel_potw[$weekvar];
+										//$setpotw = '1991SmitRB';
+										$getpotw_data = get_player_data($setpotw);
+										$getpotw_info = get_player_basic_info($setpotw);
+										$potw = $getpotw_data[$weekvar];
+/*
+										printr($getpotw_info, 0);
+										printr($potw, 0);
+										*/
 
+									if(isset($setpotw)){
+									?>
+								
+									<div class="col-xs-24 col-sm-4">
+ 										<?php echo '<img src="/wp-content/uploads/'.$setpotw.'-50x50.jpg" class="img-responsive">'; ?> 
+									</div>
+									<div class="col-xs-24 col-sm-20">
+										<h3 class="mar-no"><?php echo $getpotw_info[0]['first'].' '.$getpotw_info[0]['last']; ?></h3>
+										<h4 style="margin-top: 7px;"><?php echo $teamlist[$potw['team']].' - '.$potw['points'].' Points';?></h4>
+									</div>
+									
+									<?php 
+										
+										} else { 	
+											echo 'No Player Found';
+										}
+									
+									
+									?>
+									
+								</div>
+								<div class="panel-footer">
+									<p><?php echo $result;	 ?> - Was PVQ Week High</p>
+									<?php insertpotw($year_sel,$week_sel,$result); ?>
+								</div>
+								
+								<?php		
+								} else {  // END IF ISSET
+									echo '<h3>WEEK NOT FOUND</h3>';
+								}		  
+			
+								?>
+								
+							</div>
+							
+							
+					
+							
+
+						<!-- PRINTED PDF if availible --> 
+						<div class="panel panel-bordered panel-dark">
+							<div class="panel-body">
+								
+									<?php $week_update_url = $update_pdf[$weekvar];
+									if (isset($week_update_url)){
+										echo '<h4><a href="'.$week_update_url .'" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;&nbsp;Update - '.$week_sel.', '.$year_sel.'</a></h4>';
+									} else {
+										echo '<h4>No Printed Update Found</h4>';
+									} ?>
+							
+							</div>
+							<div class="panel-footer">
+								<p>(flipper)</p>
+							</div>
+						</div>
+						
+					</div>
+					
+					<div class="col-xs-24 col-md-8">
+						<div class="panel panel-bordered panel-dark">
+								<div class="panel-body">
+									<div id="standingschart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+								</div>
+						</div>
+					</div>
+							
+	
+				</div><!--End page content-->
+				
+								
+						<?php
+							// builds logic to get and insert values into wp_week_standings that returns the teams standing progress as the season goes.  It is used for the STANDINGS chart on the page.  Values reset for each year after week 14. 
+							$standing = get_standings($year_sel);
+							foreach ($standing as $stand){
+								$teamdiv[$stand['teamid']] = $stand['division'];
+							}
+							//printr($teamdiv, 0);
+							
+							foreach ($teamlist as $key => $value){
+								$get = get_all_team_results_by_week($weekvar, $key);
+								if($get != ''){
+									$weekstand[$weekvar.$key] = $get;
+								}
+
+							}
+							function insert_week_stand($array){
+								global $wpdb;
+								global $teamdiv;
+								global $week_sel;
+								foreach ($array as $key => $value){
+									$insertarr = $wpdb->insert(
+										 'wp_week_standings',
+									     array(
+										    'id' 		=> $key,
+										    'weekvar'	=> $value['season'].$week_sel,
+											'season' 	=> $value['season'],
+											'week' 		=> $value['week'],
+											'team' 		=> $value['team'],
+											'division'	=> $teamdiv[$value['team']],
+											'points' 	=> $value['points'],
+											'result' 	=> $value['result'],
+											'victory' 	=> $value['victory']
+										),
+										array( 
+											'%s','%d','%d','%d','%s','%s','%d','%d','%d' 
+										)
+									);
+								}
+							}
+							
+							function insert_week_stand_check($array){
+								global $wpdb;
+								global $teamdiv;
+								global $weekvar;
+								global $week_sel;
+								// gets all week ids
+								$theweeks = the_weeks();
+								// get current week key
+								$weekkey = array_search($weekvar, $theweeks);
+								$theweekneeded = $weekkey -1;
+								
+								// need to get previous week / weekvar based on current week var.  right now it is hardcoded.
+								$getstand = $wpdb->get_results("select * from wp_week_standings where weekvar = $theweeks[$theweekneeded]", ARRAY_N);
+								
+								foreach ($getstand as $value){
+									$lwv[$value[4]] = array(
+										'points' 	=> $value[6],
+										'result' 	=> $value[7],
+										'victory' 	=> $value[8]
+									);
+								}
+								
+								foreach ($array as $key => $value){
+									$tea = $value['team'];
+									
+									$insertarr = $wpdb->insert(
+										 'wp_week_standings',
+									     array(
+										    'id' 		=> $key,
+										    'weekvar'	=> $value['season'].$week_sel,
+											'season' 	=> $value['season'],
+											'week' 		=> $value['week'],
+											'team' 		=> $value['team'],
+											'division'	=> $teamdiv[$value['team']],
+											'points' 	=> $value['points'] + $lwv[$tea]['points'],
+											'result' 	=> $value['result'] + $lwv[$tea]['result'],
+											'victory' 	=> $value['victory'] + $lwv[$tea]['victory']
+										),
+										array( 
+											'%s','%d','%d','%d','%s','%s','%d','%d','%d' 
+										)
+									);
+								}
+								
+								return $getstand;
+							}
+							
+							if($week_sel == '01'){
+								insert_week_stand($weekstand);
+								//echo 'inserted week 1';
+							} else {
+								$lastweek = insert_week_stand_check($weekstand);
+								//printr($lastweek, 0);
+							}
+							
+						function get_wp_week_standings($week){
+							global $wpdb;
+							$getweek = $wpdb->get_results("select * from wp_week_standings where weekvar = $week", ARRAY_N);
+							return $getweek;
+						}
+						
+						$standingweek = get_wp_week_standings($weekvar);
+						foreach ($standingweek as $value){
+							$standingweekteam[$value[5]][$value[4]] = $value;
+						}
+						arsort($standingweekteam);
+							
+						//printr($standingweekteam, 0);
+						?>						
+						
+					
+				
 			</div><!--END CONTENT CONTAINER-->
 			
 			<?php include_once('main-nav.php'); ?>
@@ -647,6 +952,98 @@ function linktoplayerpage($pid, $all){
 		
 </div>
 </div>
+
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+
+<script>
+	// Create the chart
+Highcharts.chart('standingschart', {
+  chart: {
+    type: 'column'
+  },
+  title: {
+    text: 'Playoff Chase'
+  },
+  subtitle: {
+    text: 'Modified Standings Showing Race for the Playoffs'
+  },
+  xAxis: {
+	  categories: [<?php
+		  foreach ($standingweekteam as $key => $value){
+			  foreach ($value as $ky => $ve){
+				 echo "'".$ve[4]."', "; 
+			  }
+		  }
+		  //'ETS', 'BST', 'BUL'
+	  	?>],	    
+	    crosshair: true,
+	    allowDecimals: false,
+	    labels: {
+	        align: 'right',
+	        reserveSpace: true,
+	        rotation: 270
+	    },
+	},
+  yAxis: {
+    title: {
+      text: 'Wins'
+    },
+    allowDecimals: false,
+    max: 14
+  },
+  legend: {
+    enabled: false
+  },
+  plotOptions: {
+    series: {
+      borderWidth: 0,
+      dataLabels: {
+        enabled: true,
+        format: ''
+      }
+    }
+  },
+
+  tooltip: {
+    headerFormat: '<span style="color:{point.color}">{point.name}</span><br/>',
+    pointFormat: '<span style="color:{point.color}">{point.name}</span><br/><span style="color:{point.pointdiff}">{point.pointdiff}</span><br/>'
+  },
+
+  series: [
+    {
+      name: "Teams",
+      colorByPoint: true,
+        data: [<?php 
+	        foreach ($standingweekteam as $key => $value){
+		        foreach ($value as $ky => $ve){
+			        echo '{';
+			        echo 'name: "'.$ky.'",';
+					echo 'y: '.$ve[8].',';
+					if($ve[5] == 'PFL'){
+						echo 'color: "#3b4146",';
+					}
+					if($ve[5] == 'EGAD'){
+						echo 'color: "#5fa2dd",';
+					}
+					if($ve[5] == 'DGAS'){
+						echo 'color: "#eaa642",';
+					}
+					if($ve[5] == 'MGAC'){
+						echo 'color: "#37c445",';
+					}
+					echo 'pointdiff: '.$ve[7].'';
+					echo '},';
+	        	}
+	        } 
+	    ?>],
+    }
+  ]
+});
+</script>
+
 
 
 <?php get_footer(); ?>

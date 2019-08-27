@@ -343,6 +343,34 @@ foreach ($merge_mults as $key => $val){
 }
 // end PVQ calc
 
+//printr($final_pvq, 1);
+
+function insert_wp_player_pvq(){
+	global $final_pvq;		
+	global $wpdb;
+	
+	//remove the row for the player if it exsists
+	
+	foreach ($final_pvq as $key => $value){
+	$inserted = $wpdb->insert(
+		 'wp_player_pvqs',
+	     array(
+	        'id' => $key,
+	        'playerid' => substr($key, 0, 10),
+	        'year' => substr($key, -4),
+			'pvq' => $value
+	     ),
+		 array( 
+			'%s','%s','%d','%f'
+		 )
+		);
+	}
+ 
+}
+
+insert_wp_player_pvq();
+
+
 // Calc PPG -- get arrays of positions player in loops above (at least 7 games played)
 $merge_ppgs = array_merge($qb_ppg_build, $rb_ppg_build, $wr_ppg_build, $pk_ppg_build);
 arsort($merge_ppgs);

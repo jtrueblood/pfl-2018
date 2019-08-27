@@ -4,6 +4,7 @@
  * Description: Page for displaying player profiles
  */
  ?>
+ 
 
 <!-- necessary cache fies are pulled in via the 'pointsleader' function in functions.php -->
 
@@ -82,7 +83,7 @@ $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
 
-// printr($careerdata, 0);
+//printr($careerdata, 0);
 
 if(!empty( $careerdata['years'])){
 	$playseasons = $careerdata['years'];
@@ -125,16 +126,11 @@ $table = get_table('playoffs');
 
 // sets an enhanced value for players with more complex careers.  It displays tables, timelines, etc
 
-if ($careerdata['seasons'] > 2){
+if ($careerdata['seasons'] > 0){
 		$enhanced = 1;
 	} else {
 		$enhanced = 0;
 }
-
-	
-
-
-
 
 // get Posse Bowl Apperances
 if(!empty($playoffsplayer)){
@@ -206,6 +202,7 @@ $qb_leaders = $arr_position['QB'];
 $rb_leaders = $arr_position['RB'];
 $wr_leaders = $arr_position['WR'];
 $pk_leaders = $arr_position['PK'];
+
 
 function sortByOrder($a, $b) {
     return $b['points'] - $a['points'];
@@ -364,8 +361,9 @@ foreach($buildtheyears as $season ){
 	$get_leaders = '';
 }
 
+$highestgame = $careerdata['high'];
 
-//printr($playseasons, 0);
+$potw = get_player_of_week_player($playerid);
 
 //printr($career_timeline, 0);
 
@@ -383,12 +381,7 @@ foreach($buildtheyears as $season ){
 
 //insert data into tables to store .....
 
-
-
-
-
 ?>
-
 			
 <!--CONTENT CONTAINER-->
 <div class="boxed">
@@ -547,8 +540,10 @@ foreach($buildtheyears as $season ){
 			
 			<div class="panel widget">
 				<div class="widget-body text-center">
-					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-top-scorer.jpg">
-					<?php echo '<h5>Overall Career<br>Position Rank</h5><h4>'.$ranker.'</h4>'; 
+					<!--<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-top-scorer.jpg">-->
+					<?php if($ranker != ''){
+							echo '<h5>Overall Career<br>Position Rank</h5><h3>'.ordinal($ranker).'</h3>'; 
+						}
 						echo '<p>&nbsp;</p>';
 						if(!empty($player_number_ones)){
 							foreach ($player_number_ones as $key => $value){
@@ -556,15 +551,32 @@ foreach($buildtheyears as $season ){
 							}
 						} 
 						
-// 						printr($number_ones, 0);
+ 						//printr($number_ones, 0);
 					?>
 				
 				
 				</div>
 			</div>
 			
-			
-			
+			<!-- only if player won a sesaonal pvq -->
+			<?php 
+			$pvqplayer = $careerdata['pvqbyseason'];
+			if (false !== $key = array_search(1, $pvqplayer)) {?>
+				<div class="panel widget">
+				<div class="widget-body text-center">
+					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-top-pvq.jpg">
+					<h4>PVQ Leader</h4>
+					<?php 
+						foreach ($pvqplayer as $key => $value){
+							if( $value == 1):
+								echo '<h3><span class="text-bold">'.$key.'</span> - 1.000</h3>';	
+							endif;
+						}
+						echo '<i>Highest scorer according to player PVQ.</i>';
+					?>
+				</div>
+			</div>
+			<?php } ?>
 
 			
 			<!-- only if probowl selections exsist -->
@@ -577,7 +589,27 @@ foreach($buildtheyears as $season ){
 					<h5>Probowl Selections</h5>
 					<?php 
 						foreach ($probowlplayer as $key => $value){
-								echo '<span class="text-bold">'.$value['year'].'</span> - '.$teamids[$value['team']].'<br>';
+							echo '<span class="text-bold">'.$value['year'].'</span> - '.$teamids[$value['team']].'<br>';		
+						}
+					?>
+				</div>
+			</div>
+			<?php } ?>
+			
+			
+			<!-- only if named player of the week -->
+			<?php
+			
+			if(!empty($potw)){?>	
+			
+			<div class="panel widget">
+				<div class="widget-body text-center probowl">
+					<h5>Player of the Week Selections</h5>
+					<?php 
+						foreach ($potw as $value){
+							$w = substr($value, -2);
+							$y = substr($value, 0, 4);
+							echo '<span class="text-bold">Week '.$w.', '.$y.'<br>';		
 						}
 					?>
 				</div>
@@ -833,6 +865,7 @@ foreach($buildtheyears as $season ){
 									<!--===================================================-->
 										<div class="table-responsive">
 											<table class="table table-striped">
+
 												<thead>
 													<tr>
 														<th>Year</th>
@@ -841,6 +874,7 @@ foreach($buildtheyears as $season ){
 														<th class="text-center">Games</th>
 														<th class="text-center">PPG</th>
 														<th class="text-center">High</th>
+														<th class="text-center">PVQ</th>
 														
 <!-- 														<th class="hidden-xs">Acquisition</th> -->
 													</tr>
@@ -851,7 +885,7 @@ foreach($buildtheyears as $season ){
 														
 														<?php 
 														
- //														printr($playseasons, 0);
+													//printr($playseasons, 1);
 															
 															
 															if(isset($buildtheyears)){
@@ -870,6 +904,7 @@ foreach($buildtheyears as $season ){
 																			$steams = array_values($iteams);
 																			$teamsplayer = array($steams[0],$steams[1],$steams[2],$steams[3]);
 																			$yearsplayed[] = $printyear;
+																			$pvq  = $pvqplayer[$printyear];
 																		
 																			$seasonsList .= '<tr>';
 																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
@@ -896,6 +931,7 @@ foreach($buildtheyears as $season ){
 																			$seasonsList .= '<td class="text-center">'.$igames.'</td>';
 																			$seasonsList .= '<td class="text-center">'.$ippg.'</td>';
 																			$seasonsList .= '<td class="text-center">'.$ihigh.'</td>';
+																			$seasonsList .= '<td class="text-center">'.round($pvq, 3).'</td>';
 																			
 																				
 																			$seasonsList .= '</td>';
@@ -909,6 +945,7 @@ foreach($buildtheyears as $season ){
 																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
 																			$seasonsList .= '</td>';															
 																			$seasonsList .= '<td class="text-bold">Did Not Play</td>';
+																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
@@ -1132,7 +1169,11 @@ foreach($buildtheyears as $season ){
 															
 															$gametable .= '<td class="text-center">'.$pweek.'</td>';
 															$gametable .= '<td class="text-center">'.$pteam.'</td>';
-															$gametable .= '<td class="text-center">'.$ppoints.'</td>';
+															if ($ppoints == $highestgame){
+																$gametable .= '<td class="text-center text-bold" style="background-color:#afd1ee;">'.$ppoints.'</td>';
+															} else {
+																$gametable .= '<td class="text-center">'.$ppoints.'</td>';
+															}
 															$gametable .= '<td class="text-center">'.$pversus.'</td>';
 															
 														
@@ -1427,8 +1468,8 @@ foreach($buildtheyears as $season ){
 							        <div class="timeline-label no-label">
 							            <p class="protected-by"><span class="text-bold">
 								            Traded to <?php echo $tradedto; ?></span> during the <?php echo $when; ?></p>
-								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_to_team'];?></span> &mdash; Get <?php echo implode( ", ", $alongwith_format).' '.$a_picks; ?> </p> 
-										<p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_from_team'];?></span> &mdash; Get <?php echo implode( ", ", $sent_format).' '.$s_picks; ?>  
+								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_to_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $alongwith_format).' '.format_draft_pick($a_picks); ?></span> </p> 
+										<p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_from_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $sent_format).' '.format_draft_pick($s_picks); ?>  </span>
 								        </p>
 								         <p class="protected-by"><?php echo $notes; ?> </p>
 							        </div>
@@ -1475,6 +1516,20 @@ foreach($buildtheyears as $season ){
 							        </div>
 						    	</div>
 								<?php } 
+								
+								if($pvqplayer[$key] == 1){ ?>
+								<div class="timeline-entry">
+							        <div class="timeline-stat">
+							            <div class="timeline-icon bg-success">
+								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-top-pvq.jpg" />
+							            </div>
+							            <div class="timeline-time"><?php $pvqplayer[$key]; ?></div>
+							        </div>
+							        <div class="timeline-label">
+							            <?php echo '<span class="text-bold">1.000 PVQ</span>'; ?>
+							        </div>
+						    	</div>
+								<?php } 	
 										    
 								    
 								if(!empty($value['pfltitle'])){ ?>

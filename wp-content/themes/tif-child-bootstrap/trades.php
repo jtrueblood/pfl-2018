@@ -61,33 +61,32 @@
 
 							asort($newtrades);
  							//printr($newtrades, 0);
-										
+							
+							$x = 0;			
 							foreach ($newtrades as $key => $value){ 
+							
+							if ($x % 3 == 2) : 
+								echo '<div class="row">';
+							endif;
 							?>
-																									
+																								
 								<div class="col-xs-8">		
 									<div class="panel protections">
 										<div class="panel-body">
 											<h5><?php echo $value['year'].' / '.$value['when']; ?></h5>
+											<div class="col-xs-12">	
 											<p>
-												<?php echo '<span class="text-bold">'.$teamids[$value['team1']].'</span> Get ';
+												<?php echo '<h4><span class="text-bold">'.$teamids[$value['team1']].'</span> get:</h4>';
 													if(!empty($value['players1'][0])){
 														foreach($value['players1'] as $player){
-															//$playername = get_player_name($player);
-															//echo $playername['first'].' '.$playername['last'].' ';
-															echo $player;
+															$playername = get_player_name($player);
+															echo $playername['first'].' '.$playername['last'].', '.$playername['pos'].'<br>';
 														}
 	
 													}
-													if(!empty($value['picks1'][0])){
-														if (isset($value['picks1'][1])){
-															echo 'Picks ';
-														} else {
-															echo 'Pick ';
-														}
-														
+													if(!empty($value['picks1'][0])){														
 														foreach($value['picks1'] as $pick){
-															echo $pick.' ';
+															format_draft_pick($pick).' ';
 														}
 													}
 													if(!empty($value['protections1'][0])){
@@ -97,24 +96,20 @@
 													}
 													?> 
 											</p>
+											</div>
+											<div class="col-xs-12">	
 											<p>
-												<?php echo '<span class="text-bold">'.$teamids[$value['team2']].'</span> Get ';
+												<?php echo '<h4><span class="text-bold">'.$teamids[$value['team2']].'</span> get:</h4>';
 													if(!empty($value['players2'][0])){
 														foreach($value['players2'] as $player){
-															//$playername = get_player_name($player);
-															//echo $playername['first'].' '.$playername['last'].' ';
-															echo $player;
+															$playername = get_player_name($player);
+															echo $playername['first'].' '.$playername['last'].', '.$playername['pos'].'<br>';
+															//echo $player;
 														}
 													}
 													if(!empty($value['picks2'][0])){
-														if (isset($value['picks2'][1])){
-															echo 'Picks ';
-														} else {
-															echo 'Pick ';
-														}
-														
 														foreach($value['picks2'] as $pick){
-															echo $pick.' ';
+															format_draft_pick($pick).' ';
 														}
 													}
 													if(!empty($value['protections2'][0])){
@@ -124,7 +119,7 @@
 													}
 													?>
 											</p>
-											
+											</div>
 										</div>
 										<div class="panel-footer">
 											<p><?php echo 'Note: '. $value['notes']; ?></p>
@@ -133,8 +128,10 @@
 								</div>
 							
 								<?php 
-							
-								
+								if ($x % 3 == 2) : 
+									echo '</div>';
+								endif;
+								$x++;
 							} ?>
 
 					</div>					

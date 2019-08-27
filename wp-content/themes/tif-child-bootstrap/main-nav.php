@@ -43,6 +43,7 @@
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
 												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2018">Leaders By Season</a></li>	
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
+												<li class="<?php ifbodyclass (1413, 'active-link'); ?>"><a href="/player-value-quotient/">Player Value</a></li>
 											</ul>
 									</li>
 									
@@ -93,7 +94,7 @@
 											<!--Submenu-->
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (281, 'active-link'); ?>"><a href="/protections-team">Protections By Team</a></li>	
-												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>																			<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>	
+												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>												<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>	
 											</ul>
 									</li>
 									

@@ -134,18 +134,20 @@ $all_team_transient = local_all_team_data_trans();
 foreach ($theyears as $year){
 	$get = get_standings($year);
 	//$store[$year] = $get;
-	foreach ($get as $val){
-		$games = $val['divwin'] + $val['divloss'];
-		if ($games > 0){
-			$winpert = $val['divwin'] / $games;
-			$allstandings[$val['teamid'].$year] = array(
-			'divwin' => $val['divwin'],
-			'divloss' => $val['divloss'],
-			'div' => $val['division'],
-			'winper' => number_format($winpert, 3)
-			);
+	if($get != ''){
+		foreach ($get as $val){
+			$games = $val['divwin'] + $val['divloss'];
+			if ($games > 0){
+				$winpert = $val['divwin'] / $games;
+				$allstandings[$val['teamid'].$year] = array(
+				'divwin' => $val['divwin'],
+				'divloss' => $val['divloss'],
+				'div' => $val['division'],
+				'winper' => number_format($winpert, 3)
+				);
+			}
+			$allteampoints[$year][$val['teamid']] = $val['pts'];
 		}
-		$allteampoints[$year][$val['teamid']] = $val['pts'];
 	}
 }
 
@@ -433,7 +435,19 @@ $playerids = just_player_ids();
 foreach($playerids as $pl){
 	$player_stats = get_player_career_stats($pl);
 	$topseasonscores[$pl] = $player_stats['yeartotal']; 
+	$titles = $player_stats['possebowlwins'];
+	if($titles != ''){
+		$count = array_sum($titles);
+		if ($count > 1){
+			$player_titles[$pl] = array(
+				'count' => $count,
+				'years' => $titles
+			);
+		}
+	}
 }
+
+//printr($player_titles, 1);
 
 foreach($topseasonscores as $key => $item){
 	$pos = substr($key, -2);
@@ -685,39 +699,42 @@ arsort($totalppggame);
 				
 			</div>
 			
+
 			<div class="col-xs-24 col-sm-12 col-md-6">
 			
 			<?php 
-				$teampoints = get_team_points('SNR');
+				//$teampoints = get_team_points('SNR');
 
 				foreach ($theteams as $team){
 					$teamjustpts[$team] = get_team_points($team);
 				}
+				
+				//printr($teamjustpts, 1);
 								
 				foreach ($theteams as $t){
-					$store = array();
+					$c = 1;
 					foreach ($teamjustpts[$t] as $key => $value){
 							
 							if($value >= 50){
-								$store[] = $key;
+								$counter[$t] = $c;
 								$j++;
+								$c++;
 								$consec[$t][$key] = $j;		
 							} else {
 								$j = 0;
 								$consec[$t][$key] = $j;	
 							}
-							$count[$t] = count($store);			
+										
 					}
 					
 				}	
-				arsort($count, SORT_NUMERIC);
+				arsort($counter, SORT_NUMERIC);
 
-				
 				$labels = array('Team', 'Count');	
 				tablehead('Number of 50+ Point Games', $labels);	
 				
 				$b = 1;
-				foreach ($count as $key => $value){
+				foreach ($counter as $key => $value){
 					
 						$fiftyprint .='<tr><td>'.$b.'. '.$teamids[$key].'</td>';
 						$fiftyprint .='<td class="min-width text-right">'.$value.'</td></tr>';
@@ -732,6 +749,7 @@ arsort($totalppggame);
 			?>
 			
 			</div>
+
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				
@@ -1301,10 +1319,8 @@ arsort($totalppggame);
 						}
 						
 						$b++;
-						
-						
+								
 					}
-				
 				
 				echo $streakprint;
 				
@@ -1478,6 +1494,43 @@ arsort($totalppggame);
 					echo $plpostprint;
 					
 					tablefoot('-- Top 20 Players');	
+				
+
+				
+				?>	
+				
+				</div>
+				
+				
+				<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php
+					
+					arsort($player_titles);
+					
+					//printr($player_titles, 0); 
+
+					$labels = array('Player','Title Count','Years' );	
+					tablehead('Player Posse Bowl Titles', $labels);	
+					
+					
+					foreach ($player_titles as $key => $value){
+						
+						$name = get_player_name($key);
+						$years = $value['years'];
+						$yearlist = array();
+						foreach($years as $k => $v){
+							$yearlist[] = $k;
+						}
+						
+						$titprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
+						$titprint .='<td class="">'.$value['count'].'</td>';
+						$titprint .='<td class="">'.$yearlist[0].' '.$yearlist[1].' '.$yearlist[2].'</td></tr>';
+						
+					}
+					
+					echo $titprint;
+					
+					tablefoot('');	
 				
 
 				

@@ -191,7 +191,7 @@ function createnewplayer($array){
 											
 											
 										</form>
-										
+										<p><small>Year and possibly league ID value needs to be updated for function get_mfl_player_details()</small></p>
 									</div>
 									
 									<div class="col-xs-24">
@@ -273,10 +273,12 @@ function createnewplayer($array){
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24 col-sm-12">	
-										<a href="http://www58.myfantasyleague.com/2018/home/38954#0" target="_blank">MFL Website 2018</a><br>
+										<a href="http://www58.myfantasyleague.com/2019/home/38954#0" target="_blank">MFL Website 2019</a><br>
 										<a href="https://www.pro-football-reference.com/" target="_blank">Pro Football Reference</a><br>
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
+										<a href="https://docs.google.com/document/d/1D8VZPOBn04zVXYQB1gr-xb1NDe2nYLn9Rqgl4oZVhXI/edit?usp=sharing" target="_blank">PFL Rules - Rev 2019</a><br>
 										<hr>
+										<a href="http://www58.myfantasyleague.com/2018/home/38954#0" target="_blank">MFL Website 2018</a><br>
 										<a href="http://www58.myfantasyleague.com/2017/home/38954#0" target="_blank">MFL Website 2017</a><br>
 										<a href="http://www58.myfantasyleague.com/2016/home/38954#0" target="_blank">MFL Website 2016</a><br>
 										<a href="http://www58.myfantasyleague.com/2015/home/47099#0" target="_blank">MFL Website 2015</a><br>

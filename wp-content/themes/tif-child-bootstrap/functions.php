@@ -108,7 +108,6 @@ function get_attachment_url_by_slug( $slug ) {
 }
 
 
-
 /* Get Single txt file from Cache and store as array.  0 no print, 1 for print on page */
 
 function get_cache($file, $print){
@@ -1407,8 +1406,9 @@ function get_one_player_week ($pid, $weekid){
 	} else {
 		return 'did not play';
 	}
-	
 }
+
+
 
 // gets consecutive game streak of player. returns a sum of games played.  They are allowed to miss one but once they miss two in a row the streak is broken.
 function get_player_game_streak($pid){
@@ -1637,11 +1637,76 @@ function team_record($team){
 	return $results;
 }
 
+
+function countthepts($p){
+	foreach ($p as $k => $v){
+		$thecount[] = $v['points'];
+	}
+	return array_sum($thecount);
+}
+	
+// gets pvq season multiplier values.  not actually used in the leaders by season pages to calculate pvq on that page.						
+function getpvqmultipliers($year){
+	$leadersyear = get_season_leaders($year);
+	if (isset($leadersyear)){
+	
+		foreach ($leadersyear as $key => $value){
+			$leaders[$value['position']][$key] = $value;
+		}
+		$qb_year = $leaders['QB'];
+		$rb_year = $leaders['RB'];
+		$wr_year = $leaders['WR'];
+		$pk_year = $leaders['PK'];
+	
+		$sum_qb = countthepts($qb_year);
+		$sum_rb = countthepts($rb_year);
+		$sum_wr = countthepts($wr_year);
+		$sum_pk = countthepts($pk_year);
+		$total_pts = $sum_qb + $sum_rb + $sum_wr + $sum_pk;
+		$max = max($sum_qb, $sum_rb, $sum_wr, $sum_pk);
+		$qb_mult = $max / $sum_qb;
+		$rb_mult = $max / $sum_rb;
+		$wr_mult = $max / $sum_wr;
+		$pk_mult = $max / $sum_pk;
+		
+		$multipliers = array(
+			'Year' => $year,
+			'QB' => $sum_qb,
+			'RB' => $sum_rb,
+			'WR' => $sum_wr,
+			'PK' => $sum_pk,
+			'Totals' => $total_pts,
+			'Max' => $max,
+			'QB_Mult' => round($qb_mult, 3),
+			'RB_Mult' => round($rb_mult, 3),
+			'WR_Mult' => round($wr_mult, 3),
+			'PK_Mult' => round($pk_mult, 3)
+			
+		);
+		
+		return $multipliers;
+	}
+}
+
+function printmultiplypvq(){
+		$theyears = the_seasons();
+		
+		foreach ($theyears as $season){
+		$test = getpvqmultipliers($season);
+		if($test['QB'] != ''):
+			$print_multiply[$season] = getpvqmultipliers($season);
+		endif;
+	}	
+	return $print_multiply;
+}
+
+
+
 // gets the cumulative career stats from the player table
 function get_player_career_stats($pid){
 	
 	$data_array = get_player_data($pid);
-	
+		
 	if(!empty($data_array)){
 		foreach ($data_array as $get){
 			$pointsarray[] = $get['points'];
@@ -1680,6 +1745,26 @@ function get_player_career_stats($pid){
 		$highseapts = max($new_sort_flat);		
 		$maxseason = array_keys($new_sort_flat, max($new_sort_flat));
 		
+		$justchamps = get_just_champions();
+		$playoffsplayer = playerplayoffs($pid);
+		
+		if(!empty($playoffsplayer)){
+			foreach($playoffsplayer as $key => $value){
+				if ($value['week'] == '16'){
+					$pb_apps[$value['year']] = $value['team'];	
+				}
+			}
+		}
+		// get Posse Bowl Wins 
+		foreach ($justchamps as $key => $possebowls){
+			if ($possebowls == $pb_apps[$key]){
+				$pbwins[$key] = $possebowls;
+				$pbwins_index[$key] = 1;
+			}
+		}
+		
+		$pvqflat = get_player_pvqs($pid);
+		
 		$carrer_stats = array(
 			'pid' => $pid,
 			'games' => $games,
@@ -1695,7 +1780,9 @@ function get_player_career_stats($pid){
 			'years' => $indyears,
 			'yeartotal' => $new_sort_flat,
 			'gamesbyseason' => $new_sort_flat_games,
-			'ppgbyseason' => $new_sort_flat_ppg
+			'ppgbyseason' => $new_sort_flat_ppg,
+			'pvqbyseason' => $pvqflat,
+			'possebowlwins' => $pbwins_index
 			
 		);
 		
@@ -2307,6 +2394,7 @@ function teamid_mfl_to_name(){
 }
 
 // function to return player data from MFL
+// Year and possibly league ID value needs to be updated
 
 function get_mfl_player_details($mflid){
 
@@ -2317,7 +2405,7 @@ function get_mfl_player_details($mflid){
 	
 			
 	 
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/2018/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_URL => "http://www58.myfantasyleague.com/2019/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
@@ -2543,7 +2631,7 @@ function get_player_name($playerid){
 	return $name;
 }
 
-// gets basic team table 
+// results for team by week
 function get_team_results_by_week($team, $weekid){
 	global $wpdb;
 	
@@ -2576,6 +2664,51 @@ function get_team_results_by_week($team, $weekid){
 	return $byweekteam;
 }
 
+// results for all teams by week
+function get_all_team_results_by_week($weekid, $team){
+	global $wpdb;
+
+		$getteam = $wpdb->get_results("select * from wp_team_$team where id = '$weekid'", ARRAY_N);
+		foreach ($getteam as $revisequery){
+		
+			if($revisequery[9] > 0){
+				$wl = 1;
+			} else {
+				$wl = 0;
+			}
+			$theweek = $revisequery[2];
+			$sum += $revisequery[4];
+			
+			
+			
+			$weekteams = array(
+				'season' => $revisequery[1], 
+				'week' => $theweek, 
+				'team' => $team,
+				'points' => $sum,
+				'result' => $revisequery[9],
+				'victory' => $wl
+			);
+			
+			
+			
+		}
+	
+	
+	return $weekteams;
+}
+
+
+//format number as ordinal
+function ordinal($number) {
+    $ends = array('th','st','nd','rd','th','th','th','th','th','th');
+    if ((($number % 100) >= 11) && (($number%100) <= 13))
+        return $number. 'th';
+    else
+        return $number. $ends[$number % 10];
+}
+
+
 // get the total number of regular season games played
 function get_total_games_played(){
 	$teams = get_teams();
@@ -2592,7 +2725,88 @@ function get_team_points($team){
 	}
 	
 	return $teampoints;
+}
 
+function format_draft_pick($pickvar){
+	if($pickvar != ''){
+		$ex = explode('.', $pickvar);
+		echo ordinal($ex[1]).' Round Pick ('.$ex[1].'.'.$ex[2].')<br/>';
+	}
+}
+
+//get values from PVQ table and sort by player id
+
+function get_allpvqs(){
+	global $wpdb;
+	
+	$getpvq = $wpdb->get_results(" select * from wp_player_pvqs ", ARRAY_N);
+	foreach ($getpvq as $c){
+		$allpvq[$c[1]][$c[2]] = $c[3];
+	}
+	
+	return $allpvq;
+}
+
+// get pvq data by player
+function get_player_pvqs($pid){
+global $wpdb;
+	
+	$getpvq = $wpdb->get_results(" select * from wp_player_pvqs where playerid = '$pid' ", ARRAY_N);
+	foreach ($getpvq as $c){
+		$thepvq[$c[2]] = $c[3];
+	}
+	
+	return $thepvq;
+}
+
+//get values from PVQ table and sort by year
+
+function get_allpvqs_year(){
+	global $wpdb;
+	
+	$getpvq = $wpdb->get_results(" select * from wp_player_pvqs ", ARRAY_N);
+	foreach ($getpvq as $c){
+		$allpvq[$c[1]] = $c[3];
+	}
+	
+	foreach ($allpvq as $key => $d){
+		$pos = substr($key, -2);
+		$grouppvq[$pos][] = $d;
+	}
+	
+	foreach ($grouppvq as $key => $e){
+		$countthem[$key] = count($e);
+		$thepvq[$key] = array_sum($e);
+	}
+	
+	foreach ($thepvq as $key => $f){
+		$pvq[$key] = $f / $countthem[$key];
+	}
+	
+	return $pvq;
+}
+
+
+
+// get player of the week data
+function get_player_of_week(){
+global $wpdb;	
+	$getpotw = $wpdb->get_results(" select * from wp_player_of_week", ARRAY_N);
+	foreach ($getpotw as $p){
+		$potw[$p[0]] = $p[1];
+	}
+	return $potw;
+}
+
+
+// get player of the week data by player
+function get_player_of_week_player($pid){
+global $wpdb;	
+	$getpotw = $wpdb->get_results(" select * from wp_player_of_week where playerid = '$pid' ", ARRAY_N);
+	foreach ($getpotw as $p){
+		$potwp[] = $p[0];
+	}
+	return $potwp;
 }
 
 

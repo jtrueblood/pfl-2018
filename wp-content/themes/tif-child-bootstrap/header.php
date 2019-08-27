@@ -5,15 +5,15 @@
 	<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
 	<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 
+	<?php $playerid = $_GET['id'];?>
 	<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel='icon' href='favicon.ico'>
+    <link rel='icon' href='<?php echo get_stylesheet_directory_uri();?>/img/pfl-circ.png";?>'>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <meta name="format-detection" content="telephone=no">
-    <title><?php wp_title(' | ', true, 'right'); ?></title>
+    <title><?php wp_title(' | '.$playerid, true, 'right'); ?></title>
 	<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
-	
 	
 	
 	<!--[if IE 8]>
@@ -38,6 +38,7 @@
 	date_default_timezone_set('America/New_York');
 	$year = date("Y");
 	$mflleagueid = 49077;
+	
 	
 	//NEW Google Cloud Database used with ASO Hybrid
 	//$mydb = new wpdb('root','eur0TRASH','pflmicro','173.194.240.57');

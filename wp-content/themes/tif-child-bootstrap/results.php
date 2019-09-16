@@ -263,7 +263,7 @@ function get_helmet($team, $year){
 	
 	$x = 1991;
 	
-	while ($x < $season){
+	while ($x <= $season){
 		if (isset($helmets[$x])){
 		 	$myhelmets[$x] = $helmets[$x];
 		 	$active = $helmets[$x];
@@ -277,7 +277,10 @@ function get_helmet($team, $year){
 	
 }
 
-//printr($weeknotes, 0);
+/*
+$testhelmet = get_helmet('ETS', 2019);
+printr($testhelmet, 0);
+*/
 
 ?>
 
@@ -490,9 +493,11 @@ function get_helmet($team, $year){
 								echo '<span class="text-2x text-bold">'.$get_the_helmet_away['name'].'</span>  <span class="text-2x pull-right text-bold">'.$awaypoints.'</span><br>';
 							}						
 
-							echo '<hr/><h5>Boxscores</h5>';
 					// boxscore left image
-							
+					
+					echo '<hr>';
+						echo '<h5>Boxscores</h5>';
+						
 							echo '<div class="col-xs-12 team-bar boxscorebox" style="background-image:url('.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$hometeam.'-helm-right-'.$get_the_helmet_home['helmet'].'.png);">';
 							echo '</div>';
 					
@@ -500,9 +505,12 @@ function get_helmet($team, $year){
 							
 							echo '<div class="col-xs-12 team-bar boxscorebox" style="background-image:url('.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$awayteam.'-helm-left-'.$get_the_helmet_away['helmet'].'.png);">';
 							echo '</div>';
+							
+							
 					
 					// boxscore left players
 						echo '<div class="col-xs-12 boxscorebox">';
+						
 						echo '<a href="/player/?id='.$h_qb1.'">'.checkfornone ($h_qb1_data['first']).' '.$h_qb1_data['last'].'</a><span class="pull-right">'.$h_qb1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$h_rb1.'">'.checkfornone ($h_rb1_data['first']).' '.$h_rb1_data['last'].'</a><span class="pull-right">'.$h_rb1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$h_wr1.'">'.checkfornone ($h_wr1_data['first']).' '.$h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].'</span><br>';
@@ -556,7 +564,7 @@ function get_helmet($team, $year){
 								
 									echo '</div>';	
 								
-									
+								
 							echo '</div>';
 						}
 										
@@ -690,6 +698,7 @@ function get_helmet($team, $year){
 								}
 								$w++;
 								
+								
 						} // END THE FOREACH ?>
 						
 
@@ -813,58 +822,83 @@ function get_helmet($team, $year){
 							</div>
 						</div>
 						
+					
 					</div>
 					
-					<div class="col-xs-24 col-md-8">
-						<div class="panel panel-bordered panel-dark">
-								<div class="panel-body">
-									<div id="standingschart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+					<div class="clear"></div>
+					
+					<div class="row">
+						<?php if(isset($schedulewk)){
+							foreach ($schedulewk as $key => $value){ ?>
+								<div class="col-xs-24 col-md-6">
+									<div class="panel panel-bordered panel-dark">
+											<div class="panel-body">
+												<div id="spider_<?php echo $key; ?>" style="height: 300px; margin: 0 auto"></div>
+											</div>
+									</div>
 								</div>
+						<?php }
+						} ?>
+						
+						<div class="col-xs-24 col-md-12">
+							<div class="panel panel-bordered panel-dark">
+									<div class="panel-body">
+										<div id="standingschart" style="height: 300px; margin: 0 auto"></div>
+									</div>
+							</div>
 						</div>
+					
 					</div>
-							
+					
+			</div>
 	
 				</div><!--End page content-->
+				
 				
 								
 						<?php
 							// builds logic to get and insert values into wp_week_standings that returns the teams standing progress as the season goes.  It is used for the STANDINGS chart on the page.  Values reset for each year after week 14. 
 							$standing = get_standings($year_sel);
-							foreach ($standing as $stand){
-								$teamdiv[$stand['teamid']] = $stand['division'];
-							}
-							//printr($teamdiv, 0);
-							
-							foreach ($teamlist as $key => $value){
-								$get = get_all_team_results_by_week($weekvar, $key);
-								if($get != ''){
-									$weekstand[$weekvar.$key] = $get;
+							if(isset($standing)):
+								foreach ($standing as $stand){
+									$teamdiv[$stand['teamid']] = $stand['division'];
 								}
-
-							}
+								//printr($teamdiv, 0);
+								
+								foreach ($teamlist as $key => $value){
+									$get = get_all_team_results_by_week($weekvar, $key);
+									if($get != ''){
+										$weekstand[$weekvar.$key] = $get;
+									}
+	
+								}
+							endif;
+							
 							function insert_week_stand($array){
 								global $wpdb;
 								global $teamdiv;
 								global $week_sel;
-								foreach ($array as $key => $value){
-									$insertarr = $wpdb->insert(
-										 'wp_week_standings',
-									     array(
-										    'id' 		=> $key,
-										    'weekvar'	=> $value['season'].$week_sel,
-											'season' 	=> $value['season'],
-											'week' 		=> $value['week'],
-											'team' 		=> $value['team'],
-											'division'	=> $teamdiv[$value['team']],
-											'points' 	=> $value['points'],
-											'result' 	=> $value['result'],
-											'victory' 	=> $value['victory']
-										),
-										array( 
-											'%s','%d','%d','%d','%s','%s','%d','%d','%d' 
-										)
-									);
-								}
+								if(isset($array)):
+									foreach ($array as $key => $value){
+										$insertarr = $wpdb->insert(
+											 'wp_week_standings',
+										     array(
+											    'id' 		=> $key,
+											    'weekvar'	=> $value['season'].$week_sel,
+												'season' 	=> $value['season'],
+												'week' 		=> $value['week'],
+												'team' 		=> $value['team'],
+												'division'	=> $teamdiv[$value['team']],
+												'points' 	=> $value['points'],
+												'result' 	=> $value['result'],
+												'victory' 	=> $value['victory']
+											),
+											array( 
+												'%s','%d','%d','%d','%s','%s','%d','%d','%d' 
+											)
+										);
+									}
+								endif;
 							}
 							
 							function insert_week_stand_check($array){
@@ -929,10 +963,14 @@ function get_helmet($team, $year){
 						}
 						
 						$standingweek = get_wp_week_standings($weekvar);
-						foreach ($standingweek as $value){
-							$standingweekteam[$value[5]][$value[4]] = $value;
-						}
-						arsort($standingweekteam);
+						
+							foreach ($standingweek as $value){
+								$standingweekteam[$value[5]][$value[4]] = $value;
+							}
+							
+						if(isset($standingweekteam)):	
+							arsort($standingweekteam);
+						endif;
 							
 						//printr($standingweekteam, 0);
 						?>						
@@ -953,10 +991,15 @@ function get_helmet($team, $year){
 </div>
 </div>
 
+<?php if(isset($standingweekteam)){ ?>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 <script>
 	// Create the chart
@@ -1009,7 +1052,7 @@ Highcharts.chart('standingschart', {
 
   tooltip: {
     headerFormat: '<span style="color:{point.color}">{point.name}</span><br/>',
-    pointFormat: '<span style="color:{point.color}">{point.name}</span><br/><span style="color:{point.pointdiff}">{point.pointdiff}</span><br/>'
+    pointFormat: '<span style="color:{point.color}">{point.name}</span><br/><span style="color:{point.pointdiff}">Diff:{point.pointdiff}</span><br/><span style="color:{point.pointdiff}">PTS:{point.totalpoint}</span><br/>'
   },
 
   series: [
@@ -1034,7 +1077,8 @@ Highcharts.chart('standingschart', {
 					if($ve[5] == 'MGAC'){
 						echo 'color: "#37c445",';
 					}
-					echo 'pointdiff: '.$ve[7].'';
+					echo 'pointdiff: '.$ve[7].',';
+					echo 'totalpoint: '.$ve[6].'';
 					echo '},';
 	        	}
 	        } 
@@ -1042,8 +1086,131 @@ Highcharts.chart('standingschart', {
     }
   ]
 });
+
 </script>
 
+<?php } ?>
+
+<?php 
+	
+function spiderpoints($value){
+	if($value['points'] != ''){
+		echo $value['points'];
+	} else {
+		echo 0;
+	}
+}
+
+if(isset($schedulewk)){
+	foreach ($schedulewk as $key => $value){ 
+		
+		$hometeam = $key;
+		$awayteam = $value;	
+		
+		$spid_h_qb1 = $getwk[$hometeam]['QB1'];
+		$spid_h_rb1 = $getwk[$hometeam]['RB1'];
+		$spid_h_wr1 = $getwk[$hometeam]['WR1'];
+		$spid_h_pk1 = $getwk[$hometeam]['PK1'];	
+		
+		$spid_a_qb1 = $getwk[$awayteam]['QB1'];
+		$spid_a_rb1 = $getwk[$awayteam]['RB1'];
+		$spid_a_wr1 = $getwk[$awayteam]['WR1'];
+		$spid_a_pk1 = $getwk[$awayteam]['PK1'];
+									
+		$spid_h_qb1_data = get_player_week($spid_h_qb1, $weekvar);
+		$spid_h_rb1_data = get_player_week($spid_h_rb1, $weekvar);
+		$spid_h_wr1_data = get_player_week($spid_h_wr1, $weekvar);
+		$spid_h_pk1_data = get_player_week($spid_h_pk1, $weekvar);
+		
+		$spid_a_qb1_data = get_player_week($spid_a_qb1, $weekvar);
+		$spid_a_rb1_data = get_player_week($spid_a_rb1, $weekvar);
+		$spid_a_wr1_data = get_player_week($spid_a_wr1, $weekvar);
+		$spid_a_pk1_data = get_player_week($spid_a_pk1, $weekvar);
+		
+		
+		
+?>
+
+<script>
+		// spider chart
+		Highcharts.chart('spider_<?php echo $hometeam;?>', {
+		
+		    chart: {
+		        polar: true,
+		        type: 'line'
+		    },
+		
+		    accessibility: {
+		        description: 'A spiderweb chart'
+		    },
+		
+		    title: {
+		        text: '<?php echo $hometeam.' vs '.$awayteam.' <span class="small">Comparison</span>';?>'
+		    },
+		
+		    pane: {
+		        size: '90%'
+		    },
+		
+		    xAxis: {
+		        categories: ['QB', 'RB', 'PK', 'WR'],
+		        tickmarkPlacement: 'on',
+		        lineWidth: 0
+		    },
+		
+		    yAxis: {
+		        gridLineInterpolation: 'polygon',
+		        lineWidth: 1,
+		        min: 0
+		    },
+		
+		    tooltip: {
+		        shared: true,
+		        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
+		    },
+		
+		    legend: {
+		        align: 'bottom',
+		        verticalAlign: 'bottom'
+		    },
+	
+		    series: [{
+		        name: '<?php echo $hometeam;?>',
+		        data: [<?php spiderpoints($spid_h_qb1_data);?>, <?php spiderpoints($spid_h_rb1_data);?>, <?php spiderpoints($spid_h_pk1_data);?>, <?php spiderpoints($spid_h_wr1_data);?>],
+		        pointPlacement: 'on',
+		        color: '#54abd9',
+		        fillColor: '#54abd9'
+		    }, {
+		        name: '<?php echo $awayteam;?>',
+		        data: [<?php spiderpoints($spid_a_qb1_data);?>, <?php spiderpoints($spid_a_rb1_data);?>, <?php  spiderpoints($spid_a_pk1_data);?>, <?php spiderpoints($spid_a_wr1_data);?>],
+		        pointPlacement: 'on',
+		        color: '#3b4146'
+		    }],
+		
+		    responsive: {
+		        rules: [{
+		            condition: {
+		                maxWidth: 500
+		            },
+		            chartOptions: {
+		                legend: {
+		                    align: 'center',
+		                    verticalAlign: 'bottom'
+		                },
+		                pane: {
+		                    size: '80%'
+		                }
+		            }
+		        }]
+		    }
+		
+		});
+
+
+</script>
+
+<?php }
+} ?>
 
 
 <?php get_footer(); ?>

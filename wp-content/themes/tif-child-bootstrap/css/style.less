@@ -27,6 +27,10 @@ body {
 	margin: 0 !important;
 }
 
+.no-mar-top {
+	margin-top: 0 !important;
+}
+
 .menu {
 	margin: 30px 0;
 	ul {
@@ -250,9 +254,33 @@ body.page-template-awards-season h4, body.page-template-awards-hall h4, body.pag
 body.page-template-tables .table > tbody > tr > td {
 	padding: 5px;
 }
+.table > tbody > tr > td {
+	padding: 5px;	
+}
 
 .add-to-top {
 	margin-top: 50px;
+}
+
+.playoff-summary-team {
+	margin-top: 10px;
+	h2 {
+		margin: 0;
+	}
+	h4 {
+		margin: 0;
+	}
+	.spacer {
+		display: block;
+		height: 30px;
+		width: 100%;
+	}
+}
+
+.head-to-head-playoffs-team {
+	h4 {
+		margin: 0;
+	}
 }
 
 
@@ -449,6 +477,13 @@ h4.protection-season {
 		font-size: 12px;
 		margin-bottom: 0;
 	}
+}
+.timeline-helmet {
+	width: 55px;
+	float: left;
+	margin: -45px 0px 0px 24px;
+	position: absolute;
+	z-index: 333;
 }
 
 div.helmet-crop {
@@ -747,4 +782,46 @@ img.widget-bg.team-helmet-image {
 			background-color: #f9f9f9;
 		}
 	}
+}
+
+#player_widget_img {
+	background-color: #515151;
+}
+
+#spider {
+    min-width: 360px;
+    max-width: 600px;
+    height: 400px;
+    margin: 0 auto;
+	
+	caption {
+		padding-bottom: 15px;
+		font-family: 'Verdana';
+		font-size: 1.2em;
+		color:#555;
+	}
+	
+	table {
+		font-family: 'Verdana';
+		font-size: 12pt;          
+		border-collapse: collapse;
+		border: 1px solid #EBEBEB;
+		margin: 10px auto;
+	    text-align: center;
+	    width: 100%;
+	}
+	
+	table tr:nth-child(odd) {
+	  background-color: #fff;
+	}
+	
+	table tr:nth-child(even) {
+	  background-color: #FCF9F9;
+	}
+	
+	th {
+		font-weight: 600;
+	    padding: 10px;
+	}
+
 }

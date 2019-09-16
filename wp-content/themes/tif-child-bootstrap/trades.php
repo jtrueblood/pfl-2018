@@ -8,12 +8,8 @@
 <!-- Make the required arrays and cached files availible on the page -->
 
 <?php get_header(); 
-	
-	$theseasons = the_seasons();
 
-?>
-
-
+$theseasons = the_seasons(); ?>
 
 <div class="boxed">
 			
@@ -77,6 +73,7 @@
 											<div class="col-xs-12">	
 											<p>
 												<?php echo '<h4><span class="text-bold">'.$teamids[$value['team1']].'</span> get:</h4>';
+													//printr($value['players1'], 0);
 													if(!empty($value['players1'][0])){
 														foreach($value['players1'] as $player){
 															$playername = get_player_name($player);

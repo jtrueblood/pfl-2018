@@ -32,9 +32,9 @@ $covertids = playerid_mfl_to_pfl();
 
 //$mflid = $thestarters[$id];
 
-$allteams = array('DST' => $dst, 'PEP' => $pep, 'WRZ' => $wrz, 'ETS' => $ets, 'SON' => $son, 'HAT' => $hat, 'CMN' => $cmn, 'BUL' => $bul, 'SNR' => $snr, 'TSG' => $tsg);
+$allteams = array('DST' => $dst, 'PEP' => $pep, 'WRZ' => $wrz, 'ETS' => $ets, 'BST' => $bst, 'HAT' => $hat, 'CMN' => $cmn, 'BUL' => $bul, 'SNR' => $snr, 'TSG' => $tsg);
 
-$mflteamids = array('0005' => 'DST', '0003' => 'PEP', '0004' => 'WRZ', '0002' => 'ETS', '0006' => 'SON', '0008' => 'HAT', '0009' => 'CMN', '0010' => 'BUL', '0007' => 'SNR', '0001' => 'TSG');
+$mflteamids = array('0005' => 'DST', '0003' => 'PEP', '0004' => 'WRZ', '0002' => 'ETS', '0006' => 'BST', '0008' => 'HAT', '0009' => 'CMN', '0010' => 'BUL', '0007' => 'SNR', '0001' => 'TSG');
 
 $weeks = array('1','2','3','4','5','6','7','8','9','10','11','12','13','14');
 $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14');
@@ -360,10 +360,6 @@ foreach ($weekstarters as $key => $value){
 // INSERT FORMATTED DATA INTO ALL TEAM TABLES
 global $wpdb;
 
-if($run == 'false'){
-	echo '<div class="row"><div class="col-sm-6"><pre><h3>NO DATA INSERTED</h3></pre></div></div>';
-}
-
 if($run == 'true'){
 	foreach ($insert_team as $key => $insert){
 		$wpdb->insert(
@@ -435,7 +431,12 @@ if($run == 'true'){
 			<div class="row">
 				
 				<div class="col-sm-6">
-					<?php foreach ($insert_player as $key => $value){
+					<?php 
+						if($run == 'false'){
+							echo '<pre><h3>NO DATA INSERTED</h3></pre>';
+						}
+						
+						foreach ($insert_player as $key => $value){
 						$query = $wpdb->get_results("select * from $key", ARRAY_N);
 						//var_dump($query);
 						if(empty($query)){
@@ -450,7 +451,7 @@ if($run == 'true'){
 				
 				</div>
 				
-				<div class="col-sm-6">
+				<div class="col-sm-8">
 					<h4 class="mar-no">Data Inserted Into Teams</h4>
 					<?php printr($insert_team, 0); ?>
 				
@@ -458,13 +459,13 @@ if($run == 'true'){
 					<!--===================================================-->
 				
 				
-				<div class="col-sm-6">						
+				<div class="col-sm-8">						
 					<h4 class="mar-no"><?php echo $year;?> Data Inserted into Players</h4>
 					<?php printr($insert_player, 0); ?>
 					
 				</div>
 				
-				<div class="col-sm-6">	
+				<div class="col-sm-2">	
 					
 					
 				</div>

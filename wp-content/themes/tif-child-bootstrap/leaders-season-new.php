@@ -372,8 +372,12 @@ insert_wp_player_pvq();
 
 
 // Calc PPG -- get arrays of positions player in loops above (at least 7 games played)
-$merge_ppgs = array_merge($qb_ppg_build, $rb_ppg_build, $wr_ppg_build, $pk_ppg_build);
-arsort($merge_ppgs);
+if(is_array($qb_ppg_build)):
+	$merge_ppgs = array_merge($qb_ppg_build, $rb_ppg_build, $wr_ppg_build, $pk_ppg_build);
+	if(isset($merge_ppgs)):
+		arsort($merge_ppgs);
+	endif;
+endif;
 
 ?>
 <?php include_once('main-nav.php'); ?>
@@ -405,8 +409,8 @@ arsort($merge_ppgs);
 							echo '</div>';
 							echo '<div class="row">';
 							
-									leadersbyseason($wr_leaders, $yearid, 'Wide Receivers');
-									leadersbyseason($pk_leaders, $yearid, 'Kickers');	
+								leadersbyseason($wr_leaders, $yearid, 'Wide Receivers');
+								leadersbyseason($pk_leaders, $yearid, 'Kickers');	
 							?>
 							</div>
 					</div>

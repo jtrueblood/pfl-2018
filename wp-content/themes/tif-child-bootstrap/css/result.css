@@ -17,6 +17,9 @@
 .no-mar {
   margin: 0 !important;
 }
+.no-mar-top {
+  margin-top: 0 !important;
+}
 .menu {
   margin: 30px 0;
 }
@@ -187,8 +190,28 @@ body.page-template-awards-probowl .widget-header {
 body.page-template-tables .table > tbody > tr > td {
   padding: 5px;
 }
+.table > tbody > tr > td {
+  padding: 5px;
+}
 .add-to-top {
   margin-top: 50px;
+}
+.playoff-summary-team {
+  margin-top: 10px;
+}
+.playoff-summary-team h2 {
+  margin: 0;
+}
+.playoff-summary-team h4 {
+  margin: 0;
+}
+.playoff-summary-team .spacer {
+  display: block;
+  height: 30px;
+  width: 100%;
+}
+.head-to-head-playoffs-team h4 {
+  margin: 0;
 }
 body.page-template-builds li.list-group-item {
   font-size: 14px;
@@ -358,6 +381,13 @@ h4.protection-season {
 .timeline-element .tl-note {
   font-size: 12px;
   margin-bottom: 0;
+}
+.timeline-helmet {
+  width: 55px;
+  float: left;
+  margin: -45px 0px 0px 24px;
+  position: absolute;
+  z-index: 333;
 }
 div.helmet-crop {
   width: 50px;
@@ -601,4 +631,7 @@ img.widget-bg.team-helmet-image {
 #seasonawards .ooty-season .widget-bg {
   top: -30px;
   background-color: #f9f9f9;
+}
+#player_widget_img {
+  background-color: #515151;
 }

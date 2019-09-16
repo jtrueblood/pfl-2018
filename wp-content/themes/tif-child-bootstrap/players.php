@@ -244,12 +244,6 @@ foreach ($number_ones as $key => $value){
 $get_player_teams = get_player_teams_season($playerid);
 //printr($get_player_teams, 0);
 
-if (($year - end($playseasons)) > 3){
-	$year_retired = end($playseasons);
-} else {
-	$year_retired = '';
-}
-
 if(!empty($awards)){
 	foreach ($awards as $key => $value){
 		$build_awards[$value['awardid']] = array(
@@ -281,6 +275,12 @@ if(!empty($protections)){
 	}
 }
 
+if (($year - end($playseasons)) > 4){
+	$year_retired = end($playseasons);
+} else {
+	$year_retired = '';
+}
+
 //printr($build_draft, 0);
 
 // get first and last player years in an array
@@ -295,7 +295,7 @@ while ($first != $last){
 
 // Trades by player
 $playerbytrade = get_trade_by_player($playerid);
-										
+//printr($playerbytrade, 0);										
 
 foreach($buildtheyears as $season ){
 	
@@ -359,6 +359,7 @@ foreach($buildtheyears as $season ){
 	$get_awards = '';
 	$get_champs = '';
 	$get_leaders = '';
+	
 }
 
 $highestgame = $careerdata['high'];
@@ -400,7 +401,7 @@ $potw = get_player_of_week_player($playerid);
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-5 left-column">
 			<div class="panel widget">
-				<div class="widget-header">
+				<div id="player_widget_img" class="widget-header">
 					
 					<?php
 					
@@ -561,22 +562,25 @@ $potw = get_player_of_week_player($playerid);
 			<!-- only if player won a sesaonal pvq -->
 			<?php 
 			$pvqplayer = $careerdata['pvqbyseason'];
-			if (false !== $key = array_search(1, $pvqplayer)) {?>
-				<div class="panel widget">
-				<div class="widget-body text-center">
-					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-top-pvq.jpg">
-					<h4>PVQ Leader</h4>
-					<?php 
-						foreach ($pvqplayer as $key => $value){
-							if( $value == 1):
-								echo '<h3><span class="text-bold">'.$key.'</span> - 1.000</h3>';	
-							endif;
-						}
-						echo '<i>Highest scorer according to player PVQ.</i>';
-					?>
+			if(isset($pvqplayer)):
+				if (false !== $key = array_search(1, $pvqplayer)) {?>
+					<div class="panel widget">
+					<div class="widget-body text-center">
+						<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-top-pvq.jpg">
+						<h4>PVQ Leader</h4>
+						<?php 
+							foreach ($pvqplayer as $key => $value){
+								if( $value == 1):
+									echo '<h3><span class="text-bold">'.$key.'</span> - 1.000</h3>';	
+								endif;
+							}
+							echo '<i>Highest scorer according to player PVQ.</i>';
+						?>
+					</div>
 				</div>
-			</div>
-			<?php } ?>
+				<?php } 
+				endif;
+			?>
 
 			
 			<!-- only if probowl selections exsist -->
@@ -609,7 +613,7 @@ $potw = get_player_of_week_player($playerid);
 						foreach ($potw as $value){
 							$w = substr($value, -2);
 							$y = substr($value, 0, 4);
-							echo '<span class="text-bold">Week '.$w.', '.$y.'<br>';		
+							echo '<span class="text-bold">Week '.$w.', '.$y.'</span><br>';		
 						}
 					?>
 				</div>
@@ -880,14 +884,8 @@ $potw = get_player_of_week_player($playerid);
 													</tr>
 												</thead>
 												<tbody>
-													
-												
-														
-														<?php 
-														
-													//printr($playseasons, 1);
-															
-															
+																		
+														<?php 	
 															if(isset($buildtheyears)){
 																foreach ($buildtheyears as $printyear) {
 																																		
@@ -931,7 +929,7 @@ $potw = get_player_of_week_player($playerid);
 																			$seasonsList .= '<td class="text-center">'.$igames.'</td>';
 																			$seasonsList .= '<td class="text-center">'.$ippg.'</td>';
 																			$seasonsList .= '<td class="text-center">'.$ihigh.'</td>';
-																			$seasonsList .= '<td class="text-center">'.round($pvq, 3).'</td>';
+																			$seasonsList .= '<td class="text-center">'.number_format((float)$pvq, 3, '.', '').'</td>';
 																			
 																				
 																			$seasonsList .= '</td>';
@@ -1372,11 +1370,11 @@ $potw = get_player_of_week_player($playerid);
 						<!-- Timeline -->
 						<!--===================================================-->
 						
-					
 				        <div class="timeline">
 						    
 						    <?php 
 							    $count = 0;
+							    //printr($career_timeline, 0);
 								foreach ($career_timeline as $key => $value){
 								?>
 								<!-- post the years -->
@@ -1451,13 +1449,16 @@ $potw = get_player_of_week_player($playerid);
 									foreach ($alongwith_players as $playerf){
 										$alongwith_format = array();
 										$trim = ltrim($playerf);
-										$alongwith_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
-										
+										if($playerf != ''){
+											$alongwith_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
+										}
 									}
 									foreach ($sent_players as $playern){
-										$sent_players = array();
+										$sent_format = array();
 										$trim = ltrim($playern);
-										$sent_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];	
+										if($playern != ''){
+											$sent_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
+										}	
 									}
 									
 									//printr($sent_format, 0);

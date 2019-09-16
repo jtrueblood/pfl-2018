@@ -465,8 +465,6 @@ class table_foot {
 	
 }
 
-
-
 /*
 function player_id_transient($plid) {
 
@@ -555,8 +553,15 @@ function leadersbyseason ($array, $year, $labelpos){
 								$first = $playersassoc[$getvars['playerid']][0];
 								$last = $playersassoc[$getvars['playerid']][1];
 								
+								// get rookie year to display (R) and omit 1991
+								$info = get_player_basic_info($getvars['playerid']);
+								$rookie = $info[0]['rookie'];
+								if($rookie == $year && $year != 1991){
+									$pr_rook = ' <small>(R)</small>';
+								}
+								
 // 								$printval .= '<td>'.$rank.'.</td>';
-								$printval .= '<td><a href="/player/?id='.$getvars['playerid'].'" class="btn-link">'.$first.' '.$last.'</a></td>';
+								$printval .= '<td><a href="/player/?id='.$getvars['playerid'].'" class="btn-link">'.$first.' '.$last.'</a>'.$pr_rook.'</td>';
 								$printval .= '<td class="text-center">'.$getvars['points'].'</td>';
 								$printval .= '<td class="text-center">'.$getvars['games'].'</td>';
 								$printval .= '</tr>';
@@ -939,7 +944,7 @@ function get_protections_player($pid){
 	return $protections;
 }
 
-
+// get a standing table by year
 function get_standings($year){
 	global $wpdb;
 	$get = $wpdb->get_results("select * from stand$year", ARRAY_N);
@@ -966,6 +971,19 @@ function get_standings($year){
 	
 	return $standings;
 }
+
+
+// get all of the standings tables in one big array
+function get_all_standings(){
+	global $wpdb;
+	$seasons = the_seasons();
+	
+	foreach ($seasons as $season){
+		$allstandings[$season] = get_standings($season);
+	}	
+	return $allstandings;
+}
+
 
 function get_standings_by_team($year, $team){
 	global $wpdb;
@@ -1087,6 +1105,73 @@ function get_playoff_points_by_team_year($year, $team, $week){
 		$output = array_sum($sumval);
 	}
 	return $output;
+}
+
+function get_all_team_postseason_by_week($team){
+	$seasons = the_seasons();
+	
+	foreach ($seasons as $year){
+		$get[$year.'15'] = get_playoff_points_by_team_year($year, $team, 15);
+		$get[$year.'16'] = get_playoff_points_by_team_year($year, $team, 16);
+	}
+	
+	return $get;
+	
+}
+
+// returns just team info for playoffs and possebowl as a summary
+function get_team_postseason_summary($team){
+	
+	global $wpdb;
+	$getplayoffssum = $wpdb->get_results("select * from wp_playoffs where team = '$team'", ARRAY_N);
+	$winsonly = $wpdb->get_results("select * from wp_playoffs where team = '$team' && result = 1", ARRAY_N);
+	
+	if($getplayoffssum != ''){
+		foreach ($getplayoffssum as $query){
+			$pos = substr($query[3], -2);
+			$plscore[] = $query[4];
+			if($pos == 'QB'){
+				$plresult[] = $query[8];
+			}
+		}
+		
+		$countwin = 0;
+		
+		foreach ($winsonly as $getwins){
+			$checkid = $getwins[0];
+			$subval[] = substr($checkid, 0, 6);
+		}
+		if(is_array($subval)){
+			$unique = array_unique($subval);
+			
+			$teamscore = get_all_team_postseason_by_week($team);
+			$removeblanks = array_filter($teamscore);
+			$games = count($removeblanks); 
+			$wins = count($unique);
+			$lowweek = array_search(min($teamscore), $teamscore);
+			$low = min($removeblanks);
+			$loss = $games - $wins;
+			$plwinper = $wins / $games;
+				
+			$playoffsummary = array(
+				'teamid' 		=> $team,
+				'total_points' 	=> array_sum($teamscore),
+				'total_games' 	=> $games,
+				'total_wins' 	=> $wins,
+				'total_loss' 	=> $loss,
+				'winper' 		=> $plwinper,
+				'high' 			=> array(
+									'highpts' => max($teamscore),
+									'highweek' => array_search(max($teamscore), $teamscore)
+								),
+				'low' 			=> array(
+									'lowpts' => $low,
+									'lowweek' => $lowweek
+				)
+			);
+		}
+	}
+	return $playoffsummary;
 }
 
 
@@ -1762,11 +1847,19 @@ function get_player_career_stats($pid){
 				$pbwins_index[$key] = 1;
 			}
 		}
+		$lastseason = end($indyears);
+		$checkseason = date("Y") - $lastseason;
+		if($checkseason <= 3){
+			$activepl = 1;
+		} else {
+			$activepl = 0;
+		}
 		
 		$pvqflat = get_player_pvqs($pid);
 		
 		$carrer_stats = array(
 			'pid' => $pid,
+			'active' => $activepl,
 			'games' => $games,
 			'points' => $points,
 			'ppg' => $ppg,
@@ -1782,6 +1875,7 @@ function get_player_career_stats($pid){
 			'gamesbyseason' => $new_sort_flat_games,
 			'ppgbyseason' => $new_sort_flat_ppg,
 			'pvqbyseason' => $pvqflat,
+			//'avgpvq' => array_sum($pvqflat)/count($pvqflat),
 			'possebowlwins' => $pbwins_index
 			
 		);
@@ -1893,6 +1987,23 @@ function probowl_boxscores(){
 	}
 	
 	return $probowlbox;
+}
+
+// get team name and helmet history
+function get_helmet_name_history(){
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_helmet_history", ARRAY_N);
+	
+	foreach ($get as $revisequery){
+		$helm_hist[$revisequery[0]] = array(
+			'id' => $revisequery[0], 
+			'team' => $revisequery[1], 
+			'year' => $revisequery[2], 
+			'name' => $revisequery[3],  
+			'helmet' => $revisequery[4]
+		);
+	}
+	return $helm_hist;
 }
 
 // get drafts
@@ -2443,7 +2554,7 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
 	
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&YEAR=$year&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&YEAR=$year&PLAYERS=$mflid&JSON=1&APIKEY=aRNp1sySvuKmx1qmO1HIZDYeFbox",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
@@ -2730,7 +2841,7 @@ function get_team_points($team){
 function format_draft_pick($pickvar){
 	if($pickvar != ''){
 		$ex = explode('.', $pickvar);
-		echo ordinal($ex[1]).' Round Pick ('.$ex[1].'.'.$ex[2].')<br/>';
+		echo $ex[0].' '.ordinal($ex[1]).' Round Pick ('.$ex[1].'.'.$ex[2].')<br/>';
 	}
 }
 

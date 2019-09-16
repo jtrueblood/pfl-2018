@@ -15,6 +15,16 @@
 	$award = get_award('Hall of Fame Inductee', 2);	
 	
 	$teams = get_teams();
+	
+	$getpotw = get_player_of_week();
+	
+	//printr($potw, 0);
+	$e = 1;
+	foreach ($getpotw as $potw){	
+		$totalpotw[$potw][] = $e;
+	}
+
+	//printr($totalpotw['1991KellQB'], 1);
 
 /*	
 	$get = get_player_career_stats('2000GarcQB');
@@ -41,34 +51,36 @@
 				<div id="page-content">
 			<?php 
 			function labeltheseaward($awardid){
-					if ($awardid == 'mvp'){
-						echo 'Most Valuable Player';
-					}
-					if ($awardid == 'pbm'){
-						echo 'Posse Bowl MVP';
-					}
-					if ($awardid == 'pro'){
-						echo 'Pro Bowl MVP';
-					}
-					if ($awardid == 'roty'){
-						echo 'Rookie of the Year';
-					}
-				}	
-				?>
+				if ($awardid == 'mvp'){
+					echo 'Most Valuable Player';
+				}
+				if ($awardid == 'pbm'){
+					echo 'Posse Bowl MVP';
+				}
+				if ($awardid == 'pro'){
+					echo 'Pro Bowl MVP';
+				}
+				if ($awardid == 'roty'){
+					echo 'Rookie of the Year';
+				}
+			}	
+			?>
 					
 				<!-- start new layout -->
 				<?php
 					$i = 0;	
 				
-				foreach ($award as $hall){	
+			foreach ($award as $hall){	
 				$hallyear = $hall['year'];
 				$hallfirst = $hall['first'];
 				$halllast = $hall['last'];
 				$hallid = $hall['pid'];
 				$hallpos = $hall['position'];
 				$playerstats = get_player_data($hallid);
+				$plpotw = $totalpotw[$hallid];
+				$sumpotw = array_sum($plpotw);
 				
-				$career = get_player_career_stats($hallid); 
+				$career = get_player_career_stats($hallid);
 				
 				$pbapps = array();
 				$playerchamps = array();
@@ -80,6 +92,7 @@
 				$playerimg = $image_attributes[0];
 				
 				$justchamps = get_just_champions();
+				
 									
 				$get = playerplayoffs($hallid);
 				foreach($get as $key => $value){
@@ -177,6 +190,8 @@
 										}
 									}
 									
+									
+									
 									if(!empty($player_number_ones)){?>
 									
 									<tr>
@@ -200,6 +215,18 @@
 									?>
 								
 								<?php
+									}
+									if ($sumpotw != ''){ 
+									?>
+									<tr>
+										<td class="text-left">Player of The Week</td>
+										<?php if ($sumpotw == 1){ ?>
+											<td><span class="text-bold"><?php echo $sumpotw; ?> Time</span></td>
+										<?php } else { ?>	
+											<td><span class="text-bold"><?php echo $sumpotw; ?> Times</span></td>
+										<?php } ?>
+									</tr>
+									<?php 
 									}
 									if (!empty($pbapps)){ 
 								?>

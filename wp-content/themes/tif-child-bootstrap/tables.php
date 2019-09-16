@@ -15,6 +15,12 @@ $theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN',
 $firstyear = 1991;
 $currentyear = date('Y');
 
+$thegames = the_games();
+$gamecount = count($thegames);
+
+$theots = get_overtime();
+$countots = count($theots);
+
 while ($firstyear <= $currentyear){
 	$theyears[] = $firstyear;
 	$firstyear++;
@@ -57,38 +63,47 @@ printr($me, 0);
 die();
 */
 
+// this will get all player data as a transient.  Often a page reload is required after new player data is added or updated.
 
 function allplayerdata_tables_trans() {
 	$transient = get_transient( 'allplayerdata_table_trans' );
-	if( ! empty( $transient ) ) {
-    	return $transient;
-  	} else {
-	  	global $playersassoc;
+	if( empty( $transient ) ) {
+		global $playersassoc;
 	  	foreach ($playersassoc as $key => $value){
 	  		$allplayerdata[$key] = get_player_data($key);
 		}
 	    set_transient( 'allplayerdata_table_trans', $allplayerdata, 129600 );
-	    return $set;
+	    return $set;	
+  	} else {
+	  	return $transient;
     }
 }
 
 $allplayerdata = allplayerdata_tables_trans();
 
-foreach ($allplayerdata as $weeks){
-	if(!empty($weeks)){
-			foreach ($weeks as $key => $value){
-			if($value['points'] > 25){
-				$toppoints[$value['playerid'].$value['weekids']] = $value['points'];
-			}
-			$pos = substr($value['playerid'], -2);
-			if($pos == 'PK'){
-				if($value['points'] > 12){
-					$pktoppoints[$value['playerid'].$value['weekids']] = $value['points'];
+if(isset($allplayerdata)){
+	foreach ($allplayerdata as $weeks){
+		if(!empty($weeks)){
+				foreach ($weeks as $key => $value){
+				if($value['points'] > 25){
+					$toppoints[$value['playerid'].$value['weekids']] = $value['points'];
+				}
+				$pos = substr($value['playerid'], -2);
+				if($pos == 'PK'){
+					if($value['points'] > 12){
+						$pktoppoints[$value['playerid'].$value['weekids']] = $value['points'];
+					}
 				}
 			}
 		}
 	}
+} else {
+	echo '<div class="row">
+		<div class="col-xs-24">Reload page to refresh player data.</div>
+	</div>';
 }
+
+//printr($allplayerdata, 1);
 
 /*
 
@@ -431,11 +446,18 @@ arsort($player_streaks);
 
 $playerids = just_player_ids();
 
+$countplayers = 0;
 
 foreach($playerids as $pl){
+	$countplayers++;
 	$player_stats = get_player_career_stats($pl);
 	$topseasonscores[$pl] = $player_stats['yeartotal']; 
 	$titles = $player_stats['possebowlwins'];
+	$gamesplayed[$pl] = array(
+		'games' => $player_stats['games'],
+		'active' => $player_stats['active']
+	);
+	$fourteen[$pl] = $player_stats['gamesbyseason'];
 	if($titles != ''){
 		$count = array_sum($titles);
 		if ($count > 1){
@@ -447,7 +469,18 @@ foreach($playerids as $pl){
 	}
 }
 
-//printr($player_titles, 1);
+foreach ($fourteen as $key => $value){
+	if(is_array($value)){
+		if(in_array(13, $value) OR in_array(14, $value)){
+			$storethirteens[] = $key;
+		} 
+	}
+}
+
+$count_thirteens = count($storethirteens);
+
+//printr($storethirteens, 1);
+arsort($gamesplayed);
 
 foreach($topseasonscores as $key => $item){
 	$pos = substr($key, -2);
@@ -503,7 +536,17 @@ foreach ($ppgseason as $key => $value){
 arsort($totalppggame);
 
 
-//printr($totalppggame, 1);
+$getpotw = $wpdb->get_results("select playerid from wp_player_of_week", ARRAY_N);	
+$e = 1;
+foreach ($getpotw as $potw){	
+	$total[$potw[0]][] = $e;
+}
+foreach ($total as $key => $value){
+	$totalpotw[$key] = array_sum($value);
+}
+arsort($totalpotw);
+//printr($totalpotw, 1);
+
 
 ?>
 
@@ -1267,6 +1310,34 @@ arsort($totalppggame);
 			
 			
 			<div class="col-xs-24">
+				
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php 
+				
+				$labels = array('Player', 'Games', 'Active');	
+				tablehead('Total Games Played', $labels);	
+				
+				foreach ($gamesplayed as $key => $value){
+					$pos = substr($key, -2);
+					$name = get_player_name($key);
+					if ($value['active'] == 1){
+						$bull = '<i class="fa fa-circle"></i>';
+					} else {
+						$bull = '';
+					}
+					if($value['games'] >= 100){
+						$gmprint .='<tr><td>'.$name['first'].' '.$name['last'].' - '.$pos.'</td>';
+						$gmprint .='<td class="min-width text-center">'.$value['games'].'</td>';
+						$gmprint .='<td class="min-width text-center">'.$bull.'</td></tr>';		
+					}
+				}
+				
+				echo $gmprint;
+				
+				tablefoot('');	
+				?>	
+
+			</div>	
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				<?php 
@@ -1291,8 +1362,6 @@ arsort($totalppggame);
 				echo $toppointsprint;
 				
 				tablefoot('');	
-			
-				
 				?>	
 
 			</div>
@@ -1357,11 +1426,9 @@ arsort($totalppggame);
 						
 					}
 				
-				
 				echo $pppprint;
 				
 				tablefoot('Minimum 8 Games Played');		
-				
 			
 			?>
 			</div>
@@ -1369,7 +1436,81 @@ arsort($totalppggame);
 			<div class="row">
 			</div>
 			
-			<div class="col-xs-24 col-sm-12 col-md-8">
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php					
+				$labels = array('Player', 'Count');	
+					tablehead('Player of the Week Count', $labels);	
+					
+						foreach ($totalpotw as $key => $value){
+							
+							if ($value > 4){
+								$n = get_player_name($key);
+								
+								$potyprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
+								$potyprint .='<td class="min-width text-center">'.$value.'</td>'; 
+							}
+								
+						}
+					
+					echo $potyprint;
+				
+				tablefoot('5 times POTW or more.');		
+			?>
+			</div>
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<!-- total number of players -->
+				<div class="panel">
+					<div class="panel-heading"><h3 class="panel-title">Total Players</h3></div>
+						<div class="panel-body">
+							<?php
+								$rosteropps = ($gamecount + $countots) * 8;  // games + ot games x 8 roster spots (4 per team).				
+								echo '<h3 class="no-mar-top">'.number_format($countplayers).'</h3>';
+								echo '<h5>Total Roster Opportunities: '.number_format($rosteropps).'</h5>';				
+							?>
+						<span class="text-small">The total number of players you have taken the field in the PFL.</span>
+						</div>
+				</div>
+				
+				<!-- games -->
+				<div class="panel">
+					<div class="panel-heading"><h3 class="panel-title">Total Games</h3></div>
+						<div class="panel-body">
+							<?php
+								$percentot = ($countots / $gamecount) * 100;					
+								echo '<h3 class="no-mar-top">'.$gamecount.'</h3>';	
+								echo '<h5>Overtime: '.$countots.' / Percent OT: '.round($percentot, 1).'%</h5>'; 	
+							?>
+						<span class="text-small">Total Number of Regular Season Games.</span>
+						</div>
+				</div>
+				
+				<!-- thirteen game seasons -->
+				<div class="panel">
+					<div class="panel-heading"><h3 class="panel-title">Number of 13 Game Seasons</h3></div>
+						<div class="panel-body">
+							<?php					
+								echo '<h3 class="no-mar-top">'.$count_thirteens.'</h3>';				
+							?>
+						<span class="text-small">Jason Elam played 14 games in 2001 because the Broncos' Bye was Week 15.</span>
+						</div>
+				</div>
+				
+				<!-- EXTRA BLANK PANEL -->
+				<div class="panel">
+					<div class="panel-heading"><h3 class="panel-title"></h3></div>
+						<div class="panel-body">
+							<?php					
+								echo '<h3 class="no-mar-top"></h3>';				
+							?>
+						<span class="text-small"></span>
+						</div>
+				</div>
+				
+			</div>
+			
+			
+			<div class="col-xs-24 col-sm-12">
 				<?php
 				$ro = get_award_rookie();	
 					

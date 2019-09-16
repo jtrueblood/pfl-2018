@@ -39,6 +39,14 @@ else :
     $notes = array();
 endif;
 
+$helmethist = get_helmet_name_history();
+foreach ($helmethist as $value){
+	$helmet[$value['team']][$value['year']] = $value;	
+}
+
+
+$teamhelmet = $helmet[$teamid];
+//printr($teamhelmet, 0);
 
 foreach ($stand as $key => $value){
 	$team_timeline[$key] = array(
@@ -46,7 +54,8 @@ foreach ($stand as $key => $value){
 		'champions' => $teamchamps[$key],
 		'awards' => $team_award_year[$key],
 		'number_ones' => $ones[$key],
-		'notes' => $notes[$key]
+		'notes' => $notes[$key],
+		'helmets' => $teamhelmet[$key]
 	);
 }
 
@@ -57,7 +66,6 @@ foreach($team_timeline as $key => $val){
 	}
 }
 
-//printr($timelineyears, 0);
 
 ?>
 
@@ -141,6 +149,13 @@ foreach($team_timeline as $key => $val){
 						echo '<div class="timeline-element">';
 					        	echo '<p class="tl-note font-italic">'.$value['notes'].'</span></p>';
 						echo '</div>';
+					}
+					
+					if(isset($value['helmets'])){
+						echo '<div class="timeline-element">';
+					        	echo '<p class="tl-note">Team Name: <span class="text-bold">'.$value['helmets']['name'].'</span></p>';
+						echo '</div>';
+						echo '<img src="'.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$teamid.'-helm-right-'.$value['helmets']['helmet'].'.png" class="timeline-helmet" />';
 					}
 					
 					$setval++;

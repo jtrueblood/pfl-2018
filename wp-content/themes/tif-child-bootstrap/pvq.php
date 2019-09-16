@@ -12,6 +12,10 @@
 	get_header(); 
 	
 	$theyears = the_seasons();
+	
+	$allstandings = get_all_standings();
+	
+	//printr($allstandings, 1);
 ?>
 
 <div class="boxed add-to-top">
@@ -34,14 +38,14 @@
 						printr($byyear, 0);
 						
 						$player = get_player_pvqs('2004BreeQB');
-						//printr($player, 0);
+						printr($player, 0);
 						
 						$allpvq = get_allpvqs();
-						//printr($allpvq, 0);
+						printr($allpvq, 0);
 
 						echo '<h3>Standings By Week for Results</h3>';
 						
-						$weekstand = get_all_team_results_by_week(199111);
+						//$weekstand = get_all_team_results_by_week(199111);
 						
 						//$test = get_team_results_by_week('PEP', 199101);
 						

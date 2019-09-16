@@ -75,7 +75,7 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (45, 'active-link'); ?>"><a href="/results?Y=2018&W=01">Weekly Results</a></li>	
+												<li class="<?php ifbodyclass (45, 'active-link'); ?>"><a href="/results?Y=2019&W=01">Weekly Results</a></li>	
 												<li class="<?php ifbodyclass (1153, 'active-link'); ?>"><a href="/grandslams">Grandslams</a></li>	
 												<li class="<?php ifbodyclass (305, 'active-link'); ?>" ><a href="/playoffs">The Playoffs</a></li>
 												<li class="<?php ifbodyclass (6, 'active-link'); ?>" ><a href="/champions">The Posse Bowl</a></li>

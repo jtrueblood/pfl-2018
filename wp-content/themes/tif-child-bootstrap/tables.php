@@ -15,8 +15,24 @@ $theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN',
 $firstyear = 1991;
 $currentyear = date('Y');
 
+$teamsbyseason = get_all_teams_by_season();
 $thegames = the_games();
-$gamecount = count($thegames);
+
+foreach ($teamsbyseason as $year => $flatteam){
+	foreach($flatteam as $team => $div){
+		$flatgamecount[] = $year.$team.$div;
+	}
+}
+
+
+$seasonsall = get_all_teams_by_season();
+foreach ($seasonsall as $value){
+	$gamesbyyear[] = $value['games'];
+}
+
+$gamecount = array_sum($gamesbyyear);
+
+//printr($gamesbyyear, 1); 
 
 $theots = get_overtime();
 $countots = count($theots);
@@ -1478,7 +1494,7 @@ arsort($totalpotw);
 						<div class="panel-body">
 							<?php
 								$percentot = ($countots / $gamecount) * 100;					
-								echo '<h3 class="no-mar-top">'.$gamecount.'</h3>';	
+								echo '<h3 class="no-mar-top">'.number_format($gamecount).'</h3>';	
 								echo '<h5>Overtime: '.$countots.' / Percent OT: '.round($percentot, 1).'%</h5>'; 	
 							?>
 						<span class="text-small">Total Number of Regular Season Games.</span>
@@ -1915,9 +1931,6 @@ arsort($totalpotw);
 
 			
 <?php include_once('main-nav.php'); ?>
-
-
-<?php session_destroy(); ?>
 		
 </div>
 </div>

@@ -22,72 +22,63 @@ $teamlist = teamlist();
 
 ?>
 
-<div class="boxed">
+<?php include_once('main-nav.php'); ?>
+	
+<div id="page-content" class="season-page">	
+				
+	<!--CONTENT CONTAINER-->
+		<div id="content-container">
 			
-	<div id="page-content">	
-					
-		<!--CONTENT CONTAINER-->
-			<div id="content-container">
-				
-				<!-- LEFT COL -->
-				
-				<div class="col-xs-24 col-md-4">
-										
-					<div class="panel widget">
-						<div class="widget-header">
-							<h2><?php echo $year; ?></h2>
-							<h3>PFL Season</h3>
-						</div>
-						<div class="widget-body">
-							<?php $champs = get_just_champions(); 
-								echo '<h3>'.$teamlist[$champs[$year]].'</h3>';
-							?>
-							<h4>PFL Champions</h4>
-						</div>
+			<!-- LEFT COL -->
+			<div class="col-xs-24 col-sm-4">
+									
+				<div class="panel widget">
+					<div class="left-widget widget-body">
+						<h3><?php echo $year; ?> PFL Season</h3>
+						<hr>
+						<?php $champs = get_just_champions(); 
+							echo '<h4>'.$teamlist[$champs[$year]].'</h4>';
+						?>
+						<h5>PFL Champions</h5>
 					</div>
 				</div>
 				
-				
-				<!-- MIDDLE COL -->
-				
-				<div class="col-xs-24 col-sm-11">
-						
-					<?php 
-					include_once('inc/season_awards.php');
-					include_once('inc/season_leaders.php');
-					?>
-						
-				</div>
-				
-				
-				
-				<!-- RIGHT COL -->
+			</div>		
 					
-				<div class="col-xs-24 col-md-9">
+			<!-- MIDDLE COL -->
+			
+			<div class="col-xs-24 col-sm-10">
+					
+				<?php 
+				include_once('inc/season_awards.php');
+				include_once('inc/season_leaders.php');
+				?>
+					
+			</div>
+			
+			
+			
+			<!-- RIGHT COL -->
+				
+			<div class="col-xs-24 col-md-10">
 
-					<?php 
-						selectseason();
-						include_once('inc/season_standings.php');
-						include_once('inc/season_draft.php');
-					?>
-						
-				</div>
-						
-
-			</div><!--End page content-->
-
-		</div><!--END CONTENT CONTAINER-->
-
-
-		<?php include_once('main-nav.php'); ?>
-
-		</div>
-</div> 
-
-<?php session_destroy(); ?>
+				<?php 
+					selectseason();
+					include_once('inc/season_standings.php');
+					include_once('inc/season_draft.php');
+				?>
+					
+			</div>
+			
 		
-</div>
-</div>
+			
+		
+
+		
+
+	</div><!--END CONTENT CONTAINER-->
+
+</div><!--End page content-->		
 
 
 <?php get_footer(); ?>

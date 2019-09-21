@@ -10,10 +10,7 @@
 			$labels = array('', 'Pick', 'Team', 'Selection', 'Orig' );	
 			tablehead($year.' Draft', $labels);	
 			
-			
-			
 			foreach ($draft as $key => $value){
-				
 				
 				if($setround != $value['round']){	
 					$draftprint .='<tr><td class="min-width text-center">'.$value['round'].'</td>';
@@ -30,6 +27,7 @@
 				}
 				$setround = $value['round'];
 			}
+			echo '<tr></tr>';
 			
 			echo $draftprint;
 			

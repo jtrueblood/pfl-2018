@@ -614,24 +614,65 @@ img.widget-bg.team-helmet-image {
   padding-top: 150px !important;
 }
 #seasondraft {
-  height: 500px;
+  height: 750px;
   overflow-y: scroll;
 }
 #seasonawards .widget-header {
-  min-height: 100px;
+  min-height: 150px;
 }
 #seasonawards .widget-body {
-  min-height: 100px;
+  min-height: 150px;
   color: #515151;
   padding-top: 20px;
+  border: 5px solid #efefef;
 }
 #seasonawards .widget-body p {
   color: #515151;
 }
 #seasonawards .ooty-season .widget-bg {
-  top: -30px;
+  top: -10px;
   background-color: #f9f9f9;
 }
 #player_widget_img {
   background-color: #515151;
+}
+#spider {
+  min-width: 360px;
+  max-width: 600px;
+  height: 400px;
+  margin: 0 auto;
+}
+#spider caption {
+  padding-bottom: 15px;
+  font-family: 'Verdana';
+  font-size: 1.2em;
+  color: #555;
+}
+#spider table {
+  font-family: 'Verdana';
+  font-size: 12pt;
+  border-collapse: collapse;
+  border: 1px solid #EBEBEB;
+  margin: 10px auto;
+  text-align: center;
+  width: 100%;
+}
+#spider table tr:nth-child(odd) {
+  background-color: #fff;
+}
+#spider table tr:nth-child(even) {
+  background-color: #FCF9F9;
+}
+#spider th {
+  font-weight: 600;
+  padding: 10px;
+}
+.season-page .left-widget.widget-body {
+  padding-top: 10px;
+}
+.next-prev-week {
+  padding-top: 30px;
+}
+.select-the-week {
+  padding-top: 20px;
 }

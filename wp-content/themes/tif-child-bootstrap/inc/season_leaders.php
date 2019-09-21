@@ -12,6 +12,9 @@
 		
 		foreach($getleaders as $key => $item){
 			$leaders[$item['position']][$item['playerid']] = $item;
+			if( $item['games'] >= 8){
+				$allppg[$item['playerid']] = $item['points'] / $item['games'];
+			}
 		}
 		
 		$qb_leaders = $leaders['QB'];
@@ -47,8 +50,6 @@
 			$yearone[$newitem['pos']][$newitem['playerid']] = $newitem;
 		}
 		
-		//printr($yearone, 0);
-		
 		?>
 		
 		<div class="row">
@@ -57,7 +58,7 @@
 			
 				<?php 		
 				foreach ($yearone['QB'] as $key => $value){ ?>
-				<div class="col-xs-24 col-sm-12 col-md-6">		
+				<div class="col-xs-24 col-sm-12 col-md-8">		
 					<div class="panel">
 						<div class="widget-header">
 							
@@ -88,7 +89,7 @@
 
 				<?php 
 				foreach ($yearone['RB'] as $key => $value){ ?>
-				<div class="col-xs-24 col-sm-12 col-md-6">		
+				<div class="col-xs-24 col-sm-12 col-md-8">		
 					<div class="panel">
 						<div class="widget-header">
 							
@@ -119,7 +120,7 @@
 			
 				<?php 
 				foreach ($yearone['WR'] as $key => $value){ ?>
-				<div class="col-xs-24 col-sm-12 col-md-6">		
+				<div class="col-xs-24 col-sm-12 col-md-8">		
 					<div class="panel">
 						<div class="widget-header">
 							
@@ -151,7 +152,7 @@
 
 				<?php 
 				foreach ($yearone['PK'] as $key => $value){ ?>
-				<div class="col-xs-24 col-sm-12 col-md-6">		
+				<div class="col-xs-24 col-sm-12 col-md-8">		
 					<div class="panel">
 						<div class="widget-header">
 							
@@ -178,7 +179,81 @@
 						</div>
 					</div>
 				</div>	
-				<?php } ?>
+				<?php } 
+					
+				?>
+				
+				<div class="col-xs-24 col-sm-12 col-md-8">		
+					<div class="panel">
+						<div class="widget-header">
+							
+							<?php
+						    arsort($allppg);
+							$topppg = reset($allppg);
+							$pidppg = key($allppg);					
+							$info = get_player_basic_info($pidppg);
+							$playerteam = get_player_teams_season($pidppg);
+							$teams = $playerteam[$year];
+								
+							$playerimgobj = get_attachment_url_by_slug($pidppg);
+							$imgid =  attachment_url_to_postid( $playerimgobj );
+							$image_attributes = wp_get_attachment_image_src($imgid, array( 400, 400 ));	
+							$playerimg = $image_attributes[0];
+							
+							printr($pidppg, 0);
+							?>
+						
+							<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image">
+						</div>
+						<div class="widget-body text-center">
+							<h5><? echo $year ?> Points Per Game</h5>
+							<h4 class="mar-no text-center"><?php echo $info[0]['first'].'<br>'.$info[0]['last']; ?></h4>
+							<p class="text-light text-center mar-top"><?php echo round($topppg, 1); ?> PPG</p>
+							<?php //$tags = implode(', ', $teams); 
+								//printr($teams, 0);
+								foreach ($teams as $te){
+									echo '<p class="text-light text-center">'.$te.'</p>';
+								}
+							?>
+						</div>
+					</div>
+				</div>	
+
+				
+
+				<div class="col-xs-24 col-sm-12 col-md-8">		
+					<div class="panel">
+						<div class="widget-header">
+							
+							<?php
+							$seasonpvq = get_season_pvq_leader();		
+							$pvqwinner = $seasonpvq[$year]['playerid'];						
+							$info = get_player_basic_info($pvqwinner);
+							$playerteam = get_player_teams_season($pvqwinner);
+							$teams = $playerteam[$year];
+								
+							$playerimgobj = get_attachment_url_by_slug($pvqwinner);
+							$imgid =  attachment_url_to_postid( $playerimgobj );
+							$image_attributes = wp_get_attachment_image_src($imgid, array( 400, 400 ));	
+							$playerimg = $image_attributes[0];
+							?>
+						
+							<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image">
+						</div>
+						<div class="widget-body text-center">
+							<h5><? echo $year ?> PVQ Leader</h5>
+							<h4 class="mar-no text-center"><?php echo $info[0]['first'].'<br>'.$info[0]['last']; ?></h4>
+							<p class="text-light text-center mar-top">1.000 PVQ</p>
+							<?php //$tags = implode(', ', $teams); 
+								//printr($teams, 0);
+								foreach ($teams as $te){
+									echo '<p class="text-light text-center">'.$te.'</p>';
+								}
+							?>
+						</div>
+					</div>
+				</div>	
+
 				
 		</div>
 		</div>

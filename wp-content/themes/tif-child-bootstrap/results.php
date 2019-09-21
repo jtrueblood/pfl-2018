@@ -278,9 +278,10 @@ function get_helmet($team, $year){
 }
 
 /*
-$testhelmet = get_helmet('ETS', 2019);
-printr($testhelmet, 0);
+$assoc = get_players_assoc ();
+printr($assoc, 0);
 */
+
 
 ?>
 
@@ -294,16 +295,13 @@ printr($testhelmet, 0);
 				<!--Page content-->
 				<div id="page-content">
 								
-					<div class="row">
+					
 						
-						<div class="col-xs-24 col-sm-12 col-md-8">
-							<div id="page-title">
-						<?php echo '<h2>Week '.$week_sel.', '.$year_sel.'</h2>'; ?>	
-						</div>
-						
+						<div class="col-xs-24 col-sm-12 col-md-8">	
+							<?php echo '<h2>Week '.$week_sel.', '.$year_sel.'</h2>'; ?>	
 						</div>					
 						
-						<div class="col-xs-24 col-sm-12 col-md-8">
+						<div class="col-xs-24 col-sm-12 col-md-8 next-prev-week">
 							<p>
 								<?php if ($week_sel == '14'){ ?>
 										<a href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">Prev Week</a>
@@ -324,7 +322,7 @@ printr($testhelmet, 0);
 							</p>
 						</div>
 						
-						<div class="col-xs-24 col-md-8">
+						<div class="col-xs-24 col-md-8 select-the-week">
 							
 							<select name="Words" id="comboYear"'; 
 								<option value="1991">1991</option>
@@ -343,7 +341,7 @@ printr($testhelmet, 0);
 							<button id="schedulebtn" class="btn btn-default btn-hover-warning">Change Week</button><br/>
 						</div>
 					
-					</div>
+						<div class="clear"></div>
 					
 								
 				<?php
@@ -466,7 +464,7 @@ printr($testhelmet, 0);
 							// Display the Boxes Here...		
 							echo '<div class="col-xs-24 col-sm-12 col-md-8">
 							
-							<div class="panel panel-bordered panel-dark">
+							<div class="panel panel-dark">
 								<div class="panel-heading">
 									<div class="panel-control">';
 // 										alter CMN stadium name based on year
@@ -743,7 +741,7 @@ printr($testhelmet, 0);
 							
 							?>	
 							
-							<div class="panel panel-bordered panel-dark">
+							<div class="panel panel-dark">
 								<div class="panel-heading">
 									<div class="panel-control">
 										Player of the Week
@@ -806,7 +804,7 @@ printr($testhelmet, 0);
 							
 
 						<!-- PRINTED PDF if availible --> 
-						<div class="panel panel-bordered panel-dark">
+						<div class="panel panel-dark">
 							<div class="panel-body">
 								
 									<?php $week_update_url = $update_pdf[$weekvar];
@@ -826,12 +824,18 @@ printr($testhelmet, 0);
 					</div>
 					
 					<div class="clear"></div>
+					<!-- LEADERS WEEKLY -->
+					<?php 
+						include_once('inc/results_leaders.php');
+					?>
+										
+					<div class="clear"></div>
 					
-					<div class="row">
+				
 						<?php if(isset($schedulewk)){
 							foreach ($schedulewk as $key => $value){ ?>
 								<div class="col-xs-24 col-md-6">
-									<div class="panel panel-bordered panel-dark">
+									<div class="panel panel-dark">
 											<div class="panel-body">
 												<div id="spider_<?php echo $key; ?>" style="height: 300px; margin: 0 auto"></div>
 											</div>
@@ -841,14 +845,13 @@ printr($testhelmet, 0);
 						} ?>
 						
 						<div class="col-xs-24 col-md-12">
-							<div class="panel panel-bordered panel-dark">
+							<div class="panel panel-dark">
 									<div class="panel-body">
 										<div id="standingschart" style="height: 300px; margin: 0 auto"></div>
 									</div>
 							</div>
 						</div>
-					
-					</div>
+			
 					
 			</div>
 	
@@ -926,7 +929,7 @@ printr($testhelmet, 0);
 								foreach ($array as $key => $value){
 									$tea = $value['team'];
 									
-									$insertarr = $wpdb->insert(
+									$insertarr = $wpdb->update(
 										 'wp_week_standings',
 									     array(
 										    'id' 		=> $key,
@@ -1126,85 +1129,83 @@ if(isset($schedulewk)){
 		$spid_a_rb1_data = get_player_week($spid_a_rb1, $weekvar);
 		$spid_a_wr1_data = get_player_week($spid_a_wr1, $weekvar);
 		$spid_a_pk1_data = get_player_week($spid_a_pk1, $weekvar);
-		
-		
-		
+	
 ?>
 
 <script>
-		// spider chart
-		Highcharts.chart('spider_<?php echo $hometeam;?>', {
-		
-		    chart: {
-		        polar: true,
-		        type: 'line'
-		    },
-		
-		    accessibility: {
-		        description: 'A spiderweb chart'
-		    },
-		
-		    title: {
-		        text: '<?php echo $hometeam.' vs '.$awayteam.' <span class="small">Comparison</span>';?>'
-		    },
-		
-		    pane: {
-		        size: '90%'
-		    },
-		
-		    xAxis: {
-		        categories: ['QB', 'RB', 'PK', 'WR'],
-		        tickmarkPlacement: 'on',
-		        lineWidth: 0
-		    },
-		
-		    yAxis: {
-		        gridLineInterpolation: 'polygon',
-		        lineWidth: 1,
-		        min: 0
-		    },
-		
-		    tooltip: {
-		        shared: true,
-		        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
-		    },
-		
-		    legend: {
-		        align: 'bottom',
-		        verticalAlign: 'bottom'
-		    },
-	
-		    series: [{
-		        name: '<?php echo $hometeam;?>',
-		        data: [<?php spiderpoints($spid_h_qb1_data);?>, <?php spiderpoints($spid_h_rb1_data);?>, <?php spiderpoints($spid_h_pk1_data);?>, <?php spiderpoints($spid_h_wr1_data);?>],
-		        pointPlacement: 'on',
-		        color: '#54abd9',
-		        fillColor: '#54abd9'
-		    }, {
-		        name: '<?php echo $awayteam;?>',
-		        data: [<?php spiderpoints($spid_a_qb1_data);?>, <?php spiderpoints($spid_a_rb1_data);?>, <?php  spiderpoints($spid_a_pk1_data);?>, <?php spiderpoints($spid_a_wr1_data);?>],
-		        pointPlacement: 'on',
-		        color: '#3b4146'
-		    }],
-		
-		    responsive: {
-		        rules: [{
-		            condition: {
-		                maxWidth: 500
-		            },
-		            chartOptions: {
-		                legend: {
-		                    align: 'center',
-		                    verticalAlign: 'bottom'
-		                },
-		                pane: {
-		                    size: '80%'
-		                }
-		            }
-		        }]
-		    }
-		
-		});
+// spider chart
+Highcharts.chart('spider_<?php echo $hometeam;?>', {
+
+    chart: {
+        polar: true,
+        type: 'line'
+    },
+
+    accessibility: {
+        description: 'A spiderweb chart'
+    },
+
+    title: {
+        text: '<?php echo $hometeam.' vs '.$awayteam.' <span class="small">Comparison</span>';?>'
+    },
+
+    pane: {
+        size: '90%'
+    },
+
+    xAxis: {
+        categories: ['QB', 'RB', 'PK', 'WR'],
+        tickmarkPlacement: 'on',
+        lineWidth: 0
+    },
+
+    yAxis: {
+        gridLineInterpolation: 'polygon',
+        lineWidth: 1,
+        min: 0
+    },
+
+    tooltip: {
+        shared: true,
+        pointFormat: '<span style="color:{series.color}">{series.name}: <b>{point.y:,.0f}</b><br/>'
+    },
+
+    legend: {
+        align: 'bottom',
+        verticalAlign: 'bottom'
+    },
+
+    series: [{
+        name: '<?php echo $hometeam;?>',
+        data: [<?php spiderpoints($spid_h_qb1_data);?>, <?php spiderpoints($spid_h_rb1_data);?>, <?php spiderpoints($spid_h_pk1_data);?>, <?php spiderpoints($spid_h_wr1_data);?>],
+        pointPlacement: 'on',
+        color: '#54abd9',
+        fillColor: '#54abd9'
+    }, {
+        name: '<?php echo $awayteam;?>',
+        data: [<?php spiderpoints($spid_a_qb1_data);?>, <?php spiderpoints($spid_a_rb1_data);?>, <?php  spiderpoints($spid_a_pk1_data);?>, <?php spiderpoints($spid_a_wr1_data);?>],
+        pointPlacement: 'on',
+        color: '#3b4146'
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                },
+                pane: {
+                    size: '80%'
+                }
+            }
+        }]
+    }
+
+});
 
 
 </script>

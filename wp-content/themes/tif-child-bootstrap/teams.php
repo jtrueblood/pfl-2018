@@ -19,6 +19,8 @@ $seasons = the_seasons();
 $players = get_players_assoc();
 $champs = get_champions();
 $thisteam = get_team_results('wp_team_'.$teamid);
+
+
 //$player = get_player_data('2004BreeQB');
 //$player = get_raw_player_data_team('2004BreeQB', $teamid);
 

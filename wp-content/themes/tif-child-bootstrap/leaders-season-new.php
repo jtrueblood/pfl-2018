@@ -24,10 +24,6 @@ $playerids = just_player_ids_with_position();
 
 //retrieve all leaders from wp_leaders database
 
-
-
-
-
 $get_season_leaders = get_season_leaders($yearid);
 //printr($get_season_leaders, 0);
 
@@ -379,6 +375,8 @@ if(is_array($qb_ppg_build)):
 	endif;
 endif;
 
+//$season_rank = get_player_season_rank ('2012ZuerPK', 2018);
+
 ?>
 <?php include_once('main-nav.php'); ?>
 <div class="boxed">
@@ -451,6 +449,7 @@ endif;
 								</div>
 								<div class="panel-body">
 									<p class="">PVQ is a custom PFL Stat that looks at a player's individual value where scoring is leveled regardless of position.</p>
+									
 									<div class="table-responsive">
 										<table class="table table-striped">
 											<thead>
@@ -478,7 +477,7 @@ endif;
 															echo '<tr>';
 														}
 														echo '<td>'.$rank.'.</td>';
-														echo '<td><a href="/player/?id='.$name.'" class="btn-link">'.$name['first'].' '.$name['last'].'</a></td>';
+														echo '<td><a href="/player/?id='.$keyname.'" class="btn-link">'.$name['first'].' '.$name['last'].'</a></td>';
 														echo '<td>'.$pos.'</td>';
 														echo '<td>'.$pvqscore.'</td>';
 														echo '</tr>';
@@ -495,6 +494,7 @@ endif;
 											</tbody>
 										</table>
 									
+									<p class="small">Note: All player pages must be loaded before loading this page to insert the PVQ data into wp_players_pvq table.  If PVQ values seem wrong, delete the rows for the given year and reload this page AFTER loading all players pages for players that played this season.</p>
 									</div>
 								
 								</div>

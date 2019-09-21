@@ -558,6 +558,8 @@ function leadersbyseason ($array, $year, $labelpos){
 								$rookie = $info[0]['rookie'];
 								if($rookie == $year && $year != 1991){
 									$pr_rook = ' <small>(R)</small>';
+								} else {
+									$pr_rook = '';
 								}
 								
 // 								$printval .= '<td>'.$rank.'.</td>';
@@ -571,6 +573,28 @@ function leadersbyseason ($array, $year, $labelpos){
 						$printval .= '</tbody></table></div></div></div></div>';
 	echo $printval;
 }
+
+
+// requires 'playersassoc' cache added to page
+function get_player_season_rank ($playerid, $year){
+	$pos = substr($playerid, -2); 
+	global $wpdb;
+	$getdata = $wpdb->get_results("select * from wp_season_leaders where '$year' like season", ARRAY_N);	
+	foreach ($getdata as $key => $value){
+		$position = substr($value[1], -2);
+		if ($position == $pos){
+			$data[$value[1]] = $value[3];
+		}
+	}
+	arsort($data);
+	
+	$getindex = array_search($playerid,array_keys($data));
+	// add one to the index to get a rank
+	$output = $getindex + 1;	
+	return $output;
+
+}
+
 
 
 //convert month
@@ -1292,6 +1316,36 @@ function get_award_rookie(){
 	return $rookids;
 }
 
+//get all ring of honor players
+function get_ring_of_honor(){
+global $wpdb;
+	
+	$gethonor = $wpdb->get_results("select * from wp_postmeta where meta_key like '%honored_player_%'", ARRAY_N);
+	foreach ($gethonor as $c){
+		$ring[] = $c[3];
+	}
+	$i = 0;
+	foreach ($ring as $value){
+		if( $i % 2 == 0){
+			$ringsecond[] = $value;
+		}
+		$i++;
+	}
+	$j = 0;
+	foreach ($ringsecond as $value){
+		if( $j % 2 == 0){
+			$team = $value;
+		} else {
+			$pid = $value;
+		}
+		$rhonor[$team.$j] = $pid;
+		$j++;
+	}
+	$ringofhonor = array_unique($rhonor);
+	
+	return $ringofhonor;
+}
+
 
 // gets the weekly stats from the player table
 function get_player_data($pid) {
@@ -1478,6 +1532,7 @@ function gettheweek ($pid){
 	}
 	return $weeks;
 }
+
 
 // returns an the points of a player on a given week.
 function get_one_player_week ($pid, $weekid){
@@ -1772,6 +1827,25 @@ function getpvqmultipliers($year){
 		return $multipliers;
 	}
 }
+
+//gets season winner of PVQ score. 1.000
+function get_season_pvq_leader(){
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_player_pvqs where pvq = '1.00000000'", ARRAY_N);
+	
+	foreach ($get as $revisequery){
+		$sealeadpvq[$revisequery[2]] = array(
+			'id' => $revisequery[0], 
+			'playerid' => $revisequery[1], 
+			'year' => $revisequery[2], 
+			'pvq' => $revisequery[3]
+		);
+	}
+	
+	return $sealeadpvq;
+}
+
+
 
 function printmultiplypvq(){
 		$theyears = the_seasons();
@@ -2897,7 +2971,22 @@ function get_allpvqs_year(){
 	return $pvq;
 }
 
-
+// get team names by season.
+function get_all_teams_by_season(){ 
+	$thestandings = get_all_standings();
+	foreach ($thestandings as $key => $value){
+		if(is_array($value)){	
+			$i = 0;
+			foreach ($value as $k => $v){
+				$standbyyear[$key][$v['teamid']] = $v['division'];
+				$i++;
+			}
+			$standbyyear[$key]['count'] = $i;
+			$standbyyear[$key]['games'] = ($i / 2) * 14;
+		}
+	}
+	return $standbyyear;
+}
 
 // get player of the week data
 function get_player_of_week(){

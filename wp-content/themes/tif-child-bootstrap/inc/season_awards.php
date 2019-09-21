@@ -1,6 +1,8 @@
 <div class="panel">
+	<div class="panel-heading">
+		<h3 class="panel-title">Season Award Winners</h3>
+	</div>
 	<div class="panel-body">
-		<h4>Season Awards</h4>
 		<div id="seasonawards">
 		
 		<?php 

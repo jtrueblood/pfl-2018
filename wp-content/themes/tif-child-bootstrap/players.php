@@ -82,6 +82,8 @@ $playernumber = $players[$playerid][9];
 $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
+$basicinfo = get_player_basic_info($playerid);
+
 
 //printr($careerdata, 0);
 
@@ -171,6 +173,8 @@ $countawards = count($awards);
 if ($countawards > 0){
 	$wonaward = 1;
 }
+$ringofhonor = get_ring_of_honor();
+//printr($ringofhonor, 0);
 
 function in_array_r($needle, $haystack, $strict = false) {
 	if (!empty($haystack)){
@@ -284,7 +288,7 @@ if (($year - end($playseasons)) > 4){
 //printr($build_draft, 0);
 
 // get first and last player years in an array
-$first = $playseasons[0];
+$first = $basicinfo[0]['rookie'];
 
 $last = end($playseasons) + 1;
 
@@ -292,6 +296,7 @@ while ($first != $last){
 	$buildtheyears[] = $first;
 	$first++;
 } 
+
 
 // Trades by player
 $playerbytrade = get_trade_by_player($playerid);
@@ -404,13 +409,13 @@ $potw = get_player_of_week_player($playerid);
 				<div id="player_widget_img" class="widget-header">
 					
 					<?php
-					
+					 
 						$playerimgobj = get_attachment_url_by_slug($playerid);
 						$imgid =  attachment_url_to_postid( $playerimgobj );
 						$image_attributes = wp_get_attachment_image_src($imgid, 'thumbnail');	
 						echo '<img src="'.$image_attributes[0].'" class="widget-bg img-responsive">';
 						
-						//printr($image_attributes, 0);
+						//printr($firstdraft, 0);
 						
 					?>
 
@@ -420,8 +425,17 @@ $potw = get_player_of_week_player($playerid);
 					<h3 class="" style="margin-bottom: 0;"><?php echo $firstname.' '.$lastname; ?></h3>
 					
 					<?php if (!empty($weight)){ 
-						echo '<div class="uniform">'.$playernumber.'</div> ';
+						
+						if (false !== $key = array_search($playerid, $ringofhonor)) {
+						   $honorteam = substr($key, 0, 3);
+						} 
+						if(in_array($playerid, $ringofhonor)){
+							echo '<h5><span class="text-thin">'.$teamids[$honorteam].'</span> Ring of Honor</h5>';
+						}
+					    echo '<div class="uniform">'.$playernumber.'</div> ';
 					?>
+					
+					
 					
 					<p class="mar-btm">
 						<span class="text-muted">IDs: </span><?php echo $playerid; ?><?php 
@@ -476,7 +490,10 @@ $potw = get_player_of_week_player($playerid);
 					?>
 				</div>
 			</div>
-			<?php } ?>
+			<?php } 
+				
+				//printr($honor, 0);
+			?>
 		
 		
 			<!-- only if player won title -->
@@ -562,6 +579,7 @@ $potw = get_player_of_week_player($playerid);
 			<!-- only if player won a sesaonal pvq -->
 			<?php 
 			$pvqplayer = $careerdata['pvqbyseason'];
+			//printr($pvqplayer, 0);
 			if(isset($pvqplayer)):
 				if (false !== $key = array_search(1, $pvqplayer)) {?>
 					<div class="panel widget">
@@ -697,9 +715,7 @@ $potw = get_player_of_week_player($playerid);
 								?></span>
 								<p class="text-white">Seasons</p>
 								<p class="text-white"></p>
-								
-								
-								
+												
 							</div>
 						</div>
 					</div>
@@ -878,7 +894,8 @@ $potw = get_player_of_week_player($playerid);
 														<th class="text-center">Games</th>
 														<th class="text-center">PPG</th>
 														<th class="text-center">High</th>
-														<th class="text-center">PVQ</th>
+														<th class="text-center"><a class="add-tooltip" data-toggle="tooltip" data-placement="bottom" href="#" data-original-title="Position Rank">Rank</a></th>
+														<th class="text-center"><a class="add-tooltip" data-toggle="tooltip" data-placement="bottom" href="#" data-original-title="Player Value">PVQ</a></th>
 														
 <!-- 														<th class="hidden-xs">Acquisition</th> -->
 													</tr>
@@ -903,6 +920,7 @@ $potw = get_player_of_week_player($playerid);
 																			$teamsplayer = array($steams[0],$steams[1],$steams[2],$steams[3]);
 																			$yearsplayed[] = $printyear;
 																			$pvq  = $pvqplayer[$printyear];
+																			$irank = get_player_season_rank ($playerid, $printyear);
 																		
 																			$seasonsList .= '<tr>';
 																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
@@ -929,6 +947,7 @@ $potw = get_player_of_week_player($playerid);
 																			$seasonsList .= '<td class="text-center">'.$igames.'</td>';
 																			$seasonsList .= '<td class="text-center">'.$ippg.'</td>';
 																			$seasonsList .= '<td class="text-center">'.$ihigh.'</td>';
+																			$seasonsList .= '<td class="text-center">'.$irank.'</td>'; 
 																			$seasonsList .= '<td class="text-center">'.number_format((float)$pvq, 3, '.', '').'</td>';
 																			
 																				
@@ -943,6 +962,7 @@ $potw = get_player_of_week_player($playerid);
 																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
 																			$seasonsList .= '</td>';															
 																			$seasonsList .= '<td class="text-bold">Did Not Play</td>';
+																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';

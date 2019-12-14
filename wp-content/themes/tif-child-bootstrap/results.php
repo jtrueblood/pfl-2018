@@ -844,6 +844,17 @@ printr($assoc, 0);
 						<?php }
 						} ?>
 						
+						<div class="col-xs-24 col-md-18">
+							<div class="panel panel-dark">
+								<div class="panel-body">
+									<?php 
+										include_once('inc/weekly_standings.php'); ?>
+								</div>
+							</div>
+						</div>	
+						
+
+<!--
 						<div class="col-xs-24 col-md-12">
 							<div class="panel panel-dark">
 									<div class="panel-body">
@@ -851,6 +862,7 @@ printr($assoc, 0);
 									</div>
 							</div>
 						</div>
+-->
 			
 					
 			</div>
@@ -926,26 +938,28 @@ printr($assoc, 0);
 									);
 								}
 								
-								foreach ($array as $key => $value){
-									$tea = $value['team'];
-									
-									$insertarr = $wpdb->update(
-										 'wp_week_standings',
-									     array(
-										    'id' 		=> $key,
-										    'weekvar'	=> $value['season'].$week_sel,
-											'season' 	=> $value['season'],
-											'week' 		=> $value['week'],
-											'team' 		=> $value['team'],
-											'division'	=> $teamdiv[$value['team']],
-											'points' 	=> $value['points'] + $lwv[$tea]['points'],
-											'result' 	=> $value['result'] + $lwv[$tea]['result'],
-											'victory' 	=> $value['victory'] + $lwv[$tea]['victory']
-										),
-										array( 
-											'%s','%d','%d','%d','%s','%s','%d','%d','%d' 
-										)
-									);
+								if(isset($array)){
+									foreach ($array as $key => $value){
+										$tea = $value['team'];
+										
+										$insertarr = $wpdb->update(
+											 'wp_week_standings',
+										     array(
+											    'id' 		=> $key,
+											    'weekvar'	=> $value['season'].$week_sel,
+												'season' 	=> $value['season'],
+												'week' 		=> $value['week'],
+												'team' 		=> $value['team'],
+												'division'	=> $teamdiv[$value['team']],
+												'points' 	=> $value['points'] + $lwv[$tea]['points'],
+												'result' 	=> $value['result'] + $lwv[$tea]['result'],
+												'victory' 	=> $value['victory'] + $lwv[$tea]['victory']
+											),
+											array( 
+												'%s','%d','%d','%d','%s','%s','%d','%d','%d' 
+											)
+										);
+									}
 								}
 								
 								return $getstand;
@@ -994,8 +1008,6 @@ printr($assoc, 0);
 </div>
 </div>
 
-<?php if(isset($standingweekteam)){ ?>
-
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
@@ -1003,96 +1015,6 @@ printr($assoc, 0);
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-<script>
-	// Create the chart
-Highcharts.chart('standingschart', {
-  chart: {
-    type: 'column'
-  },
-  title: {
-    text: 'Playoff Chase'
-  },
-  subtitle: {
-    text: 'Modified Standings Showing Race for the Playoffs'
-  },
-  xAxis: {
-	  categories: [<?php
-		  foreach ($standingweekteam as $key => $value){
-			  foreach ($value as $ky => $ve){
-				 echo "'".$ve[4]."', "; 
-			  }
-		  }
-		  //'ETS', 'BST', 'BUL'
-	  	?>],	    
-	    crosshair: true,
-	    allowDecimals: false,
-	    labels: {
-	        align: 'right',
-	        reserveSpace: true,
-	        rotation: 270
-	    },
-	},
-  yAxis: {
-    title: {
-      text: 'Wins'
-    },
-    allowDecimals: false,
-    max: 14
-  },
-  legend: {
-    enabled: false
-  },
-  plotOptions: {
-    series: {
-      borderWidth: 0,
-      dataLabels: {
-        enabled: true,
-        format: ''
-      }
-    }
-  },
-
-  tooltip: {
-    headerFormat: '<span style="color:{point.color}">{point.name}</span><br/>',
-    pointFormat: '<span style="color:{point.color}">{point.name}</span><br/><span style="color:{point.pointdiff}">Diff:{point.pointdiff}</span><br/><span style="color:{point.pointdiff}">PTS:{point.totalpoint}</span><br/>'
-  },
-
-  series: [
-    {
-      name: "Teams",
-      colorByPoint: true,
-        data: [<?php 
-	        foreach ($standingweekteam as $key => $value){
-		        foreach ($value as $ky => $ve){
-			        echo '{';
-			        echo 'name: "'.$ky.'",';
-					echo 'y: '.$ve[8].',';
-					if($ve[5] == 'PFL'){
-						echo 'color: "#3b4146",';
-					}
-					if($ve[5] == 'EGAD'){
-						echo 'color: "#5fa2dd",';
-					}
-					if($ve[5] == 'DGAS'){
-						echo 'color: "#eaa642",';
-					}
-					if($ve[5] == 'MGAC'){
-						echo 'color: "#37c445",';
-					}
-					echo 'pointdiff: '.$ve[7].',';
-					echo 'totalpoint: '.$ve[6].'';
-					echo '},';
-	        	}
-	        } 
-	    ?>],
-    }
-  ]
-});
-
-</script>
-
-<?php } ?>
 
 <?php 
 	
@@ -1132,7 +1054,7 @@ if(isset($schedulewk)){
 	
 ?>
 
-<script>
+<script type="text/javascript">
 // spider chart
 Highcharts.chart('spider_<?php echo $hometeam;?>', {
 
@@ -1206,9 +1128,10 @@ Highcharts.chart('spider_<?php echo $hometeam;?>', {
     }
 
 });
-
-
 </script>
+
+
+
 
 <?php }
 } ?>

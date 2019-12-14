@@ -7,7 +7,7 @@
 // - ThemeOn.net -
 
 
- $(document).ready(function() {
+ jQuery(document).ready(function($) {
 
 	// BOOTBOX - ALERT MODAL
 	// =================================================================

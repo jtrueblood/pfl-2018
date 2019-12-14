@@ -74,14 +74,8 @@ foreach ($stand as $key => $value){
 					<div class="row">
 					<?php 
 					foreach ($matchupteams as $key => $value){
-							
-							$check = 1;
-							
-							if($check % 2 == 0){
-								echo '<div class="row">';
-							}
 	
-							echo '<div class="col-xs-24 col-md-12 eq-box-sm">';
+							echo '<div class="col-xs-24 col-md-18 eq-box-sm">';
 								echo '<div class="panel panel-bordered panel-dark">';
 									echo '<div class="panel-heading">';
 										echo '<div class="panel-control">
@@ -167,14 +161,19 @@ foreach ($stand as $key => $value){
 								echo '</div>';		
 							echo '</div>';			
 							
-							if($check % 2 == 0){
+							echo '<div class="col-xs-24 col-md-6">';
+/*
+								echo '<div class="panel panel-bordered panel-dark">';
+									echo 'Notes here';
 								echo '</div>';
-							}
+*/
+							echo '</div>';
 							
 							$check++;
 					
 					}
 				?>
+					
 					
 					</div><!-- end row -->	
 					

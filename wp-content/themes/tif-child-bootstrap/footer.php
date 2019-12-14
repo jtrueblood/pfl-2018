@@ -78,7 +78,7 @@
 	
     
     <!--Demo script [ DEMONSTRATION ]-->
-	<script src="<?php echo get_stylesheet_directory_uri();?>/js/demo/nifty-demo.min.js"></script>
+	<script src="<?php echo get_stylesheet_directory_uri();?>/js/demo/nifty-demo.js"></script>
     
     
     <!--Foo Table-->

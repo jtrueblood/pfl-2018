@@ -44,7 +44,7 @@
 				$s = implode(' / ', $t);
 			}
 			if ($a <= 10){
-				$qb_lead .='<tr><td>'.$a.'. <span class="text-bold">'.$n['first'].' '.$n['last'].'</span></td>';
+				$qb_lead .='<tr><td>'.$a.'. <span class="">'.$n['first'].' '.$n['last'].'</span></td>';
 				$qb_lead .='<td class="min-width">'.$s.'</td>';
 				$qb_lead .='<td class="min-width text-right">'.$value.'</td></tr>';
 			}
@@ -78,7 +78,7 @@
 				$s = implode(' / ', $t);
 			}
 			if ($a <= 10){
-				$rb_lead .='<tr><td>'.$a.'. <span class="text-bold">'.$n['first'].' '.$n['last'].'</span></td>';
+				$rb_lead .='<tr><td>'.$a.'. <span class="">'.$n['first'].' '.$n['last'].'</span></td>';
 				$rb_lead .='<td class="min-width">'.$s.'</td>';
 				$rb_lead .='<td class="min-width text-right">'.$value.'</td></tr>';
 			}
@@ -112,7 +112,7 @@
 				$s = implode(' / ', $t);
 			}
 			if ($a <= 10){
-				$wr_lead .='<tr><td>'.$a.'. <span class="text-bold">'.$n['first'].' '.$n['last'].'</span></td>';
+				$wr_lead .='<tr><td>'.$a.'. <span class="">'.$n['first'].' '.$n['last'].'</span></td>';
 				$wr_lead .='<td class="min-width">'.$s.'</td>';
 				$wr_lead .='<td class="min-width text-right">'.$value.'</td></tr>';
 			}
@@ -145,7 +145,7 @@
 				$s = implode(' / ', $t);
 			}
 			if ($a <= 10){
-				$pk_lead .='<tr><td>'.$a.'. <span class="text-bold">'.$n['first'].' '.$n['last'].'</span></td>';
+				$pk_lead .='<tr><td>'.$a.'. <span class="">'.$n['first'].' '.$n['last'].'</span></td>';
 				$pk_lead .='<td class="min-width">'.$s.'</td>';
 				$pk_lead .='<td class="min-width text-right">'.$value.'</td></tr>';
 			}

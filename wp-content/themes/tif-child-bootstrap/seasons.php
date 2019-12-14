@@ -67,18 +67,17 @@ $teamlist = teamlist();
 					include_once('inc/season_standings.php');
 					include_once('inc/season_draft.php');
 				?>
-					
+				
 			</div>
-			
-		
-			
-		
-
-		
 
 	</div><!--END CONTENT CONTAINER-->
 
 </div><!--End page content-->		
+
+
+
+
+
 
 
 <?php get_footer(); ?>

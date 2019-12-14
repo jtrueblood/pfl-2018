@@ -22,6 +22,7 @@ $lid = 38954;
 $year = $_GET['Y'];
 $week = $_GET['W'];	
 $run = $_GET['SQL'];
+$curl = $_GET['CURL'];
 
 if(empty($year)){
 	die();
@@ -427,10 +428,23 @@ if($run == 'true'){
 <div class="boxed">
 	<div id="content-container">
 		<div id="page-content">
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="panel">
+						<div class="panel-body">
+							<ol>
+								<li>Set Year and Week Values.  Check if any players are not found.  If so create player from MFL using 'Create New Player' widget on Homepage.</li> 
+								<li>Once all player tables are found or created. Change SQL to true to insert into database.</li>
+								<li>Once inserted change SQL back to false and set url CURL value to true to load player pages for all players who played this week and refresh leaders data.</li>
+							</ol>
+						</div>
+					</div>
+				</div>
+			</div>
 		
 			<div class="row">
-				
-				<div class="col-sm-6">
+
+				<div class="col-sm-8">
 					<?php 
 						if($run == 'false'){
 							echo '<pre><h3>NO DATA INSERTED</h3></pre>';
@@ -444,9 +458,11 @@ if($run == 'true'){
 						} 
 						
 						if(!empty($query)){                 
-						 	echo 'Table Found - '.$key.'<br>';
+						 	echo 'Table Found - <a href="/player/?id='.$key.'" target="_blank">'.$key.'</a><br>';
+						 	$storetoload[] = $key;
 						}
 					} 
+
 					?>
 				
 				</div>
@@ -473,6 +489,31 @@ if($run == 'true'){
 
 			</div>
 			
+			<?php
+			// set url CURL value to true to load player pages for all players who played this week and refresh leaders data	
+			if($curl == 'true'){
+				foreach($storetoload as $pid){
+					
+					$ch = curl_init();
+
+					// set URL and other appropriate options
+					$options = array(CURLOPT_URL => "pfl-data.local/player/?id=$pid",
+					                 CURLOPT_HEADER => false
+					                );
+					
+					curl_setopt_array($ch, $options);
+					
+					// grab URL and pass it to the browser
+					curl_exec($ch);
+					
+					// close cURL resource, and free up system resources
+					curl_close($ch);
+					
+					echo '<hr/>';
+					echo '<pre>Curled '.$pid.'</pre>';
+				}
+			}
+			?>
 			
 		
 		</div>

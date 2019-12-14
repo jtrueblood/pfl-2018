@@ -35,7 +35,6 @@
 
 <?php get_header(); ?>
 
-
 <div class="boxed">
 			
 			<!--CONTENT CONTAINER-->
@@ -49,21 +48,9 @@
 				
 				<!--Page content-->
 				<div id="page-content">
+			
 			<?php 
-			function labeltheseaward($awardid){
-				if ($awardid == 'mvp'){
-					echo 'Most Valuable Player';
-				}
-				if ($awardid == 'pbm'){
-					echo 'Posse Bowl MVP';
-				}
-				if ($awardid == 'pro'){
-					echo 'Pro Bowl MVP';
-				}
-				if ($awardid == 'roty'){
-					echo 'Rookie of the Year';
-				}
-			}	
+				
 			?>
 					
 				<!-- start new layout -->
@@ -286,7 +273,14 @@
 		</div>
 </div> 
 
-<?php session_destroy(); ?>
+<?php 
+
+/*
+$pid = '2004BreeQB';
+supercard($pid); 
+*/
+
+?>
 		
 </div>
 </div>

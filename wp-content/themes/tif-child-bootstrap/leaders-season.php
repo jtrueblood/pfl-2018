@@ -45,6 +45,8 @@ get_cache('rankyears/pvq/pvq'.$yearid, 0);
 $getpvq = $_SESSION['rankyears/pvq/pvq'.$yearid];
 $currentpvq = array_slice($getpvq, 0, 25);
 
+
+
 ?>
 
 <div class="boxed">

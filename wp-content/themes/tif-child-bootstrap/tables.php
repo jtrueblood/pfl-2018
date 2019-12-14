@@ -174,13 +174,24 @@ foreach ($theyears as $year){
 				'divwin' => $val['divwin'],
 				'divloss' => $val['divloss'],
 				'div' => $val['division'],
+				'seed' => $val['seed'],
 				'winper' => number_format($winpert, 3)
 				);
 			}
 			$allteampoints[$year][$val['teamid']] = $val['pts'];
+			$allteamdefensepoints[$year][$val['teamid']] = $val['ptsvs'];
+			if($val['seed'] > 0){
+				$seeding[$year][$val['division']][$val['seed']] = array(
+					'team' => $val['teamid']
+				);
+			}
 		}
 	}
 }
+
+ksort($seeding);
+
+//printr($seeding, 1);
 
 uasort($allstandings, function($a, $b) {
     return $b['winper'] <=> $a['winper'];
@@ -205,7 +216,21 @@ foreach ($allteampoints as $year => $value){
 
 //printr($teampointleaders, 1);
 
-//printr($allstandings, 1);
+
+// get team point winners
+foreach ($allteamdefensepoints as $year => $value){
+	asort($value);
+	$teamint0 = key($value);
+	$points0 = $value[$teamint0];
+
+	$teampointdefense[$year] = array(
+		'team' => $teamint0,
+		'points' => $points0 
+	);
+}
+
+//printr($teampointdefense, 1);
+
 $rookieyears = get_player_rookie_years();
 
 foreach ($rookieyears as $key => $value){
@@ -563,7 +588,6 @@ foreach ($total as $key => $value){
 arsort($totalpotw);
 //printr($totalpotw, 1);
 
-
 ?>
 
 
@@ -584,7 +608,7 @@ arsort($totalpotw);
 			
 			<div class="col-xs-24">
 				<h4>Team Data - Regular Season</h4>
-				<p>This page requires the use of some transients.  If you see an error try loading a leaders by season page.</p>
+				<p>This page requires the use of some transients.  If you see an error try reloading the page or loading a leaders by season page.</p>
 				<hr>
 			</div>
 			
@@ -838,6 +862,104 @@ arsort($totalpotw);
 				?>
 				
 			</div>
+
+
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					//printr($teampointleaders, 0);
+					
+					$labels = array('Year', 'Team', 'Points');	
+					tablehead('Team Point Winners', $labels);	
+				
+					foreach ($teampointleaders as $key => $value){
+							$printteapte .='<tr><td>'.$key.'</td>';
+							if($value['points'] != $value['secondpoints'] ){
+								$printteapte .='<td>'.$teamids[$value['team']].'</td>';
+								$printteapte .='<td>'.$value['points'].'</td></tr>';
+							} else {
+								$printteapte .='<td>'.$teamids[$value['team']].' / '.$teamids[$value['secondteam']].'</td>';
+								$printteapte .='<td>'.$value['points'].'</td></tr>';
+							}
+					}
+
+					echo $printteapte;
+						
+					tablefoot('');	
+					
+				?>
+				
+			</div>
+			
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					//printr($teampointdefense, 1);
+					
+					$labels = array('Year', 'Team', 'Points');	
+					tablehead('Team Defense Winners', $labels);	
+				
+					foreach ($teampointdefense as $key => $value){
+						$printteaptdef .='<tr><td>'.$key.'</td>';
+						$printteaptdef .='<td>'.$teamids[$value['team']].'</td>';
+						$printteaptdef .='<td>'.$value['points'].'</td></tr>';
+					}
+
+					echo $printteaptdef;
+						
+					tablefoot('Lowest Team Score Allowed');	
+					
+				?>
+				
+			</div>
+			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					//printr($seeding, 1);
+					
+					$labels = array('Year', 'PFL', 'EGAD', 'DGAS', 'MGAC');		
+					tablehead('Division Winners by Year', $labels);	
+					
+					foreach ($seeding as $key => $value){
+							if(is_array($value['PFL'])){
+								$pflwin = reset($value['PFL']);
+							} else {
+								$pflwin = $value['PFL'];
+							}
+							if(is_array($value['EGAD'])){
+								$egadwin = reset($value['EGAD']);
+							} else {
+								$egadwin = $value['EGAD'];
+							}
+							if(is_array($value['DGAS'])){
+								$dgaswin = reset($value['DGAS']);
+							} else {
+								$dgaswin = $value['DGAS'];
+							}
+							if(is_array($value['MGAC'])){
+								$mgacwin = reset($value['MGAC']);
+							} else {
+								$mgacwin = $value['MGAC'];
+							}	
+					
+						    $printdivwinners .='<tr><td>'.$key.'</td>';
+							$printdivwinners .='<td>'.$pflwin['team'].'</td>';
+							$printdivwinners .='<td>'.$egadwin['team'].'</td>';
+							$printdivwinners .='<td>'.$dgaswin['team'].'</td>';
+							$printdivwinners .='<td>'.$mgacwin['team'].'</td></tr>';
+						
+					}
+
+					echo $printdivwinners;
+
+						
+					tablefoot('');	
+					
+				?>
+				
+			</div>
 			
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
@@ -868,37 +990,6 @@ arsort($totalpotw);
 				?>
 				
 			</div>
-			
-			
-			<div class="col-xs-24 col-sm-12 col-md-6">
-				
-				<?php 
-					//printr($teampointleaders, 0);
-					
-					$labels = array('Year', 'Team', 'Points');	
-					tablehead('Team Point Winners', $labels);	
-				
-					foreach ($teampointleaders as $key => $value){
-							$printteapte .='<tr><td>'.$key.'</td>';
-							if($value['points'] != $value['secondpoints'] ){
-								$printteapte .='<td>'.$teamids[$value['team']].'</td>';
-								$printteapte .='<td>'.$value['points'].'</td></tr>';
-							} else {
-								$printteapte .='<td>'.$teamids[$value['team']].' / '.$teamids[$value['secondteam']].'</td>';
-								$printteapte .='<td>'.$value['points'].'</td></tr>';
-							}
-					}
-
-					echo $printteapte;
-						
-					tablefoot('');	
-					
-				?>
-				
-			</div>
-			
-			
-			
 			
 
 			<!-- NEW SECTION -->

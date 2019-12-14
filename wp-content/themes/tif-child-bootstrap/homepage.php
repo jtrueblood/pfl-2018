@@ -6,7 +6,6 @@
 
 
 /*
-
 $url1=$_SERVER['REQUEST_URI'];
 header("Refresh: 5; URL=$url1");
 */
@@ -149,7 +148,7 @@ function createnewplayer($array){
 				<!-- THE ROW -->
 				<div class="row">
 					
-					<div class="col-xs-12 col-sm-7 eq-box-sm">
+					<div class="col-xs-12 col-sm-7 eq-box-sm">	
 						
 						<div class="panel panel-bordered panel-light">
 							<div class="panel-heading">
@@ -283,7 +282,8 @@ function createnewplayer($array){
 										<a href="http://www58.myfantasyleague.com/2016/home/38954#0" target="_blank">MFL Website 2016</a><br>
 										<a href="http://www58.myfantasyleague.com/2015/home/47099#0" target="_blank">MFL Website 2015</a><br>
 										<hr>
-										<a href="/builds/build-mfl-weekly/?Y=2019&W=1&SQL=false">Run MFL Weekly Data Insert</a>
+										<a href="/builds/build-mfl-weekly/?Y=2019&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a>
+										<a href="/python-scripts">Sportsrefernce API Python Scripts</a>
 									</div>
 								</div>
 							</div>
@@ -536,6 +536,7 @@ function createnewplayer($array){
 					</div>
 					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
+						
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
 									<h3 class="panel-title">MFL Data</h3>

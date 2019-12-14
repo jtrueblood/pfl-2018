@@ -374,8 +374,19 @@ if(is_array($qb_ppg_build)):
 		arsort($merge_ppgs);
 	endif;
 endif;
-
 //$season_rank = get_player_season_rank ('2012ZuerPK', 2018);
+
+
+
+//get probowlers for this year
+/*
+$probowl = probowl_boxscores_player_year($yearid);
+foreach($probowl as $key => $value){
+	$ispro[$value['playerid']] = $value['starter'];
+}
+
+printr($ispro, 0);
+*/
 
 ?>
 <?php include_once('main-nav.php'); ?>
@@ -560,8 +571,52 @@ endif;
 								</div>
 		
 							</div>
+							
+							
+							
+							<!-- WEEKLY HIGH SCORES -->
+							<div class="panel">
+								<div class="panel-heading">
+									<h2 class="panel-title">Game High Scores</h2>
+									
+								</div>
+								<div class="panel-body">
+									<div class="table-responsive">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th></th>
+													<th>Player</th>
+													<th>Pos</th>
+													<th>Pts</th>
+													<th>Team</th>
+												</tr>
+											</thead>
+											<tbody>
+												
+												
+											</tbody>
+										</table>
+									
+									</div>
+								
+								</div>
+		
+							</div>
 
 							
+							
+							
+							<div class="panel">
+								<div class="panel-heading">
+									<h2 class="panel-title">Notes</h2>
+								</div>
+								<div class="panel-body">
+									<p><i class="fa fa-circle"></i> = Probowl Starter </p>
+									<p><i class="fa fa-circle-o"></i> = Probowl Reserve </p>
+									<p><i class="fa fa-circle-thin"></i> = Probowl Substitute </p>
+								</div>
+							</div>
 							
 							
 							

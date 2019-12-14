@@ -1,9 +1,9 @@
 <?php  
 //printr($careerstats_team, 1);	
 
+$win = array();
 
-
-foreach ($seasons as $value){
+foreach ($seasons as $k => $value){
 	$thewin = $stand[$value][0]['win'];
 	
 	if(isset($thewin)){
@@ -14,9 +14,10 @@ foreach ($seasons as $value){
 	
 	$thepoints = $stand[$value][0]['pts'];
 	$thediff[] = $thepoints - $stand[$value][0]['ptsvs'];
-	
 
 }
+
+//printr($win, 0);
 
 ?>
 
@@ -26,8 +27,6 @@ foreach ($seasons as $value){
 	</div>
 	<div class="panel-body text-center">
 		
- 		
-		
 		<script type="text/javascript">
 			jQuery(document).ready(function() {
 				Highcharts.chart('teamchart', {
@@ -35,11 +34,9 @@ foreach ($seasons as $value){
 				        text: ''
 				    },
 				    xAxis: {
-				        categories: [<?php 
-					        foreach ($win as $key => $value){
+				        categories: [<?php foreach ($win as $key => $value){
 						        echo $key.',';
-					        } 
-					    ?>],
+					    }?>],
 					    crosshair: true,
 					    allowDecimals: false,
 					    labels: {
@@ -69,7 +66,7 @@ foreach ($seasons as $value){
 
 				    series: [{
 				        type: 'column',
-				        name: 'Team Plus / Minus',
+				        name: 'Diff',
 				        color: '#5fa2dd',
 				        negativeColor: '#eaa642',
 				        marker: {
@@ -89,8 +86,6 @@ foreach ($seasons as $value){
 			<div class="panel hidden-xs">
 				<div id="teamchart"></div> 
 			</div>
-
-
 		
 	</div>
 </div>

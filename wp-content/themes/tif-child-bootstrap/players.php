@@ -16,8 +16,6 @@
 // $playerid = '2011SproRB';
 $playerid = $_GET['id'];
 
-
-
 $year = date("Y");
 
 $teamids = $_SESSION['teamids'];
@@ -56,6 +54,9 @@ $i = 0;
 foreach ($players as $key => $value){
 	$playersid[] = $key;
 }
+
+$randomize = array_rand($players);
+
 /*
 echo $i;
 printr($playersid, 1);
@@ -65,7 +66,7 @@ printr($playersid, 1);
 insert_wp_career_leaders($playerid);
 insert_wp_season_leaders($playerid);
 
-// printr($players, 0);
+//printr($players, 0);
 
 $firstname = $players[$playerid][0];
 $lastname = $players[$playerid][1];
@@ -77,15 +78,24 @@ $weight = $players[$playerid][6];
 $college = $players[$playerid][7];
 $birthdate = $players[$playerid][8];
 $playernumber = $players[$playerid][9];
+$profburi = $players[$playerid][10];
+$f_init = substr($profburi, 0, 1);
+$nickname = $players[$playerid][12];
+
+
+// for plyer pro football reference link
+$profblink = 'https://www.pro-football-reference.com/players/'.$f_init.'/'.$profburi.'.htm';
+// CURL TO PRO FOOTBALL REFERNECE .com REMOVE LATER
+	//insert_pfrcurl($playerid, $profblink);
 
 
 $weeklydata = get_player_data($playerid);
 $careerdata = get_player_career_stats($playerid);
 $playoffsplayer = playerplayoffs($playerid);
 $basicinfo = get_player_basic_info($playerid);
+$weeksplayed = get_player_weeks_played($playerid);
 
-
-//printr($careerdata, 0);
+//printr($weeksplayed, 1);
 
 if(!empty( $careerdata['years'])){
 	$playseasons = $careerdata['years'];
@@ -289,18 +299,30 @@ if (($year - end($playseasons)) > 4){
 
 // get first and last player years in an array
 $first = $basicinfo[0]['rookie'];
+//printr($basicinfo, 1);
 
-$last = end($playseasons) + 1;
+if(count($playseasons) > 0){
+	$last = end($playseasons) + 1;
+} else {
+	$last = $first +1;
+}
 
-while ($first != $last){
-	$buildtheyears[] = $first;
-	$first++;
+//printr($playseasons, 0);
+
+if($last != ''){
+	while ($first != $last){
+		$buildtheyears[] = $first;
+		$first++;
+	} 
+} else {
+	echo 'NO DATA';
 } 
-
 
 // Trades by player
 $playerbytrade = get_trade_by_player($playerid);
 //printr($playerbytrade, 0);										
+
+//printr($buildtheyears, 0);
 
 foreach($buildtheyears as $season ){
 	
@@ -367,9 +389,12 @@ foreach($buildtheyears as $season ){
 	
 }
 
+
 $highestgame = $careerdata['high'];
 
 $potw = get_player_of_week_player($playerid);
+
+$curlsuccess = get_check_for_pfr_success($playerid);
 
 //printr($career_timeline, 0);
 
@@ -402,37 +427,38 @@ $potw = get_player_of_week_player($playerid);
 	<div id="page-content">
 		
 		<div class="row">
-
+			<?php	 
+			$playerimgobj = get_attachment_url_by_slug($playerid);
+			$imgid =  attachment_url_to_postid( $playerimgobj );
+			$image_attributes = wp_get_attachment_image_src($imgid, 'medium');	
+			?>
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-5 left-column">
 			<div class="panel widget">
-				<div id="player_widget_img" class="widget-header">
-					
-					<?php
-					 
-						$playerimgobj = get_attachment_url_by_slug($playerid);
-						$imgid =  attachment_url_to_postid( $playerimgobj );
-						$image_attributes = wp_get_attachment_image_src($imgid, 'thumbnail');	
-						echo '<img src="'.$image_attributes[0].'" class="widget-bg img-responsive">';
-						
-						//printr($firstdraft, 0);
-						
-					?>
-
+				<div id="player_widget_img" class="widget-header" style="background-image: url(<?php echo $image_attributes[0]; ?>); background-position: center top; background-size: cover; ">
 				</div>
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">
 					<h3 class="" style="margin-bottom: 0;"><?php echo $firstname.' '.$lastname; ?></h3>
 					
-					<?php if (!empty($weight)){ 
-						
-						if (false !== $key = array_search($playerid, $ringofhonor)) {
-						   $honorteam = substr($key, 0, 3);
-						} 
-						if(in_array($playerid, $ringofhonor)){
-							echo '<h5><span class="text-thin">'.$teamids[$honorteam].'</span> Ring of Honor</h5>';
-						}
-					    echo '<div class="uniform">'.$playernumber.'</div> ';
+					<?php
+					if(!empty($nickname)){
+						echo '<h5><span class="text-muted">"'.$nickname.'"</span></h5>';
+					}	
+					if (false !== $key = array_search($playerid, $ringofhonor)) {
+					   $honorteam = substr($key, 0, 3);
+					} 
+					if(in_array($playerid, $ringofhonor)){
+						echo '<h5><span class="text-thin">'.$teamids[$honorteam].'</span> Ring of Honor</h5>';
+					}
+					if(!empty($playernumber)){
+				    	echo '<div class="uniform">'.$playernumber.'</div> ';
+				    } else {
+					    echo '<p>&nbsp;</p>';
+				    }
+				    
+				    //printr($curlsuccess, 0);
+				    
 					?>
 					
 					
@@ -441,12 +467,20 @@ $potw = get_player_of_week_player($playerid);
 						<span class="text-muted">IDs: </span><?php echo $playerid; ?><?php 
 							if(!empty($mflid)){
 								echo ' / '.$mflid;
-							} ?>
+							} 
+							
+							if ($curlsuccess == 200){
+								echo ' / <a href="'.$profblink.'" target="_blank">'.$profburi.'</a>';
+							}
+							
+
+							?>
 						</span><br/>
-						<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br/>
-						<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span><br/>
-						<span class="text-muted">Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br/>
-<!-- 					<span class="text-muted">Birthdate: </span><span class="text-bold"><?php echo $birthdate; ?></span><br/> -->
+						<?php if(!empty($college)){ ?>
+							<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br/>
+							<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span><br/>
+							<span class="text-muted">Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br/>
+						<?php } ?>
 						
 						<h4 class="mar-no text-sm">
 							<?php 
@@ -469,7 +503,7 @@ $potw = get_player_of_week_player($playerid);
 							?>
 						</h4>
 						
-					<?php } ?>
+				
 					</p>					
 				</div>
 			</div>
@@ -858,14 +892,16 @@ $potw = get_player_of_week_player($playerid);
 	
 						<!--Nav tabs-->
 						<ul class="nav nav-tabs">
-							<li class="active"><a data-toggle="tab" href="#demo-tabs-box-1">By Season</a>
+							<li class="active"><a data-toggle="tab" href="#demo-tabs-box-1">PFL Season Stats</a>
 							</li>
 							
-							<li><a data-toggle="tab" href="#demo-tabs-box-2">By Game</a></li>
-							
+							<li><a data-toggle="tab" href="#demo-tabs-box-2">PFL Game Stats</a></li>
+
 							<?php if (!empty($playoffsplayer)){  ?>
-							<li><a data-toggle="tab" href="#demo-tabs-box-3">Postseason</a></li>
+							<li><a data-toggle="tab" href="#demo-tabs-box-3">PFL Postseason</a></li>
 							<?php } ?>
+							
+							<li><a data-toggle="tab" href="#demo-tabs-box-4">NFL Game Stats</a></li>
 						</ul>
 	
 					</div>
@@ -1330,21 +1366,76 @@ $potw = get_player_of_week_player($playerid);
 												}	
 												
 												echo $playtable;
-
-												?>	
-												
+												?>					
 												
 												</tbody>
 											</table>
 										</div>
 
 						</div>
-				
+						
+						<div id="demo-tabs-box-4" class="tab-pane fade">
+							<?php 
+								$nflboxscores = get_pfr_linescores_by_player($playerid);
+								if (isset($nflboxscores)){
+									$c = count($nflboxscores);
+									echo '<h3>'.$c.' Games Counted</h3>';
+	// 								printr($nflboxscores, 0);	
+								?>
+								<div class="table-responsive">
+									<table class="table table-striped">
+										<thead>
+											<tr>
+												<th class="text-center min-width">Year</th>
+												<th class="text-center min-width">Week</th>
+												<th class="text-center min-width">Pass</th>
+												<th class="text-center min-width">PaTDs</th>
+												<th class="text-center min-width">Ints</th>
+												<th class="text-center min-width">Rush</th>
+												<th class="text-center min-width">RuTDs</th>
+												<th class="text-center min-width">Rec</th>
+												<th class="text-center min-width">ReTDs</th>
+												<th class="text-center min-width">2PT</th>
+												<th class="text-center min-width">FGs</th>
+												<th class="text-center min-width">EPs</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php 
+												foreach ($nflboxscores as $nfl){
+													$yr = substr($nfl['pflgameid'], 0, 4);
+													$wk = substr($nfl['pflgameid'], -2); 
+													
+													$tbl .='<tr>';
+													$tbl .='<td class="text-center min-width">'.$yr.'</td>';
+													$tbl .='<td class="text-center min-width">'.$wk.'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['passyards'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['passtds'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['passints'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['rushyards'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['rushtds'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['recyards'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['rectds'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['twopointcon'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['fieldgoals'].'</td>';
+													$tbl .='<td class="text-center min-width">'.$nfl['extrapoints'].'</td>';
+													$tbl .='</tr>';
+												}
+												
+												echo $tbl;
+												
+											?>
+										</tbody>
+									</table>
+								</div>
+								<?php } ?>
+						</div>
+						
 					</div>
 				</div>
-			</div>
+			</div>	
 		</div>
-		
+	
 		
 		<!-- Right COL timeline -->
 			<div class="hidden-xs hidden-sm col-md-7">
@@ -1373,6 +1464,9 @@ $potw = get_player_of_week_player($playerid);
 							</div>
 							<div class="col-xs-24 col-sm-6">
 								<button class="btn btn-warning" id="playerSelect">Select</button>
+							</div>
+							<div class="col-xs-24">
+								<?php echo '<br><p><a id="randombutton" href="https://pfl-data.local/player/?id='.$randomize.'"/>Random Player</a></p>'; ?>
 							</div>
 						</div>
 						<!--===================================================-->
@@ -1453,28 +1547,31 @@ $potw = get_player_of_week_player($playerid);
 								
 								// traded player									
 							    if (isset($value['traded'])){
-								    
-									$tradedto = $teamids[$value['traded']['traded_to_team']];
-									$tradedfrom = $teamids[$value['traded']['traded_from_team']];
-									$when = $value['traded']['when'];
-									$alongwith_players = $value['traded']['received_players'];
-									$alongwith_picks = $value['traded']['received_picks'];
-									$sent_players = $value['traded']['sent_players'];
-									$sent_picks = $value['traded']['sent_picks'];
-									$notes = $value['traded']['notes'];
+								
+								$counttrades = count($value['traded']);  
+								for ($i = 0; $i < $counttrades; $i++) {  
+									$tradedto = $teamids[$value['traded'][$i]['traded_to_team']];
+									$tradedfrom = $teamids[$value['traded'][$i]['traded_from_team']];
+									$when = $value['traded'][$i]['when'];
+									$alongwith_players = $value['traded'][$i]['received_players'];
+									$alongwith_picks = $value['traded'][$i]['received_picks'];
+									$sent_players = $value['traded'][$i]['sent_players'];
+									$sent_picks = $value['traded'][$i]['sent_picks'];
+									$notes = $value['traded'][$i]['notes'];
 									
 									$a_picks = implode( ", ", $alongwith_picks);
 									$s_picks = implode( ", ", $sent_picks);
 									
-									foreach ($alongwith_players as $playerf){
-										$alongwith_format = array();
+									$alongwith_format = array();
+									foreach ($alongwith_players as $playerf){		
 										$trim = ltrim($playerf);
 										if($playerf != ''){
 											$alongwith_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
 										}
 									}
+									
+									$sent_format = array();
 									foreach ($sent_players as $playern){
-										$sent_format = array();
 										$trim = ltrim($playern);
 										if($playern != ''){
 											$sent_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
@@ -1489,19 +1586,22 @@ $potw = get_player_of_week_player($playerid);
 							        <div class="timeline-label no-label">
 							            <p class="protected-by"><span class="text-bold">
 								            Traded to <?php echo $tradedto; ?></span> during the <?php echo $when; ?></p>
-								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_to_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $alongwith_format).' '.format_draft_pick($a_picks); ?></span> </p> 
-										<p class="protected-by"><span class="text-bold"><?php echo $value['traded']['traded_from_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $sent_format).' '.format_draft_pick($s_picks); ?>  </span>
+								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_to_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $alongwith_format).' '.format_draft_pick($a_picks); ?></span> </p> 
+										<p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_from_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $sent_format).' '.format_draft_pick($s_picks);?>  </span>
 								        </p>
 								         <p class="protected-by"><?php echo $notes; ?> </p>
 							        </div>
 							    </div>
 							    
-							    <?php } 
+							    <?php } // end trades for loop
+								} //  end trades if    
 							    
 							    if ($value['traded']['when'] == 'Preseason'){
 									include('inc/player_timeline_protected.php');
 								}
-							
+								
+								//reset traded player values in the loop
+								$value['traded']['when'] = array();
 								
 									
 								if(!empty($value['awards'])){ ?>
@@ -1613,7 +1713,6 @@ $potw = get_player_of_week_player($playerid);
 			
 		</div>
 		
-		
 	</div>
 	<!--===================================================-->
 	<!--End page content-->
@@ -1625,15 +1724,21 @@ $potw = get_player_of_week_player($playerid);
 <?php include_once('main-nav.php'); ?>		
 </div>
 
-			
-
-
-
-<?php session_destroy(); ?>
+		
 		
 </div>
 </div>
 
+<!--
+<script type="text/javascript">
+window.onload=function(){
+  var delayInMilliseconds = 3000; 
+  	setTimeout(function() {
+  		document.getElementById("randombutton").click();
+	}, delayInMilliseconds);	
+};
+</script>
+-->
 
 
 

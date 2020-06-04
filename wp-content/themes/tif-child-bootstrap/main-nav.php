@@ -41,7 +41,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (70, 'active-link'); ?>"><a href="/player/?id=1998MannQB">Individual Players</a></li>
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
-												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2018">Leaders By Season</a></li>	
+												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2019">Leaders By Season</a></li>	
 												<li class="<?php ifbodyclass (1413, 'active-link'); ?>"><a href="/player-value-quotient/">Player Value</a></li>
 											</ul>
 									</li>
@@ -57,8 +57,8 @@
 											<!--Submenu-->
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2018">Seasons</a></li>
-												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2017">Drafts by Year</a></li>
-												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2018">Standings By Year</a></li>			
+												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2019">Drafts by Year</a></li>
+												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2019">Standings By Year</a></li>			
 												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>															<li class="<?php ifbodyclass (252, 'active-link'); ?>"><a href="/protections">Protections By Year</a></li>
 											</ul>
 									</li>
@@ -108,6 +108,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
 												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>														<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>	
+												<li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
 											</ul>
 									</li>
 									

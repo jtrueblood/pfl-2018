@@ -45,16 +45,11 @@ foreach ($stand as $key => $value){
 	}
 }
 
-
-
 //$testget = get_playoff_points_by_team_year(1991, 'BUL', 15);
-
 //printr($champions[2017], 0);
-//printr($matchupteams[1991], 0);
+//printr($matchupteams[1997], 0);
 //printr($testget, 0);
-
 ?>
-
 
 <?php get_header(); ?>
 
@@ -93,17 +88,47 @@ foreach ($stand as $key => $value){
 											
 											echo '<div class="col-xs-10">';
 												
+												$score1 = $value[1]['pl_score'];
+												$score2 = $value[2]['pl_score'];
+												$score3 = $value[3]['pl_score'];
+												$score4 = $value[4]['pl_score'];
+												
+												// fix overtime issue to break tie and add one point to winner in playoff round
+												$overtimealert1 = '';
+												$overtimealert2 = '';
+												
+												if($score1 == $score4){
+													$overtimealert1 = 'Overtime';
+													if($score1 > $score4){
+														$score1++;
+													} else {
+														$score4++;
+													}
+												}
+												if($score2 == $score3){
+													$overtimealert2 = 'Overtime';
+													if($score2 > $score3){
+														$score2++;
+													} else {
+														$score3++;
+													}
+												}
+												// end fix
 												
 												echo '<h3>Playoff Round</h3>';
+												
 												echo '<div class="boxbrack id="topbrackbox">';
-													echo '<h4><small>1. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[1]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[1]['team']].'<span class="floatright">'.$value[1]['pl_score'].'</span></h4>';
-													echo '<h4><small>4. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[4]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[4]['team']].'<span class="floatright">'.$value[4]['pl_score'].'</span></h4>';	
+													echo '<h4><small>1. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[1]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[1]['team']].'<span class="floatright">'.$score1.'</span></h4>';
+													echo '<h4><small>4. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[4]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[4]['team']].'<span class="floatright">'.$score4.'</span></h4>';	
+												echo '<h5 style="margin-top:10px;">'.$overtimealert1.'</h5>';
 												echo '</div>';
 												echo '<div class="location-box">@ '.$teams[$value[1]['team']]['stadium'].'</div>';
+												
 														
 												echo '<div class="boxbrack">';
-													echo '<h4><small>2. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[2]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[2]['team']].'<span class="floatright">'.$value[2]['pl_score'].'</span></h4>';
-													echo '<h4><small>3. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[3]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[3]['team']].'<span class="floatright">'.$value[3]['pl_score'].'</span></h4>';
+													echo '<h4><small>2. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[2]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[2]['team']].'<span class="floatright">'.$score2.'</span></h4>';
+													echo '<h4><small>3. </small><img src="'.get_stylesheet_directory_uri().'/img/'.$value[3]['team'].'-bar.png" class="brackethelm"/>'.$teamids[$value[3]['team']].'<span class="floatright">'.$score3.'</span></h4>';
+												echo '<h5 style="margin-top:10px;">'.$overtimealert2.'</h5>';
 												echo '</div>';
 												echo '<div class="location-box">@ '.$teams[$value[2]['team']]['stadium'].'</div>';
 											
@@ -123,6 +148,7 @@ foreach ($stand as $key => $value){
 											}
 											ksort($cybpb);
 											
+											$champion = $teamids[$champions[$key]['winner']];
 											
 											echo '<div class="col-xs-8">';
 											
@@ -130,12 +156,36 @@ foreach ($stand as $key => $value){
 												echo '<h3>Posse Bowl</h3>';
 													//printr($cybpb, 0);
 													echo '<div class="boxbrack vert-align">';
+														$scorecheck = '';
+														foreach ($cybpb as $k => $v){
+															$scorecheck[] = $v['pb_score'];
+														}
+							
 														
 														foreach ($cybpb as $k => $v){
-															echo '<h4>'.$teamids[$v['team']].'<span class="floatright">'.$v['pb_score'].'</span></h4>';
+															$pbscore = $v['pb_score'];
+															$pbteam = $teamids[$v['team']];
+															if($scorecheck[0] == $scorecheck[1]){
+																if($pbteam == $champion){
+																	$addscore = $pbscore +1;
+																	echo '<h4><strong>'.$pbteam.'<span class="floatright">'.$addscore.'</strong></span></h4>';
+																} else {
+																	echo '<h4>'.$pbteam.'<span class="floatright">'.$pbscore.'</span></h4>';
+																	echo '<h5 style="margin-top:10px;">Overtime</h5>';
+																}
+																
+															} else {
+																if($pbteam == $champion){
+																	echo '<h4><strong>'.$pbteam.'<span class="floatright">'.$pbscore.'</strong></span></h4>';
+																} else {
+																	echo '<h4>'.$pbteam.'<span class="floatright">'.$pbscore.'</span></h4>';
+																}
+															}
+															
 														}
 														
 													echo '</div>';
+													
 													echo '<div class="location-box">Posse Bowl '.$champions[$key]['numeral'].' &mdash; @ '.$champions[$key]['location'].'</div>';
 												echo '</div>';
 											
@@ -150,7 +200,7 @@ foreach ($stand as $key => $value){
 											echo '<div class="col-xs-4 champ-brack-box">';
 											
 												echo '<h3>PFL Champion <span class="text-muted">'.$key.'</span></h3>';
-												echo '<h4>'.$teamids[$champions[$key]['winner']].'</h4>';
+												echo '<h4>'.$champion.'</h4>';
 												
 											echo '</div>';
 											

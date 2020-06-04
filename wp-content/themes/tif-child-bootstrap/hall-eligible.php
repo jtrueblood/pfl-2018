@@ -134,14 +134,16 @@ foreach ($allleaders as $key => $value){
 									$count = 1;
 									//printr($notinyet, 0);
 									foreach ($notinyet as $nextup){
-										 if($count % 3 == 0){
+										if($count % 3 == 0){
 										    echo '<div class="row">';
-										 }
-										supercard($nextup);
+										}
+										echo '<div class="col-xs-24 col-sm-12 col-md-8">';
+										 	supercard($nextup);
+										echo '</div>';	
 										if($count % 3 == 0){
 										    echo '</div>';
-										 }
-										 $count++;
+										}
+										$count++;
 									}
 									
 								?>	

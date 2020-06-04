@@ -110,7 +110,7 @@
 					$i = 0;
 					$gamereview = get_field('game_review' ); // get all the rows
 					
-					for ($c = 1991; $c < $season; $c++) {
+					for ($c = 1991; $c <= $season; $c++) {
 						
 						$theyear = $champions[$c][0];
 						$numeral = $champions[$c][1];

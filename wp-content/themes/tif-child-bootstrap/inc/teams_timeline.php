@@ -120,7 +120,7 @@ foreach($team_timeline as $key => $val){
 							        $n = get_player_name($unos['playerid']);
 							        $name = $n['first'].' '.$n['last'];
 						        }
-					        	echo '<p class="tl-note">'.$name.' <span class="text-bold">Scoring Title - </span>'.$unos['points'].'</p>';
+					        	echo '<p class="tl-note">'.$name.' <span class="text-bold">'.$n['pos'].' Scoring Title - </span>'.$unos['points'].'</p>';
 					        }
 						echo '</div>';
 					}

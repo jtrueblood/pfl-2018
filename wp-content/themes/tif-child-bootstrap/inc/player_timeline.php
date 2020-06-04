@@ -121,7 +121,7 @@
 			<div class="timeline-entry">
 		        <div class="timeline-stat">
 		            <div class="timeline-icon bg-success">
-			            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-leaders.jpg" />
+			            <img class="" src="<?php echo get_stylesheet_directory_uri();?>/img/award-leaders.jpg" />
 		            </div>
 		            <div class="timeline-time"><?php $getaward['year']; ?></div>
 		        </div>
@@ -141,7 +141,7 @@
 			<div class="timeline-entry">
 		        <div class="timeline-stat">
 		            <div class="timeline-icon bg-success">
-			            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-top-scorer.jpg" />
+			            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-top-scorer.jpg" />
 		            </div>
 		            <div class="timeline-time"><?php $getaward['year']; ?></div>
 		        </div>
@@ -155,7 +155,7 @@
 			<div class="timeline-entry">
 		        <div class="timeline-stat">
 		            <div class="timeline-icon bg-success">
-			            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-top-pvq.jpg" />
+			            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-top-pvq.jpg" />
 		            </div>
 		            <div class="timeline-time"><?php $pvqplayer[$key]; ?></div>
 		        </div>
@@ -170,7 +170,7 @@
 			<div class="timeline-entry">
 		        <div class="timeline-stat">
 		            <div class="timeline-icon bg-success">
-			            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
+			            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
 		            </div>
 		            <div class="timeline-time"><?php $getaward['year']; ?></div>
 		        </div>
@@ -198,7 +198,7 @@
 			<div class="timeline-entry">
 		        <div class="timeline-stat">
 		            <div class="timeline-icon bg-success">
-			            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-hall.jpg" />
+			            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-hall.jpg" />
 		            </div>
 		            <div class="timeline-time"><?php $getaward['year']; ?></div>
 		        </div>

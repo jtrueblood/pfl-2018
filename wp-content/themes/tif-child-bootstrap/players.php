@@ -167,7 +167,9 @@ foreach ($justchamps as $key => $possebowls){
 //printr($pbwins, 0);
 
 $titlewon = 0;
-$counttitles = count($pbwins);
+if($pbwins >= 1){
+	$counttitles = count($pbwins);
+}
 if ($counttitles > 0){
 	$titlewon = 1;
 }
@@ -382,10 +384,10 @@ foreach($buildtheyears as $season ){
 		'dnp' => $empty
 	);
 	
-	$get_rook = '';
-	$get_awards = '';
-	$get_champs = '';
-	$get_leaders = '';
+	$get_rook = array();
+	$get_awards = array();
+	$get_champs = array();
+	$get_leaders = array();
 	
 }
 
@@ -542,11 +544,37 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 						}
 					?>
 					<p></p>
-					<p>Appearances: <span class="text-bold"><?php 
-						foreach($pb_apps as $key => $value){
-							echo $key.' ';
-						}
-						?></span></p>
+					<?php $count = count($pb_apps); 
+						
+						//echo $count;
+						if($count == 1){
+							echo '<p>Appearances: <span class="text-bold">';
+							foreach($pb_apps as $key => $value){
+								echo $key.' ';
+							}
+							echo '</span></p>';
+						} 
+						$i = 0;
+						if($count > 1){
+							foreach($pb_apps as $key => $value){
+								if ($i == $count - 2) {
+									$printkeys .= $key.' ';
+								} else {
+									if ($i == $count - 1) {
+										$printkeys .= '& '.$key;
+							    	} else {
+								    	$printkeys .= $key.', ';
+							    	}
+								}
+								
+							    
+						
+							    $i++;
+							}
+							
+							echo '<p>Appearances: <span class="text-bold">'.$printkeys.'</span></p>';
+						} 
+						?>
 				</div>
 			</div>
 			<?php } ?>
@@ -642,10 +670,22 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 			
 			<div class="panel widget">
 				<div class="widget-body text-center probowl">
-					<h5>Probowl Selections</h5>
+					<h5>Pro Bowl Selections</h5>
 					<?php 
+						//printr($probowlplayer, 0);
 						foreach ($probowlplayer as $key => $value){
-							echo '<span class="text-bold">'.$value['year'].'</span> - '.$teamids[$value['team']].'<br>';		
+							$starter = $value['starter'];
+							$prostarter = '';
+							if($starter == 0){
+								$prostarter = 'Starter';
+							}
+							if($starter == 1){
+								$prostarter = 'Backup';
+							}
+							if($starter == 2){
+								$prostarter = 'Alternate';
+							}
+							echo '<span class="text-bold">'.$value['year'].' '.$prostarter.'</span> - '.$teamids[$value['team']].'<br>';		
 						}
 					?>
 				</div>
@@ -901,7 +941,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 							<li><a data-toggle="tab" href="#demo-tabs-box-3">PFL Postseason</a></li>
 							<?php } ?>
 							
-							<li><a data-toggle="tab" href="#demo-tabs-box-4">NFL Game Stats</a></li>
+							<li><a data-toggle="tab" href="#demo-tabs-box-4">Player Supercard</a></li>
 						</ul>
 	
 					</div>
@@ -1375,6 +1415,12 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 						</div>
 						
 						<div id="demo-tabs-box-4" class="tab-pane fade">
+							<?php
+								supercard($playerid);
+							?>
+						</div>
+						
+						<!--<div id="demo-tabs-box-5" class="tab-pane fade">
 							<?php 
 								$nflboxscores = get_pfr_linescores_by_player($playerid);
 								if (isset($nflboxscores)){
@@ -1429,7 +1475,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 									</table>
 								</div>
 								<?php } ?>
-						</div>
+						</div>-->
 						
 					</div>
 				</div>
@@ -1466,7 +1512,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 								<button class="btn btn-warning" id="playerSelect">Select</button>
 							</div>
 							<div class="col-xs-24">
-								<?php echo '<br><p><a id="randombutton" href="https://pfl-data.local/player/?id='.$randomize.'"/>Random Player</a></p>'; ?>
+								<?php echo '<br><p><a id="randombutton" href="/player/?id='.$randomize.'"/>Random Player</a></p>'; ?>
 							</div>
 						</div>
 						<!--===================================================-->
@@ -1489,6 +1535,12 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 						    <?php 
 							    $count = 0;
 							    //printr($career_timeline, 0);
+							    foreach ($career_timeline as $key => $value){
+								    $tradechecker[$key] = $value['traded'][0]['when'];
+							    }
+							    
+							    //printr($tradechecker, 0);
+								
 								foreach ($career_timeline as $key => $value){
 								?>
 								<!-- post the years -->
@@ -1512,15 +1564,31 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 							    
 							    <?php } 
 								 
-								// free agents
-								if (empty($value['dnp'])){
-									if(empty($value['drafted'])){
-										if(empty($value['protected'])){
-											include('inc/player_timeline_free_agent.php');
-										}
-									}
-								}
+								
 								 
+								
+								
+								
+								// protected (order based on season or preseason trade)
+								
+								// player not traded
+								if($tradechecker[$key] == ''){			
+									include('inc/player_timeline_protected.php');					
+								}
+								
+								// traded player preseason	
+								if($tradechecker[$key] == 'Preseason'){								
+							    	include('inc/player_timeline_traded.php');
+							    	include('inc/player_timeline_protected.php');
+								}
+								
+								// traded player Draft	
+								if($tradechecker[$key] == 'Draft'){			
+									include('inc/player_timeline_protected.php');					
+							    	include('inc/player_timeline_traded.php');	
+								}
+								
+								
 								// rookie season    
 								if ($count == 0){
 								echo '<div class="timeline-entry">
@@ -1530,85 +1598,44 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 							    </div>';							    
 							    } 
 								 
+								 
+								 
 								// did not play    
 								if (!empty($value['dnp'])){
 									include('inc/player_timeline_dnp.php');
 								}   
 								
-								// career high 
-								if(!empty($value['careerhigh'])){
-									include('inc/player_timeline_max_points.php'); 
-								} 
-								
-								// protected (order based on season or preseason trade)
-								if ($value['traded']['when'] == ''){
-									include('inc/player_timeline_protected.php');
-								}
-								
-								// traded player									
-							    if (isset($value['traded'])){
-								
-								$counttrades = count($value['traded']);  
-								for ($i = 0; $i < $counttrades; $i++) {  
-									$tradedto = $teamids[$value['traded'][$i]['traded_to_team']];
-									$tradedfrom = $teamids[$value['traded'][$i]['traded_from_team']];
-									$when = $value['traded'][$i]['when'];
-									$alongwith_players = $value['traded'][$i]['received_players'];
-									$alongwith_picks = $value['traded'][$i]['received_picks'];
-									$sent_players = $value['traded'][$i]['sent_players'];
-									$sent_picks = $value['traded'][$i]['sent_picks'];
-									$notes = $value['traded'][$i]['notes'];
-									
-									$a_picks = implode( ", ", $alongwith_picks);
-									$s_picks = implode( ", ", $sent_picks);
-									
-									$alongwith_format = array();
-									foreach ($alongwith_players as $playerf){		
-										$trim = ltrim($playerf);
-										if($playerf != ''){
-											$alongwith_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
+								// free agents
+								if (empty($value['dnp'])){
+									if(empty($value['drafted'])){
+										if(empty($value['protected'])){
+											include('inc/player_timeline_free_agent.php');
 										}
 									}
-									
-									$sent_format = array();
-									foreach ($sent_players as $playern){
-										$trim = ltrim($playern);
-										if($playern != ''){
-											$sent_format[] = substr($players[$trim][0], 0, 1).'.'.$players[$trim][1];
-										}	
-									}
-									
-									//printr($sent_format, 0);
-								?>
-								
-								 <div class="timeline-entry">
-									 
-							        <div class="timeline-label no-label">
-							            <p class="protected-by"><span class="text-bold">
-								            Traded to <?php echo $tradedto; ?></span> during the <?php echo $when; ?></p>
-								        <p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_to_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $alongwith_format).' '.format_draft_pick($a_picks); ?></span> </p> 
-										<p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_from_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $sent_format).' '.format_draft_pick($s_picks);?>  </span>
-								        </p>
-								         <p class="protected-by"><?php echo $notes; ?> </p>
-							        </div>
-							    </div>
-							    
-							    <?php } // end trades for loop
-								} //  end trades if    
-							    
-							    if ($value['traded']['when'] == 'Preseason'){
-									include('inc/player_timeline_protected.php');
 								}
+								
+								// traded player mid-season	
+								if($tradechecker[$key] == 'Season'){			
+									include('inc/player_timeline_protected.php');					
+							    	include('inc/player_timeline_traded.php');	
+								}
+								
+								
+								
 								
 								//reset traded player values in the loop
 								$value['traded']['when'] = array();
 								
+								// career high 
+								if(!empty($value['careerhigh'])){
+									include('inc/player_timeline_max_points.php'); 
+								} 
 									
 								if(!empty($value['awards'])){ ?>
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
 							            <div class="timeline-icon bg-success">
-								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-leaders.jpg" />
+								            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-leaders.jpg" />
 							            </div>
 							            <div class="timeline-time"><?php $getaward['year']; ?></div>
 							        </div>
@@ -1628,7 +1655,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
 							            <div class="timeline-icon bg-success">
-								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-top-scorer.jpg" />
+								            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-top-scorer.jpg" />
 							            </div>
 							            <div class="timeline-time"><?php $getaward['year']; ?></div>
 							        </div>
@@ -1642,7 +1669,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
 							            <div class="timeline-icon bg-success">
-								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-top-pvq.jpg" />
+								            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-top-pvq.jpg" />
 							            </div>
 							            <div class="timeline-time"><?php $pvqplayer[$key]; ?></div>
 							        </div>
@@ -1657,7 +1684,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
 							            <div class="timeline-icon bg-success">
-								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
+								            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
 							            </div>
 							            <div class="timeline-time"><?php $getaward['year']; ?></div>
 							        </div>
@@ -1685,7 +1712,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
 							            <div class="timeline-icon bg-success">
-								            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-hall.jpg" />
+								            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-hall.jpg" />
 							            </div>
 							            <div class="timeline-time"><?php $getaward['year']; ?></div>
 							        </div>

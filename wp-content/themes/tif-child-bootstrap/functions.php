@@ -1270,7 +1270,7 @@ function get_team_postseason_by_game($team){
 
 function get_playoff_points_by_team_year($year, $team, $week){
 	global $wpdb;
-	$get = $wpdb->get_results("select points from wp_playoffs where week = '$week' && team = '$team' && year='$year'", ARRAY_N);
+	$get = $wpdb->get_results("select points from wp_playoffs where week = '$week' && team = '$team' && year='$year' && overtime <> 1", ARRAY_N);
 	
 	foreach ($get as $value){
 		$sumval[] = $value[0];
@@ -2267,6 +2267,32 @@ function get_drafts(){
 	
 	return $drafts;
 }
+
+function get_draft_number_ones() {
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_drafts where round = '01' && picknum = '01'", ARRAY_N);
+	
+	foreach ($get as $getdraft){
+		$draftones[$getdraft[0]] = array(
+			'key' => $getdraft[0], 
+			'season' => $getdraft[1],
+			'round' => $getdraft[2],	
+			'pick' => $getdraft[3],	
+			'overall' => $getdraft[4],
+			'playerfirst' => $getdraft[7],
+			'playerlast' => $getdraft[8],	
+			'position' => $getdraft[9],
+			'playerid' => $getdraft[10],	
+			'orteam' => $getdraft[5],	
+			'acteam' => $getdraft[6],	
+			'tradeid' => $getdraft[11],
+			'tradehappened' => $tradehappened
+		);
+	}
+	
+	return $draftones;
+}
+
 
 function get_drafts_by_year($season){
 	global $wpdb;
@@ -3492,9 +3518,13 @@ function supercard($pid){
 		}
 	}
 	
+	$halloffame = get_award_hall();
+	
 	$number_ones = get_number_ones();
 	
-		echo '<div class="col-sm-12 col-lg-8 eq-box-sm">';
+	$halloffame = get_award_hall();
+	
+		echo '<div class="col-xs-24 eq-box-sm">';
 			echo '<div class="panel panel-bordered panel-dark the-supercard">';
 				echo '<div class="panel-heading">';
 					echo '<h3 class="panel-title">Posse Football League</h3>';
@@ -3522,8 +3552,16 @@ function supercard($pid){
 						<td><span class="text-bold"><?php echo ordinal($career['careerposrank']); ?></span></td>
 					</tr>
 					<tr>
-						<td class="text-left">Seasons</td>
-						<td><span class="text-bold"><?php echo $career['years'][0].' - '.end($career['years']); ?></span></td>
+						<?php 
+							$st = $career['years'][0];
+							$end = end($career['years']);
+						if ($st != $end){	?>
+							<td class="text-left">Seasons</td>
+							<td><span class="text-bold"><?php echo $st.' - '.$end; ?></span></td>
+						<?php } else { ?>
+							<td class="text-left">Season</td>
+							<td><span class="text-bold"><?php echo $st; ?></span></td>
+						<?php } ?>
 					</tr>
 					<tr>
 						<td class="text-left">Points Per Game</td>
@@ -3625,7 +3663,7 @@ function supercard($pid){
 							?>	
 						</span></td>
 					</tr>
-					
+	
 					<?php 
 						
 						} ?>
@@ -3633,7 +3671,9 @@ function supercard($pid){
 					</tbody>
 					</table>
 					<?php
-	
+						if (in_array($pid, $halloffame)){ 
+							echo '<h5 class="text-left text-bold">&nbsp;Inducted into the PFL Hall of Fame</h5>';
+						}
 			echo '</div>';
 		echo '</div>';
 		

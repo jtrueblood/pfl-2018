@@ -111,77 +111,81 @@
 					$gamereview = get_field('game_review' ); // get all the rows
 					
 					for ($c = 1991; $c <= $season; $c++) {
+						if($champions[$c][0] > 0){ // check to see if PB happened yet that year.
+							
+							$theyear = $champions[$c][0];
+							$numeral = $champions[$c][1];
+							$teama = $champions[$c][2];
+							$scorea = $champions[$c][3];
+							$seeda = $champions[$c][4];
+							$teamb = $champions[$c][5];
+							$scoreb = $champions[$c][6];
+							$seedb = $champions[$c][7];
+							$location = $champions[$c][8];
+							
+							// get the first row
 						
-						$theyear = $champions[$c][0];
-						$numeral = $champions[$c][1];
-						$teama = $champions[$c][2];
-						$scorea = $champions[$c][3];
-						$seeda = $champions[$c][4];
-						$teamb = $champions[$c][5];
-						$scoreb = $champions[$c][6];
-						$seedb = $champions[$c][7];
-						$location = $champions[$c][8];
+							$modulus = 3;
 						
-						// get the first row
-					
-					$modulus = 3;
-					
-					if ($i % $modulus == 0){
-						echo '<div class="row">';
-					}	
-					echo '<div class="col-sm-12 col-lg-8 eq-box-sm">';
-						echo '<div class="panel panel-bordered panel-dark">';
-							echo '<div class="panel-heading">';
-							echo '<div class="panel-control">
-							<em><small class="text-muted">Location: </small>'.$location.'</em>
-								</div>';
-								echo '<h3 class="panel-title">'.$theyear.' <i class="fa fa-angle-double-right text-muted"></i> Posse Bowl '.$numeral.'</h3>';
+							if ($i % $modulus == 0){
+								echo '<div class="row">';
+							}	
+							echo '<div class="col-sm-12 col-lg-8 eq-box-sm">';
+								echo '<div class="panel panel-bordered panel-dark">';
+									echo '<div class="panel-heading">';
+									echo '<div class="panel-control">
+									<em><small class="text-muted">Location: </small>'.$location.'</em>
+										</div>';
+										echo '<h3 class="panel-title">'.$theyear.' <i class="fa fa-angle-double-right text-muted"></i> Posse Bowl '.$numeral.'</h3>';
+									echo '</div>';
+									echo '<div class="panel-body">';
+										echo $seeda.'  <span class="text-2x text-bold">'.$teamids[$teama].'</span>  <span class="text-2x text-bold pull-right">'.$scorea.'</span><br>';
+										echo $seedb.'  <span class="text-2x text-thin">'.$teamids[$teamb].'</span>  <span class="text-2x text-thin pull-right">'.$scoreb.'</span>';
+									
+									echo '<hr/><h5>Game Details</h5>';
+									echo '<p class="text-dark">';
+										echo $gamereview[$i]['writeup'];
+										echo '<hr/><h5>Boxscores</h5>';
+																				
+											echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$teama.'-bar.png);">';
+											echo '</div>'; 
+											echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$teamb.'-bar.png);">';
+											echo '</div>';
+											
+										
+											$scoresa = $arr[$theyear.$teama];								
+											$scoresb = $arr[$theyear.$teamb];
+											
+											echo '<div class="col-xs-12">';
+												foreach ($scoresa as $key => $value){
+													echo $players[$key][0].' '.$players[$key][1].' <span class="pull-right">'.$value.'</span><br>';
+												}
+											echo '</div>';
+											
+											echo '<div class="col-xs-12">';
+												foreach ($scoresb as $key => $value){
+													echo $players[$key][0].' '.$players[$key][1].' <span class="pull-right">'.$value.'</span><br>';
+												}
+											echo '</div>';
+											
+									echo '</div>';	
+									
+									$onlychamps[$c] = $champions[$c][2];
+									$freqs = array_count_values($onlychamps);
+									$freq_of = $freqs[$teama];
+									
+									echo '<div class="well well-sm">Game MVP: <span class="text-bold text-dark">'.$pbmvp[$i]['first'].' '.$pbmvp[$i]['last'].'</span>, '.$pbmvp[$i]['team'].'<br/>';
+									echo 'Number of <span class="text-bold text-dark">'.$teamids[$teama].'</span> Titles: <span class="text-bold text-dark">'.$freq_of.'</span>';
+									echo '</div>';
+				
+									$i++;
+									
+								echo '</div>';
 							echo '</div>';
-							echo '<div class="panel-body">';
-								echo $seeda.'  <span class="text-2x text-bold">'.$teamids[$teama].'</span>  <span class="text-2x text-bold pull-right">'.$scorea.'</span><br>';
-								echo $seedb.'  <span class="text-2x text-thin">'.$teamids[$teamb].'</span>  <span class="text-2x text-thin pull-right">'.$scoreb.'</span>';
-							
-							echo '<hr/><h5>Game Details</h5>';
-							echo '<p class="text-dark">';
-								echo $gamereview[$i]['writeup'];
-								echo '<hr/><h5>Boxscores</h5>';
-																		
-									echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$teama.'-bar.png);">';
-									echo '</div>'; 
-									echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$teamb.'-bar.png);">';
-									echo '</div>';
-									
-								
-									$scoresa = $arr[$theyear.$teama];								
-									$scoresb = $arr[$theyear.$teamb];
-									
-									echo '<div class="col-xs-12">';
-										foreach ($scoresa as $key => $value){
-											echo $players[$key][0].' '.$players[$key][1].' <span class="pull-right">'.$value.'</span><br>';
-										}
-									echo '</div>';
-									
-									echo '<div class="col-xs-12">';
-										foreach ($scoresb as $key => $value){
-											echo $players[$key][0].' '.$players[$key][1].' <span class="pull-right">'.$value.'</span><br>';
-										}
-									echo '</div>';
-									
-							echo '</div>';	
-							
-							$onlychamps[$c] = $champions[$c][2];
-							$freqs = array_count_values($onlychamps);
-							$freq_of = $freqs[$teama];
-							
-							echo '<div class="well well-sm">Game MVP: <span class="text-bold text-dark">'.$pbmvp[$i]['first'].' '.$pbmvp[$i]['last'].'</span>, '.$pbmvp[$i]['team'].'<br/>';
-							echo 'Number of <span class="text-bold text-dark">'.$teamids[$teama].'</span> Titles: <span class="text-bold text-dark">'.$freq_of.'</span>';
-							echo '</div>';
-		
-							$i++;
-							
-						echo '</div>';
-					echo '</div>';
-					if ($i % $modulus == 0){echo '</div>';} /* close 'row' every 3rd time through the loop */
+							if ($i % $modulus == 0){
+								echo '</div>';
+							} /* close 'row' every 3rd time through the loop */
+						}
 					} ?>
 					
 

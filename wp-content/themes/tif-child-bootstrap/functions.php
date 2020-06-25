@@ -89,6 +89,13 @@ function printrlabel($data, $label) {
 }
 
 
+/* Remove special characters from string */
+function clean($string) {
+   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+
+   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+}
+
 function check_if_image($image_src){
 	global $wpdb;
 	$query = $wpdb->query("SELECT ID FROM wp_posts WHERE post_title = '$image_src'" );
@@ -563,7 +570,9 @@ function leadersbyseason ($array, $year, $labelpos){
 								$teams = $getteam[$year];
 								
 								$pr = '';
-								$c = count($teams);
+								if($teams > 0){
+									$c = count($teams);
+								}
 								if ($c == 1){
 									$pr = $teams[0];	
 								} else {
@@ -1535,6 +1544,18 @@ function get_player_weeks_played($pid) {
 	
 }
 
+// gets the years a player played from the player table 
+function get_player_years_played($pid) {
+	global $wpdb;
+	$getplayer = $wpdb->get_results("select year from $pid", ARRAY_N);
+	
+	foreach ($getplayer as $key => $revisequery){
+		$player_the_years[] = $revisequery[0];
+	}
+	
+	return array_unique($player_the_years);
+	
+}
 
 // gets the weekly stats from the player table
 function get_raw_player_data_team($pid, $team) {
@@ -1576,7 +1597,10 @@ function get_player_basic_info($pid){
 			'height' => $revisequery[6],
 			'weight' => $revisequery[7],
 			'college' => $revisequery[8],
-			'number' => $revisequery[10]
+			'number' => $revisequery[10],
+			'pfruri' => $revisequery[11],
+			'pfrcurl' => $revisequery[12],
+			'nickname' => $revisequery[13]
 		);
 	}
 	
@@ -1942,6 +1966,62 @@ function team_record($team){
 	return $results;
 }
 
+//used for QB, WR, RB
+function pos_score_converter($year, $passyd, $passtd, $rushyd, $rushtd, $int, $recyd, $rectd){
+	if($int < 0){ $int = 0; }
+	if($passyd < 0){ $passyd = 0; }
+	if($rushyd < 0){ $rushyd = 0; }
+	if($recyd < 0){ $recyd = 0; }
+	
+	if($year == 1991):
+		$pass_get = floor($passyd / 50);
+		if($pass_get < 0){
+			$passdata = 0;
+		} else {
+			$passdata = $pass_get;
+		}
+		
+		$posscore = $passdata + (floor($rushyd / 25)) + (($passtd + $rushtd + $rectd) * 2) + floor($recyd / 25) - $int;
+		return $qbscore;
+	else:
+		$posscore = (floor($passyd / 30)) + (floor($rushyd / 10)) + (($passtd + $rushtd + $rectd) * 2) + floor($recyd / 10) - $int ;
+		return $posscore;
+	endif;	
+}
+
+/*
+function rb_wr_score_converter($year, $rushyd, $rushtd, $recyd, $rectd){
+	if($year == 1991):
+		$rwscore = floor($rushyd / 25)  + (($rushtd + $rectd) * 2) + floor($recyd / 25);
+		return $rwscore;
+	else:
+		$rwscore = floor($rushyd / 10)  + (($rushtd + $rectd) * 2) + floor($recyd / 10);
+		return $rwscore;
+	endif;
+}
+*/
+
+function pk_score_converter($year, $xpm, $fgm){
+	$pkscore = $xpm + ($fgm * 2);
+	return $pkscore;
+}
+
+// gets correctted score data for nfl tables including 2pt conversions, special teams tds, passed tds by non-qbs, and misc.
+function get_score_correct_by_player($pid){
+	global $wpdb;
+	$getcorrect = $wpdb->get_results("select * from wp_score_correct where playerid = '$pid'", ARRAY_N);
+	
+	foreach ($getcorrect as $revisequery){
+		$correct[$revisequery[1]] = array(
+			//'id' => $revisequery[0], 
+			//'weekid' => $revisequery[1], 
+			'score' => $revisequery[3], 
+			'type' => $revisequery[4]
+		);
+	}
+	
+	return $correct;
+}
 
 function countthepts($p){
 	foreach ($p as $k => $v){
@@ -2236,11 +2316,51 @@ function get_helmet_name_history(){
 			'team' => $revisequery[1], 
 			'year' => $revisequery[2], 
 			'name' => $revisequery[3],  
-			'helmet' => $revisequery[4]
+			'helmet' => $revisequery[4],
+			'color1' => $revisequery[5],
+			'color2' => $revisequery[6],
+			'color3' => $revisequery[7]
 		);
 	}
 	return $helm_hist;
 }
+
+function get_helmet_name_history_by_team($team, $year){
+	global $wpdb;
+	$get = $wpdb->get_results("select * from wp_helmet_history where team = '$team'", ARRAY_N);
+	
+	foreach ($get as $revisequery){
+		$helm_hist_m[$revisequery[2]] = array(
+			'team' => $revisequery[1], 
+			'year' => $revisequery[2],
+			'name' => $revisequery[3],  
+			'helmet' => $revisequery[4],
+			'color1' => $revisequery[5],
+			'color2' => $revisequery[6],
+			'color3' => $revisequery[7]
+		);
+	}
+	
+	$i = 1991;
+	$thisyear = date('Y');
+	
+	while ($i <= $thisyear){
+		if($helm_hist_m[$i]):
+			$build_helm_hist_m[$i] = $helm_hist_m[$i];
+			$store = $helm_hist_m[$i];
+		else:
+			$build_helm_hist_m[$i] = $store;	
+		endif;
+		$i++;
+	}
+	
+	if($build_helm_hist_m[$year]):
+		return $build_helm_hist_m[$year];
+	else:
+		echo 'Not Found';
+	endif;
+}
+
 
 // get drafts
 function get_drafts(){
@@ -2341,6 +2461,15 @@ function get_drafts_player($pid){
 	}
 	
 	return $drafts;
+}
+
+
+function get_drafts_player_first_instance($pid){
+	
+	$draftfirst = get_drafts_player($pid);	
+	if($draftfirst > 0):
+		return reset($draftfirst);
+	endif;
 }
 
 // get probowl by player 
@@ -3478,7 +3607,6 @@ function supercard($pid){
 	}
 	
 	$career = get_player_career_stats($pid);
-	
 	$pbapps = array();
 	$playerchamps = array();
 	$printawards = array();
@@ -3532,6 +3660,9 @@ function supercard($pid){
 				
 				echo '<div class="panel-body">';
 					echo '<span class="text-2x text-bold"><a href="/player?id='.$pid.'">'.$firstname.' '.$lastname.'</a></span>&nbsp;'.$position;
+					if($info[0]['height'] != ''):
+						echo '<p>'.$info[0]['height'].', '.$info[0]['weight'].' lbs. | '.$info[0]['college'].' | <span class="text-bold">#'.$info[0]['number'].'</span></p>';
+					endif;
 				//echo '<a href="/player/?id='.$val['pid'].'"><img src="'.$playerimg.'" class="img-responsive"/></a>';
 				echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
 				?>
@@ -3541,20 +3672,22 @@ function supercard($pid){
 					<tbody>
 					<tr>
 						<td class="text-left">Points Scored</td>
-						<td><span class="text-bold"><?php echo number_format($career['points'],0); ?></span></td>
+						<td><span class="text-bold"><?php if ($career['points'] > 0){ echo number_format($career['points'],0); } else {echo 0; } ?></span></td>
 					</tr>
 					<tr>
 						<td class="text-left">Games Played</td>
-						<td><span class="text-bold"><?php echo $career['games']; ?></span></td>
+						<td><span class="text-bold"><?php if ($career['games'] > 0){ echo $career['games']; } else { echo 0; } ?></span></td>
 					</tr>
 					<tr>
 						<td class="text-left">Position Rank</td>
-						<td><span class="text-bold"><?php echo ordinal($career['careerposrank']); ?></span></td>
+						<td><span class="text-bold"><?php if ($career['careerposrank'] != ''){ echo ordinal($career['careerposrank']);} else { echo '--';} ?></span></td>
 					</tr>
 					<tr>
 						<?php 
 							$st = $career['years'][0];
+						if($career['games'] > 0){	
 							$end = end($career['years']);
+						}
 						if ($st != $end){	?>
 							<td class="text-left">Seasons</td>
 							<td><span class="text-bold"><?php echo $st.' - '.$end; ?></span></td>
@@ -3675,10 +3808,54 @@ function supercard($pid){
 							echo '<h5 class="text-left text-bold">&nbsp;Inducted into the PFL Hall of Fame</h5>';
 						}
 			echo '</div>';
+			
+			//TEMPORARY TO BUILD OLD PLAYER INFO DATA
+			if($info[0]['weight'] == ''):
+				if($position == 'PK'):
+					echo '<a href="http://localhost:10060/?id='.$pid.'" target="_blank">INDEX LINK</a>';
+				endif;
+			endif;
+			
 		echo '</div>';
 		
 		echo '</div>';
 		echo '</div>';
+
+}
+
+// gets all game scores by players for an individual season, sorted by best.
+function get_season_game_highs($yearval){
+	$playerslist = get_season_leaders($yearval);
+	foreach ($playerslist as $player){
+		$lists[$player['playerid']] = get_player_season_stats($player['playerid'], $yearval);
+	}
+	foreach ($lists as $key => $value){
+		$output[$key] = array(
+			$value['week1']['team'].'01' => $value['week1']['points'], 
+			$value['week2']['team'].'02' => $value['week2']['points'], 
+			$value['week3']['team'].'03' => $value['week3']['points'],
+			$value['week4']['team'].'04' => $value['week4']['points'],
+			$value['week5']['team'].'05' => $value['week5']['points'],
+			$value['week6']['team'].'06' => $value['week6']['points'],
+			$value['week7']['team'].'07' => $value['week7']['points'],
+			$value['week8']['team'].'08' => $value['week8']['points'],
+			$value['week9']['team'].'09' => $value['week9']['points'],
+			$value['week10']['team'].'10' => $value['week10']['points'],
+			$value['week11']['team'].'11' => $value['week11']['points'],
+			$value['week12']['team'].'12' => $value['week12']['points'],
+			$value['week13']['team'].'13' => $value['week13']['points'],
+			$value['week14']['team'].'14' => $value['week14']['points']
+		); 
+	}
+	foreach ($output as $kr => $vu){
+		foreach ($vu as $k => $v){
+			if($v > 0){
+				$thruput[$kr.$k] = $v;
+			}
+		}
+	}
+	arsort($thruput);
+	return $thruput;
 }
 
 

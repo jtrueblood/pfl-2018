@@ -32,7 +32,6 @@ module.exports = function(grunt) {
 		    },
 		    scripts: {
 		        files: ['css/*.css'],
-		        tasks: ['concat', 'uglify'],
 		        options: {
 		            spawn: false,
 		        },

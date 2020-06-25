@@ -136,13 +136,10 @@ $champions = get_champions();
 $justchamps = get_just_champions();
 $table = get_table('playoffs');
 
-// sets an enhanced value for players with more complex careers.  It displays tables, timelines, etc
 
-if ($careerdata['seasons'] > 0){
-		$enhanced = 1;
-	} else {
-		$enhanced = 0;
-}
+// sets an enhanced value for players with more complex careers.  It displays tables, timelines, etc
+$enhanced = 1;
+
 
 // get Posse Bowl Apperances
 if(!empty($playoffsplayer)){
@@ -181,12 +178,17 @@ $psloss = $playoffgames - $pswins;
 
 $awards = get_player_award($playerid);
 $wonaward = 0;
-$countawards = count($awards);
+if ($awards > 0){
+	$countawards = count($awards);
+}
 if ($countawards > 0){
 	$wonaward = 1;
 }
 $ringofhonor = get_ring_of_honor();
 //printr($ringofhonor, 0);
+
+$draftedplayerfirst = get_drafts_player_first_instance($playerid);
+$firstseasondrafted = $draftedplayerfirst['season'];
 
 function in_array_r($needle, $haystack, $strict = false) {
 	if (!empty($haystack)){
@@ -301,6 +303,14 @@ if (($year - end($playseasons)) > 4){
 
 // get first and last player years in an array
 $first = $basicinfo[0]['rookie'];
+// checks if player was drafted before the season where they first appeared.  If so, set that to be the first season in thier years played array
+
+if ($firstseasondrafted < $first){
+	if($firstseasondrafted > 0){
+		$first = $firstseasondrafted;
+	}
+} 
+
 //printr($basicinfo, 1);
 
 if(count($playseasons) > 0){
@@ -398,6 +408,34 @@ $potw = get_player_of_week_player($playerid);
 
 $curlsuccess = get_check_for_pfr_success($playerid);
 
+
+$prefix = '';
+								
+$teamall = get_player_record($playerid);
+//printr($teamall, 0);
+if(isset($teamall)){
+	$teams = array_unique($teamall);
+	foreach ($teams as $printteams) { 
+		$teamList .= $prefix . '' . $teamids[$printteams];
+		$prefix = ', ';
+	} 
+}
+
+if($teamall):
+	foreach ($teamall as $key => $value){
+		if($check != $value):
+			$check = $value;
+			$teamall_no_change[$key] = $check; 
+		else:
+			$teamall_no_change[$key] = '';
+		endif;		
+	}
+endif;	
+
+//$teamcolors = get_helmet_name_history_by_team('ATK', 1992);
+
+//printr($teamcolors, 1);
+
 //printr($career_timeline, 0);
 
 //$simpleteam = get_team_results_expanded('ETS');
@@ -441,7 +479,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 				</div>
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">
-					<h3 class="" style="margin-bottom: 0;"><?php echo $firstname.' '.$lastname; ?></h3>
+					<h3 class="playername"><?php echo $firstname.' '.$lastname; ?></h3>
 					
 					<?php
 					if(!empty($nickname)){
@@ -453,11 +491,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 					if(in_array($playerid, $ringofhonor)){
 						echo '<h5><span class="text-thin">'.$teamids[$honorteam].'</span> Ring of Honor</h5>';
 					}
-					if(!empty($playernumber)){
-				    	echo '<div class="uniform">'.$playernumber.'</div> ';
-				    } else {
-					    echo '<p>&nbsp;</p>';
-				    }
+					
 				    
 				    //printr($curlsuccess, 0);
 				    
@@ -479,24 +513,15 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 							?>
 						</span><br/>
 						<?php if(!empty($college)){ ?>
-							<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br/>
-							<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span><br/>
-							<span class="text-muted">Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br/>
+							<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br>
+							<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span>
+							<span class="text-muted"> - Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br>
+							<span class="text-muted">First Drafted: </span><span class="text-bold"><?php echo $draftedplayerfirst['season']; ?>: Round <?php echo $draftedplayerfirst['round']; ?>-<?php echo $draftedplayerfirst['pick']; ?></span> by <span class="text-bold"><?php echo $draftedplayerfirst['acteam']; ?></span><br/>
+							
 						<?php } ?>
 						
 						<h4 class="mar-no text-sm">
 							<?php 
-								$prefix = '';
-								
-								$teamall = get_player_record($playerid);
-								//printr($teamall, 0);
-								if(isset($teamall)){
-									$teams = array_unique($teamall);
-									foreach ($teams as $printteams) { 
-										$teamList .= $prefix . '' . $teamids[$printteams];
-										$prefix = ', ';
-									} 
-								}
 								
 								//printr($teamall, 0);
 								
@@ -566,8 +591,6 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 								    	$printkeys .= $key.', ';
 							    	}
 								}
-								
-							    
 						
 							    $i++;
 							}
@@ -594,7 +617,41 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 				</div>
 			</div>
 			<?php } ?>
-		
+			
+			
+			<div class="panel">
+				<!--Panel heading-->
+				<div class="panel-heading">
+					<div class="panel-control">
+						<button class="btn btn-default" data-target="#demo-panel-collapse" data-toggle="collapse" aria-expanded="true"><i class="fa fa-chevron-down"></i></button>
+						<!-- <button class="btn btn-default" data-dismiss="panel"><i class="fa fa-times"></i></button> -->
+					</div>
+					<h3 class="panel-title">Team Numbers</h3>
+				</div>
+	
+				<!--Panel body-->
+				<div id="demo-panel-collapse" class="collapse out" aria-expanded="false">
+					<div class="panel-body">
+				<?php
+				if($teamall_no_change):
+					echo '<div class="uniwrapper">';
+						$team_switches = array_filter($teamall_no_change);
+						//printr($team_switches, 0);
+						//$teamcolors = get_helmet_name_history_by_team('ATK', 1992);
+						foreach($team_switches as $key => $value){
+							$uniyear = substr($key, 0, 4);
+							$teamcolors = get_helmet_name_history_by_team($value, $uniyear);
+				    		echo '<a class="btn-link text-semibold add-tooltip" data-toggle="tooltip" data-placement="bottom" href="#" data-original-title="'.$value.'" aria-describedby="tooltip906942"><div class="uniform" style="background-color: #'.$teamcolors['color1'].'; border: 4px solid #'.$teamcolors['color2'].'; color: #'.$teamcolors['color3'].';">'.$playernumber.'</div></a> ';
+				    	}
+				    echo '</div>';
+			    else:
+				    echo '<p>&nbsp;</p>';
+			    endif;
+				?>
+					</div>
+				</div>
+			</div>
+			
 			
 			<!-- only if player was league leading scorer -->
 			
@@ -941,7 +998,10 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 							<li><a data-toggle="tab" href="#demo-tabs-box-3">PFL Postseason</a></li>
 							<?php } ?>
 							
-							<li><a data-toggle="tab" href="#demo-tabs-box-4">Player Supercard</a></li>
+							<li><a data-toggle="tab" href="#demo-tabs-box-4">NFL Boxscores</a></li>
+							
+							<li><a data-toggle="tab" href="#demo-tabs-box-5">Player Supercard</a></li>
+							
 						</ul>
 	
 					</div>
@@ -1252,6 +1312,7 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 															$plocation = $printplayer['location'];
 															$checkot = $playerot[$weekids];
 														
+															$storepoints[$weekids] = $ppoints; // used to compare PFL points to NFL points
 															
 															if ($pyear != $checkyear){
 																$gametable .= '<td class="text-center text-bold switch-year">'.$pyear.'</td>';
@@ -1414,69 +1475,183 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 
 						</div>
 						
-						<div id="demo-tabs-box-4" class="tab-pane fade">
+						
+						<div id="demo-tabs-box-4" class="tab-pane fade" style="overflow: scroll;">
+						<?php
+							// Pro Football Reference Boxscores
+							$pfr_gamelog_file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/pfr-gamelogs/'.$playerid.'.json';
+							if (file_exists($pfr_gamelog_file)):
+							    $getfile = file_get_contents($pfr_gamelog_file);
+							    $decode_json = json_decode($getfile);
+							   
+								$weeks = $decode_json->week_num; 
+								
+								
+								if($weeks):
+									foreach ($weeks as $theyear => $theweek){
+										$listyears[] = $theyear;
+										$newyears[$theyear] = explode(",", $theweek);
+									}
+								endif;
+								
+								if($decode_json):
+									foreach ($decode_json as $key => $value){
+										if($value):
+											foreach ($value as $k => $v){
+												$exploded[$k][$key] = array_filter(explode(",", $v));
+											}
+										endif;
+									}
+								endif;
+								
+								if($listyears):						
+									foreach($listyears as $y){
+										$i = 0;
+										$yearget = $exploded[$y]['week_num'];							
+										$count = count($yearget);
+										//$y = 1991; 
+										while($i < $count){
+											$getw = $exploded[$y]['week_num'][$i];
+											$w = str_pad($getw, 2, '0', STR_PAD_LEFT);
+											$location = $exploded[$y]['game_location'][$i];
+											if($location != '@'){
+												$location = 'vs';
+											}
+											
+											$xpm = $exploded[$y]['xpm'][$i];
+											$xpa = $exploded[$y]['xpa'][$i];
+											$fgm = $exploded[$y]['fgm'][$i];
+											$fga = $exploded[$y]['fga'][$i];
+											
+											if($xpm == ''){ $xpm = 0; }
+											if($xpa == ''){ $xpa = 0; }
+											if($fgm == ''){ $fgm = 0; }
+											if($fga == ''){ $fga = 0; }
+											
+											$get_score_correct = get_score_correct_by_player($playerid);
+											$score_correct = $get_score_correct[$y.$w]['score'];
+											
+											$playerdata[$y.$w] = array(
+												'year' => $y,
+												'week_num' => $w,
+												'game_date' => $exploded[$y]['game_date'][$i],
+												'team' => $exploded[$y]['team'][$i],
+												'game_location' => $location,
+												'opp' => $exploded[$y]['opp'][$i],
+		 										'pass_yds' => $exploded[$y]['pass_yds'][$i],
+												'pass_td' => $exploded[$y]['pass_td'][$i],
+												'pass_int' => $exploded[$y]['pass_int'][$i],
+												'rush_yds' => $exploded[$y]['rush_yds'][$i],
+												'rush_td' => $exploded[$y]['rush_td'][$i],
+												'rec_yds' => $exploded[$y]['rec_yds'][$i],
+												'rec_td' => $exploded[$y]['rec_td'][$i],
+												'score_correct' => $score_correct,
+												'xpm' => $xpm,
+												'xpa' => $xpa,
+												'fgm' => $fgm,
+												'fga' => $fga
+											);
+											$i++;
+										}
+									}
+								endif;
+									
+							    //printr($playerdata, 0);
+							   
+							    ?>
+							    <div class="table-responsive">
+									<table class="table table-striped">
+										<thead>
+												<tr>
+													<th class="text-center">Year</th>
+													<th class="text-center">Week</th>
+													<th class="text-center">Game</th>
+													<?php if ($playerposition != 'PK'){ ?>
+													<th class="text-center">Pass Yds</th>
+													<th class="text-center">Pass TD</th>
+													<th class="text-center">Pass Int</th>
+													<th class="text-center">Rush Yds</th>
+													<th class="text-center">Rush TD</th>
+													<th class="text-center">Rec Yds</th>
+													<th class="text-center">Rec TD</th>
+													<th class="text-center">Extras</th>
+													<?php } else { ?>
+													<th class="text-center">XP</th>
+													<th class="text-center">FG</th>
+													<th class="text-center"></th>
+													<?php } ?>
+													<th class="text-center">NFL</th>
+													<th class="text-center">PFL</th>
+													<th class="text-center"></th>
+												</tr>
+											</thead>
+										<tbody>
+											<?php
+											
+											if($playerdata ):	
+												foreach ($playerdata as $key => $data){
+													if(in_array($key, $weeksplayed)):
+														
+														if($playerposition != 'PK'){
+															$nflscore = pos_score_converter($data['year'], $data['pass_yds'], $data['pass_td'], $data['rush_yds'], $data['rush_td'], $data['pass_int'], $data['rec_yds'], $data['rec_td']);
+														} else {
+															$nflscore = pk_score_converter($data['year'], $data['xpm'], $data['fgm']);
+														}
+														
+														$final_nfl_score = $nflscore + $data['score_correct'];
+														
+														if($storepoints[$key] == $final_nfl_score){
+															$check = '-';
+														} else {
+															$check = 'X';
+														}
+														
+													
+														echo '<tr>';
+														echo '<td class="text-center">'.$data['year'].'</td>';
+														echo '<td class="text-center">'.$data['week_num'].'</td>';
+														echo '<td class="text-center">'.$data['team'].' '.$data['game_location'].' '.$data['opp'].'</td>';
+														if ($playerposition != 'PK'){ 
+															echo '<td class="text-center">'.$data['pass_yds'].'</td>';
+															echo '<td class="text-center">'.$data['pass_td'].'</td>';
+															echo'<td class="text-center">'.$data['pass_int'].'</td>';
+															echo '<td class="text-center">'.$data['rush_yds'].'</td>';
+															echo '<td class="text-center">'.$data['rush_td'].'</td>';
+															echo '<td class="text-center">'.$data['rec_yds'].'</td>';
+															echo '<td class="text-center">'.$data['rec_td'].'</td>';
+														} else {		
+															echo '<td class="text-center">'.$data['xpm'].' / '.$data['xpa'].'</td>';
+															echo '<td class="text-center">'.$data['fgm'].' / '.$data['fga'].'</td>';	
+														}
+														echo '<td class="text-center">'.$data['score_correct'].'</td>';
+														echo '<td class="text-center" style="border-left:2px solid grey;">'.$final_nfl_score.'</td>';
+														echo '<td class="text-center">'.$storepoints[$key].'</td>';
+														echo '<td class="text-center">'.$check.'</td>';
+														echo '</tr>';
+													endif;
+												}
+											else:
+												echo 'No NFL Player Data';
+											endif;	
+											?>
+										</tbody>
+									</table>
+									
+								 </div>
+							    <?php
+							else:
+								echo 'Boxscore Data Not Found';
+							endif;
+						?>
+							   
+						</div>
+						
+						
+						<div id="demo-tabs-box-5" class="tab-pane fade">
 							<?php
 								supercard($playerid);
 							?>
 						</div>
-						
-						<!--<div id="demo-tabs-box-5" class="tab-pane fade">
-							<?php 
-								$nflboxscores = get_pfr_linescores_by_player($playerid);
-								if (isset($nflboxscores)){
-									$c = count($nflboxscores);
-									echo '<h3>'.$c.' Games Counted</h3>';
-	// 								printr($nflboxscores, 0);	
-								?>
-								<div class="table-responsive">
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th class="text-center min-width">Year</th>
-												<th class="text-center min-width">Week</th>
-												<th class="text-center min-width">Pass</th>
-												<th class="text-center min-width">PaTDs</th>
-												<th class="text-center min-width">Ints</th>
-												<th class="text-center min-width">Rush</th>
-												<th class="text-center min-width">RuTDs</th>
-												<th class="text-center min-width">Rec</th>
-												<th class="text-center min-width">ReTDs</th>
-												<th class="text-center min-width">2PT</th>
-												<th class="text-center min-width">FGs</th>
-												<th class="text-center min-width">EPs</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php 
-												foreach ($nflboxscores as $nfl){
-													$yr = substr($nfl['pflgameid'], 0, 4);
-													$wk = substr($nfl['pflgameid'], -2); 
-													
-													$tbl .='<tr>';
-													$tbl .='<td class="text-center min-width">'.$yr.'</td>';
-													$tbl .='<td class="text-center min-width">'.$wk.'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['passyards'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['passtds'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['passints'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['rushyards'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['rushtds'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['recyards'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['rectds'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['twopointcon'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['fieldgoals'].'</td>';
-													$tbl .='<td class="text-center min-width">'.$nfl['extrapoints'].'</td>';
-													$tbl .='</tr>';
-												}
-												
-												echo $tbl;
-												
-											?>
-										</tbody>
-									</table>
-								</div>
-								<?php } ?>
-						</div>-->
-						
 					</div>
 				</div>
 			</div>	
@@ -1564,10 +1739,6 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 							    
 							    <?php } 
 								 
-								
-								 
-								
-								
 								
 								// protected (order based on season or preseason trade)
 								
@@ -1736,7 +1907,11 @@ $curlsuccess = get_check_for_pfr_success($playerid);
 					
 		</div>
 		
+		
 			</div>
+			
+			
+	
 			
 		</div>
 		

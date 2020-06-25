@@ -109,7 +109,7 @@ foreach ($allleaders as $key => $value){
 											echo '<th class="text-center min-width">'.number_format($winper, 3).'</th>';
 											echo '<th class="text-center min-width">'.$p['high'].'</th>';
 											echo '<th class="text-center min-width">'.$p['highseasonpts'].'</th>';
-											echo '<th class="text-center min-width">'.count($p['possebowlwins']).'</th>';
+											if($p['possebowlwins'] != 0): echo '<th class="text-center min-width">'.count($p['possebowlwins']).'</th>'; endif;
 											echo '</tr>';
 										
 											if($checkhall != 1){

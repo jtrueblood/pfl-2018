@@ -103,7 +103,7 @@ foreach($team_timeline as $key => $val){
 					 echo '<div class="timeline-entry">
 				        <div class="timeline-stat">
 				            <div class="timeline-icon bg-success">
-					            <img class="" src="https:/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
+					            <img class="" src="/wp-content/themes/tif-child-bootstrap/img/award-trophy.jpg" />
 				            </div>
 				        </div>
 				        <div class="timeline-label">'

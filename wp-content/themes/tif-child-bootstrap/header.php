@@ -93,9 +93,6 @@
 						<a href="/teams/?id=ETS">Teams</a>
 						<a href="/teams//player/?id=1998MannQB">Players</a>
 						
-		
-						
-						
 					</div>
 					
 					<ul class="nav navbar-top-links pull-right">

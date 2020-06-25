@@ -30,7 +30,7 @@ $teamlist = teamlist();
 		<div id="content-container">
 			
 			<!-- LEFT COL -->
-			<div class="col-xs-24 col-sm-4">
+			<div class="col-xs-24 col-sm-6">
 									
 				<div class="panel widget">
 					<div class="left-widget widget-body">
@@ -46,8 +46,21 @@ $teamlist = teamlist();
 			</div>		
 					
 			<!-- MIDDLE COL -->
+			<div class="col-xs-24 col-md-9">
+
+				<?php 
+					selectseason();
+					include_once('inc/season_standings.php');
+					//include_once('inc/season_draft.php');
+				?>
+				
+			</div>
 			
-			<div class="col-xs-24 col-sm-10">
+			
+			
+			
+			<!-- RIGHT COL -->
+			<div class="col-xs-24 col-sm-9">
 					
 				<?php 
 				include_once('inc/season_awards.php');
@@ -55,20 +68,8 @@ $teamlist = teamlist();
 				?>
 					
 			</div>
-			
-			
-			
-			<!-- RIGHT COL -->
 				
-			<div class="col-xs-24 col-md-10">
-
-				<?php 
-					selectseason();
-					include_once('inc/season_standings.php');
-					include_once('inc/season_draft.php');
-				?>
-				
-			</div>
+			
 
 	</div><!--END CONTENT CONTAINER-->
 

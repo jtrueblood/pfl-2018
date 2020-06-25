@@ -581,19 +581,51 @@ printr($ispro, 0);
 									
 								</div>
 								<div class="panel-body">
+									<?php $gethighgames = get_season_game_highs($yearid); 
+										
+										
+									?>
+									
 									<div class="table-responsive">
 										<table class="table table-striped">
 											<thead>
 												<tr>
-													<th></th>
 													<th>Player</th>
 													<th>Pos</th>
+													<th>Week</th>
 													<th>Pts</th>
 													<th>Team</th>
 												</tr>
 											</thead>
 											<tbody>
-												
+												<?php 
+													$ranke = 1;
+													
+													foreach ($gethighgames as $key => $value){
+														$pid = substr($key, 0, -5);
+														$week = substr($key, -2);	
+														$name = get_player_name($pid);
+														$pos = substr($pid, -2); 
+														$team = substr($key, 10, -2);
+													
+														echo '<tr>';
+														echo '<td>'.$name['first'].' '.$name['last'].'</td>';
+														echo '<td>'.$pos.'</td>';
+														echo '<td>'.$week.'</td>';
+														echo '<td>'.$value.'</td>';
+														echo '<td>'.$team.'</td>';
+														echo '</tr>';
+														
+														if($ranke == 10){
+															break;
+														}
+														
+														$ranke++;
+														
+													}
+													
+													//printr($gethighgames, 0);
+												?>
 												
 											</tbody>
 										</table>
@@ -621,17 +653,8 @@ printr($ispro, 0);
 							
 							
 					</div>
-					
-					
-					<!-- Leaders By All -->
-					<div class="col-xs-24 col-sm-24 eq-box-sm">
-							
-					</div>
-	
-									
 
-<?php session_destroy(); ?>
-		
+											
 </div>
 
 </div>

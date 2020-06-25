@@ -147,6 +147,24 @@ jQuery(document).ready(function($) {
 	  //alert(url);
 	});	
 	
+	$("#playerSelectScrape").click(function() {
+	  //alert("Handler for .click() called.");
+	  var dropselect8 = $("#playerDropScrape").val(); 
+	  var headurl = ('/scrape-pro-football-ref/'+dropselect8);
+	  window.location = headurl;	
+	  //alert(url);
+	});	
+	
+	
+	$("#playerSelectUnis").click(function() {
+	  //alert("Handler for .click() called.");
+	  var dropselect10 = $("#playerSelectUnisDrop").val(); 
+	  var headurl = ('/uniforms-helmets/'+dropselect10);
+	  window.location = headurl;	
+	  //alert(url);
+	});	
+	
+	
 	$("#teamSelect").click(function() {
 	  //alert("Handler for .click() called.");
 	  var dropselect7 = $("#teamDrop").val(); 
@@ -173,6 +191,7 @@ jQuery(document).ready(function($) {
 	    $(this).hide();
 	    //or $(this).css({visibility:"hidden"}); 
 	});
+	
 		   
 	        
 }); /* CLOSE DOCUMENT */

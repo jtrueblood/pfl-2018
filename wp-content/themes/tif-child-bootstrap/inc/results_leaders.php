@@ -10,7 +10,9 @@
 	foreach ($yearleaderids as $k=>$subArray) {
 	  if ($k <= $weekvar){	
 		  foreach ($subArray as $id=>$value) {
-		    $sumLeaderYear[$id]+=$value;
+			if($value > 0):  
+		    	$sumLeaderYear[$id]+=$value;
+		    endif;
 		  }
 	  }
 	}

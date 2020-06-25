@@ -128,13 +128,13 @@ function createnewplayer($array){
 	return $insertarr;
 }
 
-
 ?>
 
 <div class="boxed">
 			
 			<!--CONTENT CONTAINER-->
 			<div id="content-container">
+
 				
 				<div id="page-title">
 					<?php while (have_posts()) : the_post(); ?>
@@ -148,7 +148,7 @@ function createnewplayer($array){
 				<!-- THE ROW -->
 				<div class="row">
 					
-					<div class="col-xs-12 col-sm-7 eq-box-sm">	
+					<div class="col-xs-12 col-sm-6 eq-box-sm">	
 						
 						<div class="panel panel-bordered panel-light">
 							<div class="panel-heading">
@@ -173,6 +173,7 @@ function createnewplayer($array){
 								<button class="btn btn-warning" id="playerSelect">Select</button>
 							</div>
 						</div>
+						
 						
 						
 						<div class="panel panel-bordered panel-light">
@@ -247,10 +248,12 @@ function createnewplayer($array){
 												//var_dump($covheight);
 												//printr($explode, 0);
 	
+/*
 												if(isset($insertplayer)){
 													createnewplayer($insertplayer);
 													printr($insertplayer, 0);
-												}												
+												}
+*/												
 
 										     } ?>
 										     
@@ -271,7 +274,7 @@ function createnewplayer($array){
 								<h3 class="panel-title">Quick Links</h3>
 							</div>
 								<div class="panel-body">
-									<div class="col-xs-24 col-sm-12">	
+									<div class="col-xs-24">	
 										<a href="#" target="_blank">MFL Website 2020 - Coming Soon</a><br>
 										<a href="https://www.pro-football-reference.com/" target="_blank">Pro Football Reference</a><br>
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
@@ -291,6 +294,7 @@ function createnewplayer($array){
 							</div>
 						</div>
 					</div>
+					
 					
 					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
@@ -342,9 +346,19 @@ function createnewplayer($array){
 							</div>
 						</div>
 					</div>
+					
+					<div class="col-xs-12 col-sm-6 eq-box-sm">
+						<div class="panel panel-bordered panel-light">
+							<div class="panel-body">
+								<?php while (have_posts()) : the_post(); ?>
+								<p><?php the_content();?></p>
+								<?php endwhile; wp_reset_query(); ?>
+							</div>
+						</div>
+					</div>
 							
 					<!-- PLAYER SPOTLIGHT -->
-					<div class="col-xs-24 col-sm-7 left-column">
+					<div class="col-xs-24 col-sm-6 left-column">
 						<div class="panel widget">
 							<div class="widget-body text-center">
 								<?php 
@@ -384,15 +398,92 @@ function createnewplayer($array){
 										
 									} else {
 										echo 'MFL ID Not Found';
+										
+										// FOR POSITION PLAYERS (QB, RB, WR)
+										//$pfr_id = $featuredplayer[10];
+										//$firstInit =  $pfr_id[0];
+										//$firstInitCap = strtoupper($firstInit);
+										
+										// FOR KICKERS (PK)
+										//$pfr_id = 'reveifua01';
+
+										$firstInitCap = strtoupper($last[0]);
+										//$firstshort = substr($first, 0, 3);
+										//$lastshort = substr($last, 0, 5);
+										//$pfr_id = strtolower($lastshort.$firstshort).'01';
+										$pfr_id = $featuredplayer[10];		
+										
+										if($pfr_id):	
+											include_once('simplehtmldom/simple_html_dom.php');
+											
+											    $html = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'.htm');
+											
+												if($html):
+												    $pfr_name = $html->find('h1', 0);
+												    $pfr_height = $html->find('#meta div p[3] span[1]', 0);
+													$pfr_weight = $html->find('#meta div p[3] span[2]', 0);
+													
+													$pfr_number = $html->find('.uni_holder', 0);
+													$e = explode(" ", $pfr_number);
+													$p = explode("=", $e[4]);
+													$q = end($p);
+													$number = rtrim($q, '"');
+													
+													$pfr_college = $html->find('#meta div p[5]', 0);
+													$c = strip_tags($pfr_college);
+													$d = str_replace("College:", "", $c );
+													$e = explode(",", $d);
+													$college = str_replace("(College Stats)", "", $e);
+													
+													$info = array(
+														'name' => strip_tags($pfr_name), 
+														'height' => strip_tags($pfr_height),
+														'weight' => strip_tags($pfr_weight),
+														'college' => trim($college[0]),
+														'number' => $number,
+													);
+													
+													printr($d, 0);
+													
+													$wpdb->query(
+													"UPDATE wp_players
+													SET weight = '$info[weight]', height = '$info[height]', college = '$info[college]', number = '$info[number]', pfruri = '$pfr_id'
+													WHERE p_id = '$randomplayer'"
+													);
+													
+													else:
+													
+													echo "PRO FOOTBALL REF PAGE NOT FOUND<br>";
+													
+												endif;
+											
+											else:
+											
+											echo "PRO FOOTBALL REF ID NOT FOUND";
+											
+											endif;
+										?>
+	
+										<div class="panel-heading">
+											<h3 class="panel-title">Player Info Scraped from Pro Football Reference</h3>
+											
+										</div>
+										<div class="panel-body">
+										<p>Pro Football Ref ID: <?php echo $firstInit.'/'.$pfr_id; ?></p>
+										<?php printr($info,0); ?>
+										</div>
+					
+										<?php
+										
 									}
 									
 									
 								?>
 							</div>
 						</div>
+				
 					
-					</div>			
-					
+					</div>
 					
 				</div>
 				<!-- THE ROW -->
@@ -447,7 +538,38 @@ function createnewplayer($array){
 									?>
 								</div>
 							</div>
+							
+							
+							<div class="panel panel-bordered panel-light">
+								<div class="panel-heading">
+									<h3 class="panel-title">Player Drafted</h3>
+								</div>
+								<div class="panel-body">
+									<p>get_drafts_player($pid);</p>
+									<p>All drafted instances by player</p>
+									<?php 							
+										$draftedplayer = get_drafts_player($randomplayer);
+										if (isset($draftedplayer)){
+									    	printr($draftedplayer, 0);
+									    }
+									?>
+									<p>get_drafts_player_first_instance($pid);</p>
+									<p>First drafted instance by player</p>
+									<?php 							
+										$draftedplayerfirst = get_drafts_player_first_instance($randomplayer);
+										if (isset($draftedplayerfirst)){
+									    	printr($draftedplayerfirst, 0);
+									    }
+									?>
+									
+								</div>
+							</div>
+							
+							
 					</div>
+					
+					
+					
 					
 					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
@@ -483,16 +605,15 @@ function createnewplayer($array){
 							
 							<div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
-									<h3 class="panel-title">Boxscore By Week.  Pass Week ID</h3>
+									<h3 class="panel-title">Score By Week.</h3>
+									
 								</div>
 								<div class="panel-body">
-									<?php while (have_posts()) : the_post(); ?>
-										<p><?php the_content();?></p>
-									<?php endwhile; wp_reset_query(); 
-										
-										
-
-										$getboxscore = put_boxscore_results(199101);
+									<p>get_one_player_week(pid, weekid);</p>
+									<?php
+										$firstweek = key($record);
+										echo 'First Week Played as example - '.$firstweek;
+										$getboxscore = get_one_player_week($randomplayer, $firstweek);
 										printr($getboxscore, 0);
 
 									?>

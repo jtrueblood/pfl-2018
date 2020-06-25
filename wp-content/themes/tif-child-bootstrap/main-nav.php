@@ -43,6 +43,7 @@
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
 												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2019">Leaders By Season</a></li>	
 												<li class="<?php ifbodyclass (1413, 'active-link'); ?>"><a href="/player-value-quotient/">Player Value</a></li>
+												<li class="<?php ifbodyclass (1495, 'active-link'); ?>"><a href="/supercards/">Supercards</a></li>
 											</ul>
 									</li>
 									

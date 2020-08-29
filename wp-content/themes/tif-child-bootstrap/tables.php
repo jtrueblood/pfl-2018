@@ -238,6 +238,7 @@ foreach ($rookieyears as $key => $value){
 	if(isset($grab)){
 		$rookieseason[$key] = array(
 			'points' => $grab['points'],
+			'season' => $rookieyears[$key],
 			'games' => $grab['games'],
 			'high' => $grab['high'],
 			'teams' => array_unique($grab['teams'])	
@@ -991,6 +992,29 @@ arsort($totalpotw);
 				
 			</div>
 			
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					$career_duration = get_all_players_games_played();
+					
+					$labels = array('Pos', 'Games', 'Seasons');	
+					tablehead('Career Duration By Posittion', $labels);	
+				
+					$n = 0;
+					foreach ($career_duration as $key => $val){		
+						$printduration .='<tr><td>'.$key.'</td>';
+						$printduration .='<td>'.number_format($val['avg'], 1).'</td>';
+						$printduration .='<td>'.number_format($val['season'], 1).'</td></tr>';
+					}
+
+					echo $printduration;
+						
+					tablefoot('');	
+					
+				?>
+				
+			</div>
+			
 
 			<!-- NEW SECTION -->
 			<div class="col-xs-24">
@@ -1629,12 +1653,10 @@ arsort($totalpotw);
 				
 					foreach ($rookieseason as $key => $value){
 						
-						
-						
 						$awardcheck = '';
 						$sea = substr($key, 0, 4);
 						
-						if($ro[$key] == $sea){
+						if($ro[$key] == $value['season']){
 							$checkrook = '<i class="fa fa-circle"></i>';
 						} else {
 							$checkrook = '';
@@ -1644,7 +1666,7 @@ arsort($totalpotw);
 						$rookppg = $value['points'] / $value['games'];
 						
 						$rookprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
-						$rookprint .='<td class="min-width text-center">'.$sea.'</td>'; 
+						$rookprint .='<td class="min-width text-center">'.$value['season'].'</td>'; 
 						$rookprint .='<td class="min-width text-center">'.$value['points'].'</td>';
 						$rookprint .='<td class="min-width text-center">'.$value['games'].'</td>';
 						$rookprint .='<td class="min-width text-center">'.number_format($rookppg, 1).'</td>';

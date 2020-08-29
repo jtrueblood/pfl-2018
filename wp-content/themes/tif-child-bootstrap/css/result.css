@@ -1,10 +1,129 @@
+@font-face {
+  font-family: 'Alfa Slab One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Alfa Slab One Regular'), local('AlfaSlabOne-Regular'), url(https://fonts.gstatic.com/s/alfaslabone/v9/6NUQ8FmMKwSEKjnm5-4v-4Jh6dU.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Black Ops One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Black Ops One Regular'), local('BlackOpsOne-Regular'), url(https://fonts.gstatic.com/s/blackopsone/v11/qWcsB6-ypo7xBdr6Xshe96H3WDw.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Bungee';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Bungee'), local('Bungee-Regular'), url(https://fonts.gstatic.com/s/bungee/v5/N0bU2SZBIuF2PU_ECg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Bungee Shade';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Bungee Shade'), local('BungeeShade-Regular'), url(https://fonts.gstatic.com/s/bungeeshade/v6/DtVkJxarWL0t2KdzK3oI_jks7g.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Coda';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: local('Coda ExtraBold'), local('Coda-ExtraBold'), url(https://fonts.gstatic.com/s/coda/v15/SLXIc1jY5nQ8HeIgTp4.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Exo 2';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/exo2/v9/7cH3v4okm5zmbtYtMeA0FKq0Jjg2drHdetC6.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Exo 2';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/exo2/v9/7cH1v4okm5zmbvwkAx_sfcEuiD8jF_WcPg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Holtwood One SC';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Holtwood One SC'), local('HoltwoodOneSC'), url(https://fonts.gstatic.com/s/holtwoodonesc/v10/yYLx0hLR0P-3vMFSk1TCq3Txg5B3cQ.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Montserrat Black Italic'), local('Montserrat-BlackItalic'), url(https://fonts.gstatic.com/s/montserrat/v14/JTUPjIg1_i6t8kCHKm459WxZSgnD-w.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Montserrat Black'), local('Montserrat-Black'), url(https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_epG7g4.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Neuton';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Neuton Bold'), local('Neuton-Bold'), url(https://fonts.gstatic.com/s/neuton/v12/UMBQrPtMoH62xUZKdK0feg.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Russo One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Russo One'), local('RussoOne-Regular'), url(https://fonts.gstatic.com/s/russoone/v8/Z9XUDmZRWg6M1LvRYsH-yA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Saira Stencil One';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Saira Stencil One Regular'), local('SairaStencilOne-Regular'), url(https://fonts.gstatic.com/s/sairastencilone/v2/SLXSc03I6HkvZGJ1GvvipLoYSTEL9AsM.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Staatliches';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Staatliches Regular'), local('Staatliches-Regular'), url(https://fonts.gstatic.com/s/staatliches/v3/HI_OiY8KO6hCsQSoAPmtMbec.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Teko';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Teko Bold'), local('Teko-Bold'), url(https://fonts.gstatic.com/s/teko/v9/LYjCdG7kmE0gdRhYgCM.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Tienne';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: local('Tienne Black'), local('Tienne-Black'), url(https://fonts.gstatic.com/s/tienne/v13/AYCJpX7pe9YCRP0zFG7jQA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Tomorrow';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Tomorrow Bold'), local('Tomorrow-Bold'), url(https://fonts.gstatic.com/s/tomorrow/v3/WBLhrETNbFtZCeGqgR1pXkXI.ttf) format('truetype');
+}
 select {
   font-family: 'Verdana';
 }
 html,
 body {
-  font-family: 'Verdana';
-  font-weight: 400;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 200;
 }
 .clear {
   display: block;
@@ -294,6 +413,10 @@ a.player-link:hover {
 }
 #protectionPanel .panel img {
   height: 30px;
+}
+.acf-field-5f42adceb9ba2 .acf-switch.-on {
+  background: #5aaedc;
+  border-color: #5aaedc;
 }
 .qb-color {
   border-right: 3px solid #5aaedc !important;
@@ -669,6 +792,19 @@ img.widget-bg.team-helmet-image {
 #player_widget_img .widget-bg {
   min-height: 0px;
 }
+#demo-tabs-box-teams h4 {
+  margin-bottom: 20px;
+  color: silver;
+}
+#demo-tabs-box-teams .draft-teams {
+  margin-top: 20px;
+  padding: 20px;
+  text-align: left;
+  border: 2px solid silver;
+}
+#demo-tabs-box-teams .draft-teams span.push-right {
+  float: right;
+}
 #spider {
   min-width: 360px;
   max-width: 600px;
@@ -739,131 +875,71 @@ font-family: 'Tienne', serif;
 font-family: 'Tomorrow', sans-serif;   // Most like SPORTS 
 
 */
-@font-face {
-  font-family: 'Alfa Slab One';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Alfa Slab One Regular'), local('AlfaSlabOne-Regular'), url(https://fonts.gstatic.com/s/alfaslabone/v9/6NUQ8FmMKwSEKjnm5-4v-4Jh6dU.ttf) format('truetype');
+.number-samples h2 {
+  font-size: 50px;
 }
-@font-face {
-  font-family: 'Black Ops One';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Black Ops One Regular'), local('BlackOpsOne-Regular'), url(https://fonts.gstatic.com/s/blackopsone/v11/qWcsB6-ypo7xBdr6Xshe96H3WDw.ttf) format('truetype');
+.alfa-slab-one {
+  font-family: 'Alfa Slab One', cursive;
 }
-@font-face {
-  font-family: 'Bungee';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Bungee'), local('Bungee-Regular'), url(https://fonts.gstatic.com/s/bungee/v5/N0bU2SZBIuF2PU_ECg.ttf) format('truetype');
+.black-ops {
+  font-family: 'Black Ops One', cursive;
 }
-@font-face {
-  font-family: 'Bungee Shade';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Bungee Shade'), local('BungeeShade-Regular'), url(https://fonts.gstatic.com/s/bungeeshade/v5/DtVkJxarWL0t2KdzK3oI_jks7g.ttf) format('truetype');
+.bungee {
+  font-family: 'Bungee', cursive;
 }
-@font-face {
-  font-family: 'Coda';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: local('Coda ExtraBold'), local('Coda-ExtraBold'), url(https://fonts.gstatic.com/s/coda/v15/SLXIc1jY5nQ8HeIgTp4.ttf) format('truetype');
+.bungee-shade {
+  font-family: 'Bungee Shade', cursive;
 }
-@font-face {
-  font-family: 'Exo 2';
-  font-style: italic;
-  font-weight: 900;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/exo2/v8/7cH3v4okm5zmbtYtMeA0FKq0Jjg2drHdetC6.ttf) format('truetype');
+.coda {
+  font-family: 'Coda', cursive;
 }
-@font-face {
-  font-family: 'Exo 2';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: url(https://fonts.gstatic.com/s/exo2/v8/7cH1v4okm5zmbvwkAx_sfcEuiD8jF_WcPg.ttf) format('truetype');
+.exo {
+  font-family: 'Exo 2', sans-serif;
 }
-@font-face {
-  font-family: 'Montserrat';
-  font-style: italic;
-  font-weight: 900;
-  font-display: swap;
-  src: local('Montserrat Black Italic'), local('Montserrat-BlackItalic'), url(https://fonts.gstatic.com/s/montserrat/v14/JTUPjIg1_i6t8kCHKm459WxZSgnD-w.ttf) format('truetype');
+.montserrat {
+  font-family: 'Montserrat', sans-serif;
 }
-@font-face {
-  font-family: 'Montserrat';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: local('Montserrat Black'), local('Montserrat-Black'), url(https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_epG7g4.ttf) format('truetype');
+.neuton {
+  font-family: 'Neuton', serif;
 }
-@font-face {
-  font-family: 'Neuton';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('Neuton Bold'), local('Neuton-Bold'), url(https://fonts.gstatic.com/s/neuton/v12/UMBQrPtMoH62xUZKdK0feg.ttf) format('truetype');
+.open-sans {
+  font-family: 'Open Sans', sans-serif;
 }
-@font-face {
-  font-family: 'Open Sans';
-  font-style: italic;
-  font-weight: 800;
-  font-display: swap;
-  src: local('Open Sans ExtraBold Italic'), local('OpenSans-ExtraBoldItalic'), url(https://fonts.gstatic.com/s/opensans/v17/memnYaGs126MiZpBA-UFUKW-U-hs.ttf) format('truetype');
+.teko {
+  font-family: 'Teko', sans-serif;
 }
-@font-face {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: local('Open Sans ExtraBold'), local('OpenSans-ExtraBold'), url(https://fonts.gstatic.com/s/opensans/v17/mem5YaGs126MiZpBA-UN8rs-VQ.ttf) format('truetype');
+.russo-one {
+  font-family: 'Russo One', sans-serif;
 }
-@font-face {
-  font-family: 'Russo One';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Russo One'), local('RussoOne-Regular'), url(https://fonts.gstatic.com/s/russoone/v8/Z9XUDmZRWg6M1LvRYsH-yA.ttf) format('truetype');
+.staatliches {
+  font-family: 'Staatliches', cursive;
 }
-@font-face {
-  font-family: 'Saira Stencil One';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Saira Stencil One Regular'), local('SairaStencilOne-Regular'), url(https://fonts.gstatic.com/s/sairastencilone/v1/SLXSc03I6HkvZGJ1GvvipLoYSTEL9AsM.ttf) format('truetype');
+.saira {
+  font-family: 'Saira Stencil One', cursive;
 }
-@font-face {
-  font-family: 'Staatliches';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Staatliches Regular'), local('Staatliches-Regular'), url(https://fonts.gstatic.com/s/staatliches/v3/HI_OiY8KO6hCsQSoAPmtMbec.ttf) format('truetype');
+.tienne {
+  font-family: 'Tienne', serif;
 }
-@font-face {
-  font-family: 'Teko';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('Teko Bold'), local('Teko-Bold'), url(https://fonts.gstatic.com/s/teko/v9/LYjCdG7kmE0gdRhYgCM.ttf) format('truetype');
+.tomorrow {
+  font-family: 'Tomorrow', sans-serif;
 }
-@font-face {
-  font-family: 'Tienne';
-  font-style: normal;
-  font-weight: 900;
-  font-display: swap;
-  src: local('Tienne Black'), local('Tienne-Black'), url(https://fonts.gstatic.com/s/tienne/v12/AYCJpX7pe9YCRP0zFG7jQA.ttf) format('truetype');
+.arvo {
+  font-family: 'Arvo', serif;
 }
-@font-face {
-  font-family: 'Tomorrow';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('Tomorrow Bold'), local('Tomorrow-Bold'), url(https://fonts.gstatic.com/s/tomorrow/v2/WBLhrETNbFtZCeGqgR1pXkXI.ttf) format('truetype');
+.holtwood {
+  font-family: 'Holtwood One SC', serif;
+}
+.sholder h3.left-arm {
+  position: absolute;
+  top: -6px;
+  left: 44px;
+  transform: rotate(70deg);
+}
+.sholder h3.right-arm {
+  position: absolute;
+  top: -6px;
+  right: 40px;
+  transform: rotate(-70deg);
 }
 .jersey {
   width: 150px;
@@ -876,7 +952,7 @@ font-family: 'Tomorrow', sans-serif;   // Most like SPORTS
   border: none;
 }
 .jersey h2 {
-  font-family: 'Teko', sans-serif;
+  font-family: 'Tomorrow', sans-serif;
   font-size: 50px;
   -webkit-text-fill-color: #D61379;
   /* Will override color (regardless of order) */
@@ -888,13 +964,66 @@ font-family: 'Tomorrow', sans-serif;   // Most like SPORTS
   margin: 0;
 }
 .jersey h3 {
-  font-family: 'Teko', sans-serif;
-  font-size: 22px;
+  font-family: 'Tomorrow', sans-serif;
+  font-size: 20px;
   -webkit-text-fill-color: white;
   /* Will override color (regardless of order) */
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: #110F42;
   top: 23px;
+}
+.jersey h3.left-arm {
+  position: absolute;
+  left: 29px;
+  transform: rotate(15deg);
+}
+.jersey h3.right-arm {
+  position: absolute;
+  right: 27px;
+  transform: rotate(-15deg);
+}
+.jersey .RBS-home-1 h2,
+.jersey .RBS-road-1 h2,
+.jersey .RBS-home-1 h3,
+.jersey .RBS-road-1 h3 {
+  font-family: 'Open Sans', sans-serif;
+}
+.jersey .RBS-home-1 h2,
+.jersey .RBS-road-1 h2 {
+  font-size: 50px;
+  -webkit-text-fill-color: #CF5528;
+  /* Will override color (regardless of order) */
+  text-align: center;
+  display: inline-block;
+  padding-top: 40px;
+  margin: 0;
+  -webkit-text-stroke-width: 0.03em;
+}
+.jersey .RBS-home-1 h3,
+.jersey .RBS-road-1 h3 {
+  font-size: 18px;
+  -webkit-text-fill-color: #CF5528;
+  /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 0;
+  top: 25px;
+}
+.jersey .RBS-home-1 h3.left-arm,
+.jersey .RBS-road-1 h3.left-arm {
+  position: absolute;
+  left: 29px;
+  transform: rotate(15deg);
+}
+.jersey .RBS-home-1 h3.right-arm,
+.jersey .RBS-road-1 h3.right-arm {
+  position: absolute;
+  right: 27px;
+  transform: rotate(-15deg);
+}
+.jersey .RBS-home-1 h2,
+.jersey .RBS-home-1 h3 {
+  -webkit-text-fill-color: none;
+  -webkit-text-fill-color: #fff;
+  -webkit-text-stroke-color: #000000;
 }
 .jersey .WRZ-road-3 h2 {
   font-family: 'Teko', sans-serif;
@@ -988,6 +1117,7 @@ font-family: 'Tomorrow', sans-serif;   // Most like SPORTS
   font-size: 18px;
   -webkit-text-fill-color: #CF5528;
   /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 0;
   top: 25px;
 }
 .jersey .ATK-home-1 h3.left-arm,
@@ -1007,6 +1137,44 @@ font-family: 'Tomorrow', sans-serif;   // Most like SPORTS
   -webkit-text-fill-color: none;
   -webkit-text-fill-color: #fff;
   -webkit-text-stroke-color: #CF5528;
+}
+.jersey .ETS-home-3 h2,
+.jersey .ETS-road-3 h2 {
+  -webkit-text-fill-color: #fff;
+  padding-top: 40px;
+  font-family: 'Coda', cursive;
+}
+.jersey .ETS-home-3 h3,
+.jersey .ETS-road-3 h3 {
+  top: 37px;
+  font-family: 'Coda', cursive;
+}
+.jersey .ETS-home-3 h3.right-arm,
+.jersey .ETS-road-3 h3.right-arm {
+  right: 25px;
+}
+.jersey .ETS-home-3 h3.left-arm,
+.jersey .ETS-road-3 h3.left-arm {
+  left: 25px;
+}
+.jersey .ETS-home-4 h3.left-arm,
+.jersey .ETS-road-4 h3.left-arm {
+  position: absolute;
+  top: -6px;
+  left: 44px;
+  transform: rotate(70deg);
+}
+.jersey .ETS-home-4 h3.right-arm,
+.jersey .ETS-road-4 h3.right-arm {
+  position: absolute;
+  top: -6px;
+  right: 40px;
+  transform: rotate(-70deg);
+}
+.jersey .ETS-home-4 h2,
+.jersey .ETS-road-4 h2 {
+  -webkit-text-stroke-color: #fff;
+  -webkit-text-stroke-color: none;
 }
 .jersey img.helm-jersey {
   width: 75px;

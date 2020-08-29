@@ -516,7 +516,13 @@ endif;
 							<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br>
 							<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span>
 							<span class="text-muted"> - Weight: </span><span class="text-bold"><?php echo $weight; ?></span><br>
-							<span class="text-muted">First Drafted: </span><span class="text-bold"><?php echo $draftedplayerfirst['season']; ?>: Round <?php echo $draftedplayerfirst['round']; ?>-<?php echo $draftedplayerfirst['pick']; ?></span> by <span class="text-bold"><?php echo $draftedplayerfirst['acteam']; ?></span><br/>
+							<?php if($draftedplayerfirst['season']): ?>
+								<span class="text-muted">First Drafted:<br></span><span class="text-bold"><?php 
+									echo $draftedplayerfirst['season']; ?>: Round <?php echo $draftedplayerfirst['round']; ?>-<?php echo $draftedplayerfirst['pick']; ?></span> by <span class="text-bold"><?php echo $draftedplayerfirst['acteam'];
+								else:
+									echo 'Undrafted';		 
+								endif;	
+								?></span><br/>
 							
 						<?php } ?>
 						

@@ -275,7 +275,7 @@ function createnewplayer($array){
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24">	
-										<a href="#" target="_blank">MFL Website 2020 - Coming Soon</a><br>
+										<a href="https://www58.myfantasyleague.com/2020/home/38954#0" target="_blank">MFL Website 2020</a><br>
 										<a href="https://www.pro-football-reference.com/" target="_blank">Pro Football Reference</a><br>
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
 										<a href="https://docs.google.com/document/d/1D8VZPOBn04zVXYQB1gr-xb1NDe2nYLn9Rqgl4oZVhXI/edit?usp=sharing" target="_blank">PFL Rules - Rev 2019</a><br>

@@ -108,8 +108,10 @@
 											<!--Submenu-->
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
-												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>														<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>	
+												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>																		<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
+												<li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>	
 												<li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
+												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy">Draft Strategy</a></li>
 											</ul>
 									</li>
 									

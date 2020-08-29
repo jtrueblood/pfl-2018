@@ -22,7 +22,7 @@ jQuery(document).ready(function($) {
 	  window.location = headurl + counter++;
 	});
 	
-	// leaders settings
+	// Leaders Tables
 	
 	$('.leader-table').DataTable( {
 	    "order": [[ 3, "desc" ]],
@@ -49,7 +49,114 @@ jQuery(document).ready(function($) {
 	    "info":     false,
 	    "search": false
 	} );
+	
+	// Draft Strategy Tables
+/*
+	$('.qb-draft-table').DataTable( {
+	    "order": [[ 16, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, "All"]]
+	} );
+
+	
+	$('.rb-draft-table').DataTable( {
+	    "order": [[ 16, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+	} );
 	 
+	$('.wr-draft-table').DataTable( {
+	    "order": [[ 16, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+	} );
+	
+	$('.pk-draft-table').DataTable( {
+	    "order": [[ 14, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+	} );
+*/
+
+	
+	var t = $('.qb-draft-table').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 17, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, "All"]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+	  
+	var t = $('.rb-draft-table').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 16, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();  
+    
+    var t = $('.wr-draft-table').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 16, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
+    
+    var t = $('.te-draft-table').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 16, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
+    
+    
+    var t = $('.pk-draft-table').DataTable( {
+        "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 14, "desc" ]],
+	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
+    } );
+ 
+    t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw(); 
+	  
+	  
 	 
 	var posfilter = '';
 	

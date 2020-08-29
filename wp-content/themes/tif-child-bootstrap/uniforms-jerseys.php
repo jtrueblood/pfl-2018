@@ -192,7 +192,81 @@ get_header();
 								<?php while (have_posts()) : the_post(); ?>
 								<p><?php the_content();?></p>
 								<?php endwhile; wp_reset_query(); ?>
-							</div>
+								
+								<div class="number-samples">
+									<h2 class="alfa-slab-one"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Alfa Slab One', cursive;</p>
+								</div>
+								<div class="number-samples">
+									<h2 class="black-ops"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Black Ops One', cursive;</p>
+								</div>
+								<div class="number-samples">
+									<h2 class="bungee"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Bungee', cursive;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="bungee-shade"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Bungee Shade', cursive;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="coda"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Coda', cursive;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="exo"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Exo 2', sans-serif;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="montserrat"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Montserrat', sans-serif;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="neuton"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Neuton', serif;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="open-sans"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Open Sans', sans-serif;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="teko"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Teko', sans-serif;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="russo-one"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Russo One', sans-serif;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="staatliches"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Staatliches', cursive;</p>
+								</div>
+									<div class="number-samples">
+									<h2 class="saira"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Saira Stencil One', cursive;</p>
+								</div>
+								<div class="number-samples">
+									<h2 class="tienne"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Tienne', serif;</p>
+								</div>
+								<div class="number-samples">
+									<h2 class="tomorrow"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Tomorrow', sans-serif; </p>
+								</div>
+								<div class="number-samples">
+									<h2 class="holtwoood"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Holtwood One SC', serif; </p>
+								</div>
+								<div class="number-samples">
+									<h2 class="arvo"><?php echo $player_number; ?></h2>
+									<p>font-family: 'Arvo', serif; </p>
+								</div>
+								
+								
+								
+
+								
+							
 						</div>
 					</div>
 				</div>

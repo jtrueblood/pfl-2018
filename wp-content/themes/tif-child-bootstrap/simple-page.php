@@ -30,6 +30,7 @@ $playerassoc = get_players_assoc();
 				
 				<!--Page content-->
 				<div id="page-content">
+					
 											
 				</div><!--End page content-->
 

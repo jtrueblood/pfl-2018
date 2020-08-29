@@ -637,12 +637,17 @@ function get_player_season_rank ($playerid, $year){
 			$data[$value[1]] = $value[3];
 		}
 	}
-	arsort($data);
+	if($data):
+		arsort($data);
+		$getindex = array_search($playerid,array_keys($data));
+		// add one to the index to get a rank
+		$output = $getindex + 1;	
+		return $output;
+	else:	
+		$output = 0;
+		return $output;
+	endif;	
 	
-	$getindex = array_search($playerid,array_keys($data));
-	// add one to the index to get a rank
-	$output = $getindex + 1;	
-	return $output;
 
 }
 
@@ -2465,9 +2470,8 @@ function get_drafts_player($pid){
 
 
 function get_drafts_player_first_instance($pid){
-	
 	$draftfirst = get_drafts_player($pid);	
-	if($draftfirst > 0):
+	if($draftfirst):
 		return reset($draftfirst);
 	endif;
 }
@@ -2949,7 +2953,7 @@ function get_mfl_player_details($mflid){
 	
 			
 	 
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/2019/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_URL => "http://www58.myfantasyleague.com/2020/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
@@ -3401,6 +3405,52 @@ global $wpdb;
 		$potwp[] = $p[0];
 	}
 	return $potwp;
+}
+
+// gets all players games played by position
+function get_all_players_games_played(){
+
+	$transient = get_transient( 'games_played_by_pos' );
+	  if( ! empty( $transient ) ) {
+	    return $transient;
+	  } else {
+	   	$playerids = just_player_ids();
+		foreach ($playerids as $id):
+			$getgames = get_player_career_stats($id);
+			$pos = substr($id, -2);
+			$justgames[$pos][$id] = $getgames['games'];
+		endforeach;
+				
+		$game_output = array(
+			'QB' => array(
+				'sum' => array_sum($justgames['QB']),
+				'count' => count($justgames['QB']),
+				'avg' => array_sum($justgames['QB']) / count($justgames['QB']),
+				'season' => (array_sum($justgames['QB']) / count($justgames['QB'])) / 13
+			),
+			'RB' => array(
+				'sum' => array_sum($justgames['RB']),
+				'count' => count($justgames['RB']),
+				'avg' => array_sum($justgames['RB']) / count($justgames['RB']),
+				'season' => (array_sum($justgames['RB']) / count($justgames['RB'])) / 13,
+			),
+			'WR' => array(
+				'sum' => array_sum($justgames['WR']),
+				'count' => count($justgames['WR']),
+				'avg' => array_sum($justgames['WR']) / count($justgames['WR']),
+				'season' => (array_sum($justgames['WR']) / count($justgames['WR'])) / 13,
+			),
+			'PK' => array(
+				'sum' => array_sum($justgames['PK']),
+				'count' => count($justgames['PK']),
+				'avg' => array_sum($justgames['PK']) / count($justgames['PK']),
+				'season' => (array_sum($justgames['PK']) / count($justgames['PK'])) / 13
+			)
+		);
+	    set_transient( 'games_played_by_pos', $game_output, DAY_IN_SECONDS );
+	    return $game_output;
+	  }
+
 }
 
 
@@ -3857,5 +3907,4 @@ function get_season_game_highs($yearval){
 	arsort($thruput);
 	return $thruput;
 }
-
 

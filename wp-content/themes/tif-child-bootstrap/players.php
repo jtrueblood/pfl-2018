@@ -470,12 +470,13 @@ endif;
 			<?php	 
 			$playerimgobj = get_attachment_url_by_slug($playerid);
 			$imgid =  attachment_url_to_postid( $playerimgobj );
-			$image_attributes = wp_get_attachment_image_src($imgid, 'medium');	
+			$image_attributes = wp_get_attachment_image_src($imgid, 'thumbnail');	
 			?>
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-5 left-column">
 			<div class="panel widget">
-				<div id="player_widget_img" class="widget-header" style="background-image: url(<?php echo $image_attributes[0]; ?>); background-position: center top; background-size: cover; ">
+				<div id="player_widget_img" class="player-img-top">
+					<img src="<?php echo $image_attributes[0]; ?>" style="height: 200px;"/>
 				</div>
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">

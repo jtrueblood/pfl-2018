@@ -2778,6 +2778,14 @@ function get_grandslams(){
 
 }
 
+function url_exists($url) {
+    $hdrs = @get_headers($url);
+
+    echo @$hdrs[1]."\n";
+
+    return is_array($hdrs) ? preg_match('/^HTTP\\/\\d+\\.\\d+\\s+2\\d\\d\\s+.*$/',$hdrs[0]) : false;
+}
+
 
 // print season draft table
 function getdraft($year, $array){
@@ -2822,7 +2830,7 @@ $printit .= '<div class="panel-heading">';
 				
 					$first = $build['playerfirst'];
 					$last = $build['playerlast'];
-					$containsLetter  = preg_match('/[a-zA-Z]/',    $pid);
+					$containsLetter  = preg_match('/[a-zA-Z]/', $pid);
 					$idlength = strlen($pid);
 					
 					$playerimgobj = get_attachment_url_by_slug($pid);
@@ -2849,15 +2857,15 @@ $printit .= '<div class="panel-heading">';
 							$printit .= '<td class="min-width hidden-xs">&nbsp;</td>';
 						}
 						//$printit .= '<td class="min-width visible-xs">'.$selteam_sm.'</td>'; // either this one or the one above for non phone devices
-					
-						if ($containsLetter != 0){		
-							$printit .= '<td class="min-width hidden-xs"><img src="'.$playerimg.'" class="img-sm player-image" style="background-color:#515151;"/></td>';
+						
+						
+						if ($playerimg){		
+							$printit .= '<td class="min-width hidden-xs"><div class="draft-img-sm"><img src="'.$playerimg.'" class="player-image" style="background-color:#515151;"/></div></td>';
 						} else {
-							$printit .= '<td class="min-width hidden-xs"><img src="'.$pflmini.'" class="img-sm player-image"/></td>';
+							$printit .= '<td class="min-width hidden-xs"><div class="draft-img-sm"><img src="'.$pflmini.'" class="player-image"/></div></td>';
 						}
 						
-
-						if ($containsLetter != 0){
+						if ($playerimg){
 							$printit .= '<td class="text-bold"><a href="/player/?id='.$pid.'" class="player-link">'.$first.' '.$last.'</a></td>';
 						} else {
 							$printit .= '<td class="text-bold">'.$first.' '.$last.'</td>';

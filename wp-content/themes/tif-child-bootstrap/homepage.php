@@ -93,40 +93,7 @@ get_header();
 
 
 
-// pulls data from MFL API and inserts into wp_players as well as creating player table for weekly score data
-function createnewplayer($array){
-												
-	global $wpdb;
-	$arr = $array;
-	
-	$pid = $arr['p_id'];
-	
-	// insert info into wp_players
-	$insertarr = $wpdb->insert(
-		 'wp_players',
-	     array(
-	        'p_id' 			=> $arr['p_id'],
-			'playerFirst' 	=> $arr['playerFirst'],
-			'playerLast' 	=> $arr['playerLast'],
-			'position' 		=> $arr['position'],
-			'rookie' 		=> $arr['rookie'],
-			'mflid' 		=> $arr['mflid'],	
-			'height' 		=> $arr['height'],
-			'weight' 		=> $arr['weight'],
-			'college' 		=> $arr['college'],
-			'birthdate' 	=> '',
-			'number' 		=> $arr['number']
-	     ),
-		 array( 
-			'%s','%s','%s','%s','%d','%s','%s','%d','%s','','%d' 
-		 )
-	);	
 
-	// create new table
-	$wpdb->query("CREATE TABLE $pid LIKE 1991SmitRB" );
-			
-	return $insertarr;
-}
 
 ?>
 
@@ -182,87 +149,11 @@ function createnewplayer($array){
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24">
-										<p><small>Check for player above and if they do not exist enter MFL ID below.</small></p>	
-										<form action="" method="post">
-
-											MFL ID: <input type="text" name="mflid" /><br>
-											<br>
-											<input type="submit" />
-											
-											
-										</form>
-										<p><small>Year and possibly league ID value needs to be updated for function get_mfl_player_details()</small></p>
+											<a href="/create-new-player">Link to Create New Player Page</a>								
 									</div>
+						
 									
-									<div class="col-xs-24">
-										
-										
-										<?php 
-											if ( isset( $_POST['mflid'] ) ){
-												
-												$form_mfl_id = 	$_POST['mflid'];
-												//echo $form_mfl_id;
-												$mfl_data = get_mfl_player_details($form_mfl_id);
-												//printr($mfl_data, 0);
-												
-												$name = $mfl_data['name'];
-												$xname = explode(',', $name);
-												
-												$first = $xname[1];
-												$last = $xname[0];
-												$justfour = substr($last, 0, 4);
-												
-												$themflid = $mfl_data['id']; 
-												$draftyear = $mfl_data['draft_year']; 
-												$position = $mfl_data['position']; 
-												$weight = $mfl_data['weight'];
-												$jersey = $mfl_data['jersey']; 
-												$college = $mfl_data['college'];
-												$pflid = $draftyear.$justfour.$position;
-												
-												$h = $mfl_data['height'];
-												$getfeet = $h / 12;
-												$explode = explode('.', $getfeet);
-												
-												$feet = $explode[0];
-												$i = '.'.strval($explode[1]);
-												$inches = round($i * 12);
-												
-												
-												$covheight = $feet.'-'.$inches;
-												
-												$insertplayer = array(
-													'p_id' => $pflid,
-													'playerFirst' => ltrim($first),
-													'playerLast' => $last,
-													'position' => $position,
-													'rookie' => $draftyear,
-													'mflid' => $themflid,	
-													'height' => $covheight,
-													'weight' => $weight,
-													'college' => $college,
-													'birthdate' => '',
-													'number' => $jersey
-												);
-												
-												//var_dump($covheight);
-												//printr($explode, 0);
-	
-/*
-												if(isset($insertplayer)){
-													createnewplayer($insertplayer);
-													printr($insertplayer, 0);
-												}
-*/												
-
-										     } ?>
-										     
-									</div>
-									
-									<div class="col-xs-24">
-										
-										   
-									</div>
+								
 								</div>
 							
 						</div>

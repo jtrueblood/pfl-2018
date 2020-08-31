@@ -2799,6 +2799,7 @@ $printit .= '<div class="panel-heading">';
 					$printit .= '<th class="min-width hidden-xs"></th>';
 					$printit .= '<th>Name</th>';
 					$printit .= '<th class="min-width">Position</th>';
+					$printit .= '<th class="min-width">Pts In Season</th>';
 				$printit .= '</tr>';
 		$printit .= '</thead>';
 		$printit .= '<tbody>';
@@ -2835,7 +2836,7 @@ $printit .= '<div class="panel-heading">';
 		
 					
 					if ($activenum > $picknumber){
-						$printit .= '<tr class="text-center bg-dark text-2x"><td colspan="6">Round '.$round.'</td></tr>';
+						$printit .= '<tr class="text-center bg-dark text-2x"><td colspan="7">Round '.$round.'</td></tr>';
 					}
 					
 					$printit .= '<tr>';
@@ -2861,7 +2862,12 @@ $printit .= '<div class="panel-heading">';
 						} else {
 							$printit .= '<td class="text-bold">'.$first.' '.$last.'</td>';
 						}
+						if($pid):
+							$getstats = get_player_season_stats($pid, $year);
+							$seasonpoints = $getstats['points'];
+						endif;	
 						$printit .= '<td class="text-center"><span class="">'.$position.'</span></td>';
+						$printit .= '<td class="text-center"><span class="">'.$seasonpoints.'</span></td>';
 					$printit .= '</tr>';
 					
 					$activenum = $picknumber;
@@ -2951,9 +2957,7 @@ function get_mfl_player_details($mflid){
 
 	curl_setopt_array($curl, array(
 	
-			
-	 
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/2020/export?TYPE=players&DETAILS=8931&SINCE=&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_URL => "https://api.myfantasyleague.com/2020/export?TYPE=playerProfile&SINCE=&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
@@ -2980,8 +2984,7 @@ function get_mfl_player_details($mflid){
 	
 	$mflguy = json_decode($mflplayerinfo, true);
 	
-	
-	return $mflguy['players']['player'];
+	return $mflguy;
 	
 }
 
@@ -3021,7 +3024,40 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
 	
 }
 
+// pulls data from MFL API and inserts into wp_players as well as creating player table for weekly score data
+function createnewplayer($array){
+												
+	global $wpdb;
+	$arr = $array;
+	
+	$pid = $arr['p_id'];
+	
+	// insert info into wp_players
+	$insertarr = $wpdb->insert(
+		 'wp_players',
+	     array(
+	        'p_id' 			=> $arr['p_id'],
+			'playerFirst' 	=> $arr['playerFirst'],
+			'playerLast' 	=> $arr['playerLast'],
+			'position' 		=> $arr['position'],
+			'rookie' 		=> $arr['rookie'],
+			'mflid' 		=> $arr['mflid'],	
+			'height' 		=> $arr['height'],
+			'weight' 		=> $arr['weight'],
+			'college' 		=> $arr['college'],
+			'birthdate' 	=> '',
+			'number' 		=> $arr['number']
+	     ),
+		 array( 
+			'%s','%s','%s','%s','%d','%s','%s','%d','%s','','%d' 
+		 )
+	);	
 
+	// create new table
+	$wpdb->query("CREATE TABLE $pid LIKE 1991SmitRB" );
+			
+	return $insertarr;
+}
 
 function get_boxscore_cache($weekvar){
 	$boxscorecache = 'http://posse-football.dev/wp-content/themes/tif-child-bootstrap/cache/boxscores/'.$weekvar.'box.txt';

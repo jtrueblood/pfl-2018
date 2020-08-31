@@ -107,6 +107,9 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
+												<li class="<?php ifbodyclass (1625, 'active-link'); ?>"><a href="/create-new-player">Create New Player</a></li>
+												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>
+												
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
 												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>																		<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
 												<li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>	

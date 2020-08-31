@@ -1,7 +1,7 @@
 <?php
 /*
  * Template Name: Create New Player
- * Description: Used for creatibng a new player from the MFL API. Pass in the MFL player ID into the form field
+ * Description: 
  */
  ?>
 

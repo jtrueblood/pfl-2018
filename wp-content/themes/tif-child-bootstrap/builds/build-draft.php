@@ -7,27 +7,34 @@
 	
 get_header(); 
 
-
 // EACH SEASON AFTER THE DRAFT FOLLOW THESE STEPS  --------------------------------------------
-// 1. Check the 3 vars below.  You will need to update the year and origorder variable each season.  Somtimes lid changes
-// 2. Run /builds/build-drafts
-// 3. Check the draft list visually.  Also check the array of IDs at the bottom of the page and enter these into the 'Create New Player' area on the homepage to build the new player profiles.
-// 4. Uncomment the section that will insert the draft into wp_drafts.sql table.  Reload the page.
-// 5. Recomment that section.  Save and close.
+// Starting in 2020 the API Validation for MFL now requires auth of the user agent.  The setup is completed for 2020.  May have to repeat in 2021.  
 
 
-$year = 2019;
+// STEPS
+
+// 1. Check the 3 vars immediatly below.  You will need to update the year and origorder variable each season.  Somtimes lid changes
+// 2. Authenticate in the browser with this url : https://api.myfantasyleague.com/2020/login?jtrueblood=testuser&eur0TRASH!=testing1&XML=1
+// 3. Run /builds/build-drafts
+// 4. Check the draft list visually.  Also check the array of IDs at the bottom of the page and enter these into the 'Create New Player' area on the homepage to build the new player profiles.
+// 5. Uncomment the section that will insert the draft into wp_drafts.sql table.  Reload the page.
+// 6. Recomment that section.  Save and close.
+
+// Auth URL = https://api.myfantasyleague.com/2020/login?USERNAME=jtrueblood&PASSWORD=eur0TRASH!&XML=1
+
+$year = 2020;
 $lid = 38954;
-$apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
-$origorder = array('BST','HAT','DST','WRZ','PEP','CMN','BUL','TSG','SNR','ETS');
-// --------------------------------------------
+// NO LONGER NEEDED AS OF 2020 -- $apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
+// Looks like you could pass an API Key instead of the user agent (not totally sure?) the api key for 2020 appears to be &APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox
 
+$origorder = array('DST','SNR','WRZ','HAT','BUL','CMN','BST','PEP','ETS','TSG');
+// --------------------------------------------
 
 // get actual draft report for the year from MFL
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=draftResults&L=$lid&APIKEY=$apikey&JSON=1",
+  CURLOPT_URL => "https://www58.myfantasyleague.com/2020/export?TYPE=draftResults&L=38954&JSON=1",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,
@@ -35,8 +42,15 @@ curl_setopt_array($curl, array(
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => "GET",
   CURLOPT_HTTPHEADER => array(
+    "Accept: */*",
+    "Accept-Encoding: gzip, deflate",
     "Cache-Control: no-cache",
-    "Postman-Token: 12d23246-b5e0-73c0-4b72-2d5c0ea6d955"
+    "Connection: keep-alive",
+    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_PW_SEQ=aR9q28Gbvemq2QS6",
+    "Host: www58.myfantasyleague.com",
+    "Postman-Token: 981a2349-7260-45fe-b12d-d07f5d563927,3d357515-ffe5-40f4-8fff-19673d51bbcd",
+    "User-Agent: PostmanRuntime/7.19.0",
+    "cache-control: no-cache"
   ),
 ));
 
@@ -48,7 +62,7 @@ curl_close($curl);
 if ($err) {
   echo "cURL Error #:" . $err;
 } else {
-  echo "curl Worked";
+  echo 'WORKED';
 }
 
 $mfldraft = json_decode($response, true);
@@ -85,6 +99,9 @@ foreach ($mflpicks as $value){
 	$getid = $conv_ids[$playerid];
 	$playerinfo = $assoc[$getid];
 	
+	$firstn = $playerinfo[0];
+	$lastn = $playerinfo[1];
+	$posn = $playerinfo[2];
 	
 	if(isset($getid)){
 		$id = $getid;	
@@ -93,10 +110,7 @@ foreach ($mflpicks as $value){
 		$newplayers[] = $playerid;
 	}
 	
-	$firstn = $playerinfo[0];
-	$lastn = $playerinfo[1];
-	$posn = $playerinfo[2];
-	
+
 	if($playerid == '----'){
 		$id = 'No Pick';
 		$firstn = 'No Pick';
@@ -135,6 +149,7 @@ printr($newplayers, 0);
 // uncomment and reload to insert info into wp_drafts once the array looks good
 
 
+/*
 foreach($draftinsert as $arr){
 	
 	$wpdb->insert(
@@ -158,6 +173,8 @@ foreach($draftinsert as $arr){
 		 )
 	);	
 }
+*/
+
 
 
 // pass week parameter all players by ID and Score	

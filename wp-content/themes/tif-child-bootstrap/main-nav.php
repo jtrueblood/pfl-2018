@@ -107,7 +107,7 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (1625, 'active-link'); ?>"><a href="/create-new-player">Create New Player</a></li>
+												
 												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>
 												
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
@@ -117,6 +117,22 @@
 												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy">Draft Strategy</a></li>
 											</ul>
 									</li>
+									
+									<!--Menu list item-->
+									<li class="active-sub">
+										<a href="#">
+											<i class="fa fa-th"></i>
+											<span class="menu-title">Build Tools</span>
+											<i class="arrow"></i>
+										</a>
+											<!--Submenu-->
+											<ul class="collapse in">	
+												<li class="<?php ifbodyclass (1625, 'active-link'); ?>"><a href="/create-new-player">Create New Player</a></li>
+											</ul>
+									</li>
+									
+									
+							
 									
 									
 						

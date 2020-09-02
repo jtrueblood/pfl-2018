@@ -145,15 +145,15 @@ get_header();
 						
 						<div class="panel panel-bordered panel-light">
 							<div class="panel-heading">
-								<h3 class="panel-title">Create New Player</h3>
+								<h3 class="panel-title">Scripts</h3>
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24">
-											<a href="/create-new-player">Link to Create New Player Page</a>								
-									</div>
-						
-									
-								
+										<a href="/create-new-player">Create New Player</a><br>	
+										<a href="/builds/build-mfl-weekly/?Y=2019&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+										<a href="/builds/build-drafts/">Import Draft</a><br>	
+										<a href="/python-scripts">Sportsrefernce API Python Scripts</a><br>
+									</div>	
 								</div>
 							
 						</div>
@@ -166,20 +166,18 @@ get_header();
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24">	
-										<a href="https://www58.myfantasyleague.com/2020/home/38954#0" target="_blank">MFL Website 2020</a><br>
 										<a href="https://www.pro-football-reference.com/" target="_blank">Pro Football Reference</a><br>
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
 										<a href="https://docs.google.com/document/d/1D8VZPOBn04zVXYQB1gr-xb1NDe2nYLn9Rqgl4oZVhXI/edit?usp=sharing" target="_blank">PFL Rules - Rev 2019</a><br>
 										<hr>
-									
+										<a href="https://www58.myfantasyleague.com/2020/home/38954#0" target="_blank">MFL Website 2020</a><br>
 										<a href="http://www58.myfantasyleague.com/2019/home/38954#0" target="_blank">MFL Website 2019</a><br>
 										<a href="http://www58.myfantasyleague.com/2018/home/38954#0" target="_blank">MFL Website 2018</a><br>
 										<a href="http://www58.myfantasyleague.com/2017/home/38954#0" target="_blank">MFL Website 2017</a><br>
 										<a href="http://www58.myfantasyleague.com/2016/home/38954#0" target="_blank">MFL Website 2016</a><br>
 										<a href="http://www58.myfantasyleague.com/2015/home/47099#0" target="_blank">MFL Website 2015</a><br>
 										<hr>
-										<a href="/builds/build-mfl-weekly/?Y=2019&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a>
-										<a href="/python-scripts">Sportsrefernce API Python Scripts</a>
+										
 									</div>
 								</div>
 							</div>
@@ -388,18 +386,18 @@ get_header();
 									
 									
 									<?php 
-										echo '<p>Gamestreak -- get_player_game_streak($playerid)</p>';
+										echo '<p>get_player_game_streak($playerid);</p>';
 										echo '<p>displays games in a row played by a player.  Excludes bye weeks.</p>';
 											$gamestreak = get_player_game_streak($randomplayer); 
 											printr($gamestreak, 0);
 										
-										echo '<p>Player Matchup -- get_player_record($playerid)</p>';
+										echo '<p>get_player_record($playerid);</p>';
 										echo '<p>displays just the teams that the player played for by weekid => ETS</p>';
 											$record = get_player_record($randomplayer);
 											printr($record, 0);
 										
-										echo '<p>Player Results -- get_player_data($playerid)</p>';
-										echo '<p>gets all player data from table including record, vs, location, etc</p>';
+										echo '<p>get_player_data($playerid);</p>';
+										echo '<p>gets all player data from table including record, vs, location, etc.  basically, all of players career boxscores</p>';
 											$playerrecord = get_player_data($randomplayer);
 											printr($playerrecord, 0);
 									?>
@@ -470,9 +468,9 @@ get_header();
 									<h3 class="panel-title">Player Playoff Boxscores</h3>
 								</div>
 								<div class="panel-body">
+									<p>playerplayoffs($pid);</p>
 									<?php 
 										$playoffsplayer = playerplayoffs($randomplayer);
-										
 										printr($playoffsplayer, 0);
 
 									?>
@@ -485,6 +483,7 @@ get_header();
 									<h3 class="panel-title">Trades Involving Player</h3>
 								</div>
 								<div class="panel-body">
+									<p>get_trade_by_player($pid);</p>
 									<?php 
 										$playerbytrade = get_trade_by_player($randomplayer);
 										printr($playerbytrade, 0);
@@ -557,32 +556,12 @@ get_header();
 								</div>
 								
 								<div class="panel-body">
-									<p></p>
-							<?php 		/*
-get_cache('mfl/linkidcache', 0);	
-										$linkidcache = $_SESSION['mfl/linkidcache']; 
-										
-										foreach ($linkidcache as $key => $value){
-											$mflids[$value[2]] = $key;
-										}
-*/
-										
+									<p>playerid_mfl_to_pfl();</p>
+									<p>get array of linked MFL and PFL ids
+									<?php
 										$mflids = playerid_mfl_to_pfl();
-										
 										printr($mflids, 0);
-										
-										
-/*
-										foreach ($mflids as $key => $value){
-											$wpdb->query("UPDATE wp_players SET mflid = $value WHERE p_id = '$key'");
-										}
-										
-										
-*/
-										
-
-										
-							?>
+									?>
 							
 								</div>
 							</div>

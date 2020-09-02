@@ -2813,9 +2813,9 @@ $printit .= '<div class="panel-heading">';
 		$printit .= '<tbody>';
 
 				foreach ($array as $build){
+							
 					$picknumber = ltrim($build['pick'], '0');
 					$selectingteam = $teaminfo[$build['acteam']];
-					
 					
 					$selteam_sm = $build['acteam'];
 					$origteam_sm = $build['orteam'];
@@ -2833,6 +2833,7 @@ $printit .= '<div class="panel-heading">';
 					$containsLetter  = preg_match('/[a-zA-Z]/', $pid);
 					$idlength = strlen($pid);
 					
+
 					$playerimgobj = get_attachment_url_by_slug($pid);
 					$imgid =  attachment_url_to_postid( $playerimgobj );
 					$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
@@ -2859,13 +2860,13 @@ $printit .= '<div class="panel-heading">';
 						//$printit .= '<td class="min-width visible-xs">'.$selteam_sm.'</td>'; // either this one or the one above for non phone devices
 						
 						
-						if ($playerimg){		
+						if ($pid){		
 							$printit .= '<td class="min-width hidden-xs"><div class="draft-img-sm"><img src="'.$playerimg.'" class="player-image" style="background-color:#515151;"/></div></td>';
 						} else {
 							$printit .= '<td class="min-width hidden-xs"><div class="draft-img-sm"><img src="'.$pflmini.'" class="player-image"/></div></td>';
 						}
 						
-						if ($playerimg){
+						if ($pid){
 							$printit .= '<td class="text-bold"><a href="/player/?id='.$pid.'" class="player-link">'.$first.' '.$last.'</a></td>';
 						} else {
 							$printit .= '<td class="text-bold">'.$first.' '.$last.'</td>';
@@ -2879,6 +2880,7 @@ $printit .= '<div class="panel-heading">';
 					$printit .= '</tr>';
 					
 					$activenum = $picknumber;
+					//$printit .= $pid.'<br>';
 				}
 							
 		$printit .= '</tbody>';

@@ -1,17 +1,12 @@
 <?php
 /*
  * Template Name: Create New Player
- * Description: 
- */
+ * Description: Build page for adding new players to the PFL database.  Starts with the MFL ID for the player then adds player to wp_players table and creates unique table for player. */
  ?>
 
-<!-- In Dec of 2017 this template was switched over to pull data from mysql not from cached files.  -->
-<!-- Make the required arrays and cached files availible on the page -->
 <?php 
 $season = date("Y");
-
 $playerassoc = get_players_assoc();
-
 	
 ?>
 
@@ -31,14 +26,12 @@ $playerassoc = get_players_assoc();
 				<!--Page content-->
 				<div id="page-content">
 					
-					
-						
 						<div class="panel panel-bordered panel-light">
 							<div class="panel-heading">
 								<h3 class="panel-title">Create New Player</h3>
 							</div>
 								<div class="panel-body">
-									<div class="col-xs-24">
+									<div class="col-xs-24 col-sm-8">
 										<p><small>Check for player above and if they do not exist enter MFL ID below.</small></p>	
 										<form action="" method="post">
 
@@ -46,17 +39,16 @@ $playerassoc = get_players_assoc();
 											<br>
 											<input type="submit" />
 											
-											
 										</form>
 										<p><small>Year and possibly league ID value needs to be updated for function get_mfl_player_details()</small></p>
 									</div>
-									
+
 									<div class="col-xs-24">
 										
 										
 										<?php 
 											if ( isset( $_POST['mflid'] ) ){
-												
+
 												$form_mfl_id = 	$_POST['mflid'];
 												//echo $form_mfl_id;
 												$mfl_data = get_mfl_player_details($form_mfl_id);
@@ -79,6 +71,24 @@ $playerassoc = get_players_assoc();
 												$college = $mfl_data['college'];
 												$pflid = $draftyear.$justfour.$position;
 												$height = $mfl_data['playerProfile']['player']['height'];
+												
+												include_once('simplehtmldom/simple_html_dom.php');
+												
+												// SCRAPE NFL.com FOR NUMBER AND COLLEGE
+													$html = file_get_html('https://www.nfl.com/players/'.$first.'-'.$last.'/');				
+													if($html):
+													    $mflname = $html->find('.nfl-c-player-header__player-data', 0);
+													    preg_match_all('!\d+!', $mflname, $matches);
+														$jersey_number = $matches[0][0];
+														
+														$college = $html->find('.nfl-c-player-info ul.nfl-c-player-info__career-data li[2] .nfl-c-player-info__value', 0)->innertext;
+														strip_tags($college, '<div>');
+														
+														echo '<h5>From NFL.com Player Page</h5>';
+														echo $jersey_number.'<br>';
+														echo $college.'<br>';
+													endif;
+
 																								
 												$insertplayer = array(
 													'p_id' => $pflid,
@@ -89,9 +99,9 @@ $playerassoc = get_players_assoc();
 													'mflid' => $themflid,	
 													'height' => $height,
 													'weight' => $weight,
-													'college' => $for_college,
+													'college' => $college,
 													'birthdate' => $dob,
-													'number' => '',
+													'number' => $jersey_number,
 													'pfruri' => '',
 													'pfrcurl' => '',
 													'nickname' => ''
@@ -110,24 +120,11 @@ $playerassoc = get_players_assoc();
 										     } ?>
 										     
 									</div>
-									
-								
 								</div>
-							
 						</div>
 						<?php 
 							echo '<h3><a href="'.$pfrlink.'" target="_blank">Pro Football Reference Link</a></h3>';
-							printr($insertplayer, 0); ?>
-<!--
-						<?php
-						//$mflid = '14803';
-						$testplayer = get_mfl_player_details(14803);
-						printr($testplayer, 0);						
 						?>
--->
-
-						
-			
 											
 				</div><!--End page content-->
 

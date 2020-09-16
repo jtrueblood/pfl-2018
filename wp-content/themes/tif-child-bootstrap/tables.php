@@ -992,13 +992,44 @@ arsort($totalpotw);
 				
 			</div>
 			
+			
+			<!-- WEEK ONE REMATCH GAME -->
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				
+				<?php 
+					$pbgames = revenge_game();
+					
+					$labels = array('Year', 'Game', 'Outcome');	
+					tablehead('Week One Rematch Game', $labels);	
+				
+					foreach ($pbgames as $key => $value){		
+						if($key >= 1996): //we started the rematch game at the beginning of the 1996 season
+							if($value['pb_winner'] == $value['next_win']):
+								echo '<tr><td>'.$key.'</td><td>'.$value['next_win'].' over '.$value['next_loser'].'</td><td></td></tr>';
+								$stands++;
+							endif;
+							if($value['pb_winner'] == $value['next_loser']):
+								echo '<tr><td>'.$key.'</td><td>'.$value['next_win'].' over '.$value['next_loser'].'</td><td>REVENGE!</td></tr>';
+								$revenge++;
+							endif;	
+						endif;
+					}
+
+					echo $printrevenge;
+						
+					tablefoot('The Week 1 Rematch of the previous Posse Bowl began in 1996');	
+				?>
+				
+			</div>
+	
+			<!-- CAREER DURATION by POSITION-->
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				
 				<?php 
 					$career_duration = get_all_players_games_played();
 					
 					$labels = array('Pos', 'Games', 'Seasons');	
-					tablehead('Career Duration By Posittion', $labels);	
+					tablehead('Career Duration By Position', $labels);	
 				
 					$n = 0;
 					foreach ($career_duration as $key => $val){		

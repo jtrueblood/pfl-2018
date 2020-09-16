@@ -473,7 +473,7 @@ endif;
 			$image_attributes = wp_get_attachment_image_src($imgid, 'thumbnail');	
 			?>
 		<!-- Left COL -->
-		<div class="col-xs-24 col-sm-5 left-column">
+		<div class="col-xs-24 col-sm-4 left-column">
 			<div class="panel widget">
 				<div id="player_widget_img" class="player-img-top">
 					<img src="<?php echo $image_attributes[0]; ?>" style="height: 200px;"/>

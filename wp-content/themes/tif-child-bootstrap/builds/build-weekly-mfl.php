@@ -53,9 +53,30 @@ $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11',
 
 // THIS IS NOW COMMENTED OUT BECAUSE THE TRANSIENTS HAVE BEEN BUILT.  NEXT SEASON UNCOMMENT, CHANGE THE $YEAR and BUILD THE ARRAY EACH WEEK
 
+$curl = curl_init();
 
-$jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKmx1qmO1HIZDYeFbox&W='.$week.'&JSON=1');
-$weekresults = json_decode($jsonweekresults, true);	
+curl_setopt_array($curl, array(
+  CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=$lid&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W=$week&JSON=1",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_ENCODING => "",
+  CURLOPT_MAXREDIRS => 10,
+  CURLOPT_TIMEOUT => 0,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+  CURLOPT_CUSTOMREQUEST => "GET",
+  CURLOPT_HTTPHEADER => array(
+    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_PW_SEQ=ah9q2MiTteeo2wC5; MFL_LAST_LEAGUE_ID=38954"
+  ),
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+echo $response;
+
+
+// $jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKmx1qmO1HIZDYeFbox&W='.$week.'&JSON=1');
+$weekresults = json_decode($response, true);	
 $matchups = $weekresults['weeklyResults'];
 
 echo 'starters';
@@ -436,7 +457,8 @@ if($run == 'true'){
 								<li>Set Year and Week Values.  Check if any players are not found.  If so create player from MFL using 'Create New Player' widget on Homepage.</li> 
 								<li>Once all player tables are found or created. Change SQL to true to insert into database.</li>
 								<li>Once inserted change SQL back to false and set url CURL value to true to load player pages for all players who played this week and refresh leaders data.</li>
-							</ol>
+								<li>If there is an OVERTIME game, you will need to manually insert that data.  First figure out OT rosters and scores.  Then break the tie(s) and add one point to the winner on the MFL site.  Then add records to the wp_overtime table.  Add OT player ids to the team tables (ex. wp_team_WRZ).  Then add a line record for the game to the individual player tables.
+						</ol>
 						</div>
 					</div>
 				</div>
@@ -497,7 +519,7 @@ if($run == 'true'){
 					$ch = curl_init();
 
 					// set URL and other appropriate options
-					$options = array(CURLOPT_URL => "pfl-data.local/player/?id=$pid",
+					$options = array(CURLOPT_URL => "http://localhost:10060/player/?id=$pid",
 					                 CURLOPT_HEADER => false
 					                );
 					

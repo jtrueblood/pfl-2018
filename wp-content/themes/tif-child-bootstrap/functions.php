@@ -3953,3 +3953,31 @@ function get_season_game_highs($yearval){
 	return $thruput;
 }
 
+
+//get week 1 revenge game results
+function revenge_game(){
+	$champs = get_champions(); 
+		foreach($champs as $key => $val):
+			$nextyear = $key + 1;
+			$getteamresult = get_team_results_by_week($val['winner'], $nextyear.'01');
+			$teamresult = $getteamresult[$nextyear.'01'];
+			
+			if($teamresult['result'] > 0):
+				$nextwinner = $teamresult['team_int'];
+				$nextloser = $teamresult['versus'];
+			else:
+				$nextwinner = $teamresult['versus'];
+				$nextloser = $teamresult['team_int'];	
+			endif;
+
+			$pbgames[$key + 1] = array(
+				'pb_winner'	=> $val['winner'],
+				'pb_loser'	=> $val['loser'],
+				'next_win' => $nextwinner,
+				'next_loser' => $nextloser,
+				//'data'	=> $teamresult
+			);								
+		endforeach;	
+		
+	return $pbgames;	
+}

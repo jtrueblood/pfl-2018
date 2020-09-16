@@ -3,21 +3,21 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Alfa Slab One Regular'), local('AlfaSlabOne-Regular'), url(https://fonts.gstatic.com/s/alfaslabone/v9/6NUQ8FmMKwSEKjnm5-4v-4Jh6dU.ttf) format('truetype');
+  src: local('Alfa Slab One Regular'), local('AlfaSlabOne-Regular'), url(https://fonts.gstatic.com/s/alfaslabone/v10/6NUQ8FmMKwSEKjnm5-4v-4Jh6dU.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Black Ops One';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Black Ops One Regular'), local('BlackOpsOne-Regular'), url(https://fonts.gstatic.com/s/blackopsone/v11/qWcsB6-ypo7xBdr6Xshe96H3WDw.ttf) format('truetype');
+  src: local('Black Ops One Regular'), local('BlackOpsOne-Regular'), url(https://fonts.gstatic.com/s/blackopsone/v12/qWcsB6-ypo7xBdr6Xshe96H3WDw.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Bungee';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Bungee'), local('Bungee-Regular'), url(https://fonts.gstatic.com/s/bungee/v5/N0bU2SZBIuF2PU_ECg.ttf) format('truetype');
+  src: local('Bungee'), local('Bungee-Regular'), url(https://fonts.gstatic.com/s/bungee/v6/N0bU2SZBIuF2PU_ECg.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Bungee Shade';
@@ -31,7 +31,7 @@
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: local('Coda ExtraBold'), local('Coda-ExtraBold'), url(https://fonts.gstatic.com/s/coda/v15/SLXIc1jY5nQ8HeIgTp4.ttf) format('truetype');
+  src: local('Coda ExtraBold'), local('Coda-ExtraBold'), url(https://fonts.gstatic.com/s/coda/v16/SLXIc1jY5nQ8HeIgTp4.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Exo 2';
@@ -52,35 +52,35 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Holtwood One SC'), local('HoltwoodOneSC'), url(https://fonts.gstatic.com/s/holtwoodonesc/v10/yYLx0hLR0P-3vMFSk1TCq3Txg5B3cQ.ttf) format('truetype');
+  src: local('Holtwood One SC'), local('HoltwoodOneSC'), url(https://fonts.gstatic.com/s/holtwoodonesc/v11/yYLx0hLR0P-3vMFSk1TCq3Txg5B3cQ.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Montserrat';
   font-style: italic;
   font-weight: 900;
   font-display: swap;
-  src: local('Montserrat Black Italic'), local('Montserrat-BlackItalic'), url(https://fonts.gstatic.com/s/montserrat/v14/JTUPjIg1_i6t8kCHKm459WxZSgnD-w.ttf) format('truetype');
+  src: local('Montserrat Black Italic'), local('Montserrat-BlackItalic'), url(https://fonts.gstatic.com/s/montserrat/v15/JTUPjIg1_i6t8kCHKm459WxZSgnD-w.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 900;
   font-display: swap;
-  src: local('Montserrat Black'), local('Montserrat-Black'), url(https://fonts.gstatic.com/s/montserrat/v14/JTURjIg1_i6t8kCHKm45_epG7g4.ttf) format('truetype');
+  src: local('Montserrat Black'), local('Montserrat-Black'), url(https://fonts.gstatic.com/s/montserrat/v15/JTURjIg1_i6t8kCHKm45_epG7g4.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Neuton';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: local('Neuton Bold'), local('Neuton-Bold'), url(https://fonts.gstatic.com/s/neuton/v12/UMBQrPtMoH62xUZKdK0feg.ttf) format('truetype');
+  src: local('Neuton Bold'), local('Neuton-Bold'), url(https://fonts.gstatic.com/s/neuton/v13/UMBQrPtMoH62xUZKdK0feg.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Russo One';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Russo One'), local('RussoOne-Regular'), url(https://fonts.gstatic.com/s/russoone/v8/Z9XUDmZRWg6M1LvRYsH-yA.ttf) format('truetype');
+  src: local('Russo One'), local('RussoOne-Regular'), url(https://fonts.gstatic.com/s/russoone/v9/Z9XUDmZRWg6M1LvRYsH-yA.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Saira Stencil One';
@@ -94,14 +94,14 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: local('Staatliches Regular'), local('Staatliches-Regular'), url(https://fonts.gstatic.com/s/staatliches/v3/HI_OiY8KO6hCsQSoAPmtMbec.ttf) format('truetype');
+  src: local('Staatliches Regular'), local('Staatliches-Regular'), url(https://fonts.gstatic.com/s/staatliches/v4/HI_OiY8KO6hCsQSoAPmtMbec.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Teko';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: local('Teko Bold'), local('Teko-Bold'), url(https://fonts.gstatic.com/s/teko/v9/LYjCdG7kmE0gdRhYgCM.ttf) format('truetype');
+  src: local('Teko Bold'), local('Teko-Bold'), url(https://fonts.gstatic.com/s/teko/v10/LYjCdG7kmE0gdRhYgCM.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Tienne';

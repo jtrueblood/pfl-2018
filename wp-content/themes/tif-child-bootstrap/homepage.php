@@ -150,7 +150,7 @@ get_header();
 								<div class="panel-body">
 									<div class="col-xs-24">
 										<a href="/create-new-player">Create New Player</a><br>	
-										<a href="/builds/build-mfl-weekly/?Y=2019&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+										<a href="/builds/build-mfl-weekly/?Y=2020&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
 										<a href="/builds/build-drafts/">Import Draft</a><br>	
 										<a href="/python-scripts">Sportsrefernce API Python Scripts</a><br>
 									</div>	

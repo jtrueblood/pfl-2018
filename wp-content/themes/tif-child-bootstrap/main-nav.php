@@ -41,7 +41,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (70, 'active-link'); ?>"><a href="/player/?id=1998MannQB">Individual Players</a></li>
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
-												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2019">Leaders By Season</a></li>	
+												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2020">Leaders By Season</a></li>	
 												<li class="<?php ifbodyclass (1413, 'active-link'); ?>"><a href="/player-value-quotient/">Player Value</a></li>
 												<li class="<?php ifbodyclass (1495, 'active-link'); ?>"><a href="/supercards/">Supercards</a></li>
 											</ul>
@@ -58,7 +58,7 @@
 											<!--Submenu-->
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2018">Seasons</a></li>
-												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2019">Drafts by Year</a></li>
+												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2020">Drafts by Year</a></li>
 												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2019">Standings By Year</a></li>			
 												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>															<li class="<?php ifbodyclass (252, 'active-link'); ?>"><a href="/protections">Protections By Year</a></li>
 											</ul>

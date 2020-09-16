@@ -3003,17 +3003,16 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
 	
 	$curl = curl_init();
 	curl_setopt_array($curl, array(
-	
-	  CURLOPT_URL => "http://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&YEAR=$year&PLAYERS=$mflid&JSON=1&APIKEY=aRNp1sySvuKmx1qmO1HIZDYeFbox",
+	  CURLOPT_URL => "https://www58.myfantasyleague.com/2020/export?TYPE=playerScores&L=38954&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
-	  CURLOPT_TIMEOUT => 30,
+	  CURLOPT_TIMEOUT => 0,
+	  CURLOPT_FOLLOWLOCATION => true,
 	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 	  CURLOPT_CUSTOMREQUEST => "GET",
 	  CURLOPT_HTTPHEADER => array(
-	    "Cache-Control: no-cache",
-	    "Postman-Token: 12d23246-b5e0-73c0-4b72-2d5c0ea6d955"
+	    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_LAST_LEAGUE_ID=38954; MFL_PW_SEQ=ah9q2MiTtein3AK%2B"
 	  ),
 	));
 	

@@ -68,15 +68,14 @@ add_filter( 'filesystem_method', create_function( '$a', 'return "direct";' ) );
 add_image_size( 'player-card', 400, 400, array( 'center', 'top' ) );
 
 /* clean print_r */
-
 function printr($data, $die) {
    echo '<pre>';
       print_r($data);
    echo '</pre>';
-   if ($die == 1){
+   if ($die == 1):
 	   echo die();
 	   echo exit(0);
-   }
+   endif;
 }
 
 /* clean print_r */
@@ -2787,12 +2786,18 @@ function url_exists($url) {
 }
 
 
+function career_draft_value($pid, $teamid){
+	//return $pid;
+	$career = get_player_career_stats_team($pid, $teamid);
+	return array('points' => $career['points'], 'seasons' => $career['seasons'] );
+}
+
 // print season draft table
 function getdraft($year, $array){
 		
 $players = get_players_assoc ();	
 $teaminfo = get_teams();
-	
+
 $printit .= '<div class="panel panel-dark">';
 $printit .= '<div class="panel-heading">';
 		$printit .= '<h3 class="panel-title">'.$year.' Draft</h3>';
@@ -2806,8 +2811,9 @@ $printit .= '<div class="panel-heading">';
 					$printit .= '<th class="min-width">Orig Team</th>';
 					$printit .= '<th class="min-width hidden-xs"></th>';
 					$printit .= '<th>Name</th>';
-					$printit .= '<th class="min-width">Position</th>';
-					$printit .= '<th class="min-width">Pts In Season</th>';
+					$printit .= '<th class="min-width">Pos</th>';
+					$printit .= '<th class="min-width">Season PTS</th>';
+					$printit .= '<th class="min-width">Career PTS</th>';
 				$printit .= '</tr>';
 		$printit .= '</thead>';
 		$printit .= '<tbody>';
@@ -2826,8 +2832,8 @@ $printit .= '<div class="panel-heading">';
 					}
 
 					$pid = $build['playerid'];
-					$round = $build['round'];
-				
+					$round = $build['round'];	
+					
 					$first = $build['playerfirst'];
 					$last = $build['playerlast'];
 					$containsLetter  = preg_match('/[a-zA-Z]/', $pid);
@@ -2842,10 +2848,12 @@ $printit .= '<div class="panel-heading">';
 					//$playerimg = '/wp-content/themes/tif-child-bootstrap/img/players/'.$pid.'.jpg';
 					$pflmini = '/wp-content/themes/tif-child-bootstrap/img/pfl-mini-dark.jpg';
 					$position = $build['position'];
-		
+					
+					//career value of the pick
+					$careerdraftvalue = career_draft_value($pid, $selectingteam['int']);
 					
 					if ($activenum > $picknumber){
-						$printit .= '<tr class="text-center bg-dark text-2x"><td colspan="7">Round '.$round.'</td></tr>';
+						$printit .= '<tr class="text-center bg-dark text-2x"><td colspan="8">Round '.$round.'</td></tr>';
 					}
 					
 					$printit .= '<tr>';
@@ -2877,6 +2885,8 @@ $printit .= '<div class="panel-heading">';
 						endif;	
 						$printit .= '<td class="text-center"><span class="">'.$position.'</span></td>';
 						$printit .= '<td class="text-center"><span class="">'.$seasonpoints.'</span></td>';
+						$printit .= '<td class="text-center"><span class="">'.$careerdraftvalue['points'].'</span></td>';
+						//printr($careerdraftvalue['seasons'], 0);
 					$printit .= '</tr>';
 					
 					$activenum = $picknumber;
@@ -3028,7 +3038,7 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
 				$score[$value['week']] = $value['score'];
 		}
 	}
-	
+	sleep(2);
 	return $score[$week];
 	
 }

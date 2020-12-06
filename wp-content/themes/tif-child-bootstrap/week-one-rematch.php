@@ -9,6 +9,7 @@
 <!-- Make the required arrays and cached files availible on the page -->
 <?php 
 $season = date("Y");
+$teamlist = teamlist();
 
 ?>
 
@@ -44,10 +45,12 @@ $season = date("Y");
 									if($key >= 1996): //we started the rematch game at the beginning of the 1996 season
 										if($value['pb_winner'] == $value['next_win']):
 											echo '<h4>'.$key.' - It Stands / '.$value['next_win'].' over '.$value['next_loser'].'</h4>';
+											$wincount[$value['next_win']][] = 1;
 											$stands++;
 										endif;
 										if($value['pb_winner'] == $value['next_loser']):
 											echo '<h4>'.$key.' - Revenge!/ '.$value['next_win'].' over '.$value['next_loser'].'</h4>';
+											$losecount[$value['next_loser']][] = 1;
 											$revenge++;
 										endif;	
 									endif;
@@ -55,7 +58,25 @@ $season = date("Y");
 								
 								echo '<hr>';
 								echo '<h4>Stands Up - '. $stands.'</h4>';
-								echo '<h4>Stands Up - '. $revenge.'</h4>';							
+								echo '<h4>Stands Up - '. $revenge.'</h4>';		
+								
+								$winloss = array('win' => $wincount, 'loss' => $losecount);
+								
+								foreach ($winloss['win'] as $key => $item) {
+								   $aw[$key] = array_sum($item);
+								}
+								foreach ($winloss['loss'] as $key => $item) {
+								   $al[$key] = array_sum($item);
+								}
+								
+								foreach ($teamlist as $key => $val):
+									$finwl[$key] = array(
+										'wins' => $aw[$key],
+										'loss' => $al[$key]	
+									); 
+								endforeach;
+								
+								printr($winloss);					
 								?>									     
 						</div>
 								

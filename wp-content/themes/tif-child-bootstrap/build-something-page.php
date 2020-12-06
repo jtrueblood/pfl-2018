@@ -34,6 +34,10 @@ $playerassoc = get_players_assoc();
 					<div class="panel panel-bordered panel-light">
 						<div class="panel-heading">
 							<h3 class="panel-title">Title</h3>
+							<?php 
+								$team = get_team_results_expanded('ETS');
+								printr($team, 0);
+							?>
 						</div>
 						<div class="panel-body">										     
 						</div>

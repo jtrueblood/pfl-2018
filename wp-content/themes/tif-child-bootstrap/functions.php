@@ -2271,6 +2271,14 @@ function get_player_record($pid){
 	return $cleanteams;
 }
 
+//get player games by team count
+function get_player_team_games($pid){
+    $allgames = get_player_record($pid);
+    $count = array_count_values($allgames );
+    return $count;
+}
+
+
 // combines player data tables and get_player_record to show if the player was on the winning or losing side that week
 function get_player_results($pid){
 	$playerrecord = get_player_record($pid);
@@ -2336,12 +2344,13 @@ function get_helmet_name_history_by_team($team, $year){
 	foreach ($get as $revisequery){
 		$helm_hist_m[$revisequery[2]] = array(
 			'team' => $revisequery[1], 
-			'year' => $revisequery[2],
-			'name' => $revisequery[3],  
+			'yearstart' => $revisequery[2],
+			'name' => $revisequery[3],
 			'helmet' => $revisequery[4],
-			'color1' => $revisequery[5],
-			'color2' => $revisequery[6],
-			'color3' => $revisequery[7]
+            'jersey' => $revisequery[5],
+			'color1' => $revisequery[6],
+			'color2' => $revisequery[7],
+			'color3' => $revisequery[8]
 		);
 	}
 	
@@ -3756,6 +3765,8 @@ function supercard($pid){
 	$number_ones = get_number_ones();
 	
 	$halloffame = get_award_hall();
+
+	$gamesbyteam = get_player_team_games($pid);
 	
 		echo '<div class="col-xs-24 eq-box-sm">';
 			echo '<div class="panel panel-bordered panel-dark the-supercard">';
@@ -3771,6 +3782,23 @@ function supercard($pid){
 				//echo '<a href="/player/?id='.$val['pid'].'"><img src="'.$playerimg.'" class="img-responsive"/></a>';
 				echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
 				?>
+                <?php
+                    arsort($gamesbyteam);
+                    //printr($gamesbyteam, 0);
+                        $r = 0;
+                        foreach ($gamesbyteam as $key => $value):
+                            if ($r == 0):
+                                $string .= '<strong>'.$teams[$key]['team'].'</strong>, ';
+                            else:
+                                $string .= $teams[$key]['team'].', ';
+                           endif;
+                           $r++;
+                        endforeach;
+
+                    echo 'PFL Teams: '.substr($string, 0, -2);
+
+                    ?>
+
 				<div class="table-responsive mar-top">
 						
 					<table class="table table-striped">
@@ -3913,7 +3941,7 @@ function supercard($pid){
 							echo '<h5 class="text-left text-bold">&nbsp;Inducted into the PFL Hall of Fame</h5>';
 						}
 			echo '</div>';
-			
+
 			//TEMPORARY TO BUILD OLD PLAYER INFO DATA
 			if($info[0]['weight'] == ''):
 				if($position == 'PK'):
@@ -3990,4 +4018,44 @@ function revenge_game(){
 		endforeach;	
 		
 	return $pbgames;	
+}
+
+function get_uni_info_by_team($teamid){
+    global $wpdb;
+    $get = $wpdb->get_results("select * from wp_helmet_history where team = '$teamid'", ARRAY_N);
+
+    $jersey_val = array();
+
+    foreach ($get as $revisequery){
+        $jersey_val[$revisequery[2]] = $revisequery[5];
+    }
+
+    $i = 1991;
+    $thisyear = date('Y');
+
+    while ($i <= $thisyear){
+        if($jersey_val[$i]):
+            $build_jersey[$i] = $jersey_val[$i];
+            $store = $jersey_val[$i];
+        else:
+            $build_jersey[$i] = $store;
+        endif;
+        $i++;
+    }
+
+    return $build_jersey;
+}
+
+// Return a svg of a jersey by number
+// team id abv ALLCAP, H or R or A (alt), year jersey was worn, number on jersey
+
+function show_jersey_svg ($teamid, $location, $year, $num){
+    $number = str_pad($num, 2, '0', STR_PAD_LEFT);
+    $jersey =  '/img/uni-svgs/'.$teamid.'/'.$teamid.'_'.$location.'_'.$year.'_0'.$number.'000.svg';
+    return $jersey;
+}
+
+function show_helmet ($teamid, $year, $facing){
+    $helmet =  '/img/helmets/weekly/'.$teamid.'-helm-'.$facing.'-'.$year.'.png';
+    return $helmet;
 }

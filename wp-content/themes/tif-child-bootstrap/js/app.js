@@ -298,7 +298,10 @@ jQuery(document).ready(function($) {
 	    $(this).hide();
 	    //or $(this).css({visibility:"hidden"}); 
 	});
-	
-		   
-	        
+
+	// HANDLE BROKEN IMAGES
+	// $("img").error(function () {
+	// 	$(this).unbind("error").attr("src", "/wp-content/uploads/circ_logo_trans.png");
+	// });
+
 }); /* CLOSE DOCUMENT */

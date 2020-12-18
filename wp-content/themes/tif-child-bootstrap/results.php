@@ -448,9 +448,9 @@ printr($assoc, 0);
 									}
 								}
 							}
-							
+
 							// store the week scores as an array to use for high score
-							$soredata[] = array(
+							$soredata = array(
 								$h_qb1, 
 								$h_rb1,
 								$h_wr1,
@@ -458,13 +458,13 @@ printr($assoc, 0);
 								$a_qb1,
 								$a_rb1, 
 								$a_wr1, 
-								$a_pk1 
+								$a_pk1
 							);
 							
 							// Display the Boxes Here...		
 							echo '<div class="col-xs-24 col-sm-12 col-md-8">
 							
-							<div class="panel panel-dark">
+							<div class="panel panel-dark game-panel">
 								<div class="panel-heading">
 									<div class="panel-control">';
 // 										alter CMN stadium name based on year
@@ -486,10 +486,14 @@ printr($assoc, 0);
 							if ($homepoints > $awaypoints){
 								echo '<span class="text-2x text-bold">'.$get_the_helmet_home['name'].'</span><span class="text-2x pull-right text-bold">'.$homepoints.'</span><br>';
 								echo '<span class="text-2x">'.$get_the_helmet_away['name'].'</span><span class="text-2x pull-right">'.$awaypoints.'</span><br>';
+							    $winning_team = $hometeam;
+							    $winning_location = 'H';
 							} else {
 								echo '<span class="text-2x">'.$get_the_helmet_home['name'].'</span>  <span class="text-2x pull-right">'.$homepoints.'</span><br>';
 								echo '<span class="text-2x text-bold">'.$get_the_helmet_away['name'].'</span>  <span class="text-2x pull-right text-bold">'.$awaypoints.'</span><br>';
-							}						
+                                $winning_team = $awayteam;
+                                $winning_location = 'R';
+							}
 
 					// boxscore left image
 					
@@ -513,7 +517,7 @@ printr($assoc, 0);
 						echo '<a href="/player/?id='.$h_rb1.'">'.checkfornone ($h_rb1_data['first']).' '.$h_rb1_data['last'].'</a><span class="pull-right">'.$h_rb1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$h_wr1.'">'.checkfornone ($h_wr1_data['first']).' '.$h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$h_pk1.'">'.checkfornone ($h_pk1_data['first']).' '.$h_pk1_data['last'].'</a><span class="pull-right">'.$h_pk1_data['points'].'</span><br>';
-						
+
 /*
 						$get_the_helmet_home = get_helmet($hometeam, $year_sel);
 						printr($get_the_helmet_home, 0);
@@ -539,7 +543,18 @@ printr($assoc, 0);
 					//overtime area 
 					
 						if ( $is_overtime == 1){
-							
+
+                            $soredata_ot = array(
+                                $h_qb2,
+                                $h_rb2,
+                                $h_wr2,
+                                $h_pk2,
+                                $a_qb2,
+                                $a_rb2,
+                                $a_wr2,
+                                $a_pk2
+                            );
+
 							echo '<div class="overtime">';
 								echo '<hr>';
 								echo '<span class="text-bold" style="display:block;">Overtime Game</span><br>';
@@ -561,8 +576,7 @@ printr($assoc, 0);
 										echo '<a href="/player/?id='.$a_pk2.'">'.checkfornone ($a_pk2_data['first']).' '.$a_pk2_data['last'].'</a><span class="pull-right">'.$a_pk2_data['points'].'</span><br>';
 								
 									echo '</div>';	
-								
-								
+
 							echo '</div>';
 						}
 										
@@ -680,12 +694,43 @@ printr($assoc, 0);
 /*
 						
 */
-									echo '</div> 
-										</div>';
-										?>
+                                    // JERSEY SECTION
+                                    $getpvqmult = getpvqmultipliers($year_sel);
+                                    if($soredata_ot):
+                                        $combined_soredata = array_merge($soredata, $soredata_ot);
+                                    else:
+                                        $combined_soredata = $soredata;
+                                    endif;
+
+                                    $pvqbygame = array();
+                                    foreach ($combined_soredata as $key => $value):
+                                        $pvqpos = substr($value, 0 -2);
+                                        $playerpointsweek = get_one_player_week($value, $year_sel.$week_sel);
+                                        $getteam = get_player_record($value);
+                                        if($getteam[$year_sel.$week_sel] == $winning_team):
+                                            if($value != 'None'):
+                                                $pvqbygame[$value] = $getpvqmult[$pvqpos.'_Mult'] * $playerpointsweek;
+                                            endif;
+                                        endif;
+                                    endforeach;
+                                    arsort($pvqbygame);
+                                    $game_best_effort = array_key_first($pvqbygame);
+                                    $playerbasic = get_player_basic_info($game_best_effort);
+                                    $playernumber = $playerbasic[0]['number'];
+                                    $playername = $playerbasic[0]['first'].' '.$playerbasic[0]['last'];
+                                    $uni_info = get_uni_info_by_team($winning_team);
+                                    $jersey_url = show_jersey_svg($winning_team, $winning_location, $uni_info[$year_sel], $playernumber);
+                                    //echo $jersey_url;
+                                    ?>
+                                    <p class="pt-10">Game MVP (PVQ Based) <span class="text-bold"><br>
+                                        <?php echo $playername;?></span></p>
+                                    <div class="game-pvq-mvp" style="background-image: url(<?php echo get_stylesheet_directory_uri().$jersey_url;?>);">
+                                    </div>
+                                     </div>
+										</div>
 
 									</div>
-									
+
 								</div>
 								
 								<?php
@@ -736,7 +781,7 @@ printr($assoc, 0);
 							
 							reset($tops);
 							$result = key($tops);
-							
+
 							//printr($tops, 0);
 							
 							?>	
@@ -780,8 +825,7 @@ printr($assoc, 0);
 										} else { 	
 											echo 'No Player Found';
 										}
-									
-									
+
 									?>
 									
 								</div>

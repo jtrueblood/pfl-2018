@@ -504,15 +504,12 @@ endif;
 						<span class="text-muted">IDs: </span><?php echo $playerid; ?><?php 
 							if(!empty($mflid)){
 								echo ' / '.$mflid;
-							} 
-							
+							}
 							if ($curlsuccess == 200){
 								echo ' / <a href="'.$profblink.'" target="_blank">'.$profburi.'</a>';
 							}
-							
-
 							?>
-						</span><br/>
+						</p><br/>
 						<?php if(!empty($college)){ ?>
 							<span class="text-muted">College: </span><span class="text-bold"><?php echo $college; ?></span><br>
 							<span class="text-muted">Height: </span><span class="text-bold"><?php echo $height; ?></span>

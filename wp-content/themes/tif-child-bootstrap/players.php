@@ -547,23 +547,18 @@ endif;
 			<div class="panel widget">
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/award-hall.jpg">
-					
 					<?php 
 						foreach ($awards as $getaward){
 							if ($getaward['award'] == 'Hall of Fame Inductee'){
 								echo '<h4>'.$getaward['year'].'</h4><h5>Hall of Fame Inductee</h5>';
 							}	
 						}
-						
 					?>
 				</div>
 			</div>
-			<?php } 
-				
-				//printr($honor, 0);
+			<?php }
 			?>
-		
-		
+
 			<!-- only if player won title -->
 			<?php if($titlewon == 1){ ?>
 			<div class="panel widget">
@@ -619,7 +614,6 @@ endif;
 						foreach ($awards as $getaward){
 							echo '<span class="text-bold">'.$getaward['year'].'</span> '.$getaward['award'].'<br>';
 						}
-						
 					?>
 				</div>
 			</div>
@@ -637,19 +631,27 @@ endif;
 				</div>
 	
 				<!--Panel body-->
-				<div id="demo-panel-collapse" class="collapse out" aria-expanded="false">
+				<div id="demo-panel-collapse" class="collapse in" aria-expanded="false">
 					<div class="panel-body">
 				<?php
+                //printr($teamall_no_change, 0);
 				if($teamall_no_change):
 					echo '<div class="uniwrapper">';
 						$team_switches = array_filter($teamall_no_change);
 						//printr($team_switches, 0);
-						//$teamcolors = get_helmet_name_history_by_team('ATK', 1992);
 						foreach($team_switches as $key => $value){
-							$uniyear = substr($key, 0, 4);
-							$teamcolors = get_helmet_name_history_by_team($value, $uniyear);
-				    		echo '<a class="btn-link text-semibold add-tooltip" data-toggle="tooltip" data-placement="bottom" href="#" data-original-title="'.$value.'" aria-describedby="tooltip906942"><div class="uniform" style="background-color: #'.$teamcolors['color1'].'; border: 4px solid #'.$teamcolors['color2'].'; color: #'.$teamcolors['color3'].';">'.$playernumber.'</div></a> ';
-				    	}
+                            $uni_info = get_uni_info_by_team($value);
+                            $yearuni = substr($key, 0, 4);
+                            //echo $yearuni;
+                            $jerseyvalue = $uni_info[$yearuni];
+                            if($jerseyvalue < 1):
+                                $jerseyvalue = 1;
+                            endif;
+                            $getjersey = show_jersey_svg($value, 'H', $jerseyvalue, $playernumber );
+                            echo '<div class="jersey-small">
+				                <img src="'.get_stylesheet_directory_uri().$getjersey.'" class=""/>
+                            </div>';
+						}
 				    echo '</div>';
 			    else:
 				    echo '<p>&nbsp;</p>';

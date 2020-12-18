@@ -639,7 +639,15 @@ img.widget-bg.team-helmet-image {
 }
 .ring-of-honor .honored {
   display: inline-block;
-  padding: 0 5px;
+}
+.ring-of-honor .honored img {
+  width: 70px;
+}
+.jersey-small {
+  display: inline-block;
+}
+.jersey-small img {
+  width: 70px;
 }
 .draft-img-sm {
   width: 70px;
@@ -769,4 +777,15 @@ img.widget-bg.team-helmet-image {
 }
 .panel.the-supercard table {
   font-size: 12px;
+}
+img.svg-jersey {
+  width: 100%;
+}
+.layer-helmet {
+  position: absolute;
+  top: 110px;
+  left: 140px;
+}
+.layer-helmet .show-helmet {
+  width: 100px;
 }

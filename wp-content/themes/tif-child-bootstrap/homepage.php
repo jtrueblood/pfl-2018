@@ -187,7 +187,15 @@ get_header();
 					
 					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
-							<div class="panel panel-bordered panel-light">
+                            <div class="panel panel-bordered panel-light">
+                                <div class="panel-body">
+                                    <?php while (have_posts()) : the_post(); ?>
+                                        <p><?php the_content();?></p>
+                                    <?php endwhile; wp_reset_query(); ?>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
 									<h3 class="panel-title">Basic Info</h3>
 								</div>
@@ -197,54 +205,14 @@ get_header();
 								</div>
 																
 							</div>
-					</div>
-					
-					<!-- PLAYER SPOTLIGHT -->
-					<div class="col-xs-24 col-sm-4 left-column">
-						<div class="panel widget" >
-							
-							<div class="widget-header" style="min-height: 200px;" >
-								
-								<?php 
-									$ifimage = check_if_image($randomplayer);
 
-									if($ifimage == 1){
-										$playerimgobj = get_attachment_url_by_slug($randomplayer);
-										$imgid =  attachment_url_to_postid( $playerimgobj );
-										$image_attributes = wp_get_attachment_image_src($imgid);
-										
-										echo '<img src="'.$image_attributes[0].'" class="widget-bg img-responsive">';
-									} else {
-										echo '<img src="'.get_stylesheet_directory_uri().'/img/players/'.$randomplayer.'.jpg" class="widget-bg img-responsive">';
-									}
-								?>
-								
-							</div>
-							<div class="widget-body text-center">
-								<?php 
-									if($ifimage == 1){	
-										echo $ifimage.' source: /wp-content/uploads/';
-									} else {
-										echo $ifimage.' source: /img/players/';
-									}
-									?>
-								<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $position; ?>.jpg">
-								<h3 class="mar-no"><a href="/player/?id=<?php echo $randomplayer;?>"><?php echo $first.' '.$last; ?></a></h3>
-								<p></p>
-<!-- 								<h4 class="mar-no text-sm">	text could go here </h4> -->
-							</div>
-						</div>
+
 					</div>
-					
-					<div class="col-xs-12 col-sm-6 eq-box-sm">
-						<div class="panel panel-bordered panel-light">
-							<div class="panel-body">
-								<?php while (have_posts()) : the_post(); ?>
-								<p><?php the_content();?></p>
-								<?php endwhile; wp_reset_query(); ?>
-							</div>
-						</div>
-					</div>
+
+                    <div class="col-xs-12 col-sm-12 eq-box-md">
+                    <!-- PLAYER SUPERCARD -->
+                        <?php $supercard = supercard($randomplayer); ?>
+                    </div>
 							
 					<!-- PLAYER SPOTLIGHT -->
 					<div class="col-xs-24 col-sm-6 left-column">
@@ -390,6 +358,11 @@ get_header();
 										echo '<p>displays games in a row played by a player.  Excludes bye weeks.</p>';
 											$gamestreak = get_player_game_streak($randomplayer); 
 											printr($gamestreak, 0);
+
+                                        echo '<p>get_player_team_games($playerid)</p>';
+                                        echo '<p>Returns an array of games played for a specific team by the player</p>';
+                                            $playerteamcount = get_player_team_games($randomplayer);
+                                            printr($playerteamcount, 0);
 										
 										echo '<p>get_player_record($playerid);</p>';
 										echo '<p>displays just the teams that the player played for by weekid => ETS</p>';
@@ -565,7 +538,11 @@ get_header();
 							
 								</div>
 							</div>
+
+
+
 					</div>
+
 
 					
 				</div>

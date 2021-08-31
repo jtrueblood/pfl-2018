@@ -2274,7 +2274,9 @@ function get_player_record($pid){
 //get player games by team count
 function get_player_team_games($pid){
     $allgames = get_player_record($pid);
-    $count = array_count_values($allgames );
+    if($allgames):
+        $count = array_count_values($allgames );
+    endif;
     return $count;
 }
 
@@ -2618,6 +2620,28 @@ function insert_wp_career_leaders($pid){
 	 return $inserted;
  
 }
+
+// insert projected player season scores into table for preseason trends
+function insert_wp_projections($array){
+    global $wpdb;
+
+    $inserted = $wpdb->insert(
+        'wp_draftplan_projections',
+        array(
+            'id' => '',
+            'name' => $array['name'],
+            'date' => date('Y-m-d'),
+            'projection' => $array['est_pfl_season_score']
+        ),
+        array(
+            '%d','%s','%d','%d'
+        )
+    );
+
+    return $inserted;
+
+}
+
 
 // get player career stats for one season only inserts when page is loaded (homepage, playerpage)
 
@@ -2982,11 +3006,12 @@ function teamid_mfl_to_name(){
 function get_mfl_player_details($mflid){
 
 	$lid = 38954;
+	$year = date('Y');
 	$curl = curl_init();
 
 	curl_setopt_array($curl, array(
 	
-	  CURLOPT_URL => "https://api.myfantasyleague.com/2020/export?TYPE=playerProfile&SINCE=&PLAYERS=$mflid&JSON=1",
+	  CURLOPT_URL => "https://api.myfantasyleague.com/$year/export?TYPE=playerProfile&SINCE=&PLAYERS=$mflid&JSON=1",
 	  CURLOPT_RETURNTRANSFER => true,
 	  CURLOPT_ENCODING => "",
 	  CURLOPT_MAXREDIRS => 10,
@@ -3584,7 +3609,7 @@ global $wpdb;
 function insert_pfl_week_id($id, $pfl){
 	global $wpdb;
 	$pfdsched = $id;
-		$wpdb->update( 
+		$wpdb->update(
 	    'wp_sdapi_schedule_all', 
 	    array( 
 	        'pflweekid' => $pfl,  // string
@@ -3634,11 +3659,21 @@ function estimated_pfl_score($py, $ptd, $pint, $ruyd, $rutd, $reyd, $retd, $fg, 
 	$pvar = 30;
 	$rvar = 10;
 
-	$pass = floor($py / $pvar);
-	$rush = floor($ruyd / $rvar);
-	$rec = floor($reyd / $rvar);
-	$tds = ($ptd + $rutd + $retd) * 2;
-	$kicks = ($fg * 2) + $ep;
+	if($py):
+	    $pass = floor($py / $pvar);
+	endif;
+	if($ruyd):
+	    $rush = floor($ruyd / $rvar);
+	endif;
+	if($reyd):
+	    $rec = floor($reyd / $rvar);
+	endif;
+	if( $ptd || $rutd || $retd):
+	    $tds = ($ptd + $rutd + $retd) * 2;
+	endif;
+	if($ep):
+	    $kicks = ($fg * 2) + $ep;
+	endif;
 	
  	$thecalc = ($pass + $rush + $rec + $tds + $kicks + $tpc + $o) - $pint;
  	$calculated = array(
@@ -3783,20 +3818,19 @@ function supercard($pid){
 				echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
 				?>
                 <?php
-                    arsort($gamesbyteam);
-                    //printr($gamesbyteam, 0);
-                        $r = 0;
-                        foreach ($gamesbyteam as $key => $value):
-                            if ($r == 0):
-                                $string .= '<strong>'.$teams[$key]['team'].'</strong>, ';
-                            else:
-                                $string .= $teams[$key]['team'].', ';
-                           endif;
-                           $r++;
-                        endforeach;
-
-                    echo 'PFL Teams: '.substr($string, 0, -2);
-
+                    if($gamesbyteam):
+                        arsort($gamesbyteam);
+                            $r = 0;
+                            foreach ($gamesbyteam as $key => $value):
+                                if ($r == 0):
+                                    $string .= '<strong>'.$teams[$key]['team'].'</strong>, ';
+                                else:
+                                    $string .= $teams[$key]['team'].', ';
+                               endif;
+                               $r++;
+                            endforeach;
+                        echo 'PFL Teams: '.substr($string, 0, -2);
+                    endif;
                     ?>
 
 				<div class="table-responsive mar-top">
@@ -4058,4 +4092,339 @@ function show_jersey_svg ($teamid, $location, $year, $num){
 function show_helmet ($teamid, $year, $facing){
     $helmet =  '/img/helmets/weekly/'.$teamid.'-helm-'.$facing.'-'.$year.'.png';
     return $helmet;
+}
+
+// gets json files stored locally from MFL website
+function get_mfl_year_rosters($rosteryear){
+    $mfl_roster_file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/mfl-rosters/'.$rosteryear.'-rosters.json';
+    if (file_exists($mfl_roster_file)):
+        $getfile = file_get_contents($mfl_roster_file);
+        $decode_json = json_decode($getfile);
+    endif;
+    return $decode_json;
+}
+
+// gets json mfl file (created on the '/transactions' page) that merges all of the files above into a name -> id format
+function get_all_merged_mfl_year_rosters(){
+    $mfl_roster_file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/mfl-rosters/mfl-all-player-names-ids-2011-2020.json';
+    if (file_exists($mfl_roster_file)):
+        $getfile = file_get_contents($mfl_roster_file);
+        $decode_json = json_decode($getfile);
+    endif;
+    return $decode_json;
+}
+
+function teams_for_mfl(){
+    $teams = get_teams();
+    foreach ($teams as $key => $value):
+        if ($value['mfl_team_id']):
+            $teambyid[$value['mfl_team_id']] = $key;
+        endif;
+    endforeach;
+    return $teambyid;
+}
+
+
+// wp_teams table shows current team mfl ID.  This array accounts for the fact that the ids have shifted a bit over the years.
+function teams_for_mfl_history(){
+    $mfl_team_id_history = array(
+        2011 => array(
+            '0001' => 'BST',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2012 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2013 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2014 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2015 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2016 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'SON',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2017 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'SON',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2018 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'SON',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2019 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2020 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        )
+    );
+    return $mfl_team_id_history;
+}
+
+
+function mfl_years(){
+    $y = date('Y');
+    $d = 2011;
+    while ($d <= $y) {
+        $yearslist[] = $d;
+        $d++;
+    }
+    return $yearslist;
+}
+
+// checks if MFL ID is present for player on wp_players table, then will insert MFL ID from json exports (function above).
+function check_mfl_id_exsists($pid){
+    $getinfo = get_player_basic_info($pid);
+    $check = $getinfo[0]['mflid'];
+    if($check > 1):
+        echo 'already exsists';
+    else:
+        $getmfl = get_all_merged_mfl_year_rosters();
+        $name = $getinfo[0]['last'].', '.$getinfo[0]['first'];
+        $mflid = $getmfl->$name;
+        if($mflid):
+            global $wpdb;
+            $wpdb->update(
+                'wp_players',
+                array(
+                    'mflid' => $mflid
+                ),
+                array(
+                    'p_id' => $pid
+                )
+            );
+        else:
+            echo 'no id found';
+        endif;
+    endif;
+}
+
+function get_mfl_transactions($yearid){
+    $mfl_trans_file = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/mfl-transactions/'.$yearid.'-trans.json';
+    if (file_exists($mfl_trans_file)):
+        $getfile = file_get_contents($mfl_trans_file);
+        $decode_json = json_decode($getfile);
+    endif;
+    return $decode_json;
+}
+
+function explode_strip($string){
+    $newstring = explode('|', $string);
+    // $morestring = explode(',' $newstring);
+    return $newstring;
+}
+
+function clean_up_array($item){
+    $theitem = array();
+    $val = explode_strip($item);
+    foreach ($val as $v):
+        if($v):
+            $theitem = explode(',', $v);
+        endif;
+    endforeach;
+    return array_filter($theitem);
+}
+
+function get_player_mfl_transactions ($array, $pid){
+    foreach ($array as $key => $value):
+        foreach ($value as $v):
+            if(is_array($v)):
+                foreach($v as $a):
+                    if($a == $pid):
+                        $justplayer[] = $value;
+                    endif;
+                endforeach;
+            endif;
+        endforeach;
+    endforeach;
+    return $justplayer;
+}
+
+function new_mfl_transactions($pid){
+    $convertids = playerid_mfl_to_pfl();
+    $yearslist = mfl_years();
+    $teambyid = teams_for_mfl_history();
+
+
+    foreach ($yearslist as $year):
+        $cleantrans = array();
+        $gettransaction = get_mfl_transactions($year);
+        $transaction = $gettransaction->transactions->transaction;
+
+        if($transaction):
+            foreach ($transaction as $value):
+                $a_n_val = array();
+                $de_n_val = array();
+                $ad_n_val = array();
+                $dr_n_val = array();
+                $t_n_val = array();
+                $give1 = array();
+                $give2 = array();
+                $action = array();
+
+                if ($value->type == 'TRADE'):
+                    $gaveup1 = clean_up_array($value->franchise1_gave_up);
+                    $gaveup2 = clean_up_array($value->franchise2_gave_up);
+
+                    foreach ($gaveup1 as $g):
+                        $give1[$g] = $convertids[$g];
+                    endforeach;
+                    foreach ($gaveup2 as $f):
+                        $give2[$f] = $convertids[$f];
+                    endforeach;
+
+                    $cleantrans[] = array(
+                        'timestamp' => $value->timestamp,
+                        'realtime' => date("m-d-Y h:ia", $value->timestamp),
+                        'type' => $value->type,
+                        'franchise1' => $teambyid[$year][$value->franchise],
+                        'franchise_1_gave_up' => $give1,
+                        'franchise2' => $teambyid[$year][$value->franchise2],
+                        'franchise2_gave_up' => $give2
+                    );
+
+                else:
+                    if ($value->type != 'TRADE_OFFER_EXPIRED'):
+                        if ($value->type != 'TRADE_PROPOSAL'):
+                            $a_val = clean_up_array($value->activated);
+                            foreach ($a_val as $v): $a_n_val[$v] = $convertids[$v]; endforeach;
+                            $de_val = clean_up_array($value->deactivated);
+                            foreach ($de_val as $v): $de_n_val[$v] = $convertids[$v]; endforeach;
+                            $ad_val = clean_up_array($value->added);
+                            foreach ($ad_val as $v): $ad_n_val[$v] = $convertids[$v]; endforeach;
+                            $dr_val = clean_up_array($value->dropped);
+                            foreach ($dr_val as $v): $dr_n_val[$v] = $convertids[$v]; endforeach;
+                            $t_val = clean_up_array($value->transaction);
+                            foreach ($t_val as $v): $t_n_val[$v] = $convertids[$v]; endforeach;
+
+                            if($value->action)
+                                $action = $value->action;
+
+                            $cleantrans[] = array(
+                                'timestamp' => $value->timestamp,
+                                'realtime' => date("m-d-Y h:ia", $value->timestamp),
+                                'type' => $value->type,
+                                'action' =>  $action,
+                                'franchise' => $teambyid[$year][$value->franchise],
+                                'activated' => $a_n_val,
+                                'deactivated' => $de_n_val,
+                                'added' => $ad_n_val,
+                                'dropped' => $dr_n_val,
+                                'transaction' => $t_n_val
+
+                            );
+                        endif;
+                    endif;
+                endif;
+            endforeach;
+        endif;
+
+        $clean = array_filter($cleantrans);
+        $playertrans[$year] = get_player_mfl_transactions($clean, $pid);
+
+        //printr($clean, 0);
+
+    endforeach;
+    return $playertrans;
 }

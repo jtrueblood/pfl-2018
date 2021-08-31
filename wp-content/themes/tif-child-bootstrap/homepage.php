@@ -36,6 +36,8 @@ $last = $featuredplayer[1];
 $position = $featuredplayer[2];
 $rookie = $featuredplayer[3];
 $mflid = $featuredplayer[4];
+$name_merge = $last.', '.$first;
+
 
 insert_wp_career_leaders($randomplayer);
 $testprint = insert_wp_season_leaders($randomplayer);
@@ -56,8 +58,6 @@ else {
 */
   
 }
-
-$randomplayerdata = set_randomplayerdata_trans();
 
 /*
 $teamget = get_team_results('PEP');
@@ -91,10 +91,6 @@ get_header();
 //start the loop
 //build player id array. 
 
-
-
-
-
 ?>
 
 <div class="boxed">
@@ -106,7 +102,7 @@ get_header();
 				<div id="page-title">
 					<?php while (have_posts()) : the_post(); ?>
 						<h1 class="page-header text-bold"><?php the_title();?></h1>
-					<?php endwhile; wp_reset_query(); ?>	
+					<?php endwhile; wp_reset_query(); ?>
 				</div>
 				
 				<!--Page content-->
@@ -209,12 +205,33 @@ get_header();
 
 					</div>
 
-                    <div class="col-xs-12 col-sm-12 eq-box-md">
                     <!-- PLAYER SUPERCARD -->
+                    <div class="col-xs-12 col-sm-12 eq-box-md">
                         <?php $supercard = supercard($randomplayer); ?>
                     </div>
+
+                    <!-- PLAYER MFL TRANSACTIONS -->
+                    <div class="col-xs-12 col-sm-8 eq-box-md">
+                        <div class="panel panel-bordered panel-light">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">MFL Player Transactions</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>2011 - Present.  Must export json of Transactions from MFL api each season and save to 'mfl-transactions' directory.</p>
+                                <?php
+                                $printit = new_mfl_transactions($randomplayer);
+                                $removeempty = array_filter($printit);
+                                if($removeempty):
+                                    printr($removeempty, 0);
+                                else:
+                                    echo '<h4>No MFL Transaction Data Found</h4>';
+                                endif;
+                                ?>
+                            </div>
+                        </div>
+                    </div>
 							
-					<!-- PLAYER SPOTLIGHT -->
+					<!-- MFL DATA CURL -->
 					<div class="col-xs-24 col-sm-6 left-column">
 						<div class="panel widget">
 							<div class="widget-body text-center">
@@ -342,7 +359,7 @@ get_header();
 					
 					</div>
 					
-				</div>
+
 				<!-- THE ROW -->
 				<div class="row">
 					<div class="col-xs-12 col-sm-6 eq-box-sm">

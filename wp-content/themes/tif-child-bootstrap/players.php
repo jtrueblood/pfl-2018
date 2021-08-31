@@ -1658,9 +1658,78 @@ endif;
 								supercard($playerid);
 							?>
 						</div>
+
 					</div>
 				</div>
-			</div>	
+
+			</div>
+
+            <!-- MFL TRANSACTIONS 2011 - Present -->
+            <div class="panel panel-bordered panel-light">
+                <div class="panel-heading">
+                    <h3 class="panel-title">MFL Player Transactions</h3>
+                </div>
+                <div class="panel-body">
+                    <p>2011 - Present.  Must export json of Transactions from MFL api each season and save to 'mfl-transactions' directory.</p>
+                    <?php
+                    $printit = new_mfl_transactions($playerid);
+                    $removeempty = array_filter($printit);
+                    if($removeempty): ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+
+                            <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Player</th>
+                                <th>Date/Time</th>
+                                <th>Team</th>
+                                <th>Action</th>
+                                <!-- 														<th class="hidden-xs">Acquisition</th> -->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                                foreach($removeempty as $year):
+                                    foreach($year as $key => $value):
+                                    $type = $value['type'];
+                                        if($type == 'TRADE'):?>
+                                            <tr>
+                                                <td class="text-bold">TRADE</td>
+                                                <td><?php echo $firstname.' '.$lastname; ?></td>
+                                                <td><?php echo $value['realtime']; ?></td>
+                                                <td><?php echo $value['franchise1']; ?></td>
+                                                <td><?php echo 'from '.$value['franchise2']; ?></td>
+                                            </tr>
+                                        <?php else:
+                                            $action = in_array($playerid, $value['dropped']) ? 'Dropped':
+                                                $action = in_array($playerid, $value['added']) ? 'Added':
+                                                    $action = in_array($playerid, $value['activated']) ? 'Activated':
+                                                        $action = in_array($playerid, $value['transaction']) ? 'Transaction':
+                                                            $action = in_array($playerid, $value['deactivated']) ? 'Deactivated' : '--';
+                                            ?>
+                                                <tr>
+                                                    <td class="text-bold"><?php echo $type; ?></td>
+                                                    <td><?php echo $firstname.' '.$lastname; ?></td>
+                                                    <td><?php echo $value['realtime']; ?></td>
+                                                    <td><?php echo $value['franchise']; ?></td>
+                                                    <td><?php echo $action; ?></td>
+                                                </tr>
+                                            <?php
+                                        endif;
+                                    endforeach;
+                                endforeach;
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                    <?php else:
+                        echo '<h5>No MFL Transaction Data Found</h5>';
+                        echo '</div>';
+                    endif;?>
+            </div>
+
 		</div>
 	
 		
@@ -1909,6 +1978,10 @@ endif;
 						<!--===================================================-->
 						<!-- End Timeline -->
 				</div>
+
+
+                    </div>
+
 				<?php } ?>
 					
 		</div>

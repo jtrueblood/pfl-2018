@@ -147,6 +147,7 @@ foreach ($teamarrays as $key => $value){
 			'RB1' 		=> $week[11],
 			'WR1' 		=> $week[12],
 			'PK1' 		=> $week[13],
+			'uniform'   => $week[20],
 			'overtime' 	=> array (
 				'is_overtime' => $week[14], 
 				'QB2' 		=> $week[15],
@@ -201,7 +202,7 @@ foreach ($getwk as $key => $value){
 	}
 }
 
-//printr($schedulewk , 0);
+//printr($PEP_week , 0);
 
 function get_player_week($playerid, $weekid){
 	global $wpdb;
@@ -665,36 +666,10 @@ printr($assoc, 0);
 										}
 										
 										echo '<p></p><i>'.$weeknotes[$hometeam].'</i>'; 
-										
-										// check if kicker outscores all other players on team
-										
-/*
-										if ($h_pk1_data['points'] > $h_qb1_data['points']){
-											if ($h_pk1_data['points'] > $h_rb1_data['points']){
-												if ($h_pk1_data['points'] > $h_wr1_data['points']){
-													echo 'TRUE_HOME!';
-												}
-											}
-										}
-									
-									
-										if ($a_pk1_data['points'] > $a_qb1_data['points']){
-											if ($a_pk1_data['points'] > $a_rb1_data['points']){
-												if ($a_pk1_data['points'] > $a_wr1_data['points']){
-													echo 'TRUE_AWAY!';
-												}
-											}
-										}
-*/
-										
-									// end notes area
-									
-									// tooltip....
-									//echo '<a class="add-tooltip" data-placement="bottom" data-toggle="tooltip" data-original-title="Tooltip on top">Tooltip on top</a>';
-/*
-						
-*/
+
+
                                     // JERSEY SECTION
+
                                     $getpvqmult = getpvqmultipliers($year_sel);
                                     if($soredata_ot):
                                         $combined_soredata = array_merge($soredata, $soredata_ot);
@@ -714,16 +689,33 @@ printr($assoc, 0);
                                         endif;
                                     endforeach;
                                     arsort($pvqbygame);
+                                    //printr($pvqbygame, 0);
                                     $game_best_effort = array_key_first($pvqbygame);
                                     $playerbasic = get_player_basic_info($game_best_effort);
                                     $playernumber = $playerbasic[0]['number'];
                                     $playername = $playerbasic[0]['first'].' '.$playerbasic[0]['last'];
+
+                                    // GET ALTERNATES OF THROWBACKS IF LISTED IN W_Team Table
                                     $uni_info = get_uni_info_by_team($winning_team);
                                     $jersey_url = show_jersey_svg($winning_team, $winning_location, $uni_info[$year_sel], $playernumber);
+
+                                    $alternate_uni = ${$winning_team.'_week'};
+                                    if($alternate_uni['uniform']):
+                                        //echo $alternate_uni['uniform'];
+                                        $altvar = explode('-', $alternate_uni['uniform']);
+                                        //printr($altvar, 0);
+                                        if($altvar[1] == 'TBK'):
+                                            $extrajersey = $winning_location;
+                                        endif;
+                                        if($altvar[1] == 'ALT'):
+                                            $extrajersey = 'A';
+                                        endif;
+                                        $jersey_url = show_jersey_svg($altvar[0], $extrajersey, $altvar[2], $playernumber);;
+                                    endif;
                                     //echo $jersey_url;
                                     ?>
-                                    <p class="pt-10">Game MVP (PVQ Based) <span class="text-bold"><br>
-                                        <?php echo $playername;?></span></p>
+                                    <p class="text-sm">Winning Team Game MVP </p>
+                                    <h5><?php echo $playername;?></h5>
                                     <div class="game-pvq-mvp" style="background-image: url(<?php echo get_stylesheet_directory_uri().$jersey_url;?>);">
                                     </div>
                                      </div>

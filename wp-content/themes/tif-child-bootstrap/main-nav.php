@@ -41,8 +41,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (70, 'active-link'); ?>"><a href="/player/?id=1998MannQB">Individual Players</a></li>
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
-												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2020">Leaders By Season</a></li>	
-												<li class="<?php ifbodyclass (1413, 'active-link'); ?>"><a href="/player-value-quotient/">Player Value</a></li>
+												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2020">Leaders By Season</a></li>
 												<li class="<?php ifbodyclass (1495, 'active-link'); ?>"><a href="/supercards/">Supercards</a></li>
 											</ul>
 									</li>
@@ -108,10 +107,13 @@
 											<!--Submenu-->
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
-												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>																		<li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
-												<li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>	
-												<li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
-												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy">Draft Strategy</a></li>
+												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>
+                                                <li class="<?php ifbodyclass (1676, 'active-link'); ?>"><a href="/head-to-head">Head to Head Matrix</a></li><li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
+												<li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>
+                                                <li class="<?php ifbodyclass (1502, 'active-link'); ?>"><a href="/uniforms">Unis & Helmets</a></li>
+                                                <li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
+												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy-2021">Draft Strategy 2021</a></li>
+                                                <li class="<?php ifbodyclass (1678, 'active-link'); ?>"><a href="/transactions">Transactions</a></li>
 											</ul>
 									</li>
 									

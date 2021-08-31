@@ -74,12 +74,12 @@ ksort($playoffs_year, SORT_NUMERIC);
 
 foreach ($playoffs_year as $key => $value){
 	foreach ($value as $get){
-		foreach ($get as $this){
-			if($this['overtime'] != 1){
-				$scores[$key][$this['team']][] = $this['score'];
+		foreach ($get as $v){
+			if($v['overtime'] != 1){
+				$scores[$key][$v['team']][] = $v['score'];
 			}
-			if($this['overtime'] == 1){
-				$otscores[$key][$this['team']][] = $this['score'];
+			if($v['overtime'] == 1){
+				$otscores[$key][$v['team']][] = $v['score'];
 			}
 		}
 	}

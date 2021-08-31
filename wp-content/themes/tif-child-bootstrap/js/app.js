@@ -51,13 +51,31 @@ jQuery(document).ready(function($) {
 	} );
 	
 	// Draft Strategy Tables
-/*
-	$('.qb-draft-table').DataTable( {
-	    "order": [[ 16, "desc" ]],
-	    "lengthMenu": [[50, -1], [25, 50, "All"]]
+
+	$('.qb-draft-table-new').DataTable( {
+	    "order": [[ 17, "desc" ]],
+		"lengthMenu": [[100, -1], ["All"]],
+		"columnDefs": [
+			{ "orderable": false, "targets": 0 }
+		]
 	} );
 
-	
+	$('.rb-draft-table-new').DataTable( {
+		"order": [[ 14, "desc" ]],
+		"lengthMenu": [[25, 50, 100, -1], ["All"]]
+	} );
+
+	$('.wr-draft-table-new').DataTable( {
+		"order": [[ 14, "desc" ]],
+		"lengthMenu": [[25, 50, 100, -1], ["All"]]
+	} );
+
+	$('.pk-draft-table-new').DataTable( {
+		"order": [[ 11, "desc" ]],
+		"lengthMenu": [[100, -1], ["All"]]
+	} );
+
+	/*
 	$('.rb-draft-table').DataTable( {
 	    "order": [[ 16, "desc" ]],
 	    "lengthMenu": [[50, -1], [25, 50, 100, "All"]]
@@ -300,8 +318,8 @@ jQuery(document).ready(function($) {
 	});
 
 	// HANDLE BROKEN IMAGES
-	// $("img").error(function () {
-	// 	$(this).unbind("error").attr("src", "/wp-content/uploads/circ_logo_trans.png");
-	// });
+	$("img").error(function () {
+		$(this).unbind("error").attr("src", "/wp-content/uploads/circ_logo_trans.png");
+	});
 
 }); /* CLOSE DOCUMENT */

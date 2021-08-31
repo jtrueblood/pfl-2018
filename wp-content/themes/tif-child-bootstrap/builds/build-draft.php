@@ -14,7 +14,7 @@ get_header();
 // STEPS
 
 // 1. Check the 3 vars immediatly below.  You will need to update the year and origorder variable each season.  Somtimes lid changes
-// 2. Authenticate in the browser with this url : https://api.myfantasyleague.com/2020/login?jtrueblood=testuser&eur0TRASH!=testing1&XML=1
+// 2. Authenticate in the browser with this url : https://api.myfantasyleague.com/2021/login?jtrueblood=testuser&eur0TRASH!=testing1&XML=1
 // 3. Run /builds/build-drafts
 // 4. Check the draft list visually.  Also check the array of IDs at the bottom of the page and enter these into the 'Create New Player' area on the homepage to build the new player profiles.
 // 5. Uncomment the section that will insert the draft into wp_drafts.sql table.  Reload the page.
@@ -22,19 +22,19 @@ get_header();
 
 // Auth URL = https://api.myfantasyleague.com/2020/login?USERNAME=jtrueblood&PASSWORD=eur0TRASH!&XML=1
 
-$year = 2020;
+$year = 2021;
 $lid = 38954;
 // NO LONGER NEEDED AS OF 2020 -- $apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
 // Looks like you could pass an API Key instead of the user agent (not totally sure?) the api key for 2020 appears to be &APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox
 
-$origorder = array('DST','SNR','WRZ','HAT','BUL','CMN','BST','PEP','ETS','TSG');
+$origorder = array('DST','PEP','BUL','CMN','TSG','WRZ','SNR','BST','ETS','DST');
 // --------------------------------------------
 
 // get actual draft report for the year from MFL
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://www58.myfantasyleague.com/2020/export?TYPE=draftResults&L=38954&JSON=1",
+  CURLOPT_URL => "https://www58.myfantasyleague.com/2021/export?TYPE=draftResults&L=38954&JSON=1",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => "",
   CURLOPT_MAXREDIRS => 10,
@@ -134,9 +134,7 @@ foreach ($mflpicks as $value){
 		'tradeid' 		=> $tradeid,
 		'comment'		=> $comment 
 	);
-	
-	
-	
+
 	$o++; $i++;
 	
 	if ($o == 10){ $o = 0; }
@@ -151,10 +149,10 @@ printr($newplayers, 0);
 
 /*
 foreach($draftinsert as $arr){
-	
+
 	$wpdb->insert(
 		 'wp_drafts',
-	     array(			
+	     array(
 			'id' 			=> $arr['id'],
 			'year' 			=> $arr['year'],
 			'round'			=> $arr['round'],
@@ -166,12 +164,12 @@ foreach($draftinsert as $arr){
 			'playerlast' 	=> $arr['playerlast'],
 			'pos' 			=> $arr['pos'],
 			'playerid' 		=> $arr['playerid'],
-			'tradeid' 		=> $arr['tradeid']	
+			'tradeid' 		=> $arr['tradeid']
 	     ),
-		 array( 
-			'%d','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d' 
+		 array(
+			'%d','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d'
 		 )
-	);	
+	);
 }
 */
 

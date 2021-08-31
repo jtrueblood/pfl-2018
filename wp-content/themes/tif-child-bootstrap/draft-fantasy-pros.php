@@ -41,9 +41,7 @@ get_header();
 						</div>
 					</div>
 					
-					<div class="col-xs-12 col-sm-6 eq-box-sm">	
-						
-						
+					<div class="col-xs-12 col-sm-6 eq-box-sm">
 					</div>					
 				
 							
@@ -59,9 +57,9 @@ get_header();
 								$html = file_get_html('https://www.fantasypros.com/nfl/rankings/'.$position.'-cheatsheets.php?show=stats-total');
 								$htmldata = file_get_html('https://www.fantasypros.com/nfl/projections/'.$position.'.php');
 				
-								$table = $html->find('#rank-data', 0);
+								$table = $html->find('#ranking-table', 0);
 								$tabledata = $htmldata->find('#data', 0);
-								
+
 								$pagename = $html->find('h1', 0);
 								$subname = $html->find('h5', 0);
 								

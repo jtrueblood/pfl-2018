@@ -81,19 +81,7 @@ die();
 
 // this will get all player data as a transient.  Often a page reload is required after new player data is added or updated.
 
-function allplayerdata_tables_trans() {
-	$transient = get_transient( 'allplayerdata_table_trans' );
-	if( empty( $transient ) ) {
-		global $playersassoc;
-	  	foreach ($playersassoc as $key => $value){
-	  		$allplayerdata[$key] = get_player_data($key);
-		}
-	    set_transient( 'allplayerdata_table_trans', $allplayerdata, 129600 );
-	    return $set;	
-  	} else {
-	  	return $transient;
-    }
-}
+
 
 $allplayerdata = allplayerdata_tables_trans();
 
@@ -589,6 +577,15 @@ foreach ($total as $key => $value){
 arsort($totalpotw);
 //printr($totalpotw, 1);
 
+
+// TIGHT ENDS
+$get_te = get_tightends();
+foreach ($get_te as $item) {
+    $stats = get_player_career_stats($item);
+    $new_te[$item] = $stats['points'];
+}
+arsort($new_te);
+//printr($new_te, 1);
 ?>
 
 
@@ -1594,10 +1591,31 @@ arsort($totalpotw);
 			
 			?>
 			</div>
-			
-			<div class="row">
-			</div>
-			
+
+            <!-- ROW --> <div class="row"></div>
+
+            <!-- tight ends -->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+
+                <?php
+                $labels = array('Player', 'Points');
+                tablehead('Tight Ends Career Points', $labels);
+
+                foreach ($new_te as $key => $value){
+                    $n = get_player_name($key);
+
+                    $teprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>';
+                    $teprint .='<td class="min-width text-center">'.$value.'</td>';
+                }
+
+                echo $teprint;
+
+                tablefoot('');
+                ?>
+
+            </div>
+
+
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				<?php					
 				$labels = array('Player', 'Count');	
@@ -1619,6 +1637,9 @@ arsort($totalpotw);
 				tablefoot('5 times POTW or more.');		
 			?>
 			</div>
+
+            <!-- ROW --> <div class="row"></div>
+
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				<!-- total number of players -->
@@ -1718,8 +1739,8 @@ arsort($totalpotw);
 				
 			?>
 			</div>
-			
-			
+
+
 			<!-- NEW SECTION -->
 			<div class="col-xs-24">
 				<h4>Player Data - Post Season</h4>

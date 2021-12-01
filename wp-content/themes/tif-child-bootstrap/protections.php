@@ -38,7 +38,7 @@
                             $playerid = $value['playerid'];
                             $year = $value['year'];
 
-                            $printprotections[$year][] = $value;
+                            $printprotections[$year][$team][] = $value;
                         }
 
                         //printr($printprotections, 1);
@@ -52,50 +52,57 @@
 
                                 </div>
 
+
+
                                 <?php
-                                asort($val);
-                                foreach ($val as $value):
-                                if ($loop % 3 == 0): ?>
-								<div class="row">
+                                //asort($val);
+                                foreach ($val as $k => $value):
+                                ?>
+                                <div class="row">
                                     <div class="col-xs-2">
 
-                                        <h3 class="text-bold text-center"><?php echo $value['team']; ?></h3>
-    <!-- 										<div class="panel-body" style="background-image:url(<?php echo get_stylesheet_directory_uri().'/img/'.$team?>-bar.png); background-position-x: -20px; background-position-y: -20px; background-color: #efefef; opacity: 0.5;"></div> -->
+                                        <h3 class="text-bold text-center"><?php echo $k; ?></h3>
+    <!-- 										<div class="panel-body" style="background-image:url(<?php echo get_stylesheet_directory_uri().'/img/'.$k?>-bar.png); background-position-x: -20px; background-position-y: -20px; background-color: #efefef; opacity: 0.5;"></div> -->
                                     </div>
 		
-								<?php endif; ?>
+								<?php foreach ($value as $info): ?>
+                                    <?php if($loop == 3): ?>
+                                        <div class="col-xs-2"></div>
+                                    <?php endif; ?>
 
                                     <div class="col-xs-7">
                                         <div class="panel protections">
-                                            <div class="panel-body <?php echo $value['position'];?>">
+                                            <div class="panel-body <?php echo $info['position'];?>">
                                             <?php
                                             if ($first == 'No Protection'){
                                                 echo 'No Protection';
                                              } else {
-                                                $playerimgobj = get_attachment_url_by_slug($value['playerid']);
+                                                $playerimgobj = get_attachment_url_by_slug($info['playerid']);
                                                 $imgid =  attachment_url_to_postid( $playerimgobj );
                                                 $image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));
                                                 $playerimg = $image_attributes[0];
 
-                                                 echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$value['playerid'].'">'.$value['first'].' '.$value['last'].'</a></h4>, '.$value['position'];
+                                                 echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$info['playerid'].'">'.$info['first'].' '.$info['last'].'</a></h4>, '.$info['position'];
                                              }?>
                                             </div>
                                         </div>
                                     </div>
+
+
 							
 								<?php
-
-								$loop++;
-								if ($loop % 3 == 0){ 
-									echo '</div>';
-								}
+                                    $loop++;
+                                    endforeach; ?>
+                                    </div>
+								<?php
+                                $loop = 0;
 								endforeach;
 							}
 
 							?>
 							
 							
-											
+
 						</div>
 
 										

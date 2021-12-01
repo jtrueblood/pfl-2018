@@ -810,3 +810,80 @@ img.svg-jersey {
 .layer-helmet .show-helmet {
   width: 100px;
 }
+.panel-control.career-details-panel {
+  padding: 0 0 0 15px;
+  margin: 0;
+  background-color: #5fa2dd;
+  float: left;
+  width: 100%;
+}
+.panel-control.career-details-panel .nav-tabs > li:not(.active) a {
+  color: #fff;
+}
+.timeline-content {
+  padding: 0 0 0 10px;
+}
+.timeline-content .the-week {
+  height: 30px;
+  background-color: #fff;
+  margin: 2px 0;
+}
+.timeline-content .the-week .week-label {
+  margin-right: 30px;
+}
+.timeline-content .the-week .label {
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 10px;
+  padding: 3px 10px;
+  margin: 7px 3px;
+}
+.timeline-content .the-week .label-dark.label-plus {
+  padding: 3px 6px;
+}
+.table-scorigami {
+  background-color: #efefef;
+}
+.table-scorigami tr,
+.table-scorigami td,
+.table-scorigami th {
+  padding: 0 !important;
+  font-size: 11px;
+  text-align: center;
+}
+.table-scorigami th {
+  min-width: 20px;
+  background-color: #0A246A;
+  color: #fff;
+}
+.table-scorigami td.firstrow {
+  background-color: #0A246A;
+  color: #fff;
+  font-weight: 600;
+}
+.table-scorigami td.none-score {
+  background-color: #0A246A;
+}
+.table-scorigami .highlight {
+  background-color: lightgray;
+}
+.table-scorigami .postseasoncolor {
+  background-color: lightyellow;
+}
+.table-scorigami .newscorigami {
+  background-color: red;
+  font-weight: 600;
+}
+.table-scorigami .checkweek {
+  background-color: orange;
+  font-weight: 600;
+}
+.vertical {
+  white-space: nowrap;
+  writing-mode: tb-rl;
+  float: right;
+  font-weight: 600;
+  font-size: 16px;
+  text-align: center;
+  height: 1000px;
+}

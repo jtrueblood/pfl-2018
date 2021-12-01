@@ -202,31 +202,10 @@ foreach ($getwk as $key => $value){
 	}
 }
 
-//printr($PEP_week , 0);
+//printr($ETS_week , 0);
 
-function get_player_week($playerid, $weekid){
-	global $wpdb;
-	global $mydb;
-	
-	$playerinfo = $wpdb->get_results("select * from wp_players", ARRAY_N);
-	$playerdata = $wpdb->get_results("select * from $playerid", ARRAY_N);
-	
-	foreach ($playerinfo as $data){
-		$plarray[$data[0]] = $data;
-	}
-	
-	foreach ($playerdata as $data){
-		$array[$data[0]] = $data;
-	}
-	$playerbyweek = array( 
-		'points' 	=>  $array[$weekid][3], 
-		'team'		=>	$array[$weekid][4],
-		'first' 	=>  $plarray[$playerid][1],
-		'last' 		=>  $plarray[$playerid][2],
-		'position' 	=>  $plarray[$playerid][3]
-		);
-	return $playerbyweek;
-}
+// get_player_week moved to functions.
+
 //$rrr = get_player_week('2015GurlRB', $weekvar);
 //printr($rrr , 0);
 
@@ -461,7 +440,7 @@ printr($assoc, 0);
 								$a_wr1, 
 								$a_pk1
 							);
-							
+
 							// Display the Boxes Here...		
 							echo '<div class="col-xs-24 col-sm-12 col-md-8">
 							
@@ -688,6 +667,8 @@ printr($assoc, 0);
                                             endif;
                                         endif;
                                     endforeach;
+
+
                                     arsort($pvqbygame);
                                     //printr($pvqbygame, 0);
                                     $game_best_effort = array_key_first($pvqbygame);
@@ -748,9 +729,7 @@ printr($assoc, 0);
 									$bypoints[$v] = get_one_player_week($v, $year_sel.$week_sel);
 								}
 							}
-							
-							//printr($bypoints, 0);
-							
+
 							$pvqmult = get_allpvqs_year();
 							
 							foreach ($bypoints as $key => $val){

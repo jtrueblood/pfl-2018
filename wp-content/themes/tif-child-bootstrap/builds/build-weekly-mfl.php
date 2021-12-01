@@ -45,7 +45,8 @@ $mflteamids = array('0005' => 'DST', '0003' => 'PEP', '0004' => 'WRZ', '0002' =>
 $weeks = array('1','2','3','4','5','6','7','8','9','10','11','12','13','14');
 $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14');
 
-//printr($weeks, 0);
+//$testweek = get_weekly_mfl_player_results(10703, $year, $week);
+//printr($testweek, 1);
 
 // get json about player from MFL scores for that player, for each week (reguardless of starter or not) 	
 
@@ -58,12 +59,34 @@ $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11',
 
 // THIS IS NOW COMMENTED OUT BECAUSE THE TRANSIENTS HAVE BEEN BUILT.  NEXT SEASON UNCOMMENT, CHANGE THE $YEAR and BUILD THE ARRAY EACH WEEK
 
-// $jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKmx1qmO1HIZDYeFbox&W='.$week.'&JSON=1');
+//$jsonweekresults = file_get_contents('https://www58.myfantasyleague.com/2021/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWux0CmO1HIZDYeF7ox&W=1&JSON=1');
 
-//$weekresults = json_decode($response, true);
+$curl = curl_init();
 
-//$json_store = json_encode($playerstats);
-								
+curl_setopt_array($curl, array(
+    CURLOPT_URL => "https://www58.myfantasyleague.com/2021/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWux0CmO1HIZDYeF7ox&W=$week&JSON=1",
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
+    CURLOPT_HTTPHEADER => array(
+        'Cookie: utf-8; MFL_PW_SEQ=ah9q2MuSs%2BGq2gG6; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
+    ),
+));
+
+$response = curl_exec($curl);
+
+curl_close($curl);
+//echo $response;
+
+$weekresults = json_decode($response, true);
+$json_store = json_encode($playerstats);
+
+//printr($weekresults, 1);
+
 $destination_folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/mfl-weekly-gamelogs';
 
 if (file_exists($destination_folder.'/'.$year.$week.'.json')):
@@ -77,19 +100,33 @@ if (file_exists($destination_folder.'/'.$year.$week.'.json')):
 else:
 	$curl = curl_init();
 	
-	curl_setopt_array($curl, array(
-	  CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=$lid&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W=$week&JSON=1",
-	  CURLOPT_RETURNTRANSFER => true,
-	  CURLOPT_ENCODING => "",
-	  CURLOPT_MAXREDIRS => 10,
-	  CURLOPT_TIMEOUT => 0,
-	  CURLOPT_FOLLOWLOCATION => true,
-	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	  CURLOPT_CUSTOMREQUEST => "GET",
-	  CURLOPT_HTTPHEADER => array(
-	    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_PW_SEQ=ah9q2MiTteeo2wC5; MFL_LAST_LEAGUE_ID=38954"
-	  ),
-	));
+//	curl_setopt_array($curl, array(
+//	  CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=$lid&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W=$week&JSON=1",
+//	  CURLOPT_RETURNTRANSFER => true,
+//	  CURLOPT_ENCODING => "",
+//	  CURLOPT_MAXREDIRS => 10,
+//	  CURLOPT_TIMEOUT => 0,
+//	  CURLOPT_FOLLOWLOCATION => true,
+//	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//	  CURLOPT_CUSTOMREQUEST => "GET",
+//	  CURLOPT_HTTPHEADER => array(
+//	    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_PW_SEQ=ah9q2MiTteeo2wC5; MFL_LAST_LEAGUE_ID=38954"
+//	  ),
+//	));
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://www58.myfantasyleague.com/2021/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWux0CmO1HIZDYeF7ox&W=$week&JSON=1",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Cookie: utf-8; MFL_PW_SEQ=ah9q2MuSs%2BGq2gG6; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
+        ),
+    ));
 	
 	$response = curl_exec($curl);
 	
@@ -103,8 +140,7 @@ else:
 	$matchups = $weekresults['weeklyResults'];
 	//printr($matchups, 0);
 	die(); // STOP PAGE LOAD HERE AND RELOAD AGAIN WITH LOCAL JSON DATA
-endif;	
-	
+endif;
 
 echo 'starters';
 
@@ -334,6 +370,8 @@ $weekstarters = array(
 
 $weekform = sprintf('%02d', $week);
 
+//printr($weekstarters, 1);
+
 foreach ($weekstarters as $key => $value){
 	
 	if($value['isHome'] == 1){
@@ -393,7 +431,7 @@ foreach ($weekstarters as $key => $value){
 			'week_id' 	=> $year.$weekform,
 			'year'		=> $year,
 			'week'		=> $week,
-			'points'	=> $v[1],
+			'points'	=> $v[1][$week],
 			'team'		=> $key,
 			'versus'	=> $value['versus'],
 			'playerid'	=> $pid,
@@ -481,7 +519,8 @@ if($run == 'true'){
 					<div class="panel">
 						<div class="panel-body">
 							<ol>
-								<li>Set Year and Week Values and load the page once.  This will get the MFL Matchup data, store it locally as json, then die the page. /li>
+                                <li>At the beginning of the season.  Check to make sure weeklyReults is pulling data.  API key may nahe changed from last season and would need to be reset in MFL.  Also check if year values in GET url are correct.</li>
+								<li>Set Year and Week Values and load the page once.  This will get the MFL Matchup data, store it locally as json, then die the page. </li>
 								<li>Reload the page.  Check if any players are not found.  If so create player from MFL using 'Create New Player' widget on Homepage.</li> 
 								<li>Once all player tables are found or created. Change SQL to true to insert into database.</li>
 								<li>Once inserted change SQL back to false and set url CURL value to true to load player pages for all players who played this week and refresh leaders data.</li>

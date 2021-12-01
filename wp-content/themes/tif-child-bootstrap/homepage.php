@@ -146,7 +146,7 @@ get_header();
 								<div class="panel-body">
 									<div class="col-xs-24">
 										<a href="/create-new-player">Create New Player</a><br>	
-										<a href="/builds/build-mfl-weekly/?SET=0&Y=2020&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+										<a href="/builds/build-mfl-weekly/?SET=0&Y=2021&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
 										<a href="/builds/build-drafts/">Import Draft</a><br>	
 										<a href="/python-scripts">Sportsrefernce API Python Scripts</a><br>
 									</div>	
@@ -185,6 +185,12 @@ get_header();
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
                             <div class="panel panel-bordered panel-light">
                                 <div class="panel-body">
+
+<!--                                    --><?php //alter_player_table_columns ($randomplayer); ?>
+                                    <?php $mfrline = get_pfr_linescores_by_player($randomplayer);
+                                            printr($mfrline, 0);
+                                    ?>
+
                                     <?php while (have_posts()) : the_post(); ?>
                                         <p><?php the_content();?></p>
                                     <?php endwhile; wp_reset_query(); ?>
@@ -515,6 +521,8 @@ get_header();
 									<p>get_player_career_stats($pid);</p>
 							<?php $career = get_player_career_stats($randomplayer); 
 								printr($career, 0);
+								$careerpts = $career['points'];
+								echo 'Career Points: '.$careerpts;
 							?>
 							
 								</div>

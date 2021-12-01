@@ -322,4 +322,15 @@ jQuery(document).ready(function($) {
 		$(this).unbind("error").attr("src", "/wp-content/uploads/circ_logo_trans.png");
 	});
 
+	// Table row and column highlight on Scorigami Table
+	$('.myCell').on('click', function() {
+		$(this).closest('tr').addClass('highlight');
+		$(this).closest('table').find('.myCell:nth-child(' + ($(this).index() + 1) + ')').addClass('highlight');
+	});
+	$('.myCell').on('mouseout', function() {
+		$(this).closest('tr').removeClass('highlight');
+		$(this).closest('table').find('.myCell:nth-child(' + ($(this).index() + 1) + ')').removeClass('highlight');
+	});
+
+
 }); /* CLOSE DOCUMENT */

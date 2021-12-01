@@ -9,7 +9,7 @@
 <?php 
 	$season = date("Y");
 	$firstyear = 1991;
-	$currentyear = 2015;
+	$currentyear = 2016;
 // 	$week = '199809';
 	
 	

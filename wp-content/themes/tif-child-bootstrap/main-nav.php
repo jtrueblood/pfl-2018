@@ -115,7 +115,7 @@
                                                 <li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
 												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy-2021">Draft Strategy 2021</a></li>
                                                 <li class="<?php ifbodyclass (1678, 'active-link'); ?>"><a href="/transactions">Transactions</a></li>
-                                                <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami">Scorigami</a></li>
+                                                <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=200213">Scorigami</a></li>
 
 											</ul>
 									</li>

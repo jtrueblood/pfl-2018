@@ -1609,6 +1609,21 @@ function get_player_weeks_played($pid) {
 	
 }
 
+// gets the team that a player played for in a given week
+function get_player_team_played_week($pid, $week) {
+    global $wpdb;
+    $get = $wpdb->get_results("select team from $pid where week_id ='$week'", ARRAY_N);
+    return $get;
+}
+
+// gets the team that a player played for in a given week
+function get_player_points_by_week($pid, $week) {
+    global $wpdb;
+    $get = $wpdb->get_results("select points from $pid where week_id ='$week'", ARRAY_N);
+    return $get;
+}
+
+
 // gets the years a player played from the player table 
 function get_player_years_played($pid) {
 	global $wpdb;
@@ -3719,6 +3734,7 @@ global $wpdb;
 	}
 	return $potwp;
 }
+
 
 // gets all players games played by position
 function get_all_players_games_played(){

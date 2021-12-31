@@ -187,6 +187,26 @@
 							} /* close 'row' every 3rd time through the loop */
 						}
 					} ?>
+
+                    <div class="col-xs-24 col-sm-8">
+                        <?php
+                        $labels = array('Season', 'Numeral', 'Champion', '', 'Runner Up', '');
+                        tablehead('PFL Champions Summary', $labels);
+
+                        foreach ($champions as $key => $value){
+                            $prchamps .='<tr><td class="min-width bord-rgt">'.$value[0].'</td>';
+                            $prchamps .='<td class="min-width text-center bord-rgt">'.$value[1].'</td>';
+                            $prchamps .='<td>('.$value[4].') <strong>'.$teamids[$value[2]].'</strong></td>';
+                            $prchamps .='<td class="min-width bord-rgt">'.$value[3].'</td>';
+                            $prchamps .='<td>('.$value[7].') <strong>'.$teamids[$value[5]].'</strong></td>';
+                            $prchamps .='<td class="min-width bord-rgt">'.$value[6].'</td>';
+                            $prchamps .='</tr>';
+                        }
+                        echo $prchamps;
+
+                        tablefoot('');
+                        ?>
+                    </div>
 					
 
 				</div><!--End page content-->

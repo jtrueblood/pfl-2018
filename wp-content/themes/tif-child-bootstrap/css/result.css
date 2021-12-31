@@ -887,3 +887,9 @@ img.svg-jersey {
   text-align: center;
   height: 1000px;
 }
+.playoff-boxes .row {
+  margin-bottom: 20px;
+}
+.playoff-boxes .row .panel {
+  margin-bottom: 10px;
+}

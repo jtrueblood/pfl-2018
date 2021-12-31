@@ -9,10 +9,11 @@
 		
 		<?php 
 		$getleaders = get_season_leaders($year);
-		
+
+		$setgames = 7; // Set Number of Games for PPG
 		foreach($getleaders as $key => $item){
 			$leaders[$item['position']][$item['playerid']] = $item;
-			if( $item['games'] >= 8){
+			if( $item['games'] >= $setgames){  // Set Number of Games
 				$allppg[$item['playerid']] = $item['points'] / $item['games'];
 			}
 		}
@@ -28,7 +29,7 @@
 			return $b['points'] <=> $a['points'];
 		});
 		$rb_top = reset($rb_leaders);
-		
+
 		$wr_leaders = $leaders['WR'];
 		uasort($wr_leaders, function ($a, $b) {
 			return $b['points'] <=> $a['points'];
@@ -206,15 +207,16 @@
 							<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image">
 						</div>
 						<div class="widget-body text-center">
-							<h5><? echo $year ?> Points Per Game</h5>
+							<h5><? echo $year ?> Pts Per Game</h5>
 							<h4 class="mar-no text-center"><?php echo $info[0]['first'].'<br>'.$info[0]['last']; ?></h4>
-							<p class="text-light text-center mar-top"><?php echo round($topppg, 1); ?> PPG</p>
+							<p class="text-light text-center mar-top"><?php echo number_format($topppg, 1); ?> PPG</p>
 							<?php //$tags = implode(', ', $teams); 
 								//printr($teams, 0);
 								foreach ($teams as $te){
 									echo '<p class="text-light text-center">'.$te.'</p>';
 								}
 							?>
+                            <p class="text-sm">Min <?php echo $setgames;?> Games</p>
 						</div>
 					</div>
 				</div>	

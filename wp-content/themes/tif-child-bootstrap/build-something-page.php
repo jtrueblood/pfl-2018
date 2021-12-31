@@ -93,22 +93,22 @@ function checkConsec($d) {
     return true;
 }
 
-var_dump(checkConsec(array(4,5,6,7))); //returns true
-var_dump(checkConsec(array(2,4,6,7,8))); //returns true
-var_dump(checkConsec(array(1,2,5,7))); //returns false
+//var_dump(checkConsec(array(4,5,6,7))); //returns true
+//var_dump(checkConsec(array(2,4,6,7,8))); //returns true
+//var_dump(checkConsec(array(1,2,5,7))); //returns false
 
-$check = HasConsec($newarray);
+//$check = HasConsec($newarray);
 
 
 $first = reset($newarray);
 $second = array_slice($newarray, 1, 1, true);
-if ($first == $first):
-    echo $first;
-endif;
+//if ($first == $first):
+//    echo $first;
+//endif;
 
-echo $first;
+//echo $first;
 
-
+$champs = get_champions();
 
 ?>
 
@@ -133,8 +133,7 @@ echo $first;
 						<div class="panel-heading">
 							<h3 class="panel-title">Title</h3>
                                 <?php
-                                printr($newarray, 0);
-                                var_dump(checkConsec($newarray));
+                                printr($champs, 0);
 
                                 ?>
 						</div>

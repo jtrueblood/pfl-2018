@@ -295,10 +295,10 @@ $getDST = totalteampoints($DST);
 
 $allteamget = array('ETS' => $getETS, 'PEP' => $getPEP, 'WRZ' => $getWRZ, 'CMN' => $getCMN, 'BUL' => $getBUL, 'SNR' => $getSNR, 'TSG' => $getTSG, 'SON' => $getSON, 'HAT' => $getHAT, 'DST' => $getDST, 'ATK' => $getATK, 'PHR' => $getPHR, 'MAX' => $getMAX, 'RBS' => $getRBS, 'BST' => $getBST);
 
-/*
-printr($CMN, 0);
-die();
-*/
+
+//printr($getCMN, 0);
+//die();
+
 
 // Pull values from 'allteams' 
 foreach ($allteamget as $key => $value){
@@ -310,9 +310,11 @@ foreach ($allteamget as $key => $value){
 	$allvs[$key] = $value[5];
 	$allseasons[$key] = $value[6];
 	$alldif[$key] = $value[7];
+	$calcagnst = $value[0] - $value[7];
+	$allagainst[$key] = $calcagnst;
 }
 
-//printr($allwins, 1);
+//printr($allvs, 1);
 
 arsort($allpoints);
 arsort($allwins);
@@ -321,6 +323,9 @@ arsort($allppg);
 arsort($allwinper);
 asort($allvs);
 asort($alldif);
+arsort($allagainst);
+
+//printr($allagainst, 1);
 
 foreach ($allteams as $key => $value){
 	foreach ($value as $differ){
@@ -686,23 +691,44 @@ arsort($new_te);
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				<?php 
 				$labels = array('Team', 'PTS Allowed');	
-				tablehead('Defense - Average Season Points Against', $labels);	
+				tablehead('Defense - Total Points Allowed', $labels);
 				
 				$a = 1;
-				foreach ($allvs as $key => $value){
-					if ($allseasons[$key] >= 4){
-						$vsprint .='<tr><td>'.$a.'. '.$teamids[$key].'</td>';
-						$vsprint .='<td class="min-width text-right">'.number_format($value, 1).'</td></tr>';
+				foreach ($allagainst as $key => $value){
+
+						$agsprint .='<tr><td>'.$a.'. '.$teamids[$key].'</td>';
+						$agsprint .='<td class="min-width text-right">'.number_format($value, 0).'</td></tr>';
 						$a++;
-					}
+
 				}
 				
-				echo $vsprint;
+				echo $agsprint;
 				
-				tablefoot('-- Min 4 seasons played');	
+				tablefoot('');
 				?>	
 				
 			</div>
+
+            <div class="col-xs-24 col-sm-12 col-md-6">
+                <?php
+                $labels = array('Team', 'PTS Allowed');
+                tablehead('Defense - Average Season Points Against', $labels);
+
+                $a = 1;
+                foreach ($allvs as $key => $value){
+                    if ($allseasons[$key] >= 4){
+                        $vsprint .='<tr><td>'.$a.'. '.$teamids[$key].'</td>';
+                        $vsprint .='<td class="min-width text-right">'.number_format($value, 1).'</td></tr>';
+                        $a++;
+                    }
+                }
+
+                echo $vsprint;
+
+                tablefoot('-- Min 4 seasons played');
+                ?>
+
+            </div>
 			
 			
 			<div class="col-xs-24 col-sm-12 col-md-6">
@@ -1222,7 +1248,7 @@ arsort($new_te);
 				echo $qbtoppointsprint;
 				
 				tablefoot('26 Points or More');	
-				
+				//printr($toppoints, 1);
 				?>	
 
 			</div>

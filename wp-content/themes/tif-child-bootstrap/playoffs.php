@@ -110,9 +110,8 @@ foreach ($playoffs_year as $key => $value){
 }
 
 
-
-//printr($playoff_games, 0);
-
+$potw = potw_playoffs();
+//printr($potw, 0);
 
 ?>
 
@@ -131,7 +130,7 @@ foreach ($playoffs_year as $key => $value){
 				</div>
 				
 				<!--Page content-->
-				<div id="page-content">
+				<div id="page-content" class="playoff-boxes">
 			
 					<?php
 					foreach ($playoff_games as $key => $game){
@@ -217,13 +216,17 @@ foreach ($playoffs_year as $key => $value){
 										echo '<div class="well well-sm">';
 											echo '<p><span class="text-bold">'.$teamids[$winner].'</span> win and advance '.$ottext.' to Posse Bowl.</p>';
 										echo '</div>';
-									
+
 									echo '</div>';
+
 								echo '</div>';
 							$count++;
 							}
-							
-							
+
+							echo '<div class="col-xs-12">';
+                                echo '<p>Player of the Week - <strong>'.pid_to_name($potw[$key.'15'], 0).'</strong>';
+                            echo '</div>';
+
 						echo '</div>';
 					} ?>
 					

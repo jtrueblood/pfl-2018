@@ -979,9 +979,10 @@ printr($assoc, 0);
 								
 								return $getstand;
 							}
-							
+
+							//insert_week_stand($weekstand);
 							if($week_sel == '01'){
-								insert_week_stand($weekstand);
+                                insert_week_stand($weekstand);
 								//echo 'inserted week 1';
 							} else {
 								$lastweek = insert_week_stand_check($weekstand);

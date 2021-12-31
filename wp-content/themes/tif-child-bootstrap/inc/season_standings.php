@@ -1,7 +1,5 @@
 <?php
-	
-	
-					
+
 foreach($standing as $key => $item){
    $arr_resort[$item['division']][$key] = $item;
 }
@@ -25,7 +23,7 @@ foreach ($arr_resort as $div => $thedivision){
 						<th class="text-center">%</th>
 						<th class="text-center">Pt</th>
 						<th class="text-center">PPG</th>
-	<!-- 					<th class="text-center">Pt Vs</th> -->
+	                    <th class="text-center">PtA</th>
 	
 						<th class="text-center">+/-</th>
 	<!--
@@ -76,7 +74,7 @@ foreach ($arr_resort as $div => $thedivision){
 		echo '<td class="text-center">'.$winper.'</td>';
 		echo '<td class="text-center">'.$pts.'</td>';
 		echo '<td class="text-center">'.$ppg.'</td>';
-	// 	echo '<td class="text-center">'.$ptsvs.'</td>';
+	    echo '<td class="text-center">'.$ptsvs.'</td>';
 		echo '<td class="text-center">'.$diff.'</td>';
 	/*
 		echo '<td class="text-center">'.$divwin.'</td>';
@@ -96,7 +94,6 @@ foreach ($arr_resort as $div => $thedivision){
 	</table>
 	</div>
 	<p>For full standings see 'Standings'</p>
-
 
 </div>
 

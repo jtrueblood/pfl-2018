@@ -772,7 +772,11 @@ endif;
 						foreach ($potw as $value){
 							$w = substr($value, -2);
 							$y = substr($value, 0, 4);
-							echo '<span class="text-bold">Week '.$w.', '.$y.'</span><br>';		
+							if($w == 15):
+                                    echo '<span class="text-bold">Playoffs - '.$y.'</span><br>';
+                                else:
+							        echo '<span class="text-bold">Week '.$w.', '.$y.'</span><br>';
+                                endif;
 						}
 					?>
 				</div>

@@ -3574,6 +3574,19 @@ function get_all_team_results_by_week($weekid, $team){
 	return $weekteams;
 }
 
+function get_team_score_by_week($weekid){
+    global $wpdb;
+    $teams = get_teams();
+
+    foreach ($teams as $key => $value){
+        $revisequery = $wpdb->get_results("select * from wp_team_$key where id = '$weekid'", ARRAY_N);
+        if($revisequery):
+            $boxscoreweek[$key] = $revisequery[0][4];
+        endif;
+    }
+    arsort($boxscoreweek);
+    return $boxscoreweek;
+}
 
 // results for team by week
 function get_team_results_expanded_new($team){
@@ -3733,6 +3746,18 @@ global $wpdb;
 		$potwp[] = $p[0];
 	}
 	return $potwp;
+}
+
+// Get Player of the Week for just the Playoffs - Week 15 in wp_player_of_week table
+function potw_playoffs() {
+    $potw = get_player_of_week();
+    foreach ($potw as $key => $value):
+        $weekst = substr($key, -2);
+        if($weekst == 15):
+            $playoffpotw[$key] = $value;
+        endif;
+    endforeach;
+    return $playoffpotw;
 }
 
 

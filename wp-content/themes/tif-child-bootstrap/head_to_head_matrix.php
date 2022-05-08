@@ -83,8 +83,14 @@ arsort($cleanedup);
                                                     echo '<td class="text-center" style="background-color: #ddd;"></td>';
                                                 endif;
 
-                                                if($value['TSG']):
+                                                if($value['BUL']):
                                                 echo '<td class="text-center">'.$value['BUL'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['ETS']):
+                                                    echo '<td class="text-center">'.$value['ETS'].'</td>';
                                                 else :
                                                     echo '<td class="text-center" style="background-color: #ddd;"></td>';
                                                 endif;
@@ -95,11 +101,7 @@ arsort($cleanedup);
                                                     echo '<td class="text-center" style="background-color: #ddd;"></td>';
                                                 endif;
 
-                                                if($value['ETS']):
-                                                echo '<td class="text-center">'.$value['ETS'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
+
 
                                                 if($value['SNR']):
                                                 echo '<td class="text-center">'.$value['SNR'].'</td>';

@@ -3622,6 +3622,24 @@ function get_team_results_expanded_new($team){
 	return $teamresults;
 }
 
+//get just players played for team
+function get_players_played_by_team($teamid){
+    $results = get_team_results_expanded_new($teamid);
+    foreach ($results as $key => $value):
+        $output[$key] = array(
+            'qb1' => $value['qb1'],
+            'rb1' => $value['rb1'],
+            'wr1' => $value['wr1'],
+            'pk1' => $value['pk1'],
+            'qb2' => $value['qb2'],
+            'rb2' => $value['rb2'],
+            'wr2' => $value['wr2'],
+            'pk2' => $value['pk2']
+        );
+    endforeach;
+    return $output;
+}
+
 
 //format number as ordinal
 function ordinal($number) {

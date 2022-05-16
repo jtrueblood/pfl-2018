@@ -13,6 +13,7 @@ function get_week_stand_this_team($teamarray){
 			$wins += $value['win'];
 			$loss += $value['loss'];
 			$games = $wins + $loss;
+			$division = $value['division'];
 			$points += $value['points'];
 			$ppg = $points / $games;
 			$vspoints += $value['vspoints'];
@@ -22,7 +23,7 @@ function get_week_stand_this_team($teamarray){
 			
 			$cumweek = array(	
 				'team' => $value['teamid'],
-				'div' => 'EGAD',
+				'div' => $division,
 				'win' => $wins,
 				'loss' => $loss,
 				'per' => $wins / $games,

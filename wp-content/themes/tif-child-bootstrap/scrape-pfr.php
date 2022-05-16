@@ -11,6 +11,9 @@ header("Refresh: 5; URL=$url1");
 */
 
 $getplayer = $_GET['id'];
+
+//  Set Run Value to '1' if you want to override the .json file that exists in 'pfr-gamelogs'.  This is used for updating players that have played in the past.
+$getrun = $_GET['run'];
  
 $playersassoc = get_players_assoc();
 $i = 0;
@@ -257,15 +260,17 @@ get_header();
 								    }
 								    return $storedata;
 								}
-								
+
+        // Toggle this value here to set to either all years player played or a simple array of one or a few years.
 								$yearclean = array_values($yearsplayed);
-								//printr($yearclean, 0);
+                                //$yearclean = array(2020, 2021);
+								printr($yearclean, 0);
 								
 								$passyards = array();
 								
-								foreach($yearclean as $y){	
+								foreach($yearclean as $y){
 									// Set Boxscore Table from Page	and Year
-									//$y = 2019;
+									//$y = 2020;
 									
 									$htmlgame = '';
 									
@@ -380,20 +385,31 @@ get_header();
 								$json_store = json_encode($playerstats);
 								
 								$destination_folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/pfr-gamelogs';
-							
+
+
 								if (file_exists($destination_folder.'/'.$randomplayer.'.json')):
-									$report_message = $randomplayer.' -- file exsists || ';
-									echo '<script>console.log("'.$randomplayer.' - file exsists");</script>';
-									echo $report_message;
+                                    $report_message = $randomplayer.' -- file exsists || ';
+                                    echo '<script>console.log("'.$randomplayer.' - file exsists");</script>';
+                                    echo $report_message;
 								else:
-									if($json_store):	
-										file_put_contents("$destination_folder/$randomplayer.json", $json_store);
-										$report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
-										echo $json_store;
-										echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
-										echo $report_message;
-									endif;
-								endif;		
+                                    if($json_store):
+                                        file_put_contents("$destination_folder/$randomplayer.json", $json_store);
+                                        $report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
+                                        echo $json_store;
+                                        echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
+                                        echo $report_message;
+                                    endif;
+								endif;
+
+								// if the 'run' uri value is set to run, run the file anyway...
+                                $m = '_a';
+								if($getrun == 1):
+                                    file_put_contents("$destination_folder/$randomplayer$m.json", $json_store);
+                                    $report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
+                                    echo $json_store;
+                                    echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
+                                    echo $report_message;
+                                endif;
 
 								//printr($cleanlabels, 0);		
 								//printr($json_store, 0);	    
@@ -430,19 +446,20 @@ get_header();
 
 <script>
 
-setTimeout(function(){
-	var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
-    window.location.href = scrapeclick;
- }, 7000);
+    // DISABLE TO STOP AUTO RELOAD
+
+//setTimeout(function(){
+//	var scrapeclick = '/scrape-pro-football-ref/?id=--><?php //echo $nextplayer; ?>//';
+//    window.location.href = scrapeclick;
+// }, 7000);
 
 </script>
 
-<!--
+
 <script>
-	var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
-           console.log(scrapeclick);
-        </script>
--->
+	//var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
+       //    console.log(scrapeclick);
+</script>
 
 
 		

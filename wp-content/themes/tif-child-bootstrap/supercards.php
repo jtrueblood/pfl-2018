@@ -23,17 +23,27 @@
 						<?php
 						$getids = just_player_ids();
 						$rows = 1;
-						foreach ($getids as $id):	
-							if($rows % 3 == 0):
-								echo '<div class="row">';
-							endif;	
-							echo '<div class="col-xs-8">';
-								$getcard = supercard($id);
-								echo $getcard;
-							echo '</div>';	
-							if($rows % 3 == 0):
-								echo '</div>';
-							endif;
+                        $yearval = 2020;
+                        foreach ($getids as $value):
+                            $result = substr($value, 0, 4);
+                            if($result >= $yearval):
+                                $newarr[] = $value;
+                            endif;
+                        endforeach;
+
+                        printr($newarr, 0);
+
+						foreach ($newarr as $id):
+                            if($rows % 3 == 0):
+                                echo '<div class="row">';
+                            endif;
+                            echo '<div class="col-xs-8">';
+                                $getcard = supercard($id);
+                                echo $getcard;
+                            echo '</div>';
+                            if($rows % 3 == 0):
+                                echo '</div>';
+                            endif;
 						$rows++;	
 						
 						/*

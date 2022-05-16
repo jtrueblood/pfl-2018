@@ -1571,7 +1571,24 @@ function get_player_data($pid) {
 			'home_away' => $revisequery[8],
 			'location' => $revisequery[9],
             'cum_points' => $cumpoints,
-            'cum_wins' => $cumwins
+            'cum_wins' => $cumwins,
+            'game_date' => $revisequery[10],
+            'nflteam' => $revisequery[11],
+            'game_location' => $revisequery[12],
+            'nflopp' => $revisequery[13],
+            'pass_yds' => $revisequery[14],
+            'pass_td' => $revisequery[15],
+            'pass_int' => $revisequery[16],
+            'rush_yds' => $revisequery[17],
+            'rush_td' => $revisequery[18],
+            'rec_yds' => $revisequery[19],
+            'rec_td' => $revisequery[20],
+            'xpm' => $revisequery[21],
+            'xpa' => $revisequery[22],
+            'fgm' => $revisequery[23],
+            'fga' => $revisequery[24],
+            'nflscore' => $revisequery[25],
+            'scorediff' => $revisequery[26],
 		);
 
 	}
@@ -2196,7 +2213,17 @@ function get_player_career_stats($pid){
 			$pointsarray[] = $get['points'];
 			$yeararray[] = $get['year'];
 			$gamearray[] = $get['win_loss'];
-			
+			$passyardsarray[] = $get['pass_yds'];
+            $passtdarray[] = $get['pass_td'];
+            $passintarray[] = $get['pass_int'];
+            $rushydsarray[] = $get['rush_yds'];
+            $rushtdarray[] = $get['rush_td'];
+            $recydsarray[] = $get['rec_yds'];
+            $rectdarray[] = $get['rec_td'];
+            $xpmarray[] = $get['xpm'];
+            $xpaarray[] = $get['xpa'];
+            $fgmarray[] = $get['fgm'];
+            $fgaarray[] = $get['fga'];
 		}
 		
 		foreach ($data_array as $key => $value){
@@ -2268,6 +2295,17 @@ function get_player_career_stats($pid){
 		$loss = $games - $wins; 
 		$highseapts = max($new_sort_flat);		
 		$maxseason = array_keys($new_sort_flat, max($new_sort_flat));
+        $passingyds  = array_sum($passyardsarray);
+        $passingtds = array_sum($passtdarray);
+        $passingint = array_sum($passintarray);
+        $rushyrds = array_sum($rushydsarray);
+        $rushtds = array_sum($rushtdarray);
+        $recyds = array_sum($recydsarray);
+        $rectds = array_sum($rectdarray);
+        $xpm = array_sum($xpmarray);
+        $xpa = array_sum($xpaarray);
+        $fgm = array_sum($fgmarray);
+        $fga = array_sum($fgaarray);
 		
 		$justchamps = get_just_champions();
 		$playoffsplayer = playerplayoffs($pid);
@@ -2317,7 +2355,18 @@ function get_player_career_stats($pid){
 			'winmilestone' => $wcum,
 			//'avgpvq' => array_sum($pvqflat)/count($pvqflat),
 			'possebowlwins' => $pbwins_index,
-            'careerposrank' => get_player_career_rank($pid)
+            'careerposrank' => get_player_career_rank($pid),
+            'passingyards' => $passingyds,
+            'passingtds' => $passingtds,
+            'passingint' => $passingint,
+            'rushyrds' => $rushyrds,
+            'rushtds' => $rushtds,
+            'recyrds' => $recyds,
+            'rectds' => $rectds,
+            'xpm' => $xpm,
+            'xpa' => $xpa,
+            'fgm' => $fgm,
+            'fga' => $fga
 		);
 		
 		return $carrer_stats;
@@ -4098,8 +4147,10 @@ function supercard($pid){
 						echo '<p>'.$info[0]['height'].', '.$info[0]['weight'].' lbs. | '.$info[0]['college'].' | <span class="text-bold">#'.$info[0]['number'].'</span></p>';
 					endif;
 				//echo '<a href="/player/?id='.$val['pid'].'"><img src="'.$playerimg.'" class="img-responsive"/></a>';
-				echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
-				?>
+                if($playerimg):
+				    echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
+                endif;
+                ?>
                 <?php
                     if($gamesbyteam):
                         arsort($gamesbyteam);
@@ -4760,4 +4811,176 @@ function alter_player_table_columns ($pid){
     printr($myData, 0);
 }
 
+
+function get_pfr_json($file)
+{
+    $pfr_gamelog_file = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/tif-child-bootstrap/pfr-gamelogs/' . $file . '.json';
+    if (file_exists($pfr_gamelog_file)):
+        $getfile = file_get_contents($pfr_gamelog_file);
+        $decode_json = json_decode($getfile);
+
+        $weeks = $decode_json->week_num;
+
+        if ($weeks):
+            foreach ($weeks as $theyear => $theweek) {
+                $listyears[] = $theyear;
+                $newyears[$theyear] = explode(",", $theweek);
+            }
+        endif;
+
+        if ($decode_json):
+            foreach ($decode_json as $key => $value) {
+                if ($value):
+                    foreach ($value as $k => $v) {
+                        $exploded[$k][$key] = array_filter(explode(",", $v));
+                    }
+                endif;
+            }
+
+            if ($listyears):
+                foreach ($listyears as $y) {
+                    $i = 0;
+                    $yearget = $exploded[$y]['week_num'];
+                    $count = count($yearget);
+                    //$y = 1991;
+                    while ($i < $count) {
+                        $getw = $exploded[$y]['week_num'][$i];
+                        $w = str_pad($getw, 2, '0', STR_PAD_LEFT);
+                        $location = $exploded[$y]['game_location'][$i];
+                        if ($location != '@') {
+                            $location = 'vs';
+                        }
+
+                        $xpm = $exploded[$y]['xpm'][$i];
+                        $xpa = $exploded[$y]['xpa'][$i];
+                        $fgm = $exploded[$y]['fgm'][$i];
+                        $fga = $exploded[$y]['fga'][$i];
+
+                        if ($xpm == '') {
+                            $xpm = 0;
+                        }
+                        if ($xpa == '') {
+                            $xpa = 0;
+                        }
+                        if ($fgm == '') {
+                            $fgm = 0;
+                        }
+                        if ($fga == '') {
+                            $fga = 0;
+                        }
+
+                        $get_score_correct = get_score_correct_by_player($playerid);
+                        $score_correct = $get_score_correct[$y . $w]['score'];
+
+                        $playerdata[$y . $w] = array(
+                            'year' => $y,
+                            'week_num' => $w,
+                            'game_date' => $exploded[$y]['game_date'][$i],
+                            'team' => $exploded[$y]['team'][$i],
+                            'game_location' => $location,
+                            'opp' => $exploded[$y]['opp'][$i],
+                            'pass_yds' => $exploded[$y]['pass_yds'][$i],
+                            'pass_td' => $exploded[$y]['pass_td'][$i],
+                            'pass_int' => $exploded[$y]['pass_int'][$i],
+                            'rush_yds' => $exploded[$y]['rush_yds'][$i],
+                            'rush_td' => $exploded[$y]['rush_td'][$i],
+                            'rec_yds' => $exploded[$y]['rec_yds'][$i],
+                            'rec_td' => $exploded[$y]['rec_td'][$i],
+                            'score_correct' => $score_correct,
+                            'xpm' => $xpm,
+                            'xpa' => $xpa,
+                            'fgm' => $fgm,
+                            'fga' => $fga
+                        );
+                        $i++;
+                    }
+                }
+            endif;
+
+        endif;
+
+    endif;
+    return $playerdata;
+}
+
+
+function insert_stat_columns($pid){
+    global $wpdb;
+
+    $myData = $wpdb->get_row("SELECT * FROM $pid");
+    //Add column if not present.
+    if (!isset($myData->game_date)) { $wpdb->query("ALTER TABLE $pid ADD game_date VARCHAR(10)"); }
+    if (!isset($myData->nflteam)) { $wpdb->query("ALTER TABLE $pid ADD nflteam VARCHAR(3)"); }
+    if (!isset($myData->game_location)) { $wpdb->query("ALTER TABLE $pid ADD game_location VARCHAR(3)"); }
+    if (!isset($myData->nflopp)) { $wpdb->query("ALTER TABLE $pid ADD nflopp VARCHAR(3)"); }
+    if (!isset($myData->pass_yds)) { $wpdb->query("ALTER TABLE $pid ADD pass_yds INT(3)"); }
+    if (!isset($myData->pass_td)) { $wpdb->query("ALTER TABLE $pid ADD pass_td INT(2)"); }
+    if (!isset($myData->pass_int)) { $wpdb->query("ALTER TABLE $pid ADD pass_int INT(2)"); }
+    if (!isset($myData->rush_yds)) { $wpdb->query("ALTER TABLE $pid ADD rush_yds INT(2)"); }
+    if (!isset($myData->rush_td)) { $wpdb->query("ALTER TABLE $pid ADD rush_td INT(2)"); }
+    if (!isset($myData->rec_yds)) { $wpdb->query("ALTER TABLE $pid ADD rec_yds INT(2)"); }
+    if (!isset($myData->rec_td)) { $wpdb->query("ALTER TABLE $pid ADD rec_td INT(2)"); }
+    if (!isset($myData->xpm)) { $wpdb->query("ALTER TABLE $pid ADD xpm INT(2)"); }
+    if (!isset($myData->xpa)) { $wpdb->query("ALTER TABLE $pid ADD xpa INT(2)"); }
+    if (!isset($myData->fgm)) { $wpdb->query("ALTER TABLE $pid ADD fgm INT(2)"); }
+    if (!isset($myData->fga)) { $wpdb->query("ALTER TABLE $pid ADD fga INT(2)"); }
+    if (!isset($myData->nflscore)) { $wpdb->query("ALTER TABLE $pid ADD nflscore INT(2)"); }
+    if (!isset($myData->scorediff)) { $wpdb->query("ALTER TABLE $pid ADD scorediff INT(2)"); }
+
+    printr($myData, 0);
+
+}
+
+function insert_player_stats($pid, $exp)
+{
+    global $wpdb;
+
+    foreach ($exp as $key => $value):
+        $wpdb->update(
+            $pid,
+            array(
+                'game_date' => $value['game_date'],
+                'nflteam' => $value['nflteam'],
+                'game_location' => $value['game_location'],
+                'nflopp' => $value['opp'],
+                'pass_yds' => $value['pass_yds'],
+                'pass_td' => $value['pass_td'],
+                'pass_int' => $value['pass_int'],
+                'rush_yds' => $value['rush_yds'],
+                'rush_td' => $value['rush_td'],
+                'rec_yds' => $value['rec_yds'],
+                'rec_td' => $value['rec_td'],
+                'xpm' => $value['xpm'],
+                'xpa' => $value['xpa'],
+                'fgm' => $value['fgm'],
+                'fga' => $value['fga'],
+                'nflscore' => $value['nflscore'],
+                'scorediff' => $value['scorediff']
+            ),
+            array(
+                'week_id' => $value['weekids']
+            ),
+            array(
+                '%s',
+                '%s',
+                '%s',
+                '%s',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d',
+                '%d'
+            )
+        );
+    endforeach;
+    return 'inserted';
+}
 

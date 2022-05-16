@@ -900,7 +900,6 @@ printr($assoc, 0);
 									if($get != ''){
 										$weekstand[$weekvar.$key] = $get;
 									}
-	
 								}
 							endif;
 							

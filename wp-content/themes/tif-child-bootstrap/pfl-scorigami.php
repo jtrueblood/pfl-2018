@@ -5,7 +5,7 @@
  */
  ?>
 
-<?php 
+<?php
 $season = date("Y");
 $theweeks = the_weeks();
 $playerassoc = get_players_assoc();

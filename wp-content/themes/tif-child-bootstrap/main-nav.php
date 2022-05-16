@@ -107,6 +107,7 @@
 											<!--Submenu-->
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
+                                                <li class="<?php ifbodyclass (1791, 'active-link'); ?>"><a href="/tables-nfl">NFL Tables</a></li>
                                                 <li class="<?php ifbodyclass (1722, 'active-link'); ?>"><a href="/timeline">Timeline</a></li>
 												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>
                                                 <li class="<?php ifbodyclass (1676, 'active-link'); ?>"><a href="/head-to-head">Head to Head Matrix</a></li><li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
@@ -130,6 +131,7 @@
 											<!--Submenu-->
 											<ul class="collapse in">	
 												<li class="<?php ifbodyclass (1625, 'active-link'); ?>"><a href="/create-new-player">Create New Player</a></li>
+                                                <li class="<?php ifbodyclass (1497, 'active-link'); ?>"><a href="/scrape-pro-football-ref/">Scrape PFR for Player Info</a></li>
 											</ul>
 									</li>
 									

@@ -1,117 +1,91 @@
 <?php
 /*
- * Template Name: PFL Scorigami
- * Description: Used for creating and testing new ideas
+ * Template Name: NFL Career Stat Tables
+ * Description: Used for displaying NFL Stats listings of players (Pass, Rush, TD, Etc...)
  */
  ?>
 
-<?php 
-$season = date("Y");
-$theweeks = the_weeks();
-$playerassoc = get_players_assoc();
+<?php
 
-$RBS = $wpdb->get_results("select * from wp_team_RBS", ARRAY_N);
-$ETS = $wpdb->get_results("select * from wp_team_ETS", ARRAY_N);
-$PEP = $wpdb->get_results("select * from wp_team_PEP", ARRAY_N);
-$WRZ = $wpdb->get_results("select * from wp_team_WRZ", ARRAY_N);
-$CMN = $wpdb->get_results("select * from wp_team_CMN", ARRAY_N);
-$BUL = $wpdb->get_results("select * from wp_team_BUL", ARRAY_N);
-$SNR = $wpdb->get_results("select * from wp_team_SNR", ARRAY_N);
-$TSG = $wpdb->get_results("select * from wp_team_TSG", ARRAY_N);
-$BST = $wpdb->get_results("select * from wp_team_BST", ARRAY_N);
-$MAX = $wpdb->get_results("select * from wp_team_MAX", ARRAY_N);
-$PHR = $wpdb->get_results("select * from wp_team_PHR", ARRAY_N);
-$SON = $wpdb->get_results("select * from wp_team_SON", ARRAY_N);
-$ATK = $wpdb->get_results("select * from wp_team_ATK", ARRAY_N);
-$HAT = $wpdb->get_results("select * from wp_team_HAT", ARRAY_N);
-$DST = $wpdb->get_results("select * from wp_team_DST", ARRAY_N);
+$yeartwenty = get_season_leaders(2020);
+$yeartwentyone = get_season_leaders(2021);
 
-function theweekvalue($array)
-{
-    foreach ($array as $key => $value):
+$playerid = $_GET['id'];
 
-            $output[$value[0]] = $value[4];
+$playerposition = substr($playerid, -2);
 
-    endforeach;
-    return $output;
-}
+$playerdata = get_player_career_stats($playerid);
 
-$rbs_score = theweekvalue($RBS);
-$pep_score = theweekvalue($PEP);
-$ets_score = theweekvalue($ETS);
-$wrz_score = theweekvalue($WRZ);
-$cmn_score = theweekvalue($CMN);
-$bul_score = theweekvalue($BUL);
-$snr_score = theweekvalue($SNR);
-$tsg_score = theweekvalue($TSG);
-$bst_score = theweekvalue($BST);
-$max_score = theweekvalue($MAX);
-$phr_score = theweekvalue($PHR);
-$son_score = theweekvalue($SON);
-$atk_score = theweekvalue($ATK);
-$hat_score = theweekvalue($HAT);
-$dst_score = theweekvalue($DST);
+$playerdeets = get_player_data($playerid);
 
-foreach ($theweeks as $week):
-    $allscores[$week] = array(
-        $rbs_score[$week],
-        $pep_score[$week],
-        $ets_score[$week],
-        $wrz_score[$week],
-        $cmn_score[$week],
-        $bul_score[$week],
-        $snr_score[$week],
-        $tsg_score[$week],
-        $bst_score[$week],
-        $max_score[$week],
-        $phr_score[$week],
-        $son_score[$week],
-        $atk_score[$week],
-        $hat_score[$week],
-        $dst_score[$week]
-    );
-endforeach;
+$jusplayerids = just_player_ids();
 
-printr($allscores, 1);
-
-$firstweek = $allscores[202103];
-sort($firstweek);
-
-foreach ($firstweek as $key => $value):
-    if($value !== NULL):
-        $newarray[$key] = $value;
+foreach ($jusplayerids as $key => $value):
+    $pos = substr($value, -2);
+    $deets = get_player_career_stats($value);
+    if($deets['passingyards'] != 0 && $pos == 'QB'):
+        $passyards[$value] = $deets['passingyards'];
+        $qbgm = $deets['games'];
+        if($qbgm > 50):
+            $qbypg[$value] = $deets['passingyards'] / $qbgm;
+        endif;
+    endif;
+    if($deets['rushyrds'] != 0):
+        $rushyards[$value] = $deets['rushyrds'];
+        $rbgm = $deets['games'];
+        if($rbgm > 50 && $pos == 'RB'):
+            $rbypg[$value] = $deets['rushyrds'] / $rbgm;
+        endif;
+    endif;
+    if($deets['recyrds'] != 0):
+        $recyards[$value] = $deets['recyrds'];
+        $wrgm = $deets['games'];
+        if($wrgm > 50 && $pos == 'WR'):
+            $wrypg[$value] = $deets['recyrds'] / $wrgm;
+        endif;
+    endif;
+    if($deets['rushyrds'] != 0 && $pos == 'QB'):
+        $qbrushyards[$value] = $deets['rushyrds'];
+    endif;
+    if($deets['recyrds'] != 0 && $pos == 'RB'):
+        $rbrecyards[$value] = $deets['recyrds'];
+    endif;
+    if($deets['rushyrds'] != 0 && $pos == 'WR'):
+        $wrrushyards[$value] = $deets['rushyrds'];
+    endif;
+    if($deets['xpa'] != 0 && $pos == 'PK'):
+        $xpm[$value] = $deets['xpm'];
+        $xpa[$value] = $deets['xpa'];
+        if($deets['xpa'] > 100):
+            $xppct[$value] = $deets['xpm'] / $deets['xpa'];
+        endif;
+    endif;
+    if($deets['fga'] != 0 && $pos == 'PK'):
+        $fgm[$value] = $deets['fgm'];
+        $fga[$value] = $deets['fga'];
+        if($deets['fga'] > 50):
+            $fgpct[$value] = $deets['fgm'] / $deets['fga'];
+        endif;
     endif;
 endforeach;
 
-//$dice = array(4,5,2,6,7);
-function checkConsec($d) {
-    for($i=0;$i<count($d);$i++) {
-        if(isset($d[$i+1]) && $d[$i]+1 != $d[$i+1]) {
-            return false;
-        }
-    }
-    return true;
-}
-
-//var_dump(checkConsec(array(4,5,6,7))); //returns true
-//var_dump(checkConsec(array(2,4,6,7,8))); //returns true
-//var_dump(checkConsec(array(1,2,5,7))); //returns false
-
-//$check = HasConsec($newarray);
-
-
-$first = reset($newarray);
-$second = array_slice($newarray, 1, 1, true);
-//if ($first == $first):
-//    echo $first;
-//endif;
-
-//echo $first;
-
-$champs = get_champions();
+arsort($passyards);
+arsort($rushyards);
+arsort($recyards);
+arsort($qbrushyards);
+arsort($rbrecyards);
+arsort($wrrushyards);
+arsort($xpm);
+arsort($xpa);
+arsort($xppct);
+arsort($fgm);
+arsort($fga);
+arsort($fgpct);
+arsort($qbypg);
+arsort($rbypg);
+arsort($wrypg);
 
 ?>
-
 
 <?php get_header(); ?>
 
@@ -128,19 +102,33 @@ $champs = get_champions();
 				
 				<!--Page content-->
 				<div id="page-content">
-					
-					<div class="panel panel-bordered panel-light">
-						<div class="panel-heading">
-							<h3 class="panel-title">Title</h3>
-                                <?php
-                                printr($champs, 0);
 
-                                ?>
-						</div>
-						<div class="panel-body">										     
-						</div>
-								
-					</div>
+                    <!-- QB Game Scores -->
+                    <div class="col-xs-24 col-sm-12 col-md-6">
+                        <?php //printr($wrypg, 0); ?>
+                        <?php //printr($playerdata, 1); ?>
+
+                        <?php
+
+                        $labels = array('Player', 'Yards');
+                        tablehead('QB Passing Yards', $labels);
+                        $i = 1;
+                        foreach ($passyards as $key => $value){
+                            if($i <= 25):
+                                $name = get_player_name($key);
+                                $tableprint .='<tr><td>'.$i.'. '.$name['first'].' '.$name['last'].'</td>';
+                                $tableprint .='<td class="min-width text-right">'.number_format($value, '0', '.', ',').'</td></tr>';
+                                $i++;
+                            endif;
+                        }
+
+                        echo $tableprint;
+
+                        tablefoot('Top 25');
+                        //printr($toppoints, 1);
+                        ?>
+
+                    </div>
 																	
 				</div><!--End page content-->
 
@@ -157,6 +145,8 @@ $champs = get_champions();
 		
 </div>
 </div>
+
+
 
 
 <?php get_footer(); ?>

@@ -28,10 +28,7 @@
 						
 						<?php
 							$protections = get_protections();
-							$loop = 0;
-							
-							
-							
+
 							foreach($protections as $key => $item){
 							   $arr_resort[$item['team']][$key] = $item;
 							}
@@ -39,7 +36,6 @@
 							ksort($arr_resort, SORT_NUMERIC);
 							
 							//printr($arr_resort, 1);
-						$loop = 0;
 	
 						foreach ($arr_resort as $team){
 							foreach ($team as $key => $value){
@@ -51,58 +47,53 @@
 								$playerid = $value['playerid'];
 							    $year = $value['year'];
 								
-								
 								if($team != $checkteam){
-										$checkteam = $team;
-										?>
-										<div class="col-xs-24">		
-										
-											<h4 class="text-center protection-season"><?php echo $team; ?> Protections</h4>
-									
-										</div>
-										
-										<?php  }  
-											
-										if ($loop % 3 == 0){ ?>
-										<div class="row">
-										<div class="col-xs-2">	
-											<h3 class="text-bold text-center"><?php echo $year; ?></h3>												
-										</div>		
-				
-										<?php } ?>
-												
-										<div class="col-xs-7">		
-											<div class="panel protections">
-												<div class="panel-body <?php echo $position;?>">	
-												<?php
-												if ($first == 'No Protection'){	
-													echo 'No Protection';
-												 } else {
-													 
-													$playerimgobj = get_attachment_url_by_slug($playerid);
-													$imgid =  attachment_url_to_postid( $playerimgobj );
-													$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
-													$playerimg = $image_attributes[0];
-												
-													 
-													 echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position; 
-												 }?>
-												</div>
-											</div>
-										</div>
-									
-										<?php 
-										$loop++;
-										if ($loop % 3 == 0){ 
-											echo '</div>';
-										}
-											
-								}
+                                    $checkteam = $team;
+                                    ?>
+                                    <div class="col-xs-24">
+
+                                        <h4 class="text-center protection-season"><?php echo $team; ?> Protections</h4>
+
+                                    </div>
+
+                                    <?php  }
+
+                                    if ($year != $checkyear){ ?>
+                                        <div class="row">
+                                        <div class="col-xs-2">
+                                            <h3 class="text-bold text-center"><?php echo $year; ?></h3>
+                                        </div>
+
+                                    <?php } ?>
+
+                                    <div class="col-xs-7">
+                                        <div class="panel protections">
+                                            <div class="panel-body <?php echo $position;?>">
+                                            <?php
+                                            if ($first == 'No Protection'){
+                                                echo 'No Protection';
+                                             } else {
+
+                                                $playerimgobj = get_attachment_url_by_slug($playerid);
+                                                $imgid =  attachment_url_to_postid( $playerimgobj );
+                                                $image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));
+                                                $playerimg = $image_attributes[0];
+
+                                                echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position;
+                                             }?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <?php
+
+                                    if ($year != $checkyear){
+                                        echo '</div>';
+                                    }
+							    }
 							}
 						?>
-							
-							
-											
+
 						</div>
 
 										

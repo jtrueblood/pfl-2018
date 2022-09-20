@@ -270,8 +270,17 @@ function set_schedule_trans() {
 
 
 // simple get functions
-function the_seasons(){
-	$year = date('Y');
+function the_seasons($chmonth = 8){  // Returns a list of PFL Seasona as a 4 digit year.  There is a vaiable in here that can set the month the year turns over.
+    $month = date('m'); // get the current month as an int
+    $smonth = sprintf('%0d', $month);  //format with no leading zero
+    // set to best month where the PFL seasons turn over.  Can change it when the function is called but it will default to august (8)
+
+    $syear = date('Y');
+    if($smonth < $chmonth):
+	    $year = $syear - 1;
+	else:
+        $year = $syear;
+	endif;
 
 	$o = 1991;
 	while ($o <= $year){
@@ -2201,7 +2210,12 @@ function printmultiplypvq(){
 	return $print_multiply;
 }
 
-
+function get_numbers_by_season($pid){
+    global $wpdb;
+    $numbers = $wpdb->get_results("select numberarray from wp_players where p_id = '$pid'", ARRAY_N);
+    $arrnumbers = json_decode($numbers[0][0]);
+    return $arrnumbers;
+}
 
 // gets the cumulative career stats from the player table
 function get_player_career_stats($pid){
@@ -2351,6 +2365,7 @@ function get_player_career_stats($pid){
 			'ppgbyseason' => $new_sort_flat_ppg,
 			'seasonrank' => $seasonrank,
 			'pvqbyseason' => $pvqflat,
+            'numbersseason' => get_numbers_by_season($pid),
             'pointsmilestone' => $ptscum,
 			'winmilestone' => $wcum,
 			//'avgpvq' => array_sum($pvqflat)/count($pvqflat),
@@ -2957,6 +2972,83 @@ function teamlist(){
 	return $teamlist;
 }
 
+function team_long($teamid){
+    $teamlist = teamlist();
+    $longname = $teamlist[$teamid];
+    return $longname;
+}
+
+function get_all_team_data()
+{
+    global $wpdb;
+
+    $RBS = $wpdb->get_results("select * from wp_team_RBS", ARRAY_N);
+    $ETS = $wpdb->get_results("select * from wp_team_ETS", ARRAY_N);
+    $PEP = $wpdb->get_results("select * from wp_team_PEP", ARRAY_N);
+    $WRZ = $wpdb->get_results("select * from wp_team_WRZ", ARRAY_N);
+    $CMN = $wpdb->get_results("select * from wp_team_CMN", ARRAY_N);
+    $BUL = $wpdb->get_results("select * from wp_team_BUL", ARRAY_N);
+    $SNR = $wpdb->get_results("select * from wp_team_SNR", ARRAY_N);
+    $TSG = $wpdb->get_results("select * from wp_team_TSG", ARRAY_N);
+    $BST = $wpdb->get_results("select * from wp_team_BST", ARRAY_N);
+    $MAX = $wpdb->get_results("select * from wp_team_MAX", ARRAY_N);
+    $PHR = $wpdb->get_results("select * from wp_team_PHR", ARRAY_N);
+    $SON = $wpdb->get_results("select * from wp_team_SON", ARRAY_N);
+    $ATK = $wpdb->get_results("select * from wp_team_ATK", ARRAY_N);
+    $HAT = $wpdb->get_results("select * from wp_team_HAT", ARRAY_N);
+    $DST = $wpdb->get_results("select * from wp_team_DST", ARRAY_N);
+
+    $teamarrays = array (
+        'RBS' => $RBS,
+        'ETS' => $ETS,
+        'PEP' => $PEP,
+        'WRZ' => $WRZ,
+        'CMN' => $CMN,
+        'BUL' => $BUL,
+        'SNR' => $SNR,
+        'TSG' => $TSG,
+        'BST' => $BST,
+        'MAX' => $MAX,
+        'PHR' => $PHR,
+        'SON' => $SON,
+        'ATK' => $ATK,
+        'HAT' => $HAT,
+        'DST' => $DST
+    );
+
+    return $teamarrays;
+}
+
+function schedule_by_week(){
+    $theweeks = the_weeks();
+    $teamdata = get_all_team_data();
+
+    foreach($teamdata as $team => $theweek):
+        foreach ($theweek as $key => $value):
+            $week = $value[0];
+            $hometeam = $value[3];
+            $homescore = $value[4];
+            $roadteam = $value[5];
+            $roadscore = $value[6];
+            $loc = $value[7];  // gets H or A value
+            $stad = $value[8];
+            if($loc == 'H'):
+                $schedule[$week][] = array(
+                    'hometeam' => $hometeam,
+                    'homescore' => $homescore,
+                    'roadteam' => $roadteam,
+                    'roadscore' => $roadscore,
+                    'stadium' => $stad
+                );
+            endif;
+        endforeach;
+    endforeach;
+
+    ksort($schedule);
+
+    return $schedule;
+}
+
 
 function get_number_ones(){
 	
@@ -3232,24 +3324,10 @@ function get_mfl_player_details($mflid){
 function get_weekly_mfl_player_results($mflid, $year, $week){
 	
 	$curl = curl_init();
-    //  2020 Request Curl
-//	curl_setopt_array($curl, array(
-//	  CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1",
-//	  CURLOPT_RETURNTRANSFER => true,
-//	  CURLOPT_ENCODING => "",
-//	  CURLOPT_MAXREDIRS => 10,
-//	  CURLOPT_TIMEOUT => 0,
-//	  CURLOPT_FOLLOWLOCATION => true,
-//	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-//	  CURLOPT_CUSTOMREQUEST => "GET",
-//	  CURLOPT_HTTPHEADER => array(
-//	    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_LAST_LEAGUE_ID=38954; MFL_PW_SEQ=ah9q2MiTtein3AK%2B"
-//	  ),
-//	));
 
-    // 2021 Request Curl
+    // 2022 Updated Request Curl
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&APIKEY=aRNp1sySvuWux0CmO1HIZDYeF7ox&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1",
+        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -3258,7 +3336,7 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Cookie: utf-8; MFL_PW_SEQ=ah9q2MuSs%2BGq2gG6; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
+            'Cookie: MFL_PW_SEQ=ah9q2M6Ss%2Bis3Q29; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
         ),
     ));
 	
@@ -3272,7 +3350,7 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
 	if(isset($playerscores)){
 	    $score[$playerscores['week']] = $playerscores['score'];
 	}
-	sleep(3);
+	sleep(2);
 	return $score;
 	
 }
@@ -4022,6 +4100,30 @@ function estimated_pfl_score($py, $ptd, $pint, $ruyd, $rutd, $reyd, $retd, $fg, 
 	return $thecalc;
 }
 
+// Functions needed to convert the HTML table we get back from PFR into a CSV
+function tdrows($elements)
+{
+    $str = "";
+    foreach ($elements as $element) {
+        $str .= $element->nodeValue . ", ";
+    }
+
+    return $str;
+}
+
+function getdata($contents)
+{
+    $DOM = new DOMDocument;
+    $DOM->loadHTML($contents);
+
+    $items = $DOM->getElementsByTagName('tr');
+
+    foreach ($items as $node) {
+        $storedata[] = tdrows($node->childNodes);
+    }
+    return $storedata;
+}
+
 #get linescores from wp_sdapi_boxscores by player
 function get_pfr_linescores_by_player($playerid){
 	global $wpdb;
@@ -4591,6 +4693,30 @@ function teams_for_mfl_history(){
             '0008' => 'HAT',
             '0009' => 'CMN',
             '0010' => 'BUL'
+        ),
+        2021 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2022 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
         )
     );
     return $mfl_team_id_history;
@@ -4982,5 +5108,30 @@ function insert_player_stats($pid, $exp)
         );
     endforeach;
     return 'inserted';
+}
+
+function insert_player_number_array($pid, $numbers)
+{
+    global $wpdb;
+
+        $wpdb->update(
+            'wp_players',
+            array(
+                'numberarray' => $numbers
+            ),
+            array(
+                'p_id' => $pid
+            ),
+            array(
+                '%s'
+            )
+        );
+
+    return 'inserted';
+}
+
+function array_count_values_of($value, $array) {
+    $counts = array_count_values($array);
+    return $counts[$value];
 }
 

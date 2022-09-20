@@ -64,7 +64,7 @@ $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11',
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => "https://www58.myfantasyleague.com/2021/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWux0CmO1HIZDYeF7ox&W=$week&JSON=1",
+    CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&W=$week&JSON=1",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -73,7 +73,7 @@ curl_setopt_array($curl, array(
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => 'GET',
     CURLOPT_HTTPHEADER => array(
-        'Cookie: utf-8; MFL_PW_SEQ=ah9q2MuSs%2BGq2gG6; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
+        'Cookie: MFL_PW_SEQ=ah9q2M6Ss%2Bis3Q29; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
     ),
 ));
 
@@ -115,7 +115,7 @@ else:
 //	));
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www58.myfantasyleague.com/2021/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWux0CmO1HIZDYeF7ox&W=$week&JSON=1",
+        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&W=$week&JSON=1",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -124,9 +124,11 @@ else:
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'GET',
         CURLOPT_HTTPHEADER => array(
-            'Cookie: utf-8; MFL_PW_SEQ=ah9q2MuSs%2BGq2gG6; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
+            'Cookie: MFL_PW_SEQ=ah9q2M6Ss%2Bis3Q29; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
         ),
     ));
+
+
 	
 	$response = curl_exec($curl);
 	
@@ -442,6 +444,8 @@ foreach ($weekstarters as $key => $value){
 	}
 }
 
+//printr($insert_player, 1);
+
 // resort week data indexed by player id
 
 // INSERT FORMATTED DATA INTO ALL TEAM TABLES
@@ -450,7 +454,7 @@ global $wpdb;
 if($run == 'true'){
 	foreach ($insert_team as $key => $insert){
 		$wpdb->insert(
-			'wp_team_'.$key, 
+			'wp_team_'.$key,
 			array(
 				'id' 		=> $insert['id'],
 				'season' 	=> $insert['season'],
@@ -473,36 +477,55 @@ if($run == 'true'){
 				'PK2'		=> '',
 				'extra_ot'	=> ''
 			),
-			array( 
-				'%d','%d','%d','%s','%d','%s','%d','%s','%s','%d','%s','%s','%s','%s','%d','%s','%s','%s','%s','%d' 
+			array(
+				'%d','%d','%d','%s','%d','%s','%d','%s','%s','%d','%s','%s','%s','%s','%d','%s','%s','%s','%s','%d'
 			)
 		);
 	}
-	
+
 	echo '<h3>TEAMS INSERTED</h3>';
 	
-	foreach ($insert_player as $key => $pi){
-		$wpdb->insert(
-			$key,
-			array(
-				'week_id' 	=> $pi['week_id'],
-				'year'		=> $pi['year'],
-				'week'		=> $pi['week'],
-				'points'	=> $pi['points'],
-				'team'		=> $pi['team'],
-				'versus'	=> $pi['versus'],
-				'playerid'	=> $pi['playerid'],
-				'win_loss'	=> $pi['win_loss'],
-				'home_away'	=> $pi['home_away'],
-				'location'	=> $pi['location']
-			),
-			array (
-				'%d','%d','%d','%d','%s','%s','%s','%d','%s','%s'
-			)
-		);
-	}
-	
-	echo '<h3>PLAYERS INSERTED</h3>';
+//	foreach ($insert_player as $key => $pi){
+//		$wpdb->insert(
+//			$key,
+//			array(
+//				'week_id' 	=> $pi['week_id'],
+//				'year'		=> $pi['year'],
+//				'week'		=> $pi['week'],
+//				'points'	=> $pi['points'],
+//				'team'		=> $pi['team'],
+//				'versus'	=> $pi['versus'],
+//				'playerid'	=> $pi['playerid'],
+//				'win_loss'	=> $pi['win_loss'],
+//				'home_away'	=> $pi['home_away'],
+//				'location'	=> $pi['location'],
+//                // Change made in 2022 after player tables were expanded to include NFL Game stats.
+//                // Set values to empty.  Add weekly NFL Data using the scrape-pfr.php file
+//                'game_date' => '2022-00-00',
+//                'nflteam' => 'TTT',
+//                'game_location' => 'S',
+//                'nflopp' => 'ZZZ',
+//                'pass_yds' => 0,
+//                'pass_td' => 0,
+//                'pass_int' => 0,
+//                'rush_yds' => 0,
+//                'rush_td' => 0,
+//                'rec_yds' => 0,
+//                'rec_td' => 0,
+//                'xpm' => 0,
+//                'xpa' => 0,
+//                'fgm' => 0,
+//                'fga' => 0,
+//                'nflscore' => 0,
+//                'scorediff' => 0
+//			),
+//			array (
+//				'%d','%d','%d','%d','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d'
+//			)
+//		);
+//	}
+//
+//	echo '<h3>PLAYERS INSERTED</h3>';
 	
 }
 

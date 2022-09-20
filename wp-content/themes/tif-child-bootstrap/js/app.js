@@ -274,11 +274,31 @@ jQuery(document).ready(function($) {
 	
 	$("#playerSelectScrape").click(function() {
 	  //alert("Handler for .click() called.");
-	  var dropselect8 = $("#playerDropScrape").val(); 
-	  var headurl = ('/scrape-pro-football-ref/'+dropselect8);
+	  var dropselect23 = $("#playerDropScrape").val();
+	  var headurl = ('/scrape-pro-football-ref/'+dropselect23);
 	  window.location = headurl;	
 	  //alert(url);
-	});	
+	});
+
+	$("#playerSelectScrapeNew").click(function() {
+		//alert("Handler for .click() called.");
+		var dropselect22 = $("#playerDropScrapeNew").val();
+		var headurl = ('/scrape-pro-football-ref-new/'+dropselect22+'&year=2022&week=1');
+		window.location = headurl;
+		//alert(url);
+	});
+
+	$("#playerSelectScrapeNumber").click(function() {
+		var dropselect15 = $("#playerDropScrapeNumber").val();
+		var headurl = ('/scrape-pfr-for-numbers/'+dropselect15);
+		window.location = headurl;
+	});
+
+	$("#playerSelectScrapeTwoPt").click(function() {
+		var dropselect16 = $("#playerDropScrapeTwoPt").val();
+		var headurl = ('/scrape-pfr-for-2pt/'+dropselect16);
+		window.location = headurl;
+	});
 	
 	
 	$("#playerSelectUnis").click(function() {

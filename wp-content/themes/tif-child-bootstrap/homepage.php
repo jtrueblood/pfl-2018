@@ -145,9 +145,11 @@ get_header();
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24">
+                                        <a href="https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a>
 										<a href="/create-new-player">Create New Player</a><br>	
-										<a href="/builds/build-mfl-weekly/?SET=0&Y=2021&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
-										<a href="/builds/build-drafts/">Import Draft</a><br>	
+										<a href="/builds/build-mfl-weekly/?SET=0&Y=2022&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+										<a href="/builds/build-drafts/">Import Draft</a><br>
+                                        <a href="/scrape-pfr-for-numbers">Srape PFR for Numbers</a><br>
 										<a href="/python-scripts">Sportsrefernce API Python Scripts</a><br>
 									</div>	
 								</div>

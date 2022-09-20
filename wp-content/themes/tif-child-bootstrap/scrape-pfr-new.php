@@ -1,6 +1,6 @@
 <?php
 /*
- * Template Name: Scrape PFR
+ * Template Name: Scrape PFR New
  * Description: Script to Scrape Player Stats From Pro Football Reference
  */
 
@@ -11,6 +11,9 @@ header("Refresh: 5; URL=$url1");
 */
 
 $getplayer = $_GET['id'];
+$getyearclean = $_GET['year'];
+$yearclean = array($getyearclean);
+$weekclean = $_GET['week'];
 
 //  Set Run Value to '1' if you want to override the .json file that exists in 'pfr-gamelogs'.  This is used for updating players that have played in the past.
 $getrun = $_GET['run'];
@@ -80,7 +83,7 @@ get_header();
 							</div>
 							<div class="panel-body">
 							<div class="col-xs-24 col-sm-18">	
-								<select data-placeholder="Select an Existing Player" class="chzn-select" style="width:100%;" tabindex="1" id="playerDropScrape">
+								<select data-placeholder="Select an Existing Player" class="chzn-select" style="width:100%;" tabindex="1" id="playerDropScrapeNew">
 								<option value=""></option>
 								
 								<?php 	
@@ -94,7 +97,7 @@ get_header();
 							</select>
 							</div>
 							<div class="col-xs-24 col-sm-4">
-								<button class="btn btn-warning" id="playerSelectScrape">Select</button>
+								<button class="btn btn-warning" id="playerSelectScrapeNew">Select</button>
 							</div>
 						</div>
 						<?php echo $nextplayer ; ?>
@@ -239,10 +242,14 @@ get_header();
 									
 
 
-        // Toggle this value here to set to either all years player played or a simple array of one or a few years.
+ // Toggle this value here to set to either all years player played or a simple array of one or a few years.
 								//$yearclean = array_values($yearsplayed);
-                                $yearclean = array(2022);
-								printr($yearclean, 0);
+                                // $yearclean = array(2022);
+
+                                echo $getyearclean.'-'.$weekclean.'<br>';
+								//printr($yearclean, 0);
+								// single last year
+								$r = $yearclean[0];
 								
 								$passyards = array();
 								
@@ -332,63 +339,105 @@ get_header();
 											}
 										
 										endif;
-											
-										 
 																		
 									}
-								
+
+								//$arr_week_num = explode(',', $week_num[$y]);
+
+								//organize the scraped dataset as arrays
 									$playerstats = array(
-										'week_num' => $week_num,
-										'game_date' => $game_date,
-										'team' => $team,
-										'game_location' => $game_location,
-										'opp' => $opp,
- 										'pass_yds' => $pass_yds,
-										'pass_td' => $pass_td,
-										'pass_int' => $pass_int,
-										'rush_yds' => $rush_yds,
-										'rush_td' => $rush_td,
-										'rec_yds' => $rec_yds,
-										'rec_td' => $rec_td,
-					
-										'xpm' => $xpm,
-										'xpa' => $xpa,
-										'fgm' => $fgm,
-										'fga' => $fga
-									
-									);		
-								
-								$json_store = json_encode($playerstats);
-								
-								$destination_folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/pfr-gamelogs';
+										'week_num' => explode(',', $week_num[$r]),
+										'game_date' => explode(',', $game_date[$r]),
+										'team' => explode(',', $team[$r]),
+										'game_location' => explode(',', $game_location[$r]),
+										'opp' => explode(',', $opp[$r]),
+ 										'pass_yds' => explode(',', $pass_yds[$r]),
+										'pass_td' => explode(',', $pass_td[$r]),
+										'pass_int' => explode(',', $pass_int[$r]),
+										'rush_yds' => explode(',', $rush_yds[$r]),
+										'rush_td' => explode(',', $rush_td[$r]),
+										'rec_yds' => explode(',', $rec_yds[$r]),
+										'rec_td' => explode(',', $rec_td[$r]),
+										'xpm' => explode(',', $xpm[$r]),
+										'xpa' => explode(',', $xpa[$r]),
+										'fgm' => explode(',', $fgm[$r]),
+										'fga' => explode(',', $fga[$r])
+									);
 
-
-								if (file_exists($destination_folder.'/'.$randomplayer.'.json')):
-                                    $report_message = $randomplayer.' -- file exsists || ';
-                                    echo '<script>console.log("'.$randomplayer.' - file exsists");</script>';
-                                    echo $report_message;
-								else:
-                                    if($json_store):
-                                        file_put_contents("$destination_folder/$randomplayer.json", $json_store);
-                                        $report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
-                                        echo $json_store;
-                                        echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
-                                        echo $report_message;
+								//organize the arrays by week and clean data for insert into database
+                                $i = 0;
+                                foreach($playerstats['week_num'] as $clean):
+                                    if($playerstats['game_location'][$i] == '@'):
+                                        $vs = '@';
+                                    else:
+                                        $vs = 'vs';
                                     endif;
-								endif;
+                                    $wzero = sprintf('%02d', $clean);
+                                    $cleanarray[$r.$wzero] = array(
+                                        'game_date' => $playerstats['game_date'][$i],
+                                        'team' => $playerstats['team'][$i],
+                                        'game_location' => $vs,
+										'opp' => $playerstats['opp'][$i],
+ 										'pass_yds' => empty($playerstats['pass_yds'][$i]) ? 0 : $playerstats['pass_yds'][$i],
+										'pass_td' => empty($playerstats['pass_td'][$i]) ? 0 : $playerstats['pass_td'][$i],
+										'pass_int' => empty($playerstats['pass_int'][$i]) ? 0 : $playerstats['pass_int'][$i],
+										'rush_yds' => empty($playerstats['rush_yds'][$i]) ? 0 : $playerstats['rush_yds'][$i],
+										'rush_td' => empty($playerstats['rush_td'][$i]) ? 0 : $playerstats['rush_td'][$i],
+										'rec_yds' => empty($playerstats['rec_yds'][$i]) ? 0 : $playerstats['rec_yds'][$i],
+										'rec_td' => empty($playerstats['rec_td'][$i]) ? 0 : $playerstats['rec_td'][$i],
+										'xpm' => empty($playerstats['xpm'][$i]) ? 0 : $playerstats['xpm'][$i],
+										'xpa' => empty($playerstats['xpa'][$i]) ? 0 : $playerstats['xpa'][$i],
+										'fgm' => empty($playerstats['fgm'][$i]) ? 0 : $playerstats['fgm'][$i],
+										'fga' => empty($playerstats['fga'][$i]) ? 0 : $playerstats['fga'][$i]
+                                    );
+                                $i++;
+                                endforeach;
+                                array_pop($cleanarray);
 
-								// if the 'run' uri value is set to run, run the file anyway...
-                                $m = '_a';
-								if($getrun == 1):
-                                    file_put_contents("$destination_folder/$randomplayer$m.json", $json_store);
-                                    $report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
-                                    echo $json_store;
-                                    echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
-                                    echo $report_message;
-                                endif;
+                                function insert_player_gamestats_scrape($playerid, $array, $pos, $year){
+                                    global $wpdb;
+                                    foreach ($array as $key => $value):
 
-								//printr($cleanlabels, 0);
-								//printr($json_store, 0);	    
+                                            $gamedate = $value['game_date'];
+                                            $nflteam = $value['team'];
+                                            $gamelocation = $value['game_location'];
+                                            $opp  = $value['opp'];
+                                            $pass_yds = $value['pass_yds'];
+                                            $pass_td = $value['pass_td'];
+                                            $pass_int = $value['pass_int'];
+                                            $rush_yds = $value['rush_yds'];
+                                            $rush_td = $value['rush_td'];
+                                            $rec_yds = $value['rec_yds'];
+                                            $rec_td = $value['rec_td'];
+                                            $xpm = $value['xpm'];
+                                            $xpa = $value['xpa'];
+                                            $fgm = $value['fgm'];
+                                            $fga = $value['fga'];
+
+                                            if($pos == "PK"):
+                                                $nflscore = pk_score_converter($year, $xpm, $fgm);
+                                            else:
+                                                $nflscore = pos_score_converter($year, $pass_yds, $pass_td, $rush_yds, $rush_td, $pass_int, $rec_yds, $rec_td);
+                                            endif;
+
+                                            $pflscore = get_player_score_by_week($playerid, $key);
+                                            $pflpts = $pflscore['points'];
+                                            $ptdiff = $pflpts - $nflscore;
+
+                                            $query = $wpdb->query("
+                                                    UPDATE $playerid 
+                                                    SET game_date = '$gamedate', nflteam = '$nflteam', game_location = '$gamelocation', nflopp = '$opp', pass_yds = '$pass_yds', pass_td = '$pass_td', pass_int = '$pass_int', rush_yds = '$rush_yds', rush_td = '$rush_td', rec_yds = '$rec_yds', rec_td = '$rec_td', xpm = '$xpm', xpa = '$xpa', fgm = '$fgm', fga = '$fga', nflscore = '$nflscore', scorediff = '$ptdiff'
+                                                    WHERE week_id = '$key'
+                                                    " );
+                                            return $query.'<br>'.$playerid.'<br>'.$key.'<br>'.$pflpts.'<br>'.$nflscore;
+
+                                    endforeach;
+
+                                }
+
+                                $results = insert_player_gamestats_scrape($randomplayer, $cleanarray, $position, $r);
+                                echo $results;
+
 								?>
 							</div>
 						</div>
@@ -398,10 +447,9 @@ get_header();
 						<div class="panel widget">
 							<div class="widget-body text-center">
 								<?php
-                               printr($playerstats, 0);
-								//printr($dataarray[0], 0);
-								//printr($yearsplayed, 0);
-								printr($alldata, 0);
+                                printr($cleanarray, 0);
+                               //printr($playerstats, 0);
+
 								?>
 							</div>
 						</div>
@@ -416,8 +464,8 @@ get_header();
 </div>
 
 <?php 
-	$log_file = $destination_folder.'/file.log'; 
-	error_log($report_message, 3, $log_file); 
+	//$log_file = $destination_folder.'/file.log';
+	//error_log($report_message, 3, $log_file);
 ?>
 
 
@@ -434,7 +482,7 @@ get_header();
 
 
 <script>
-	var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
+	//  var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
        //    console.log(scrapeclick);
 </script>
 

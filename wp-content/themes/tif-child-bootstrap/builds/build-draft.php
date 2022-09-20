@@ -14,44 +14,38 @@ get_header();
 // STEPS
 
 // 1. Check the 3 vars immediatly below.  You will need to update the year and origorder variable each season.  Somtimes lid changes
-// 2. Authenticate in the browser with this url : https://api.myfantasyleague.com/2021/login?jtrueblood=testuser&eur0TRASH!=testing1&XML=1
+// 2. Authenticate in the browser with this url (Change Year) : https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1
+// 2a.  You may need to go into Postman and setup a new browser autorization cookie
 // 3. Run /builds/build-drafts
 // 4. Check the draft list visually.  Also check the array of IDs at the bottom of the page and enter these into the 'Create New Player' area on the homepage to build the new player profiles.
 // 5. Uncomment the section that will insert the draft into wp_drafts.sql table.  Reload the page.
 // 6. Recomment that section.  Save and close.
 
-// Auth URL = https://api.myfantasyleague.com/2020/login?USERNAME=jtrueblood&PASSWORD=eur0TRASH!&XML=1
+// Auth URL = https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1
 
-$year = 2021;
+$year = 2022;
 $lid = 38954;
 // NO LONGER NEEDED AS OF 2020 -- $apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
 // Looks like you could pass an API Key instead of the user agent (not totally sure?) the api key for 2020 appears to be &APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox
 
-$origorder = array('DST','PEP','BUL','CMN','TSG','WRZ','SNR','BST','ETS','DST');
+$origorder = array('BST','SNR','HAT','BUL','CMN','WRZ','DST','TSG','PEP','ETS');
 // --------------------------------------------
 
 // get actual draft report for the year from MFL
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => "https://www58.myfantasyleague.com/2021/export?TYPE=draftResults&L=38954&JSON=1",
-  CURLOPT_RETURNTRANSFER => true,
-  CURLOPT_ENCODING => "",
-  CURLOPT_MAXREDIRS => 10,
-  CURLOPT_TIMEOUT => 30,
-  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-  CURLOPT_CUSTOMREQUEST => "GET",
-  CURLOPT_HTTPHEADER => array(
-    "Accept: */*",
-    "Accept-Encoding: gzip, deflate",
-    "Cache-Control: no-cache",
-    "Connection: keep-alive",
-    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_PW_SEQ=aR9q28Gbvemq2QS6",
-    "Host: www58.myfantasyleague.com",
-    "Postman-Token: 981a2349-7260-45fe-b12d-d07f5d563927,3d357515-ffe5-40f4-8fff-19673d51bbcd",
-    "User-Agent: PostmanRuntime/7.19.0",
-    "cache-control: no-cache"
-  ),
+    CURLOPT_URL => 'https://www58.myfantasyleague.com/2022/export?TYPE=draftResults&L=38954&JSON=1',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_HTTPHEADER => array(
+        'Cookie: MFL_PW_SEQ=ah9q2M6Ss%2Bis3Q29; MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D'
+    ),
 ));
 
 $response = curl_exec($curl);
@@ -70,8 +64,8 @@ $mflpicks = $mfldraft['draftResults']['draftUnit']['draftPick'];
 
 $teamnames = teamid_mfl_to_name();
 
-printr($mflpicks[0], 0);
-printr($getorder, 0);
+//printr($mflpicks[0], 0);
+//printr($getorder, 0);
 
 $countofpicks = count($mflpicks);
 
@@ -147,7 +141,7 @@ printr($newplayers, 0);
 // uncomment and reload to insert info into wp_drafts once the array looks good
 
 
-/*
+
 foreach($draftinsert as $arr){
 
 	$wpdb->insert(
@@ -171,7 +165,6 @@ foreach($draftinsert as $arr){
 		 )
 	);
 }
-*/
 
 
 

@@ -22,10 +22,7 @@ foreach ($get_update_pdf as $val){
 	$update_pdf[$val['week_id']] = $val['pdf_file'];
 }
 
-
-$wpdb = new wpdb('root','root','local','localhost');
-$mydb = new wpdb('root','root','pflmicro','localhost');
-
+global $wpdb;
 
 $RBS = $wpdb->get_results("select * from wp_team_RBS", ARRAY_N);
 $ETS = $wpdb->get_results("select * from wp_team_ETS", ARRAY_N);

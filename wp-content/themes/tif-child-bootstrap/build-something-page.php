@@ -1,89 +1,13 @@
 <?php
 /*
- * Template Name: NFL Career Stat Tables
- * Description: Used for displaying NFL Stats listings of players (Pass, Rush, TD, Etc...)
+ * Template Name: Build Something
+ * Description: Used for...
  */
  ?>
 
 <?php
 
-$yeartwenty = get_season_leaders(2020);
-$yeartwentyone = get_season_leaders(2021);
-
-$playerid = $_GET['id'];
-
-$playerposition = substr($playerid, -2);
-
-$playerdata = get_player_career_stats($playerid);
-
-$playerdeets = get_player_data($playerid);
-
-$jusplayerids = just_player_ids();
-
-foreach ($jusplayerids as $key => $value):
-    $pos = substr($value, -2);
-    $deets = get_player_career_stats($value);
-    if($deets['passingyards'] != 0 && $pos == 'QB'):
-        $passyards[$value] = $deets['passingyards'];
-        $qbgm = $deets['games'];
-        if($qbgm > 50):
-            $qbypg[$value] = $deets['passingyards'] / $qbgm;
-        endif;
-    endif;
-    if($deets['rushyrds'] != 0):
-        $rushyards[$value] = $deets['rushyrds'];
-        $rbgm = $deets['games'];
-        if($rbgm > 50 && $pos == 'RB'):
-            $rbypg[$value] = $deets['rushyrds'] / $rbgm;
-        endif;
-    endif;
-    if($deets['recyrds'] != 0):
-        $recyards[$value] = $deets['recyrds'];
-        $wrgm = $deets['games'];
-        if($wrgm > 50 && $pos == 'WR'):
-            $wrypg[$value] = $deets['recyrds'] / $wrgm;
-        endif;
-    endif;
-    if($deets['rushyrds'] != 0 && $pos == 'QB'):
-        $qbrushyards[$value] = $deets['rushyrds'];
-    endif;
-    if($deets['recyrds'] != 0 && $pos == 'RB'):
-        $rbrecyards[$value] = $deets['recyrds'];
-    endif;
-    if($deets['rushyrds'] != 0 && $pos == 'WR'):
-        $wrrushyards[$value] = $deets['rushyrds'];
-    endif;
-    if($deets['xpa'] != 0 && $pos == 'PK'):
-        $xpm[$value] = $deets['xpm'];
-        $xpa[$value] = $deets['xpa'];
-        if($deets['xpa'] > 100):
-            $xppct[$value] = $deets['xpm'] / $deets['xpa'];
-        endif;
-    endif;
-    if($deets['fga'] != 0 && $pos == 'PK'):
-        $fgm[$value] = $deets['fgm'];
-        $fga[$value] = $deets['fga'];
-        if($deets['fga'] > 50):
-            $fgpct[$value] = $deets['fgm'] / $deets['fga'];
-        endif;
-    endif;
-endforeach;
-
-arsort($passyards);
-arsort($rushyards);
-arsort($recyards);
-arsort($qbrushyards);
-arsort($rbrecyards);
-arsort($wrrushyards);
-arsort($xpm);
-arsort($xpa);
-arsort($xppct);
-arsort($fgm);
-arsort($fga);
-arsort($fgpct);
-arsort($qbypg);
-arsort($rbypg);
-arsort($wrypg);
+$year = $_GET['year'];
 
 ?>
 
@@ -103,33 +27,67 @@ arsort($wrypg);
 				<!--Page content-->
 				<div id="page-content">
 
-                    <!-- QB Game Scores -->
-                    <div class="col-xs-24 col-sm-12 col-md-6">
-                        <?php //printr($wrypg, 0); ?>
-                        <?php //printr($playerdata, 1); ?>
 
-                        <?php
 
-                        $labels = array('Player', 'Yards');
-                        tablehead('QB Passing Yards', $labels);
-                        $i = 1;
-                        foreach ($passyards as $key => $value){
-                            if($i <= 25):
-                                $name = get_player_name($key);
-                                $tableprint .='<tr><td>'.$i.'. '.$name['first'].' '.$name['last'].'</td>';
-                                $tableprint .='<td class="min-width text-right">'.number_format($value, '0', '.', ',').'</td></tr>';
-                                $i++;
-                            endif;
-                        }
+                    <?php
 
-                        echo $tableprint;
+                    $insert_player =
+                    array(
+                        'week_id' => 202201,
+                        'year' => 2022,
+                        'week' => 1,
+            'points  => 
+            [team] => BUL
+            [versus] => CMN
+            [playerid] => 2018JackQB
+            [win_loss] => 1
+            [home_away] => H
+            [location] => The Cuckoos Nest
+        );
 
-                        tablefoot('Top 25');
-                        //printr($toppoints, 1);
-                        ?>
+                    global $wpdb;
+                    foreach ($insert_player as $key => $pi){
+                        $wpdb->insert(
+                            $key,
+                            array(
+                                'week_id' 	=> $pi['week_id'],
+                                'year'		=> $pi['year'],
+                                'week'		=> $pi['week'],
+                                'points'	=> $pi['points'],
+                                'team'		=> $pi['team'],
+                                'versus'	=> $pi['versus'],
+                                'playerid'	=> $pi['playerid'],
+                                'win_loss'	=> $pi['win_loss'],
+                                'home_away'	=> $pi['home_away'],
+                                'location'	=> $pi['location'],
+                                // Change made in 2022 after player tables were expanded to include NFL Game stats.
+                                // Set values to empty.  Add weekly NFL Data using the scrape-pfr.php file
+                                'game_date' => '2022-00-00',
+                                'nflteam' => 'TTT',
+                                'game_location' => 'S',
+                                'nflopp' => 'ZZZ',
+                                'pass_yds' => 0,
+                                'pass_td' => 0,
+                                'pass_int' => 0,
+                                'rush_yds' => 0,
+                                'rush_td' => 0,
+                                'rec_yds' => 0,
+                                'rec_td' => 0,
+                                'xpm' => 0,
+                                'xpa' => 0,
+                                'fgm' => 0,
+                                'fga' => 0,
+                                'nflscore' => 0,
+                                'scorediff' => 0
+                            ),
+                            array (
+                                '%d','%d','%d','%d','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d'
+                            )
+                        );
+                    }
+                    ?>
 
-                    </div>
-																	
+
 				</div><!--End page content-->
 
 			</div><!--END CONTENT CONTAINER-->

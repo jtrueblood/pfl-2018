@@ -33,16 +33,16 @@ printr($mfl_team_id_history, 0);
                     // gets json mfl transactions file that merges all of the files above into a name -> id format
                     //$yearid = 2011;
                     // data availible from 2011 on.
-                    $gettwenty = get_mfl_transactions(2020);
+                    $gettwenty = get_mfl_transactions(2021);
                     printr($gettwenty, 0);
 
                     $printit = new_mfl_transactions('2020BassPK');
-                    printr($printit, 0);
+                    //printr($printit, 0);
                     ?>
 
 
                     <?php
-//                  $rosteryear = 2020;
+//                  $rosteryear = 2021;
 //                    echo '<h2>'.$rosteryear.' MFL Rosters</h2>';
 //
 //                    foreach ($yearslist as $year):

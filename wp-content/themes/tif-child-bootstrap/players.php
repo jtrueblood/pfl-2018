@@ -99,7 +99,7 @@ $playoffsplayer = playerplayoffs($playerid);
 $basicinfo = get_player_basic_info($playerid);
 $weeksplayed = get_player_weeks_played($playerid);
 
-//printr($weeksplayed, 1);
+//printr($careerdata, 1);
 
 if(!empty( $careerdata['years'])){
 	$playseasons = $careerdata['years'];
@@ -654,7 +654,14 @@ endif;
                             else:
                                 $jcheck = 'R';
                             endif;
-                            $getjersey = show_jersey_svg($value, $jcheck, $jerseyvalue, $playernumber );
+                            $numberarray = get_numbers_by_season($playerid);
+                            if($numberarray):
+                                $getjersey = show_jersey_svg($value, $jcheck, $jerseyvalue, $numberarray->$yearuni );
+                                //echo'<p class="text-thin">From Number Array</p>';
+                            else:
+                                $getjersey = show_jersey_svg($value, $jcheck, $jerseyvalue, $playernumber );
+                                //echo'<p class="text-thin">From Simple Number</p>';
+                            endif;
                             echo '<div class="jersey-small">
 				                <img src="'.get_stylesheet_directory_uri().$getjersey.'" class=""/>
                             </div>';
@@ -957,6 +964,7 @@ endif;
             <div class="panel">
 
                 <?php
+                    //echo $playerposition;
                     $passingyards = $careerdata['passingyards'];
                     $passingtds = $careerdata['passingtds'];
                     $passingint = $careerdata['passingint'];
@@ -1013,7 +1021,7 @@ endif;
                         $label4 = 'Rushing Yards';
                     endif;
 
-                    if($playerposition == 'TE'):
+                    if($playerposition == 'te'):
                         $stat1 = number_format((float)$recyrds, '0', '.', ',');
                         $label1 = 'Receiving Yards';
                         $stat2 = number_format((float)$recypg, '1', '.', ',');

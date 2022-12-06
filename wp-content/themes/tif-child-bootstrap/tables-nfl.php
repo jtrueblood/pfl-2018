@@ -37,6 +37,12 @@ foreach ($jusplayerids as $key => $value):
             $rbypg[$value] = $deets['rushyrds'] / $rbgm;
         endif;
     endif;
+    if($deets['rushyrds'] != 0):
+        $rbgm = $deets['games'];
+        if($rbgm > 50):
+            $allpurpose[$value] = $deets['rushyrds'] + $deets['recyrds'];
+        endif;
+    endif;
     if($deets['recyrds'] != 0):
         $recyards[$value] = $deets['recyrds'];
         $wrgm = $deets['games'];
@@ -102,6 +108,7 @@ arsort($passtds);
 arsort($rushtds);
 arsort($rectds);
 arsort($counttds);
+arsort($allpurpose);
 
 ?>
 
@@ -405,8 +412,23 @@ arsort($counttds);
                         ?>
                     </div>
 
-                    <!-- Hold the Column -->
                     <div class="col-xs-24 col-sm-12 col-md-6">
+                        <?php
+                        $labels = array('Player', 'Yards');
+                        tablehead('All Purpose Yards', $labels);
+                        $i = 1;
+                        foreach ($allpurpose as $key => $value){
+                            if($i <= 25):
+                                $name = get_player_name($key);
+                                $tableprint .='<tr><td>'.$i.'. '.$name['first'].' '.$name['last'].'</td>';
+                                $tableprint .='<td class="min-width text-right">'.number_format($value, '0', '.', ',').'</td></tr>';
+                                $i++;
+                            endif;
+                        }
+                        echo $tableprint;
+                        $tableprint = '';
+                        tablefoot('Top 25');
+                        ?>
                     </div>
 
                     <div class="clearfix"></div>

@@ -55,6 +55,11 @@ ul {
   padding-left: 10px;
   font-family: 'Verdana';
 }
+.gibson {
+  font-family: canada-type-gibson, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 h1 {
   font-family: 'Verdana';
 }
@@ -360,6 +365,9 @@ h4.protection-season {
 }
 .protections .panel .panel-body.PK {
   border-left: 5px solid #995b92;
+}
+.timeline-book .timeline-entry {
+  margin-bottom: 50px !important;
 }
 .timeline {
   margin-left: -20px;

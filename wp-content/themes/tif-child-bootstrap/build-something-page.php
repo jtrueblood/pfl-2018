@@ -1,110 +1,187 @@
 <?php
 /*
- * Template Name: Build Something
- * Description: Used for...
+ * Template Name: Two Point Conversion Check
+ * Description: Used for trying to idenitfy and assign differences between the PFL score and the NFL calculated score froNFL game data.
  */
  ?>
 
-<?php
-
-$year = $_GET['year'];
-
-?>
-
 <?php get_header(); ?>
+
+<?php
+  $teamloop = array('PEP','WRZ','ETS');
+
+    function get_everything ($teamid)
+    {
+        $seasons = the_seasons();
+        $postseason = get_team_postseason($teamid);
+        $playoffs = get_playoffs();
+
+        foreach ($postseason as $value):
+            $newplayoff[$value['year'].$value['week']][$value['position'].$value['overtime']] = $value;
+        endforeach;
+
+        foreach ($newplayoff as $key => $value):
+            $newplayoffformat[$key] = array(
+                'id' => $key,
+                'season' => $value['QB0']['year'],
+                'week' => $value['QB0']['week'],
+                'team_int' => $teamid,
+                'points' => '',
+                'versus' => '',
+                'versus_pts' => '',
+                'home_away' => '',
+                'stadium' => '',
+                'result' => $teampostseason[$key],
+                'totalscore' => '',
+                'qb1' =>  $value['QB0']['playerid'],
+                'rb1' =>  $value['RB0']['playerid'],
+                'wr1' =>  $value['WR0']['playerid'],
+                'pk1' =>  $value['PK0']['playerid'],
+                'overtime' =>  $value['QB0']['overtime'],
+                'qb2' =>  $value['QB1']['playerid'],
+                'rb2' =>  $value['RB1']['playerid'],
+                'wr2' =>  $value['WR1']['playerid'],
+                'pk2' =>  $value['PK1']['playerid'],
+                'extra_ot' =>  ''
+            );
+        endforeach;
+
+        $teamresults = get_team_results_expanded_new($teamid);
+        foreach ($teamresults as $key => $value):
+            $year = substr($key, 0, 4);
+            foreach ($seasons as $season):
+                if($season == $year):
+                    $yearresults[$season][$key] = $value;
+                endif;
+            endforeach;
+        endforeach;
+
+        return $playoffs;
+    }
+
+    $everything = get_everything('ETS');
+    printr($everything, 0);
+
+    $seasons = the_seasons();
+    $champs = get_champions();
+
+    $teamawards = get_award_team($teamid);
+    if(isset($teamawards)){
+        foreach($teamawards as $key => $item){
+            $arr_taward[$item['award']][$key] = $item;
+        }
+
+        ksort($arr_taward, SORT_NUMERIC);
+    }
+
+    foreach ($seasons as $year){
+        $stand[$year] = get_standings_by_team($year, $teamid);
+    }
+
+    foreach ($stand as $key => $value){
+        $diffo = $pts - $value[0]['ptsvs'];
+
+        $highpts[] = $value[0]['pts'];
+        $highdiff[] = $diffo;
+        $wins[] = $value[0]['win'];
+        $loss[] = $value[0]['loss'];
+    }
+
+    foreach($champs as $key => $item){
+        $arr_champs[$item['winner']][$key] = $item;
+    }
+    ksort($arr_champs, SORT_NUMERIC);
+
+    $teamchamps = $arr_champs[$teamid];
+
+    // all seasons that team played
+    if(isset($teamawards)){
+        foreach($teamawards as $key => $item){
+            $team_award_year[$item['year']][$key] = $item;
+        }
+
+        ksort($team_award_year, SORT_NUMERIC);
+    }
+
+
+    $number_ones = get_number_ones();
+
+    if(isset($number_ones)){
+        foreach($number_ones as $key => $item){
+            $newkey = substr($key, 2, -1);
+            if($item['teams'] == $teamid){
+                $ones[$newkey][] = $item;
+            }
+        }
+    }
+
+    if(isset($ones)){
+        ksort($ones, SORT_NUMERIC);
+    }
+
+
+    // get notes from Teams page
+    if( have_rows('timeline_notes') ):
+        while ( have_rows('timeline_notes') ) : the_row();
+            $repteam = get_sub_field('teamid');
+            if($repteam == $teamid){
+                $notes[get_sub_field('year')] = get_sub_field('note');
+            }
+        endwhile;
+    else :
+        $notes = array();
+    endif;
+
+    $helmethist = get_helmet_name_history();
+    foreach ($helmethist as $value){
+        $helmet[$value['team']][$value['year']] = $value;
+    }
+
+    $teamhelmet = $helmet[$teamid];
+
+    foreach ($stand as $key => $value){
+        $team_timeline[$teamid][$key] = array(
+            'standings' => $value[0],
+            'champions' => $teamchamps[$key],
+            'awards' => $team_award_year[$key],
+            'number_ones' => $ones[$key],
+            'notes' => $notes[$key],
+            'helmets' => $teamhelmet[$key]
+        );
+    }
+ ?>
 
 <div class="boxed">
 			
-			<!--CONTENT CONTAINER-->
-			<div id="content-container">
-				
-				<div id="page-title">
-					<?php while (have_posts()) : the_post(); ?>
-						<h1 class="page-header text-bold"></h1>
-					<?php endwhile; wp_reset_query(); ?>	
-				</div>
-				
-				<!--Page content-->
-				<div id="page-content">
+        <!--CONTENT CONTAINER-->
+        <div id="content-container">
+
+            <!--Page content-->
+            <div id="page-content">
+
+                <?php
 
 
+                ?>
 
-                    <?php
+                <div class="col-xs-4">
+                        <div class="panel">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><?php echo $teamid; ?> History Timeline</h3>
 
-                    $insert_player =
-                    array(
-                        'week_id' => 202201,
-                        'year' => 2022,
-                        'week' => 1,
-            'points  => 
-            [team] => BUL
-            [versus] => CMN
-            [playerid] => 2018JackQB
-            [win_loss] => 1
-            [home_away] => H
-            [location] => The Cuckoos Nest
-        );
+                            </div>
+                        </div>
+                </div>
+            </div>
 
-                    global $wpdb;
-                    foreach ($insert_player as $key => $pi){
-                        $wpdb->insert(
-                            $key,
-                            array(
-                                'week_id' 	=> $pi['week_id'],
-                                'year'		=> $pi['year'],
-                                'week'		=> $pi['week'],
-                                'points'	=> $pi['points'],
-                                'team'		=> $pi['team'],
-                                'versus'	=> $pi['versus'],
-                                'playerid'	=> $pi['playerid'],
-                                'win_loss'	=> $pi['win_loss'],
-                                'home_away'	=> $pi['home_away'],
-                                'location'	=> $pi['location'],
-                                // Change made in 2022 after player tables were expanded to include NFL Game stats.
-                                // Set values to empty.  Add weekly NFL Data using the scrape-pfr.php file
-                                'game_date' => '2022-00-00',
-                                'nflteam' => 'TTT',
-                                'game_location' => 'S',
-                                'nflopp' => 'ZZZ',
-                                'pass_yds' => 0,
-                                'pass_td' => 0,
-                                'pass_int' => 0,
-                                'rush_yds' => 0,
-                                'rush_td' => 0,
-                                'rec_yds' => 0,
-                                'rec_td' => 0,
-                                'xpm' => 0,
-                                'xpa' => 0,
-                                'fgm' => 0,
-                                'fga' => 0,
-                                'nflscore' => 0,
-                                'scorediff' => 0
-                            ),
-                            array (
-                                '%d','%d','%d','%d','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d'
-                            )
-                        );
-                    }
-                    ?>
+            </div><!--End page content-->
+
+        </div><!--END CONTENT CONTAINER-->
 
 
-				</div><!--End page content-->
+    <?php include_once('main-nav.php'); ?>
+    <?php include_once('aside.php'); ?>
 
-			</div><!--END CONTENT CONTAINER-->
-
-
-		<?php include_once('main-nav.php'); ?>
-		<?php include_once('aside.php'); ?>
-
-		</div>
-</div> 
-
-<?php session_destroy(); ?>
-		
 </div>
-</div>
-
-
-
 
 <?php get_footer(); ?>

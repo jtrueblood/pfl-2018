@@ -1677,7 +1677,7 @@ arsort($new_te);
 								echo '<h3 class="no-mar-top">'.number_format($countplayers).'</h3>';
 								echo '<h5>Total Roster Opportunities: '.number_format($rosteropps).'</h5>';				
 							?>
-						<span class="text-small">The total number of players you have taken the field in the PFL.</span>
+						<span class="text-small">The total number of players that have taken the field in the PFL.</span>
 						</div>
 				</div>
 				

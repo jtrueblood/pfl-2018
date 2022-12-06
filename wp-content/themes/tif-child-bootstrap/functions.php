@@ -674,6 +674,13 @@ function get_player_season_rank ($playerid, $year){
 }
 
 
+// requires 'playersassoc' cache added to page
+function get_gamedate_by_player ($playerid, $weekid){
+    global $wpdb;
+    $getdata = $wpdb->get_results("select game_date from $playerid where week_id = $weekid");
+    return $getdata[0]->game_date;
+}
+
 
 //convert month
 function checkmonth($month)
@@ -1241,9 +1248,32 @@ function get_playoffs(){
 			'result' => $revisequery[8]
 		);
 	}
-	
 	return $playoffs;
 }
+
+
+// returns just week 16 posse bowl playoff games
+function get_posse_bowl(){
+
+    global $wpdb;
+    $getplayoffs = $wpdb->get_results("select * from wp_playoffs WHERE week = '16'", ARRAY_N);
+
+    foreach ($getplayoffs as $revisequery){
+        $playoffs[] = array(
+            'playoffid' => $revisequery[0],
+            'year' => $revisequery[1],
+            'week' => $revisequery[2],
+            'playerid' => $revisequery[3],
+            'score' => $revisequery[4],
+            'team' => $revisequery[5],
+            'versus' => $revisequery[6],
+            'overtime' => $revisequery[7],
+            'result' => $revisequery[8]
+        );
+    }
+    return $playoffs;
+}
+
 
 // returns just team info for playoffs and possebowl
 function get_postseason(){
@@ -1291,6 +1321,8 @@ function get_team_postseason($team){
 	
 	return $playoffs;
 }
+
+
 
 //
 
@@ -3665,6 +3697,42 @@ function get_boxscore_by_week($weekid){
     }
 
     return $boxscoreweek;
+}
+
+function get_players_by_week($weekid){
+    global $wpdb;
+    $teams = get_teams();
+
+    foreach ($teams as $key => $value){
+        $revisequery = $wpdb->get_results("select * from wp_team_$key where id = '$weekid'", ARRAY_N);
+        if($revisequery):
+            $ot = $revisequery[0][14];
+            $boxscoreplayerweek[$key] = array(
+                'qb1' => $revisequery[0][10],
+                'rb1' => $revisequery[0][11],
+                'wr1' => $revisequery[0][12],
+                'pk1' => $revisequery[0][13],
+                'qb2' => $revisequery[0][15],
+                'rb2' => $revisequery[0][16],
+                'wr2' => $revisequery[0][17],
+                'pk2' => $revisequery[0][18]
+            );
+        endif;
+    }
+
+    return $boxscoreplayerweek;
+}
+
+function get_flat_players_by_week($weekid){
+    $data = get_players_by_week($weekid);
+    foreach ($data as $team => $value):
+        foreach ($value as $key => $val):
+            if($val):
+                $flatplayers[] = $val;
+            endif;
+        endforeach;
+    endforeach;
+    return $flatplayers;
 }
 
 // results for all teams by week

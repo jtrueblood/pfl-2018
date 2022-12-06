@@ -49,6 +49,14 @@ jQuery(document).ready(function($) {
 	    "info":     false,
 	    "search": false
 	} );
+
+	//Transactions Table
+	$('.transactions-table').DataTable( {
+		"order": [[ 1, "desc" ],[ 2, "desc" ]],
+		"paging":   false,
+		"info":     false,
+		"search": false
+	} );
 	
 	// Draft Strategy Tables
 

@@ -275,7 +275,24 @@ printr($assoc, 0);
 					
 						
 						<div class="col-xs-24 col-sm-12 col-md-8">	
-							<?php echo '<h2>Week '.$week_sel.', '.$year_sel.'</h2>'; ?>	
+							<?php echo '<h2>Week '.$week_sel.', '.$year_sel.'</h2>'; ?>
+                            <?php //$playerdate = get_gamedate_by_player ('2018AlleQB', $weekvar);
+                                //printr($playerdate, 0);
+                            $justplayers = get_flat_players_by_week($weekvar);
+                                foreach ($justplayers as $key => $value):
+                                    if($value == ''):
+                                        unset($value);
+                                    else:
+                                        if($value != 'None'):
+                                            $justdates[$key] = get_gamedate_by_player($value, $weekvar);
+                                        endif;
+                                    endif;
+                                endforeach;
+                                $unique = array_unique($justdates);
+                                arsort($unique);
+
+                                printr($unique, 0);
+                            ?>
 						</div>					
 						
 						<div class="col-xs-24 col-sm-12 col-md-8 next-prev-week">
@@ -1076,7 +1093,7 @@ Highcharts.chart('spider_<?php echo $hometeam;?>', {
     },
 
     accessibility: {
-        description: 'A spiderweb chart'
+        description: 'Team position comparisons.'
     },
 
     title: {
@@ -1084,7 +1101,7 @@ Highcharts.chart('spider_<?php echo $hometeam;?>', {
     },
 
     pane: {
-        size: '90%'
+        size: '100%'
     },
 
     xAxis: {

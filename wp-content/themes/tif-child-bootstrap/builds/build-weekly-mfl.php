@@ -50,11 +50,6 @@ $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11',
 
 // get json about player from MFL scores for that player, for each week (reguardless of starter or not) 	
 
-
-//echo '<h2>Player Season Data</h2>';
-//printr($playerscores, 0);
-
-
 // this pulls all of the 'starters' out of the matchups so we can identify team and if player was a starter that week	
 
 // THIS IS NOW COMMENTED OUT BECAUSE THE TRANSIENTS HAVE BEEN BUILT.  NEXT SEASON UNCOMMENT, CHANGE THE $YEAR and BUILD THE ARRAY EACH WEEK
@@ -99,20 +94,6 @@ if (file_exists($destination_folder.'/'.$year.$week.'.json')):
 	//printr($matchups, 0);
 else:
 	$curl = curl_init();
-	
-//	curl_setopt_array($curl, array(
-//	  CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=$lid&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W=$week&JSON=1",
-//	  CURLOPT_RETURNTRANSFER => true,
-//	  CURLOPT_ENCODING => "",
-//	  CURLOPT_MAXREDIRS => 10,
-//	  CURLOPT_TIMEOUT => 0,
-//	  CURLOPT_FOLLOWLOCATION => true,
-//	  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-//	  CURLOPT_CUSTOMREQUEST => "GET",
-//	  CURLOPT_HTTPHEADER => array(
-//	    "Cookie: MFL_USER_ID=aRNp1sySvrvrmEDuagWePmY%3D; MFL_PW_SEQ=ah9q2MiTteeo2wC5; MFL_LAST_LEAGUE_ID=38954"
-//	  ),
-//	));
 
     curl_setopt_array($curl, array(
         CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&W=$week&JSON=1",
@@ -128,8 +109,6 @@ else:
         ),
     ));
 
-
-	
 	$response = curl_exec($curl);
 	
 	curl_close($curl);
@@ -368,11 +347,10 @@ $weekstarters = array(
 
 //printr($weekstarters, 0);
 
-// build array to insert results into team data
+// build array to insert results into team data for regular season
+//  You could setup a switch starting here that did a different logic in Weeks 15, 16 & 17 for the postseason and pro bowl if you wanted to automate that.
 
 $weekform = sprintf('%02d', $week);
-
-//printr($weekstarters, 1);
 
 foreach ($weekstarters as $key => $value){
 	
@@ -485,47 +463,47 @@ if($run == 'true'){
 
 	echo '<h3>TEAMS INSERTED</h3>';
 	
-//	foreach ($insert_player as $key => $pi){
-//		$wpdb->insert(
-//			$key,
-//			array(
-//				'week_id' 	=> $pi['week_id'],
-//				'year'		=> $pi['year'],
-//				'week'		=> $pi['week'],
-//				'points'	=> $pi['points'],
-//				'team'		=> $pi['team'],
-//				'versus'	=> $pi['versus'],
-//				'playerid'	=> $pi['playerid'],
-//				'win_loss'	=> $pi['win_loss'],
-//				'home_away'	=> $pi['home_away'],
-//				'location'	=> $pi['location'],
-//                // Change made in 2022 after player tables were expanded to include NFL Game stats.
-//                // Set values to empty.  Add weekly NFL Data using the scrape-pfr.php file
-//                'game_date' => '2022-00-00',
-//                'nflteam' => 'TTT',
-//                'game_location' => 'S',
-//                'nflopp' => 'ZZZ',
-//                'pass_yds' => 0,
-//                'pass_td' => 0,
-//                'pass_int' => 0,
-//                'rush_yds' => 0,
-//                'rush_td' => 0,
-//                'rec_yds' => 0,
-//                'rec_td' => 0,
-//                'xpm' => 0,
-//                'xpa' => 0,
-//                'fgm' => 0,
-//                'fga' => 0,
-//                'nflscore' => 0,
-//                'scorediff' => 0
-//			),
-//			array (
-//				'%d','%d','%d','%d','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d'
-//			)
-//		);
-//	}
-//
-//	echo '<h3>PLAYERS INSERTED</h3>';
+	foreach ($insert_player as $key => $pi){
+		$wpdb->insert(
+			$key,
+			array(
+				'week_id' 	=> $pi['week_id'],
+				'year'		=> $pi['year'],
+				'week'		=> $pi['week'],
+				'points'	=> $pi['points'],
+				'team'		=> $pi['team'],
+				'versus'	=> $pi['versus'],
+				'playerid'	=> $pi['playerid'],
+				'win_loss'	=> $pi['win_loss'],
+				'home_away'	=> $pi['home_away'],
+				'location'	=> $pi['location'],
+                // Change made in 2022 after player tables were expanded to include NFL Game stats.
+                // Set values to empty.  Add weekly NFL Data using the scrape-pfr.php file
+                'game_date' => '2022-00-00',
+                'nflteam' => 'TTT',
+                'game_location' => 'S',
+                'nflopp' => 'ZZZ',
+                'pass_yds' => 0,
+                'pass_td' => 0,
+                'pass_int' => 0,
+                'rush_yds' => 0,
+                'rush_td' => 0,
+                'rec_yds' => 0,
+                'rec_td' => 0,
+                'xpm' => 0,
+                'xpa' => 0,
+                'fgm' => 0,
+                'fga' => 0,
+                'nflscore' => 0,
+                'scorediff' => 0
+			),
+			array (
+				'%d','%d','%d','%d','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d'
+			)
+		);
+	}
+
+	echo '<h3>PLAYERS INSERTED</h3>';
 	
 }
 
@@ -609,7 +587,7 @@ if($run == 'true'){
 					$ch = curl_init();
 
 					// set URL and other appropriate options
-					$options = array(CURLOPT_URL => "http://localhost:10060/player/?id=$pid",
+					$options = array(CURLOPT_URL => "http://pfl-data.local//player/?id=$pid",
 					                 CURLOPT_HEADER => false
 					                );
 					

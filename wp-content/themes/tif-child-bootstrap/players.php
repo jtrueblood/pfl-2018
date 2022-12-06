@@ -1765,13 +1765,14 @@ endif;
                     $removeempty = array_filter($printit);
                     if($removeempty): ?>
                     <div class="table-responsive">
-                        <table class="table table-striped">
-
+                        <table id="transactionstable" class="transactions-table table table-hover table-vcenter stripe">
                             <thead>
                             <tr>
                                 <th>Type</th>
                                 <th>Player</th>
-                                <th>Date/Time</th>
+                                <th>Year</th>
+                                <th>Date</th>
+                                <th>Time</th>
                                 <th>Team</th>
                                 <th>Action</th>
                                 <!-- 														<th class="hidden-xs">Acquisition</th> -->
@@ -1782,13 +1783,18 @@ endif;
                                 foreach($removeempty as $year):
                                     foreach($year as $key => $value):
                                     $type = $value['type'];
-                                        if($type == 'TRADE'):?>
+                                        if($type == 'TRADE'):
+                                            $timeexplodet = explode(' ',$value['realtime']);
+                                            $dateexplodet = explode('-', $timeexplode[0]);
+                                            ?>
                                             <tr>
                                                 <td class="text-bold">TRADE</td>
                                                 <td><?php echo $firstname.' '.$lastname; ?></td>
-                                                <td><?php echo $value['realtime']; ?></td>
-                                                <td><?php echo $value['franchise1']; ?></td>
-                                                <td><?php echo 'from '.$value['franchise2']; ?></td>
+                                                <td><?php echo $dateexplode[2]; ?></td>
+                                                <td><?php echo $dateexplodet[0].'/'.$dateexplodet[1]; ?></td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td><?php echo $value['franchise1'].' from '.$value['franchise2']; ?></td>
                                             </tr>
                                         <?php else:
                                             $action = in_array($playerid, $value['dropped']) ? 'Dropped':
@@ -1796,11 +1802,16 @@ endif;
                                                     $action = in_array($playerid, $value['activated']) ? 'Activated':
                                                         $action = in_array($playerid, $value['transaction']) ? 'Transaction':
                                                             $action = in_array($playerid, $value['deactivated']) ? 'Deactivated' : '--';
+                                            $timeexplode = explode(' ',$value['realtime']);
+                                            $dateexplode = explode('-', $timeexplode[0]);
+                                            //$dateof = date('Y-m-d',$timeexplode[0]);
                                             ?>
                                                 <tr>
                                                     <td class="text-bold"><?php echo $type; ?></td>
                                                     <td><?php echo $firstname.' '.$lastname; ?></td>
-                                                    <td><?php echo $value['realtime']; ?></td>
+                                                    <td><?php echo $dateexplode[2]; ?></td>
+                                                    <td><?php echo $dateexplode[0].'/'.$dateexplode[1]; ?></td>
+                                                    <td><?php echo $timeexplode[1]; ?></td>
                                                     <td><?php echo $value['franchise']; ?></td>
                                                     <td><?php echo $action; ?></td>
                                                 </tr>

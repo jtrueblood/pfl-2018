@@ -244,7 +244,6 @@ function insert_wp_number_ones_pk(){
 		);
 		}
 
-		
 	 return $inserted;
  
 }
@@ -255,6 +254,8 @@ if ($yearid == $yearis){
 } else {
 	$gamelimit = 7;
 }
+
+
 
 // start PVQ calc
 foreach ($qb_leaders as $key => $val){

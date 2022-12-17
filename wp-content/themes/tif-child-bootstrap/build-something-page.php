@@ -8,7 +8,16 @@
 <?php get_header(); ?>
 
 <?php
+
+
+
+    $fin = player_championship_count();
+
+    printr($fin, 1);
+
+
   $teamloop = array('PEP','WRZ','ETS');
+
 
     function get_everything ($teamid)
     {

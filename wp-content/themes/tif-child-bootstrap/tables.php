@@ -1620,6 +1620,27 @@ arsort($new_te);
 
             <!-- ROW --> <div class="row"></div>
 
+            <!-- Player Championships -->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+                <?php
+                    $getplayerchamps = player_championship_count();
+                    $labels = array('Player', 'Titles');
+                    tablehead('Championships by Player', $labels);
+
+                    foreach ($getplayerchamps as $key => $value){
+                        $ch = get_player_name($key);
+                        if($value >= 2):
+                            $chprint .='<tr><td>'.$ch['first'].' '.$ch['last'].'</td>';
+                            $chprint .='<td class="min-width text-center">'.$value.'</td>';
+                        endif;
+                    }
+
+                    echo $chprint;
+
+                    tablefoot('');
+                    ?>
+            </div>
+
             <!-- tight ends -->
             <div class="col-xs-24 col-sm-12 col-md-6">
 

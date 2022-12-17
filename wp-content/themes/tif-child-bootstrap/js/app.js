@@ -291,7 +291,7 @@ jQuery(document).ready(function($) {
 	$("#playerSelectScrapeNew").click(function() {
 		//alert("Handler for .click() called.");
 		var dropselect22 = $("#playerDropScrapeNew").val();
-		var headurl = ('/scrape-pro-football-ref-new/'+dropselect22+'&year=2022&week=1');
+		var headurl = ('/scrape-pro-football-ref-new/'+dropselect22);
 		window.location = headurl;
 		//alert(url);
 	});

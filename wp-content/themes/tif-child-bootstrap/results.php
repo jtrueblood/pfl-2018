@@ -275,23 +275,38 @@ printr($assoc, 0);
 					
 						
 						<div class="col-xs-24 col-sm-12 col-md-8">	
-							<?php echo '<h2>Week '.$week_sel.', '.$year_sel.'</h2>'; ?>
+							<?php echo '<h2>Week '.$week_sel.'</h2>'; ?>
                             <?php //$playerdate = get_gamedate_by_player ('2018AlleQB', $weekvar);
                                 //printr($playerdate, 0);
+
                             $justplayers = get_flat_players_by_week($weekvar);
+
                                 foreach ($justplayers as $key => $value):
                                     if($value == ''):
                                         unset($value);
                                     else:
                                         if($value != 'None'):
-                                            $justdates[$key] = get_gamedate_by_player($value, $weekvar);
+                                            $justdates[$value] = get_gamedate_by_player($value, $weekvar);
                                         endif;
                                     endif;
                                 endforeach;
+
+
                                 $unique = array_unique($justdates);
                                 arsort($unique);
 
-                                printr($unique, 0);
+                                $firstdate = getLastNotNullValueInArray($unique);
+                                $lastdate = reset($unique);
+
+                                $expfirst = explode('-', $firstdate);
+                                $explast = explode('-', $lastdate);
+
+                                $monthfirst = date('F', mktime(0, 0, 0, $expfirst[1], 10));
+                                $monthlast = date('F', mktime(0, 0, 0, $explast[1], 10));
+
+                                echo '<h4>'.$monthfirst.' '.$expfirst[2].' - '.$monthlast.' '.$explast[2].', '.$year_sel.'</h4>';
+                                printr($justdates, 0);
+
                             ?>
 						</div>					
 						

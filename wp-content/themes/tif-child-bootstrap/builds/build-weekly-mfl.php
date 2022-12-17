@@ -348,11 +348,12 @@ $weekstarters = array(
 //printr($weekstarters, 0);
 
 // build array to insert results into team data for regular season
-//  You could setup a switch starting here that did a different logic in Weeks 15, 16 & 17 for the postseason and pro bowl if you wanted to automate that.
 
 $weekform = sprintf('%02d', $week);
 
-foreach ($weekstarters as $key => $value){
+// get values of players and teams from .json file and organize as an array for database insert
+if($week <= 14):
+    foreach ($weekstarters as $key => $value){
 	
 	if($value['isHome'] == 1){
 		$homeaway = 'H';
@@ -421,15 +422,96 @@ foreach ($weekstarters as $key => $value){
 		);
 	}
 }
+endif;
 
-//printr($insert_player, 1);
+// get for week 15 - playoffs
+// You must finalize the yearly standings table before you run the playoff script for week 15 or 16.
+// Otherwise the seeding will not be accessible.
+if($week >= 15):
+    echo '<h2>IS PLAYOFFS - WEEK 15</h2>';
+
+    foreach ($weekstarters as $key => $value){
+
+        if($value['isHome'] == 1){
+            $homeaway = 'H';
+            $stadium = $teamdetails[$key]['stadium'];
+        } else {
+            $homeaway = 'A';
+            $stadium = $teamdetails[$value['versus']]['stadium'];
+        }
+
+        if($value['team_score'] == $value['versus_score']){
+            $isot = 1;
+        }
+
+        $result = $value['team_score'] - $value['vs_score'];
+
+        if($result > 0){
+            $winloss = 1;
+        }
+        if($result < 0){
+            $winloss = 0;
+        }
+
+        $iQB = $covertids[$value['starters']['QB'][0]];
+        $iRB = $covertids[$value['starters']['RB'][0]];
+        $iWR = $covertids[$value['starters']['WR'][0]];
+        $iPK = $covertids[$value['starters']['PK'][0]];
+
+        $standings = get_standings($year);
+        foreach ($standings as $kstand => $valuestand):
+            $teamseed[$valuestand['teamid']] = $valuestand['seed'];
+        endforeach;
+
+        $startersteam = $value['starters'];
+        foreach ($startersteam as $k => $v){
+            $pid = $covertids[$v[0]];
+            $plv = 0;
+            $sdv = $teamseed[$key];
+            $pos = substr($pid, 0 -2);
+
+            if ($pos == 'QB'):
+                $psv = 1;
+            endif;
+            if ($pos == 'RB'):
+                $psv = 2;
+            endif;
+            if ($pos == 'WR'):
+                $psv = 3;
+            endif;
+            if ($pos == 'PK'):
+                $psv = 4;
+            endif;
+
+            $resultcalc = ( $value['result'] == 'W' ? 1 : 0);
+
+            $otv = 0;
+
+            $insert_player[$pid] = array(
+                'id'     	=> $year.$plv.$sdv.$psv.$otv,
+                'year'		=> $year,
+                'week'		=> $week,
+                'playerid'	=> $pid,
+                'points'	=> $v[1][$week],
+                'team'		=> $key,
+                'versus'	=> $value['versus'],
+                'overtime'	=> $otv,
+                'result'	=> $resultcalc,
+                'seed'      => $sdv
+            );
+        }
+    }
+endif;
+
+array_pop($insert_player);
 
 // resort week data indexed by player id
 
 // INSERT FORMATTED DATA INTO ALL TEAM TABLES
 global $wpdb;
 
-if($run == 'true'){
+// Regular season insert statements array and insert
+if($run == 'true' && $week <= 14){
 	foreach ($insert_team as $key => $insert){
 		$wpdb->insert(
 			'wp_team_'.$key,
@@ -507,6 +589,33 @@ if($run == 'true'){
 	
 }
 
+// Postseason - Week 15 - insert statements array and insert
+if($run == 'true' && $week >= 15){
+
+    foreach ($insert_player as $key => $playoffs){
+        $wpdb->insert(
+            'wp_playoffs',
+            array(
+                'id' 	    => $playoffs['id'],
+                'year'		=> $playoffs['year'],
+                'week'		=> $playoffs['week'],
+                'playerid'	=> $playoffs['playerid'],
+                'points'	=> $playoffs['points'],
+                'team'	    => $playoffs['team'],
+                'versus'	=> $playoffs['versus'],
+                'overtime'	=> $playoffs['overtime'],
+                'result'	=> $playoffs['result']
+            ),
+            array (
+                '%d','%d','%d','%s','%d','%s','%s','%d','%d'
+            )
+        );
+    }
+
+    echo '<h3>PLAYOFFS INSERTED</h3>';
+
+}
+
 //INSERT FORMATTED PLAYER DATA INTO TABLES
 // check if all players have a table....
 	
@@ -525,8 +634,9 @@ if($run == 'true'){
 								<li>Reload the page.  Check if any players are not found.  If so create player from MFL using 'Create New Player' widget on Homepage.</li> 
 								<li>Once all player tables are found or created. Change SQL to true to insert into database.</li>
 								<li>Once inserted change SQL back to false and set url CURL value to true to load player pages for all players who played this week and refresh leaders data.</li>
-								<li>If there is an OVERTIME game, you will need to manually insert that data.  First figure out OT rosters and scores.  Then break the tie(s) and add one point to the winner on the MFL site.  Then add records to the wp_overtime table.  Add OT player ids to the team tables (ex. wp_team_WRZ).  Then add a line record for the game to the individual player tables.
-						</ol>
+                                <li>If there is an OVERTIME game, you will need to manually insert that data.  First figure out OT rosters and scores.  Then break the tie(s) and add one point to the winner on the MFL site.  Then add records to the wp_overtime table.  Add OT player ids to the team tables (ex. wp_team_WRZ).  Then add a line record for the game to the individual player tables.</li>
+                                <li>As of 2022 -- This script also works for returning Playoffs and Possebowl player scores and results.  Just pass the week 15 or 16 var into the url.</li>
+                            </ol>
 						</div>
 					</div>
 				</div>

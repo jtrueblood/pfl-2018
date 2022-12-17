@@ -1171,6 +1171,15 @@ function get_standings_by_team($year, $team){
 	return $standings;
 }
 
+function get_seeds_by_year($year)
+{
+    $standings = get_standings($year);
+    foreach ($standings as $kstand => $valuestand):
+        $teamseed[$valuestand['teamid']] = $valuestand['seed'];
+    endforeach;
+    return $teamseed;
+}
+
 function get_team_division_by_year($team, $year){
 	global $wpdb;
 	$div = $wpdb->get_results("SELECT division from stand$year where teamID = '$team';", ARRAY_N);
@@ -1274,6 +1283,47 @@ function get_posse_bowl(){
     return $playoffs;
 }
 
+// Get all players who won a Posse Bowl (all instances)
+function get_player_champions(){
+    $possebowl = get_posse_bowl();
+    $i = 0;
+    foreach ($possebowl as $key => $value):
+        if($value['result'] == 1):
+            $winners[$value['year'].$value['team'].$i] = $value['playerid'];
+            $i++;
+        endif;
+    endforeach;
+    return $winners;
+}
+
+// GET number of Championships by player
+function count_player_championships($playerid){
+    $playerchamps = get_player_champions();
+    foreach ($playerchamps as $key => $value):
+        if($value == $playerid):
+            $countchamp[] = $playerid;
+        endif;
+    endforeach;
+    return $countchamp;
+}
+
+// Same functions as count_player_championship() above but better organized and sorted
+function player_championship_count(){
+    $championplayers = get_player_champions();
+    foreach ($championplayers as $key => $value):
+        $playerchamps[$value] = count_player_championships($value);
+    endforeach;
+    foreach ($playerchamps as $k => $v):
+        $newchampioncount[] = array_count_values($v);
+    endforeach;
+    foreach ($newchampioncount as $ke => $va):
+        foreach ($va as $a => $b):
+            $finalplayerchampcount[$a] = $b;
+        endforeach;
+    endforeach;
+    arsort($finalplayerchampcount);
+    return $finalplayerchampcount;
+}
 
 // returns just team info for playoffs and possebowl
 function get_postseason(){
@@ -1959,6 +2009,25 @@ function get_just_champions(){
 	return $champs;
 }
 
+// debugging datatbase conncetions
+function wpdb() {
+    global $wpdb;
+    return $wpdb;
+}
+function var_dump_database() {
+    var_dump(wpdb()->num_queries , wpdb()->queries);
+}
+
+function getLastNotNullValueInArray($array)
+{
+    $reversed = array_reverse($array);
+    foreach($reversed as $arrValue)
+    {
+        if($arrValue)
+            return  $arrValue;
+    }
+    return false;
+}
 
 // gets basic team table 
 function get_team_results($team){
@@ -3724,6 +3793,7 @@ function get_players_by_week($weekid){
 }
 
 function get_flat_players_by_week($weekid){
+    $flatplayers = array();
     $data = get_players_by_week($weekid);
     foreach ($data as $team => $value):
         foreach ($value as $key => $val):

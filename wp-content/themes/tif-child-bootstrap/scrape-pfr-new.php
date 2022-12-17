@@ -11,13 +11,17 @@ header("Refresh: 5; URL=$url1");
 */
 
 $getplayer = $_GET['id'];
-$getyearclean = $_GET['year'];
-$yearclean = array($getyearclean);
-$weekclean = $_GET['week'];
 
-//  Set Run Value to '1' if you want to override the .json file that exists in 'pfr-gamelogs'.  This is used for updating players that have played in the past.
-$getrun = $_GET['run'];
- 
+//$getyear = $_GET['year'];
+// Toggle this value here to set to either all years player played or a simple array of one or a few years.
+//$yearclean = array_values($yearsplayed);
+
+
+//$getyearclean = $_GET['year'];
+//$yearclean = array($getyearclean);
+//$weekclean = $_GET['week'];
+
+
 $playersassoc = get_players_assoc();
 $i = 0;
 foreach ($playersassoc as $key => $value){
@@ -156,17 +160,13 @@ get_header();
 					<div class="col-xs-24 col-sm-6 left-column">
 						<div class="panel widget">
 							<div class="widget-body text-center">
-								<?php 
-
-
+								<?php
 								$firstInitCap = strtoupper($last[0]);
 								$pfr_id = $featuredplayer[10];	
-								
-								
+
 								include_once('simplehtmldom/simple_html_dom.php');
 								$html = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'.htm');
-								
-								
+
 								if($pfr_id):
 										if($html):
 										    $pfr_name = $html->find('h1', 0);
@@ -234,52 +234,52 @@ get_header();
 					
 					</div>
 					
-					<!-- GET BASIC PLAYER INFO -->
+					<!-- GET PLAYER GAME DATA -->
 					<div class="col-xs-12 left-column">
 						<div class="panel widget">
 							<div class="widget-body text-center">
-								<?php 
-									
+								<?php
 
-
- // Toggle this value here to set to either all years player played or a simple array of one or a few years.
-								//$yearclean = array_values($yearsplayed);
-                                // $yearclean = array(2022);
+                            // SET YEAR
+                            $yearclean = array(2007);
 
                                 echo $getyearclean.'-'.$weekclean.'<br>';
 								//printr($yearclean, 0);
 								// single last year
 								$r = $yearclean[0];
+
+								echo '<p>Each year set $yearclean as current year value.  Then step through each player that played to update player table with NFL stats by game.</p>';
+								echo '<h3>YEAR SET as: '.$r.'</h3>';
 								
 								$passyards = array();
 								
 								foreach($yearclean as $y){
 
 									$htmlgame = '';
-									
-									$htmlgame = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'/gamelog/'.$y.'/');	
-									
-										
-										// Scrape the Dom	
+									$htmlgame = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'/gamelog/'.$y.'/');
+
+										// Scrape the Page Dom
 										if($pfr_id):					
 											if($htmlgame):
 												$tablehead = $htmlgame->getElementById("stats thead");
 											    $gamescore = $htmlgame->getElementById("stats tbody");
-											    
-											    //$passyards = $htmlgame->find('td'); 
-											    
 											endif;
 										endif;
-										
-										
-										foreach($htmlgame->find('tbody tr [data-stat=week_num]') as $e){
-											$week_num[$y] .= $e->plaintext.',';
-										}
-										
+
+										// Get the whole stats table for the season
+                                        foreach($htmlgame->find('tbody tr td') as $e){
+                                            $wholetable[$y] .= $e->plaintext.',';
+                                        }
+
+                                        // Get indivdual elements by data-stat name
+                                        foreach($htmlgame->find('tbody tr [data-stat=week_num]') as $e){
+                                            $week_num[$y] .= $e->plaintext.',';
+                                        }
+
 										foreach($htmlgame->find('tbody tr [data-stat=game_date]') as $e){
 											$game_date[$y] .= $e->plaintext.',';
 										}
-										
+
 										foreach($htmlgame->find('tbody tr [data-stat=team]') as $e){
 											$team[$y] .= $e->plaintext.',';
 										}
@@ -292,9 +292,13 @@ get_header();
 											$opp[$y] .= $e->plaintext.',';
 										}
 
+                                        foreach($htmlgame->find('tbody tr [data-stat=reason]') as $e){
+                                            $reason[$y] .= $e->plaintext.',';
+                                        }
+
 										foreach($htmlgame->find('tbody tr [data-stat=pass_yds]') as $e){
 											$pass_yds[$y] .= $e->plaintext.',';
-										}	
+										}
 										
 										foreach($htmlgame->find('tbody tr [data-stat=pass_td]') as $e){
 											$pass_td[$y] .= $e->plaintext.',';
@@ -342,101 +346,165 @@ get_header();
 																		
 									}
 
-								//$arr_week_num = explode(',', $week_num[$y]);
+                                //organize the scraped dataset as arrays
+                                $data_week_num = explode(',', $week_num[$r]);
+                                $data_passing = explode(',', $pass_yds[$r]);
+                                $data_pass_td = explode(',', $pass_td[$r]);
+                                $data_pass_int = explode(',', $pass_int[$r]);
+                                $data_rush_yds = explode(',', $rush_yds[$r]);
+                                $data_rush_td = explode(',', $rush_td[$r]);
+                                $data_rec_yds = explode(',', $rec_yds[$r]);
+                                $data_rec_td = explode(',', $rec_td[$r]);
+                                $data_xpm = explode(',', $xpm[$r]);
+                                $data_xpa = explode(',', $xpa[$r]);
+                                $data_fgm = explode(',', $fgm[$r]);
+                                $data_fga = explode(',', $fga[$r]);
 
-								//organize the scraped dataset as arrays
-									$playerstats = array(
-										'week_num' => explode(',', $week_num[$r]),
-										'game_date' => explode(',', $game_date[$r]),
-										'team' => explode(',', $team[$r]),
-										'game_location' => explode(',', $game_location[$r]),
-										'opp' => explode(',', $opp[$r]),
- 										'pass_yds' => explode(',', $pass_yds[$r]),
-										'pass_td' => explode(',', $pass_td[$r]),
-										'pass_int' => explode(',', $pass_int[$r]),
-										'rush_yds' => explode(',', $rush_yds[$r]),
-										'rush_td' => explode(',', $rush_td[$r]),
-										'rec_yds' => explode(',', $rec_yds[$r]),
-										'rec_td' => explode(',', $rec_td[$r]),
-										'xpm' => explode(',', $xpm[$r]),
-										'xpa' => explode(',', $xpa[$r]),
-										'fgm' => explode(',', $fgm[$r]),
-										'fga' => explode(',', $fga[$r])
-									);
+								// Convert $wholetable into an array where the week number is the key.
+                                // Can only use this to get the first things since the table format changes by position and even by season
+                                //
 
-								//organize the arrays by week and clean data for insert into database
-                                $i = 0;
-                                foreach($playerstats['week_num'] as $clean):
-                                    if($playerstats['game_location'][$i] == '@'):
+                                $expwholetable = explode(',', $wholetable[$r]);
+
+								foreach ($expwholetable as $key => $value):
+                                    if (DateTime::createFromFormat('Y-m-d', $value) !== false):
+                                        $dateval = $value;
+                                        $storetable[$dateval][] = $value;
+                                    else:
+                                        $storetable[$dateval][] = $value;
+                                    endif;
+                                endforeach;
+
+                                function checkzero($number){
+                                    if($number):
+                                        return $number;
+                                    else:
+                                        return 0;
+                                    endif;
+                                }
+
+                                $j = 0;
+                                foreach ($storetable as $date => $arr):
+                                    if($arr[5] == '@'):
                                         $vs = '@';
                                     else:
                                         $vs = 'vs';
                                     endif;
-                                    $wzero = sprintf('%02d', $clean);
-                                    $cleanarray[$r.$wzero] = array(
-                                        'game_date' => $playerstats['game_date'][$i],
-                                        'team' => $playerstats['team'][$i],
+
+                                    $starter = $arr[8];
+                                    if($starter == '*' OR $starter == '' ):
+                                        $pr_data_passing = $data_passing[$j];
+                                        $pr_data_pass_td = $data_pass_td[$j];
+                                        $pr_data_pass_int = $data_pass_int[$j];
+                                        $pr_data_rush_yds = $data_rush_yds[$j];
+                                        $pr_data_rush_td = $data_rush_td[$j];
+                                        $pr_data_rec_yds = $data_rec_yds[$j];
+                                        $pr_data_rec_td = $data_rec_td[$j];
+                                        $pr_data_xpm = $data_xpm[$j];
+                                        $pr_data_xpa = $data_xpa[$j];
+                                        $pr_data_fgm = $data_fgm[$j];
+                                        $pr_data_fga = $data_fga[$j];
+                                        $j++;
+                                    endif;
+
+                                    $weekbuild[$arr[2]] = array(
+                                        'week_num' =>  $arr[2],
+                                        'game_date' => $date,
+                                        'team' => $arr[4],
                                         'game_location' => $vs,
-										'opp' => $playerstats['opp'][$i],
- 										'pass_yds' => empty($playerstats['pass_yds'][$i]) ? 0 : $playerstats['pass_yds'][$i],
-										'pass_td' => empty($playerstats['pass_td'][$i]) ? 0 : $playerstats['pass_td'][$i],
-										'pass_int' => empty($playerstats['pass_int'][$i]) ? 0 : $playerstats['pass_int'][$i],
-										'rush_yds' => empty($playerstats['rush_yds'][$i]) ? 0 : $playerstats['rush_yds'][$i],
-										'rush_td' => empty($playerstats['rush_td'][$i]) ? 0 : $playerstats['rush_td'][$i],
-										'rec_yds' => empty($playerstats['rec_yds'][$i]) ? 0 : $playerstats['rec_yds'][$i],
-										'rec_td' => empty($playerstats['rec_td'][$i]) ? 0 : $playerstats['rec_td'][$i],
-										'xpm' => empty($playerstats['xpm'][$i]) ? 0 : $playerstats['xpm'][$i],
-										'xpa' => empty($playerstats['xpa'][$i]) ? 0 : $playerstats['xpa'][$i],
-										'fgm' => empty($playerstats['fgm'][$i]) ? 0 : $playerstats['fgm'][$i],
-										'fga' => empty($playerstats['fga'][$i]) ? 0 : $playerstats['fga'][$i]
+                                        'opp' => $arr[6],
+                                        'nfl_result' => $arr[7],
+                                        'starter' => $arr[8],
+                                        'pass_yds' => checkzero($pr_data_passing),
+                                        'pass_td' => checkzero($pr_data_pass_td),
+                                        'pass_int' => checkzero($pr_data_pass_int),
+                                        'rush_yds' => checkzero($pr_data_rush_yds),
+                                        'rush_td' => checkzero($pr_data_rush_td),
+                                        'rec_yds' => checkzero($pr_data_rec_yds),
+                                        'rec_td' => checkzero($pr_data_rec_td),
+                                        'xpm' => checkzero($pr_data_xpm),
+                                        'xpa' => checkzero($pr_data_xpa),
+                                        'fgm' => checkzero($pr_data_fgm),
+                                        'fga' => checkzero($pr_data_fga)
                                     );
-                                $i++;
                                 endforeach;
-                                array_pop($cleanarray);
+
+                                printr($weekbuild, 0);
 
                                 function insert_player_gamestats_scrape($playerid, $array, $pos, $year){
-                                    global $wpdb;
+
                                     foreach ($array as $key => $value):
+                                        $xpm = $value['xpm'];
+                                        $fgm = $value['fgm'];
+                                        $pass_yds = $value['pass_yds'];
+                                        $pass_td = $value['pass_td'];
+                                        $rush_yds = $value['rush_yds'];
+                                        $rush_td = $value['rush_td'];
+                                        $pass_int = $value['pass_int'];
+                                        $rec_yds = $value['rec_yds'];
+                                        $rec_td = $value['rec_td'];
 
-                                            $gamedate = $value['game_date'];
-                                            $nflteam = $value['team'];
-                                            $gamelocation = $value['game_location'];
-                                            $opp  = $value['opp'];
-                                            $pass_yds = $value['pass_yds'];
-                                            $pass_td = $value['pass_td'];
-                                            $pass_int = $value['pass_int'];
-                                            $rush_yds = $value['rush_yds'];
-                                            $rush_td = $value['rush_td'];
-                                            $rec_yds = $value['rec_yds'];
-                                            $rec_td = $value['rec_td'];
-                                            $xpm = $value['xpm'];
-                                            $xpa = $value['xpa'];
-                                            $fgm = $value['fgm'];
-                                            $fga = $value['fga'];
+                                        if($pos == "PK"):
+                                            $nflscore = pk_score_converter($year, $xpm, $fgm);
+                                        else:
+                                            $nflscore = pos_score_converter($year, $pass_yds, $pass_td, $rush_yds, $rush_td, $pass_int, $rec_yds, $rec_td);
+                                        endif;
+                                        $wzero = sprintf('%02d', $key);
+                                        $playerscore = get_player_score_by_week($playerid, $year.$wzero);
 
-                                            if($pos == "PK"):
-                                                $nflscore = pk_score_converter($year, $xpm, $fgm);
-                                            else:
-                                                $nflscore = pos_score_converter($year, $pass_yds, $pass_td, $rush_yds, $rush_td, $pass_int, $rec_yds, $rec_td);
-                                            endif;
-
-                                            $pflscore = get_player_score_by_week($playerid, $key);
-                                            $pflpts = $pflscore['points'];
-                                            $ptdiff = $pflpts - $nflscore;
-
-                                            $query = $wpdb->query("
-                                                    UPDATE $playerid 
-                                                    SET game_date = '$gamedate', nflteam = '$nflteam', game_location = '$gamelocation', nflopp = '$opp', pass_yds = '$pass_yds', pass_td = '$pass_td', pass_int = '$pass_int', rush_yds = '$rush_yds', rush_td = '$rush_td', rec_yds = '$rec_yds', rec_td = '$rec_td', xpm = '$xpm', xpa = '$xpa', fgm = '$fgm', fga = '$fga', nflscore = '$nflscore', scorediff = '$ptdiff'
-                                                    WHERE week_id = '$key'
-                                                    " );
-                                            return $query.'<br>'.$playerid.'<br>'.$key.'<br>'.$pflpts.'<br>'.$nflscore;
+                                        $insertarr[$year.$wzero] = array(
+                                            'gamedate' => $value['game_date'],
+                                            'nflteam' => $value['team'],
+                                            'gamelocation' => $value['game_location'],
+                                            'opp'  => $value['opp'],
+                                            'pass_yds' => $value['pass_yds'],
+                                            'pass_td' => $value['pass_td'],
+                                            'pass_int' => $value['pass_int'],
+                                            'rush_yds' => $value['rush_yds'],
+                                            'rush_td' => $value['rush_td'],
+                                            'rec_yds' => $value['rec_yds'],
+                                            'rec_td' => $value['rec_td'],
+                                            'xpm' => $value['xpm'],
+                                            'xpa' => $value['xpa'],
+                                            'fgm' => $value['fgm'],
+                                            'fga' => $value['fga'],
+                                            'pflscore' => $playerscore['points'],
+                                            'nflscore' => $nflscore,
+                                            'ptdiff' => $playerscore['points'] - $nflscore
+                                            );
 
                                     endforeach;
 
+                                    foreach ($insertarr as $ikey => $ivalue):
+                                        global $wpdb;
+                                         $query = $wpdb->update( $playerid, array(
+                                            'game_date' => $ivalue['gamedate'],
+                                            'nflteam' => $ivalue['nflteam'],
+                                            'game_location' => $ivalue['gamelocation'],
+                                            'nflopp' => $ivalue['opp'],
+                                            'pass_yds' => $ivalue['pass_yds'],
+                                            'pass_td' => $ivalue['pass_td'],
+                                            'pass_int' => $ivalue['pass_int'],
+                                            'rush_yds' => $ivalue['rush_yds'],
+                                            'rush_td' => $ivalue['rush_td'],
+                                            'rec_yds' => $ivalue['rec_yds'],
+                                            'rec_td' => $ivalue['rec_td'],
+                                            'xpm' => $ivalue['xpm'],
+                                            'xpa' => $ivalue['xpa'],
+                                            'fgm' => $ivalue['fgm'],
+                                            'fga' => $ivalue['fga'],
+                                            'nflscore' => $ivalue['nflscore'],
+                                            'scorediff' => $ivalue['ptdiff']
+                                         ),array('week_id'=> $ikey));
+                                    endforeach;
+
+                                    //return $insertarr;
+                                    return 'Query:'.$query.'<br>Player id: '.$playerid.'<br>Week id:'.$key.'<br>PFL Points:'.$pflpts.'<br>NFL Points:'.$nflscore.'<br>Diff:'.$ptdiff;
                                 }
 
-                                $results = insert_player_gamestats_scrape($randomplayer, $cleanarray, $position, $r);
-                                echo $results;
+                                // Uncomment the next line if you want to insert the data into the players table
+                                $result = insert_player_gamestats_scrape($randomplayer, $weekbuild, $position, $r);
+
 
 								?>
 							</div>
@@ -447,8 +515,13 @@ get_header();
 						<div class="panel widget">
 							<div class="widget-body text-center">
 								<?php
-                                printr($cleanarray, 0);
-                               //printr($playerstats, 0);
+
+                                printr($result, 0);
+                                // these arrays dont work.  use new $wholetable approch in 2022
+                                //printr($cleanarray, 0);
+                                //printr($data_passing, 0);
+                                //printr($data_week_num, 0);
+                                //printr($playerstats, 0);
 
 								?>
 							</div>
@@ -464,14 +537,14 @@ get_header();
 </div>
 
 <?php 
-	//$log_file = $destination_folder.'/file.log';
-	//error_log($report_message, 3, $log_file);
+//$log_file = $destination_folder.'/file.log';
+//error_log($report_message, 3, $log_file);
 ?>
 
 
 <script>
 
-    // DISABLE TO STOP AUTO RELOAD
+// DISABLE TO STOP AUTO RELOAD
 
 //setTimeout(function(){
 //	var scrapeclick = '/scrape-pro-football-ref/?id=--><?php //echo $nextplayer; ?>//';
@@ -482,8 +555,8 @@ get_header();
 
 
 <script>
-	//  var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
-       //    console.log(scrapeclick);
+//  var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
+//    console.log(scrapeclick);
 </script>
 
 

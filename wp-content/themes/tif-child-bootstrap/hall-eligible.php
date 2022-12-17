@@ -46,7 +46,10 @@ foreach ($allleaders as $key => $value){
 				
 				<!--Page content-->
 				<div id="page-content">
-<?php $checkval = 850; ?>	
+
+                <!--Value set as 850 in 2015-->
+                <!--Revised to 900 in 2022-->
+                <?php $checkval = 900; ?>
 				<h4>3 Years Retired, <?php echo $checkval;?> Career Points min or Already in Hall</h4>
 				<?php 
 					
@@ -62,7 +65,7 @@ foreach ($allleaders as $key => $value){
 					foreach($unique as $e){
 						$better[$e] = get_player_career_stats($e);
 					}
-					
+
 					?>
 					<div class="row">
 						<div class="panel widget">
@@ -87,16 +90,16 @@ foreach ($allleaders as $key => $value){
 									<tbody>
 									<?php
 									$year = date('Y');
-									
+
 									foreach ($better as $key => $p){
-										
+
 										$checkhall = in_array($p['pid'], $allhall);
 										$last = end($p['years']);
 										if(($year-2) > $last){
 										
 											$winper = $p['wins']/$p['games'];
 											$name = get_player_name($p['pid']);
-											
+
 											echo '<tr>';
 											echo '<th class="text-center min-width">'.$checkhall.'</th>';
 											echo '<th class="text-center min-width">'.$name['first'].' '.$name['last'].'</th>';
@@ -115,12 +118,20 @@ foreach ($allleaders as $key => $value){
                                                 echo '<th class="text-center min-width">0</th>';
 											endif;
 											echo '</tr>';
-										
+
 											if($checkhall != 1){
 												$notinyet[] = $key;
 											}
 										}
+										// Get Players that have retired and been out for two years but not in the hall yet.  This is the voting eligible group.
+                                        if($checkhall != 1){
+                                            $notinyetmore[] = $key;
+                                        }
 									}
+
+									// This is the list og players that have the right number of carrer points, but have not retired yet or only just retired.
+									$notinyetalmost = array_diff($notinyetmore, $notinyet);
+                                    //printr($notinyetalmost, 0);
 										
 									?>
 										
@@ -150,9 +161,35 @@ foreach ($allleaders as $key => $value){
 										$count++;
 									}
 									
-								?>	
+								?>
 							</div>
 						</div>
+
+                        <div class="row">
+                            <div class="col-xs-24">
+                                <hr>
+                                <h4>Enough Points, But Need to Retire or Still Wait 2 Years.</h4>
+                                <hr>
+                                <?php
+                                $count = 1;
+                                //printr($notinyet, 0);
+                                foreach ($notinyetalmost as $nextupalmost){
+                                    if($count % 3 == 0){
+                                        echo '<div class="row">';
+                                    }
+                                    echo '<div class="col-xs-24 col-sm-12 col-md-8">';
+                                    supercard($nextupalmost);
+                                    echo '</div>';
+                                    if($count % 3 == 0){
+                                        echo '</div>';
+                                    }
+                                    $count++;
+                                }
+
+                                ?>
+                            </div>
+                        </div>
+
 					</div>	
 					
 					

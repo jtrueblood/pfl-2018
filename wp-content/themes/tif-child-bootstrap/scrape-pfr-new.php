@@ -241,7 +241,7 @@ get_header();
 								<?php
 
                             // SET YEAR
-                            $yearclean = array(2007);
+                            $yearclean = array(2022);
 
                                 echo $getyearclean.'-'.$weekclean.'<br>';
 								//printr($yearclean, 0);
@@ -404,6 +404,19 @@ get_header();
                                         $pr_data_xpa = $data_xpa[$j];
                                         $pr_data_fgm = $data_fgm[$j];
                                         $pr_data_fga = $data_fga[$j];
+                                        $j++;
+                                    else:
+                                        $pr_data_passing = 0;
+                                        $pr_data_pass_td = 0;
+                                        $pr_data_pass_int = 0;
+                                        $pr_data_rush_yds = 0;
+                                        $pr_data_rush_td = 0;
+                                        $pr_data_rec_yds = 0;
+                                        $pr_data_rec_td = 0;
+                                        $pr_data_xpm = 0;
+                                        $pr_data_xpa = 0;
+                                        $pr_data_fgm = 0;
+                                        $pr_data_fga = 0;
                                         $j++;
                                     endif;
 

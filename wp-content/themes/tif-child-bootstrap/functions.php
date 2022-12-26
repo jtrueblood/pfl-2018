@@ -3051,7 +3051,7 @@ function get_player_career_rank($pid){
 	
 }
 
-
+// Convert IDs of teams to full name or just list all teams by ID or name.
 function teamlist(){
 	$teamlist = array(
 		'RBS' => 'Red Barons',
@@ -4336,6 +4336,8 @@ function supercard($pid){
 	$imgid =  attachment_url_to_postid( $playerimgobj );
 	$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
 	$playerimg = $image_attributes[0];
+    $teamsbyid = teamlist();
+	$honorring = get_ring_of_honor();
 	
 	$justchamps = get_just_champions();
 	$teams = get_teams();
@@ -4366,13 +4368,9 @@ function supercard($pid){
 			}
 		}
 	}
-	
-	$halloffame = get_award_hall();
-	
-	$number_ones = get_number_ones();
-	
-	$halloffame = get_award_hall();
 
+	$number_ones = get_number_ones();
+	$halloffame = get_award_hall();
 	$gamesbyteam = get_player_team_games($pid);
 	
 		echo '<div class="col-xs-24 eq-box-sm">';
@@ -4545,10 +4543,15 @@ function supercard($pid){
 					</tbody>
 					</table>
 					<?php
-						if (in_array($pid, $halloffame)){ 
+						if (in_array($pid, $halloffame)):
 							echo '<h5 class="text-left text-bold">&nbsp;Inducted into the PFL Hall of Fame</h5>';
-						}
-			echo '</div>';
+                        endif;
+						if(in_array($pid, $honorring)):
+                            $pidkey = array_search ($pid, $honorring);
+						    $honorteam = substr($pidkey, 0,3);
+                            echo '<h5 class="text-left text-bold">'.$teamsbyid[$honorteam].' Ring of Honor</h5>';
+                        endif;
+    echo '</div>';
 
 			//TEMPORARY TO BUILD OLD PLAYER INFO DATA
 			if($info[0]['weight'] == ''):

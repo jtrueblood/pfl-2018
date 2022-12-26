@@ -1620,6 +1620,7 @@ endif;
 														} else {
 															$playtable .= '<td class="text-center">&emsp;</td>';
 														}
+														// This will not work until Week 16 Final Data is added.
 														if ($plweek == '15'){
 															$playtable .= '<td class="text-center">Playoffs</td>';
 															if(in_array($plteam, $pbteams_index[$plyear])){

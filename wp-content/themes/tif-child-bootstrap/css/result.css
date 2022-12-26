@@ -905,3 +905,7 @@ img.svg-jersey {
   color: #5fa2dd;
   font-weight: 300;
 }
+.posse-bowl-review {
+  height: 138px;
+  overflow-y: auto;
+}

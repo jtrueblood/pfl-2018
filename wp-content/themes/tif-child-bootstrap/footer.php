@@ -100,10 +100,10 @@
     <script src="https://code.highcharts.com/modules/export-data.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
+<!-- finish calculation of page load time -->
+<?php wp_footer(); ?>
 
-<?php wp_footer(); ?>    
-  
 
-  
+
 </body>
 </html>

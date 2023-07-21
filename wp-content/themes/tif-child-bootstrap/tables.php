@@ -591,6 +591,33 @@ foreach ($get_te as $item) {
 }
 arsort($new_te);
 //printr($new_te, 1);
+
+foreach($playersassoc as $key => $value):
+    $teamall = get_player_record($key);
+    //printr($teamall, 0);
+    if(isset($teamall)){
+        $teams = array_unique($teamall);
+        foreach ($teams as $printteams) {
+            $teamList .= $prefix . '' . $teamids[$printteams];
+            $prefix = ', ';
+        }
+        $c = array_unique($teamall);
+        $playerteamunique[$key] = count($c);
+    }
+    if($teamall):
+        foreach ($teamall as $key => $value){
+            if($check != $value):
+                $check = $value;
+                $teamall_no_change[$key] = $check;
+            else:
+                $teamall_no_change[$key] = '';
+            endif;
+        }
+    endif;
+endforeach;
+arsort($playerteamunique);
+
+//printr($playerteamunique, 1);
 ?>
 
 
@@ -1685,6 +1712,30 @@ arsort($new_te);
 			?>
 			</div>
 
+
+            <div class="col-xs-24 col-sm-12 col-md-6">
+                <?php
+
+                $labels = array('Player','Position','Number of Teams' );
+                tablehead('Different Teams for Indiv. Player', $labels);
+
+                foreach ($playerteamunique as $key => $value){
+                    $name = get_player_name($key);
+                    if($value > 7):
+                        $ptuprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
+                        $ptuprint .='<td class="text-center">'.$name['pos'].'</td>';
+                        $ptuprint .='<td class="text-center">'.$value.'</td></tr>';
+                    endif;
+                }
+
+                echo $ptuprint;
+
+                tablefoot('');
+
+                ?>
+
+            </div>
+
             <!-- ROW --> <div class="row"></div>
 
 			
@@ -1899,16 +1950,12 @@ arsort($new_te);
 					
 					echo $titprint;
 					
-					tablefoot('');	
-				
-
+					tablefoot('');
 				
 				?>	
 				
 				</div>
 
-				
-		
 		</div>
 		
 		
@@ -2133,8 +2180,6 @@ arsort($new_te);
 	</div>
 	<!--===================================================-->
 	<!--End page content-->
-
-
 </div>
 <!--===================================================-->
 <!--END CONTENT CONTAINER-->

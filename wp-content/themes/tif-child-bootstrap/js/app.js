@@ -337,9 +337,58 @@ jQuery(document).ready(function($) {
 	  var teamdropselect = $("#pickteam").val(); 
 	  var headurl = ('?id='+teamdropselect);
 	  window.location = headurl;	
-	});	
-	
-	
+	});
+
+	$("#teamDropOTH").click(function() {
+		//alert("Handler for .click() called.");
+		var teamOTH = $("#pickteamOTH").val();
+		var teamOTA = $("#pickteamOTA").val();
+		var teamQBH = $("#pickplayerQBH").val();
+		var teamRBH = $("#pickplayerRBH").val();
+		var teamWRH = $("#pickplayerWRH").val();
+		var teamPKH = $("#pickplayerPKH").val();
+		var teamQBA = $("#pickplayerQBA").val();
+		var teamRBA = $("#pickplayerRBA").val();
+		var teamWRA = $("#pickplayerWRA").val();
+		var teamPKA = $("#pickplayerPKA").val();
+		var pickYear = $("#pickYEAR").val();
+		var pickWeek = $("#pickWEEK").val();
+		var headurl = ('/player-ot-score/?SQL=0&GID=01'+pickYear+pickWeek+teamOTH+teamQBH+teamRBH+teamWRH+teamPKH+teamOTA+teamQBA+teamRBA+teamWRA+teamPKA);
+		window.location = headurl;
+	});
+
+
+
+	$("#ProBowlDrop").click(function() {
+		var EGADQB1 = $("#EGADQB1").val();
+		var EGADQB2 = $("#EGADQB2").val();
+		var EGADQB3 = $("#EGADQB3").val();
+		var EGADRB1 = $("#EGADRB1").val();
+		var EGADRB2 = $("#EGADRB2").val();
+		var EGADRB3 = $("#EGADRB3").val();
+		var EGADWR1 = $("#EGADWR1").val();
+		var EGADWR2 = $("#EGADWR2").val();
+		var EGADWR3 = $("#EGADWR3").val();
+		var EGADPK1 = $("#EGADPK1").val();
+		var EGADPK2 = $("#EGADPK2").val();
+		var EGADPK3 = $("#EGADPK3").val();
+		var DGASQB1 = $("#DGASQB1").val();
+		var DGASQB2 = $("#DGASQB2").val();
+		var DGASQB3 = $("#DGASQB3").val();
+		var DGASRB1 = $("#DGASRB1").val();
+		var DGASRB2 = $("#DGASRB2").val();
+		var DGASRB3 = $("#DGASRB3").val();
+		var DGASWR1 = $("#DGASWR1").val();
+		var DGASWR2 = $("#DGASWR2").val();
+		var DGASWR3 = $("#DGASWR3").val();
+		var DGASPK1 = $("#DGASPK1").val();
+		var DGASPK2 = $("#DGASPK2").val();
+		var DGASPK3 = $("#DGASPK3").val();
+
+		var headurl = ('/get-probowl-score-from-mfl/?SQL=0&Y=2022&W=17'+EGADQB1+EGADQB2+EGADQB3+EGADRB1+EGADRB2+EGADRB3+EGADWR1+EGADWR2+EGADWR3+EGADPK1+EGADPK2+EGADPK3+DGASQB1+DGASQB2+DGASQB3+DGASRB1+DGASRB2+DGASRB3+DGASWR1+DGASWR2+DGASWR3+DGASPK1+DGASPK2+DGASPK3);
+		window.location = headurl;
+	});
+
 	$("img.player-image").error(function () { 
 	    $(this).hide();
 	    //or $(this).css({visibility:"hidden"}); 

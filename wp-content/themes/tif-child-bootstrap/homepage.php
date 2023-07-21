@@ -4,7 +4,6 @@
  * Description: Homepage for the PFL Website
  */
 
-
 /*
 $url1=$_SERVER['REQUEST_URI'];
 header("Refresh: 5; URL=$url1");
@@ -146,11 +145,14 @@ get_header();
 								<div class="panel-body">
 									<div class="col-xs-24">
                                         <a href="https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a><br>
-										<a href="/create-new-player">Create New Player</a><br>	
+                                        <a href="/builds/build-drafts/?SQL=0&Y=2022">Import Draft</a><br>
+                                        <a href="/create-new-player">Create New Player</a><br>
 										<a href="/builds/build-mfl-weekly/?SET=0&Y=2022&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
-										<a href="/builds/build-drafts/">Import Draft</a><br>
+                                        <a href="/get-weekly-rosters-mfl/?Y=2022&W=1">Get Weekly Rosters from MFL</a><br>
+                                        <a href="/player-ot-score/?SQL=0">Build Overtime Scores from MFL</a><br>
+                                        <a href="/get-player-scores-for-playoffs/?SQL=0&Y=2022&W=15&S1=XXX&S2=XXX&S3=XXX&S4=XXX">Build Playoff Data 15 & 16</a><br>
                                         <a href="/scrape-pfr-for-numbers">Srape PFR for Numbers</a><br>
-										<a href="/python-scripts">Sportsrefernce API Python Scripts</a><br>
+										<a href="/scrape-pro-football-ref-new/">Scrape PFR for Player Game Stats</a><br>
 									</div>	
 								</div>
 							
@@ -168,6 +170,9 @@ get_header();
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
 										<a href="https://docs.google.com/document/d/1D8VZPOBn04zVXYQB1gr-xb1NDe2nYLn9Rqgl4oZVhXI/edit?usp=sharing" target="_blank">PFL Rules - Rev 2019</a><br>
 										<hr>
+                                        <a href="https://www48.myfantasyleague.com/2023/home/38954#0" target="_blank">MFL Website 2023</a><br>
+                                        <a href="https://www48.myfantasyleague.com/2022/home/38954#0" target="_blank">MFL Website 2022</a><br>
+                                        <a href="https://www48.myfantasyleague.com/2021/home/38954#0" target="_blank">MFL Website 2021</a><br>
 										<a href="https://www58.myfantasyleague.com/2020/home/38954#0" target="_blank">MFL Website 2020</a><br>
 										<a href="http://www58.myfantasyleague.com/2019/home/38954#0" target="_blank">MFL Website 2019</a><br>
 										<a href="http://www58.myfantasyleague.com/2018/home/38954#0" target="_blank">MFL Website 2018</a><br>

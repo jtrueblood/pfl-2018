@@ -28,7 +28,7 @@
 	<script src="<?php bloginfo('template_directory');?>/js/respond/respond.js" type="text/javascript"></script>
 	<![endif]-->
 
-	<?php wp_head(); ?>  
+	<?php wp_head(); ?>
 
 	<!-- provides page name and appends as body class -->
 	<?php 

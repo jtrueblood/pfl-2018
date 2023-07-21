@@ -9,12 +9,10 @@
 	
 get_header(); 
 
-
 /*
 get_cache('mfl/thestarters', 0);	
 $thestarters = $_SESSION['mfl/thestarters'];
 */
-
 //$year = 2017;
 //$week = 1; change this to 1 to 14 and reload page to build all of the week needed starters
 $lid = 38954;

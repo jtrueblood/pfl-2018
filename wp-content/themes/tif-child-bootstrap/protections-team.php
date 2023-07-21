@@ -8,7 +8,10 @@
 <!-- Make the required arrays and cached files availible on the page -->
 
 <?php get_header(); ?>
-
+<?php
+$getyear = $_GET['Y'];
+$getteam = $_GET['TEAM'];
+?>
 
 
 <div class="boxed">
@@ -34,64 +37,75 @@
 							}
 							
 							ksort($arr_resort, SORT_NUMERIC);
-							
+
 							//printr($arr_resort, 1);
-	
-						foreach ($arr_resort as $team){
-							foreach ($team as $key => $value){
 
-								$team = $value['team'];
-								$first = $value['first'];
-								$last = $value['last'];
-								$position = $value['position'];
-								$playerid = $value['playerid'];
-							    $year = $value['year'];
-								
-								if($team != $checkteam){
-                                    $checkteam = $team;
-                                    ?>
-                                    <div class="col-xs-24">
+							foreach ($arr_resort as $key => $value):
+                                foreach ($value as $k => $v):
+                                    $teamprotect[$key][$v['year']][] = $v;
+                                endforeach;
+                            endforeach;
 
-                                        <h4 class="text-center protection-season"><?php echo $team; ?> Protections</h4>
+                            if($getteam != ''):
+                                $printprotect[$getteam] = $teamprotect[$getteam];
+                            else:
+                                if($getyear != ''):
+                                    foreach($teamprotect as $team => $years):
+                                        if($years[$getyear]):
+                                            $printprotect[$team][$getyear] = $years[$getyear];
+                                        endif;
+                                    endforeach;
+                                else:
+                                    $printprotect = $teamprotect;
+                                endif;
+                            endif;
 
-                                    </div>
 
-                                    <?php  }
 
-                                    if ($year != $checkyear){ ?>
-                                        <div class="row">
-                                        <div class="col-xs-2">
-                                            <h3 class="text-bold text-center"><?php echo $year; ?></h3>
-                                        </div>
+                            //printr($printprotect, 0);
 
-                                    <?php } ?>
-
-                                    <div class="col-xs-7">
-                                        <div class="panel protections">
-                                            <div class="panel-body <?php echo $position;?>">
-                                            <?php
-                                            if ($first == 'No Protection'){
-                                                echo 'No Protection';
-                                             } else {
-
-                                                $playerimgobj = get_attachment_url_by_slug($playerid);
-                                                $imgid =  attachment_url_to_postid( $playerimgobj );
-                                                $image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));
-                                                $playerimg = $image_attributes[0];
-
-                                                echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position;
-                                             }?>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <?php
-
-                                    if ($year != $checkyear){
+                            foreach ($printprotect as $key => $team):
+                            echo '<div class="row">';
+                            echo '<h3>'.$key.'</h3>';
+							foreach ($team as $year => $value):
+                                $i = 0;
+                                    echo '<div class="row">';
+                                        echo '<div class="col-xs-2">';
+                                            echo '<h4>'.$year.'</h4>';
                                         echo '</div>';
-                                    }
-							    }
-							}
+                                        foreach ($value as $k => $v):
+
+                                        $team = $v['team'];
+                                        $first = $v['first'];
+                                        $last = $v['last'];
+                                        $position = $v['position'];
+                                        $playerid = $v['playerid'];
+                                        if($i == 3):
+                                            echo '<div class="col-xs-2"></div>';
+                                        endif;
+                                        ?>
+
+                                            <div class="col-xs-7">
+                                                <div class="panel protections">
+                                                    <div class="panel-body <?php echo $position;?>">
+                                                    <?php
+                                                        $playerimgobj = get_attachment_url_by_slug($playerid);
+                                                        $imgid =  attachment_url_to_postid( $playerimgobj );
+                                                        $image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));
+                                                        $playerimg = $image_attributes[0];
+                                                        echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position;
+                                                     ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <?php
+                                            $i++;
+                                            endforeach;
+                                        echo '</div>';
+							    endforeach;
+							    echo '</div>';
+                            endforeach;
 						?>
 
 						</div>

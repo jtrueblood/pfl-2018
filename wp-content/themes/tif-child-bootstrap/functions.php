@@ -2093,6 +2093,196 @@ function get_teams(){
 	
 }
 
+// gets team PFL & MFL IDs by Season
+// 2011 was the first season that we used MFL
+function get_pfl_mfl_ids_season(){
+    $pflmflids = array(
+        2011 => array(
+           '0001' => 'BST',
+           '0002' => 'ETS',
+           '0003' => 'PEP',
+           '0004' => 'WRZ',
+           '0005' => 'PHR',
+           '0006' => 'SON',
+           '0007' => 'ATK',
+           '0008' => 'HAT',
+           '0009' => 'CMN',
+           '0010' => 'BUL',
+           '0011' => 'SNR',
+           '0012' => 'TSG'
+        ),
+        2012 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2013 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2014 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2015 => array(
+            '0001' => 'MAX',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
+        2016 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'SON',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2017 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'SON',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2018 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'SON',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2019 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2020 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2021 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2022 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2023 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+    );
+    return $pflmflids;
+}
+
 
 
 // gets team stadium name 
@@ -2103,6 +2293,16 @@ function get_stadium($teamid){
 	}
 	
 	return $stadiums;
+}
+
+// gets team stadium name
+function get_stadium_by_team($teamid){
+    $teams = get_teams();
+    foreach ($teams as $key => $val){
+        $stadiums[$key] = $val['stadium'];
+    }
+
+    return $stadiums[$teamid];
 }
 
 // extends get_team_results to include record and location
@@ -3051,6 +3251,7 @@ function get_player_career_rank($pid){
 	
 }
 
+
 // Convert IDs of teams to full name or just list all teams by ID or name.
 function teamlist(){
 	$teamlist = array(
@@ -3348,6 +3549,19 @@ function playerid_mfl_to_pfl(){
 	}
 	arsort($theids);
 	return $theids ;	
+}
+
+function one_player_mfl_to_pfl($mflid){
+    global $wpdb;
+    $query = $wpdb->get_results("SELECT p_id, mflid FROM wp_players" );
+
+    foreach ($query as $val){
+        if(!empty($val->mflid)){
+            $theids[$val->mflid] = $val->p_id;
+        }
+    }
+    arsort($theids);
+    return $theids[$mflid] ;
 }
 
 function playerid_pfl_to_mfl(){
@@ -3915,6 +4129,21 @@ function ordinal($number) {
         return $number. $ends[$number % 10];
 }
 
+// get or set a general transient from any array.  Set expiration in seconds.
+
+function get_or_set($array, $name, $seconds){
+    $transient = get_transient( $array.'_trans' );
+    if( ! empty( $transient ) ) {
+        echo '<script>console.log("'.$name.' - From Transient");</script>';
+        return $transient;
+    } else {
+        $set = $array;
+        set_transient( $name.'_pfl_trans', $set, $seconds );
+        echo '<script>console.log("'.$name.' - Transient Set");</script>';
+        return $set;
+    }
+}
+
 
 // get the total number of regular season games played
 function get_total_games_played(){
@@ -4222,19 +4451,21 @@ function estimated_pfl_score($py, $ptd, $pint, $ruyd, $rutd, $reyd, $retd, $fg, 
 	if($ep):
 	    $kicks = ($fg * 2) + $ep;
 	endif;
-	
+
+	$pass = 0; $rush = 0; $rec = 0; $tds = 0; $kicks = 0; $tpc = 0; $o = 0;
  	$thecalc = ($pass + $rush + $rec + $tds + $kicks + $tpc + $o) - $pint;
+
  	$calculated = array(
- 		'pass' => $pass , 
- 		'rush' => $rush , 
- 		'rec' => $rec , 
- 		'tds' => $tds , 
- 		'kicks' => $kicks , 
- 		'twopt' => $tpc , 
- 		'other' => $o , 
+ 		'pass' => $pass ,
+ 		'rush' => $rush ,
+ 		'rec' => $rec ,
+ 		'tds' => $tds ,
+ 		'kicks' => $kicks ,
+ 		'twopt' => $tpc ,
+ 		'other' => $o ,
  		'int' => $pint
  	);
-	
+
 	return $thecalc;
 }
 
@@ -4549,7 +4780,7 @@ function supercard($pid){
 						if(in_array($pid, $honorring)):
                             $pidkey = array_search ($pid, $honorring);
 						    $honorteam = substr($pidkey, 0,3);
-                            echo '<h5 class="text-left text-bold">'.$teamsbyid[$honorteam].' Ring of Honor</h5>';
+                            echo '<h5 class="text-left text-bold">&nbsp;'.$teamsbyid[$honorteam].' Ring of Honor</h5>';
                         endif;
     echo '</div>';
 
@@ -4701,10 +4932,44 @@ function teams_for_mfl(){
     return $teambyid;
 }
 
+// MFL League ID by Season
+function get_mfl_league_id(){
+    $leagueids = array(
+        2010 => 79850,
+        2011 => 79122,
+        2012 => 47001,
+        2013 => 23875,
+        2014 => 11521,
+        2015 => 47099,
+        2016 => 38954,
+        2017 => 38954,
+        2018 => 38954,
+        2019 => 38954,
+        2020 => 38954,
+        2021 => 38954,
+        2022 => 38954,
+        2023 => 38954
+    );
+    return $leagueids;
+}
 
 // wp_teams table shows current team mfl ID.  This array accounts for the fact that the ids have shifted a bit over the years.
 function teams_for_mfl_history(){
     $mfl_team_id_history = array(
+        2010 => array(
+            '0001' => 'BST',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'PHR',
+            '0006' => 'SON',
+            '0007' => 'ATK',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => 'SNR',
+            '0012' => 'TSG'
+        ),
         2011 => array(
             '0001' => 'BST',
             '0002' => 'ETS',
@@ -5275,4 +5540,45 @@ function array_count_values_of($value, $array) {
     $counts = array_count_values($array);
     return $counts[$value];
 }
+
+//build bench for Results page
+function get_the_bench($year, $week, $teamid){
+    $getseasonids = get_pfl_mfl_ids_season();
+    $oneseasonids = $getseasonids[$year];
+
+    $destination_folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/mfl-weekly-rosters';
+    if (file_exists($destination_folder.'/'.$year.$week.'.json')):
+        $get_roster = file_get_contents($destination_folder.'/'.$year.$week.'.json');
+        $results = json_decode($get_roster, true);
+        $rosterarray = $results['rosters']['franchise'];
+
+        foreach ($rosterarray as $key => $value):
+            $pflid = $oneseasonids[$value['id']];
+            $newrosterarray[$pflid] = $value['player'];
+        endforeach;
+
+        foreach ($newrosterarray as $key => $value):
+            if($key != ''):
+                foreach($value as $k => $v):
+                    $status = $v['status'];
+                    $playerid = one_player_mfl_to_pfl($v['id']);
+                    $playerinfo = get_player_basic_info($playerid);
+                    $fullname = substr($playerinfo[0]['first'], 0, 1).'.'.$playerinfo[0]['last'];
+                    $position = $playerinfo[0]['position'];
+                    if($k != ''):
+                        $teamrosters[$key][$status][$playerid] = array(
+                            'player' => $v['id'],
+                            'name' => $fullname,
+                            'position' => $position,
+                            'drafted' => $v['drafted']
+                        );
+                    endif;
+                endforeach;
+            endif;
+        endforeach;
+    endif;
+    return $teamrosters[$teamid];
+}
+
+
 

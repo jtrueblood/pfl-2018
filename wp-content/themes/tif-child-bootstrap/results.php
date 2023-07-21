@@ -13,6 +13,7 @@ $allWeeksZero = array("01","02","03","04","05","06","07","08","09","10","11","12
 $year_sel = $_GET["Y"];
 $week_sel = $_GET["W"];
 $weekvar = $year_sel.$week_sel;
+$nonzeroweek = $str = ltrim($week_sel, '0');
 
 $namenum = 15;
 
@@ -305,8 +306,9 @@ printr($assoc, 0);
                                 $monthlast = date('F', mktime(0, 0, 0, $explast[1], 10));
 
                                 echo '<h4>'.$monthfirst.' '.$expfirst[2].' - '.$monthlast.' '.$explast[2].', '.$year_sel.'</h4>';
-                                printr($justdates, 0);
-
+                                //printr($justdates, 0);
+                                $uniquedates = array_unique($justdates);
+                                //printr($uniquedates, 0);
                             ?>
 						</div>					
 						
@@ -527,6 +529,34 @@ printr($assoc, 0);
 						echo '<a href="/player/?id='.$h_wr1.'">'.checkfornone ($h_wr1_data['first']).' '.$h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$h_pk1.'">'.checkfornone ($h_pk1_data['first']).' '.$h_pk1_data['last'].'</a><span class="pull-right">'.$h_pk1_data['points'].'</span><br>';
 
+                        $startershome = array($h_qb1,$h_rb1,$h_wr1,$h_pk1,$h_qb2,$h_rb2,$h_wr2,$h_pk2);
+                        $bench = get_the_bench($year_sel, $nonzeroweek, $hometeam);
+                        $benchroster = $bench['ROSTER'];
+                        if($benchroster):
+                            echo '<div style="margin-top: 15px;"><strong>Bench:</strong></div>';
+                            echo '<div style="font-size: 10px;">';
+                            $print_bench = '';
+                            foreach ($benchroster as $key => $value):
+                                if(!in_array($key,$startershome)):
+                                    $print_bench .= $value['name'].', '.$value['position'].' / ';
+                                endif;
+                            endforeach;
+                            echo substr($print_bench, 0, -2);
+                            echo '</div>';
+                            $benchinjured = $bench['INJURED_RESERVE'];
+                            if($benchinjured):
+                                echo '<div style="margin-top: 15px;"><strong>Injured Reserve:</strong></div>';
+                                echo '<div style="font-size: 11px;">';
+                                $print_injured = '';
+                                foreach ($benchinjured as $key => $value):
+                                    if($value['name'] != ''):
+                                        $print_injured .= $value['name'].', '.$value['position'].' / ';
+                                    endif;
+                                endforeach;
+                                echo substr($print_injured, 0, -2);
+                                echo '</div>';
+                            endif;
+                        endif;
 /*
 						$get_the_helmet_home = get_helmet($hometeam, $year_sel);
 						printr($get_the_helmet_home, 0);
@@ -541,7 +571,35 @@ printr($assoc, 0);
 						echo '<a href="/player/?id='.$a_rb1.'">'.checkfornone ($a_rb1_data['first']).' '.$a_rb1_data['last'].'</a><span class="pull-right">'.$a_rb1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$a_wr1.'">'.checkfornone ($a_wr1_data['first']).' '.$a_wr1_data['last'].'</a><span class="pull-right">'.$a_wr1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$a_pk1.'">'.checkfornone ($a_pk1_data['first']).' '.$a_pk1_data['last'].'</a><span class="pull-right">'.$a_pk1_data['points'].'</span><br>';
-						
+
+                        $startersroad = array($a_qb1,$a_rb1,$a_wr1,$a_pk1,$a_qb2,$a_rb2,$a_wr2,$a_pk2);
+                        $bench = get_the_bench($year_sel, $nonzeroweek, $awayteam);
+                        $benchroster = $bench['ROSTER'];
+                        if($benchroster):
+                            echo '<div style="margin-top: 15px;"><strong>Bench:</strong></div>';
+                            echo '<div style="font-size: 10px;">';
+                            $print_bench_away = '';
+                            foreach ($benchroster as $key => $value):
+                                if(!in_array($key,$startersroad)):
+                                    $print_bench_away .= $value['name'].', '.$value['position'].' / ';
+                                endif;
+                            endforeach;
+                            echo substr($print_bench_away, 0, -2);
+                            echo '</div>';
+                            $benchinjured = $bench['INJURED_RESERVE'];
+                            if($benchinjured):
+                                echo '<div style="margin-top: 15px;"><strong>Injured Reserve:</strong></div>';
+                                echo '<div style="font-size: 11px;">';
+                                $print_injured_away = '';
+                                foreach ($benchinjured as $key => $value):
+                                    if($value['name'] != ''):
+                                        $print_injured_away .= $value['name'].', '.$value['position'].' / ';
+                                    endif;
+                                endforeach;
+                                echo substr($print_injured_away, 0, -2);
+                                echo '</div>';
+                            endif;
+                        endif;
 /*
 						$get_the_helmet_away = get_helmet($awayteam, $year_sel);
 						printr($get_the_helmet_away, 0);
@@ -574,7 +632,7 @@ printr($assoc, 0);
 										echo '<a href="/player/?id='.$h_rb2.'">'.checkfornone ($h_rb2_data['first']).' '.$h_rb2_data['last'].'</a><span class="pull-right">'.$h_rb2_data['points'].'</span><br>';
 										echo '<a href="/player/?id='.$h_wr2.'">'.checkfornone ($h_wr2_data['first']).' '.$h_wr2_data['last'].'</a><span class="pull-right">'.$h_wr2_data['points'].'</span><br>';
 										echo '<a href="/player/?id='.$h_pk2.'">'.checkfornone ($h_pk2_data['first']).' '.$h_pk2_data['last'].'</a><span class="pull-right">'.$h_pk2_data['points'].'</span><br>';
-								
+
 									echo '</div>';	
 									
 									echo '<div class="col-xs-12 boxscorebox">';
@@ -583,7 +641,7 @@ printr($assoc, 0);
 										echo '<a href="/player/?id='.$a_rb2.'">'.checkfornone ($a_rb2_data['first']).' '.$a_rb2_data['last'].'</a><span class="pull-right">'.$a_rb2_data['points'].'</span><br>';
 										echo '<a href="/player/?id='.$a_wr2.'">'.checkfornone ($a_wr2_data['first']).' '.$a_wr2_data['last'].'</a><span class="pull-right">'.$a_wr2_data['points'].'</span><br>';
 										echo '<a href="/player/?id='.$a_pk2.'">'.checkfornone ($a_pk2_data['first']).' '.$a_pk2_data['last'].'</a><span class="pull-right">'.$a_pk2_data['points'].'</span><br>';
-								
+
 									echo '</div>';	
 
 							echo '</div>';
@@ -610,9 +668,9 @@ printr($assoc, 0);
 									
 										// point differential 
 										if ($differential > 0){
-											echo '<span class="text-bold">'.$hometeam_full.'</span> by '.$differential.' ';
+											echo '<span class="text-bold">'.$hometeam_full.'</span> by '.$differential.'<br>';
 										} else {
-											echo '<span class="text-bold">'.$awayteam_full. '</span> by '.abs($differential).' ';
+											echo '<span class="text-bold">'.$awayteam_full. '</span> by '.abs($differential).'<br>';
 										}
 										
 										if ($differential > 20 or abs($differential) > 20){

@@ -23,19 +23,22 @@ get_header();
 
 // Auth URL = https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1
 
-$year = 2022;
+$year = $_GET['Y'];
+//$year = 2022;
 $lid = 38954;
+$run = $_GET['SQL'];
 // NO LONGER NEEDED AS OF 2020 -- $apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
 // Looks like you could pass an API Key instead of the user agent (not totally sure?) the api key for 2020 appears to be &APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox
 
-$origorder = array('BST','SNR','HAT','BUL','CMN','WRZ','DST','TSG','PEP','ETS');
+// Set the standard draft order below...
+$origorder = array('CMN','HAT','BST','PEP','SNR','TSG','WRZ','BUL','DST','ETS');
 // --------------------------------------------
 
 // get actual draft report for the year from MFL
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://www58.myfantasyleague.com/2022/export?TYPE=draftResults&L=38954&JSON=1',
+    CURLOPT_URL => 'https://www58.myfantasyleague.com/'.$year.'/export?TYPE=draftResults&L='.$lid.'&JSON=1',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -103,7 +106,6 @@ foreach ($mflpicks as $value){
 		$id = $playerid;
 		$newplayers[] = $playerid;
 	}
-	
 
 	if($playerid == '----'){
 		$id = 'No Pick';
@@ -135,37 +137,37 @@ foreach ($mflpicks as $value){
 	 
 }
 
+echo '<h3 style="margin-top: 40px;">'.$year.'</h3>';
 printr($draftinsert, 0);
 printr($newplayers, 0);
 
 // uncomment and reload to insert info into wp_drafts once the array looks good
 
+if($run == 1):
+    foreach($draftinsert as $arr){
 
-
-foreach($draftinsert as $arr){
-
-	$wpdb->insert(
-		 'wp_drafts',
-	     array(
-			'id' 			=> $arr['id'],
-			'year' 			=> $arr['year'],
-			'round'			=> $arr['round'],
-			'roundnum'		=> $arr['roundnum'],
-			'picknum'		=> $arr['picknum'],
-			'pickord'		=> $arr['pickord'],
-			'team' 			=> $arr['team'],
-			'playerfirst' 	=> $arr['playerfirst'],
-			'playerlast' 	=> $arr['playerlast'],
-			'pos' 			=> $arr['pos'],
-			'playerid' 		=> $arr['playerid'],
-			'tradeid' 		=> $arr['tradeid']
-	     ),
-		 array(
-			'%d','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d'
-		 )
-	);
-}
-
+        $wpdb->insert(
+             'wp_drafts',
+             array(
+                'id' 			=> $arr['id'],
+                'year' 			=> $arr['year'],
+                'round'			=> $arr['round'],
+                'roundnum'		=> $arr['roundnum'],
+                'picknum'		=> $arr['picknum'],
+                'pickord'		=> $arr['pickord'],
+                'team' 			=> $arr['team'],
+                'playerfirst' 	=> $arr['playerfirst'],
+                'playerlast' 	=> $arr['playerlast'],
+                'pos' 			=> $arr['pos'],
+                'playerid' 		=> $arr['playerid'],
+                'tradeid' 		=> $arr['tradeid']
+             ),
+             array(
+                '%d','%d','%s','%s','%s','%s','%s','%s','%s','%s','%s','%d'
+             )
+        );
+    }
+endif;
 
 
 // pass week parameter all players by ID and Score	

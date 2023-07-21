@@ -59,7 +59,8 @@
 												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2022">Seasons</a></li>
 												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2022">Drafts by Year</a></li>
 												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2022">Standings By Year</a></li>
-												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>															<li class="<?php ifbodyclass (252, 'active-link'); ?>"><a href="/protections">Protections By Year</a></li>
+												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>
+<!--                                                <li class="--><?php //ifbodyclass (252, 'active-link'); ?><!--"><a href="/protections">Protections By Year</a></li>-->
 											</ul>
 									</li>
 									
@@ -74,7 +75,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (299, 'active-link'); ?>"><a href="/teams/?id=ETS">Teams</a></li>	
 												<li class="<?php ifbodyclass (1465, 'active-link'); ?>"><a href="/eras/?id=ETS">Eras</a></li>	
-												<li class="<?php ifbodyclass (281, 'active-link'); ?>"><a href="/protections-team">Protections By Team</a></li>		
+												<li class="<?php ifbodyclass (281, 'active-link'); ?>"><a href="/protections-team/?Y=&TEAM=">Protections By Team</a></li>
 											</ul>
 									</li>
 									

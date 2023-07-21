@@ -78,6 +78,33 @@ endif;
 
 get_header(); 
 ?>
+
+<!-- HIDE BROKEN IMAGE LINK IF JERSEY ISN'T AVAILIBLE -->
+<style>
+    img:-moz-broken{
+        opacity: 0;
+    }
+
+    body {
+        background-color: white;
+    }
+
+    img {
+        position: relative;
+    }
+
+    img::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+    }
+</style>
+
 <div class="boxed">
 			
 			<!--CONTENT CONTAINER-->
@@ -167,8 +194,8 @@ get_header();
 
                                     endforeach;
 
-
 								?>
+
 							</div>
 						</div>
 					</div>

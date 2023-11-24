@@ -41,7 +41,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (70, 'active-link'); ?>"><a href="/player/?id=1998MannQB">Individual Players</a></li>
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
-												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2022">Leaders By Season</a></li>
+												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2023">Leaders By Season</a></li>
 												<li class="<?php ifbodyclass (1495, 'active-link'); ?>"><a href="/supercards/">Supercards</a></li>
 											</ul>
 									</li>
@@ -56,9 +56,9 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2022">Seasons</a></li>
-												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2022">Drafts by Year</a></li>
-												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2022">Standings By Year</a></li>
+												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2023">Seasons</a></li>
+												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2023">Drafts by Year</a></li>
+												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2023">Standings By Year</a></li>
 												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>
 <!--                                                <li class="--><?php //ifbodyclass (252, 'active-link'); ?><!--"><a href="/protections">Protections By Year</a></li>-->
 											</ul>
@@ -89,7 +89,7 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (45, 'active-link'); ?>"><a href="/results?Y=2022&W=01">Weekly Results</a></li>
+												<li class="<?php ifbodyclass (45, 'active-link'); ?>"><a href="/results?Y=2023&W=01">Weekly Results</a></li>
                                                 <li class="<?php ifbodyclass (1797, 'active-link'); ?>"><a href="/schedules">All Schedules</a></li>
 												<li class="<?php ifbodyclass (1153, 'active-link'); ?>"><a href="/grandslams">Grandslams</a></li>	
 												<li class="<?php ifbodyclass (305, 'active-link'); ?>" ><a href="/playoffs">The Playoffs</a></li>
@@ -120,7 +120,7 @@
                                                 <li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
 												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy-2021">Draft Strategy 2021</a></li>
                                                 <li class="<?php ifbodyclass (1678, 'active-link'); ?>"><a href="/transactions">Transactions</a></li>
-                                                <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202201">Scorigami</a></li>
+                                                <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202301">Scorigami</a></li>
                                                 <li class="<?php ifbodyclass (1937, 'active-link'); ?>"><a href="/trade-analyzer?TRADE=130">Trade Analyzer</a></li>
                                                 <li class="<?php ifbodyclass (1939, 'active-link'); ?>"><a href="/position-difference">Position Difference</a></li>
 											</ul>

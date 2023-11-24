@@ -546,7 +546,7 @@ printr($assoc, 0);
                             $benchinjured = $bench['INJURED_RESERVE'];
                             if($benchinjured):
                                 echo '<div style="margin-top: 15px;"><strong>Injured Reserve:</strong></div>';
-                                echo '<div style="font-size: 11px;">';
+                                echo '<div style="font-size: 10px;">';
                                 $print_injured = '';
                                 foreach ($benchinjured as $key => $value):
                                     if($value['name'] != ''):
@@ -589,7 +589,7 @@ printr($assoc, 0);
                             $benchinjured = $bench['INJURED_RESERVE'];
                             if($benchinjured):
                                 echo '<div style="margin-top: 15px;"><strong>Injured Reserve:</strong></div>';
-                                echo '<div style="font-size: 11px;">';
+                                echo '<div style="font-size: 10px;">';
                                 $print_injured_away = '';
                                 foreach ($benchinjured as $key => $value):
                                     if($value['name'] != ''):
@@ -678,9 +678,15 @@ printr($assoc, 0);
 										}
 										
 										if ($totalgamescore > 99){
-											echo 'Barnburner!&emsp;<br>';
+											echo 'This was a Barnburner!&emsp;<br>';
 										}
-										
+
+										$gettwos_h = check_for_number_two($weekvar, $hometeam);
+										$gettwos_a = check_for_number_two($weekvar, $awayteam);
+
+										echo $gettwos_h;
+                                        echo $gettwos_a;
+
 										if ($totalgamescore < 40 && $year_sel > 1991){
 											echo ' in a BS Win. <br>';
 										}
@@ -760,12 +766,18 @@ printr($assoc, 0);
                                     //printr($pvqbygame, 0);
                                     $game_best_effort = array_key_first($pvqbygame);
                                     $playerbasic = get_player_basic_info($game_best_effort);
-                                    $playernumber = $playerbasic[0]['number'];
+                                    //$playernumber = $playerbasic[0]['number'];
+                                    $playernumber = get_numbers_by_season($game_best_effort);
                                     $playername = $playerbasic[0]['first'].' '.$playerbasic[0]['last'];
 
                                     // GET ALTERNATES OF THROWBACKS IF LISTED IN W_Team Table
                                     $uni_info = get_uni_info_by_team($winning_team);
-                                    $jersey_url = show_jersey_svg($winning_team, $winning_location, $uni_info[$year_sel], $playernumber);
+                                    if($playernumber->$year_sel):
+                                        $yearjerseynum = $playernumber->$year_sel;
+                                    else:
+                                        $yearjerseynum = end($playernumber);
+                                    endif;
+                                    $jersey_url = show_jersey_svg($winning_team, $winning_location, $uni_info[$year_sel], $yearjerseynum);
 
                                     $alternate_uni = ${$winning_team.'_week'};
                                     if($alternate_uni['uniform']):
@@ -778,9 +790,10 @@ printr($assoc, 0);
                                         if($altvar[1] == 'ALT'):
                                             $extrajersey = 'A';
                                         endif;
-                                        $jersey_url = show_jersey_svg($altvar[0], $extrajersey, $altvar[2], $playernumber);;
+                                        $jersey_url = show_jersey_svg($altvar[0], $extrajersey, $altvar[2], $yearjerseynum);
                                     endif;
-                                    //echo $jersey_url;
+                                    //printr($playernumber, 0);
+                                    //echo $playernumber->$year_sel;
                                     ?>
                                     <p class="text-sm">Winning Team Game MVP </p>
                                     <h5><?php echo $playername;?></h5>

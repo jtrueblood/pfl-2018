@@ -114,9 +114,7 @@
 									if ($det_year == $year){
 										$detdraft[$det_year] = array($det_att, $det_phone, $det_notes);
 									}
-								
-								
-								
+
 								endwhile;
 							else :
 							endif;

@@ -1042,37 +1042,7 @@ arsort($playerteamunique);
 				
 			</div>
 			
-			
-			<!-- WEEK ONE REMATCH GAME -->
-			<div class="col-xs-24 col-sm-12 col-md-6">
-				
-				<?php 
-					$pbgames = revenge_game();
-					
-					$labels = array('Year', 'Game', 'Outcome');	
-					tablehead('Week One Rematch Game', $labels);	
-				
-					foreach ($pbgames as $key => $value){		
-						if($key >= 1996): //we started the rematch game at the beginning of the 1996 season
-							if($value['pb_winner'] == $value['next_win']):
-								echo '<tr><td>'.$key.'</td><td>'.$value['next_win'].' over '.$value['next_loser'].'</td><td></td></tr>';
-								$stands++;
-							endif;
-							if($value['pb_winner'] == $value['next_loser']):
-								echo '<tr><td>'.$key.'</td><td>'.$value['next_win'].' over '.$value['next_loser'].'</td><td>REVENGE!</td></tr>';
-								$revenge++;
-							endif;	
-						endif;
-					}
-
-					echo $printrevenge;
-						
-					tablefoot('The Week 1 Rematch of the previous Posse Bowl began in 1996');	
-				?>
-				
-			</div>
-	
-			<!-- CAREER DURATION by POSITION-->
+            <!-- CAREER DURATION by POSITION-->
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				
 				<?php 
@@ -1095,6 +1065,61 @@ arsort($playerteamunique);
 				?>
 				
 			</div>
+
+            <!-- WEEK ONE REMATCH GAME -->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+
+                <?php
+                $pbgames = revenge_game();
+
+                $labels = array('Year', 'Game', 'Outcome');
+                tablehead('Week One Rematch Game', $labels);
+
+                foreach ($pbgames as $key => $value){
+                    if($key >= 1996): //we started the rematch game at the beginning of the 1996 season
+                        if($value['pb_winner'] == $value['next_win']):
+                            echo '<tr><td>'.$key.'</td><td>'.$value['next_win'].' over '.$value['next_loser'].'</td><td></td></tr>';
+                            $stands++;
+                        endif;
+                        if($value['pb_winner'] == $value['next_loser']):
+                            echo '<tr><td>'.$key.'</td><td>'.$value['next_win'].' over '.$value['next_loser'].'</td><td>REVENGE!</td></tr>';
+                            $revenge++;
+                        endif;
+                    endif;
+                }
+
+                echo $printrevenge;
+
+                tablefoot('The Week 1 Rematch of the previous Posse Bowl began in 1996');
+                ?>
+
+            </div>
+
+            <!-- Getting Number Twed - Having the second highest score in a give week but still losing-->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+
+                <?php
+                $mynumbertwos = get_number_twoed();
+
+                $labels = array('Season', 'Week', 'Team', 'Score', 'Lost By', 'Winner');
+                tablehead('Getting Number Twoed', $labels);
+
+                foreach ($mynumbertwos as $key => $val){
+                    $printtwos .='<tr><td>'.$val['season'].'</td>';
+                    $printtwos .='<td>'.$val['week'].'</td>';
+                    $printtwos .='<td>'.$val['team_int'].'</td>';
+                    $printtwos .='<td><strong>'.$val['points'].'</strong>-'.$val['versus_pts'].'</td>';
+                    $printtwos .='<td>'.$val['result'].'</td>';
+                    $printtwos .='<td>'.$val['versus'].'</td></tr>';
+                }
+
+                echo $printtwos;
+
+                tablefoot('Team having the second highest score in a week but still losing.');
+
+                ?>
+
+            </div>
 			
 
 			<!-- NEW SECTION -->

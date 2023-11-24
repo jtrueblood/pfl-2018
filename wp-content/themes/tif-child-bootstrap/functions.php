@@ -2905,6 +2905,16 @@ function get_drafts(){
 	return $drafts;
 }
 
+function get_player_by_pick($pickid){
+    $drafts = get_drafts();
+    foreach($drafts as $key => $value):
+        $newarray[$value['season'].'.'.$value['round'].'.'.$value['pick']] = $value;
+    endforeach;
+    //return $newarray;
+    $player = $newarray[$pickid];
+    return $player['playerid'];
+}
+
 function get_draft_number_ones() {
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_drafts where round = '01' && picknum = '01'", ARRAY_N);
@@ -3577,6 +3587,7 @@ function playerid_pfl_to_mfl(){
 	return $theids ;	
 }
 
+
 // convert MFL team id to PFL team id
 function teamid_mfl_to_name(){
 	
@@ -3893,6 +3904,11 @@ function pid_to_name($pid, $init){
     return $t;
 }
 
+function pid_to_position($pid){
+    $pos = substr($pid, -2);
+    return $pos;
+}
+
 // results for team by week
 function get_team_results_by_week($team, $weekid){
 	global $wpdb;
@@ -3943,6 +3959,27 @@ function get_player_score_by_week($pid, $weekid){
         'venue' => $query[0][9],
     );
     return $clean;
+}
+
+// get player leaders by team and position
+function get_player_leaders_by_team($teamid, $position){
+    $playersall = get_players_assoc();
+    foreach ($playersall as $key => $val) {
+        if($val):
+            $careerstats_team[$key] = get_player_career_stats_team($key, $teamid);
+        endif;
+    }
+    foreach ($careerstats_team as $k => $v):
+        $pos = pid_to_position($k);
+        if($v['points']):
+            if($position == $pos):
+                $output[$k] = $v['points'];
+            endif;
+        endif;
+    endforeach;
+    arsort($output);
+
+    return $output;
 }
 
 // boxscore information by week
@@ -4063,7 +4100,7 @@ function get_team_score_by_week($weekid){
             $boxscoreweek[$key] = $revisequery[0][4];
         endif;
     }
-    arsort($boxscoreweek);
+   // arsort($boxscoreweek);
     return $boxscoreweek;
 }
 
@@ -4130,7 +4167,6 @@ function ordinal($number) {
 }
 
 // get or set a general transient from any array.  Set expiration in seconds.
-
 function get_or_set($array, $name, $seconds){
     $transient = get_transient( $array.'_trans' );
     if( ! empty( $transient ) ) {
@@ -5580,5 +5616,154 @@ function get_the_bench($year, $week, $teamid){
     return $teamrosters[$teamid];
 }
 
+//check if a team won on a specific week
+function check_for_win($team, $weekid){
+    global $wpdb;
+    $getdata = $wpdb->get_results("select * from wp_team_$team where '$weekid' like id", ARRAY_N);
+    $wincheck = $getdata[0][9];
+    $check = ($wincheck > 0) ? 1 : 0;
+    return $check;
+}
 
+// find the second highest value in an array (used on number-2s)
+function findSecondLargest($arr){
+    sort($arr);
+    $secondLargest = $arr[sizeof($arr)-2];
+    return $secondLargest;
+}
+
+// function that takes an associative array and a value, and returns an array of keys where the items in the associative array match the given value.
+function findKeysByValue($array, $searchValue) {
+    $matchingKeys = array();
+    foreach ($array as $key => $value) {
+        if ($value === $searchValue) {
+            $matchingKeys[] = $key;
+        }
+    }
+    return $matchingKeys;
+}
+
+// returns logic for number twoed table on 'tables' page
+function get_number_twoed() {
+    $theweeks = the_weeks();
+    $thefinal = [];
+    $justteam = [];
+
+    foreach ($theweeks as $key) {
+        $teamscore = get_team_score_by_week($key);
+
+        if (!empty($teamscore)) {
+            $secondvalue = findSecondLargest($teamscore);
+            $getkeys = findKeysByValue($teamscore, $secondvalue);
+            $newarray[$key][$secondvalue] = $getkeys;
+
+            foreach ($getkeys as $team) {
+                if (check_for_win($team, $key) === 0) {
+                    $final = get_team_results_by_week($team, $key);
+                    $thefinal[$key] = $final[$key];
+                    $justteam[$key] = $team;
+                }
+            }
+        }
+    }
+
+    return $thefinal;
+}
+
+// Check if a game was a number two event
+function check_for_number_two($weekid, $teamid){
+    $thetwos = get_number_twoed();
+    $checktwo = $thetwos[$weekid];
+        if($teamid == $checktwo['team_int']):
+            $return = $teamid.' got Number Two-ed!<br>';
+        endif;
+return $return;
+}
+
+// for positions difference page
+function position_difference($weekid) {
+    $teamscore = get_boxscore_by_week($weekid);
+    if($teamscore):
+        foreach ($teamscore as $team => $array):
+            $justboxes[$team] = array(
+                'versus' => $array['versus'],
+                'players' => array(
+                    $array['qb1']['pos'] => $array['qb1']['points'],
+                    $array['rb1']['pos'] => $array['rb1']['points'],
+                    $array['wr1']['pos'] => $array['wr1']['points'],
+                    $array['pk1']['pos'] => $array['pk1']['points'],
+                )
+            );
+        endforeach;
+
+        foreach ($justboxes as $key => $value):
+            $matchups[$key] = array(
+                'thisteam' => $value['players'],
+                'versus' => $justboxes[$value['versus']]['players']
+            );
+        endforeach;
+
+        foreach ($matchups as $k => $v):
+            $finals[$k] = array(
+                'QB' => $v['thisteam']['QB'] - $v['versus']['QB'],
+                'RB' => $v['thisteam']['RB'] - $v['versus']['RB'],
+                'WR' => $v['thisteam']['WR'] - $v['versus']['WR'],
+                'PK' => $v['thisteam']['PK'] - $v['versus']['PK'],
+            );
+        endforeach;
+    endif;
+    return $finals;
+}
+
+function single_team_player_difference($theteam){
+    $theweeks = the_weeks();
+    foreach ($theweeks as $key => $week):
+        $getinfo[$week] = position_difference($week);
+    endforeach;
+
+    foreach ($getinfo as $week => $teams):
+        $oneteam[$week] = $teams[$theteam];
+    endforeach;
+    return $oneteam;
+
+}
+
+function team_output($teamid) {
+    $printout = single_team_player_difference($teamid);
+    foreach ($printout as $key => $value):
+        $qb_plusmin[$key] = $value['QB'];
+        $rb_plusmin[$key] = $value['RB'];
+        $wr_plusmin[$key] = $value['WR'];
+        $pk_plusmin[$key] = $value['PK'];
+    endforeach;
+
+    $qb_sum = array_sum($qb_plusmin);
+    $rb_sum = array_sum($rb_plusmin);
+    $wr_sum = array_sum($wr_plusmin);
+    $pk_sum = array_sum($pk_plusmin);
+
+    $all_pos_output = array(
+        'QB' => $qb_sum,
+        'RB' => $rb_sum,
+        'WR' => $wr_sum,
+        'PK' => $pk_sum,
+    );
+    return $all_pos_output;
+}
+
+function get_or_set_comps(){
+    $transient = get_transient( 'comps_pfl_trans' );
+    if( ! empty( $transient ) ) {
+        echo '<script>console.log("Comps - From Transient");</script>';
+        return $transient;
+    } else {
+        $teamlist = teamlist();
+        foreach ($teamlist as $team => $name):
+            $comps[$team] = team_output($team);
+        endforeach;
+        set_transient( 'comps_pfl_trans', $comps, 600000 );
+        echo '<script>console.log("Comps - Transient Set");</script>';
+        return $comps;
+    }
+}
 

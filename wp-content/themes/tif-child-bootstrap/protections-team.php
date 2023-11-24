@@ -74,12 +74,32 @@ $getteam = $_GET['TEAM'];
                                             echo '<h4>'.$year.'</h4>';
                                         echo '</div>';
                                         foreach ($value as $k => $v):
+                                        $lastyear = $year - 1;
 
                                         $team = $v['team'];
                                         $first = $v['first'];
                                         $last = $v['last'];
                                         $position = $v['position'];
                                         $playerid = $v['playerid'];
+                                        $lastrank = get_player_season_rank ($playerid, $lastyear);
+                                        $thisrank = get_player_season_rank ($playerid, $year);
+
+                                        $lastcolor = '' ;
+                                        $thiscolor = '' ;
+
+                                        if($lastrank <= 5):
+                                            $lastcolor = 'greentext' ;
+                                        endif;
+                                        if($lastrank >= 20):
+                                            $lastcolor = 'redtext' ;
+                                        endif;
+                                        if($thisrank <= 5):
+                                            $thiscolor = 'greentext' ;
+                                        endif;
+                                        if($thisrank >= 20):
+                                            $thiscolor = 'redtext' ;
+                                        endif;
+
                                         if($i == 3):
                                             echo '<div class="col-xs-2"></div>';
                                         endif;
@@ -94,6 +114,9 @@ $getteam = $_GET['TEAM'];
                                                         $image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));
                                                         $playerimg = $image_attributes[0];
                                                         echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position;
+                                                        echo '<div class="ranktext">
+                                                            <div class="'.$lastcolor.' text-bold">POS RANK Last: '.$lastrank.'</div><div class="'.$thiscolor.' text-bold">POS RANK This: '.$thisrank.'</div>';
+                                                        echo '</div>';
                                                      ?>
                                                     </div>
                                                 </div>

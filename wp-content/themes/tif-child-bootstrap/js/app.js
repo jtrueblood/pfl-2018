@@ -50,6 +50,14 @@ jQuery(document).ready(function($) {
 	    "search": false
 	} );
 
+	$('.week-probability-table').DataTable( {
+		"order": [[ 0, "asc" ]],
+		"paging":   false,
+		"info":     false,
+		"search": false,
+		"aaSorting": []
+	} );
+
 	//Transactions Table
 	$('.transactions-table').DataTable( {
 		"order": [[ 1, "desc" ],[ 2, "desc" ]],

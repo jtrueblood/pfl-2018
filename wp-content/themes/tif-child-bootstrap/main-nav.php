@@ -114,13 +114,15 @@
                                                 <li class="<?php ifbodyclass (1722, 'active-link'); ?>"><a href="/timeline">Timeline</a></li>
 												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>
                                                 <li class="<?php ifbodyclass (1676, 'active-link'); ?>"><a href="/head-to-head">Head to Head Matrix</a></li><li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
-												<li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>
+                                                <li class="<?php ifbodyclass (1928, 'active-link'); ?>"><a href="/playoff-probability">Playoff Probability</a></li>
+                                                <li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>
                                                 <li class="<?php ifbodyclass (1502, 'active-link'); ?>"><a href="/uniforms">Unis & Helmets</a></li>
                                                 <li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
 												<li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy-2021">Draft Strategy 2021</a></li>
                                                 <li class="<?php ifbodyclass (1678, 'active-link'); ?>"><a href="/transactions">Transactions</a></li>
                                                 <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202201">Scorigami</a></li>
-
+                                                <li class="<?php ifbodyclass (1937, 'active-link'); ?>"><a href="/trade-analyzer?TRADE=130">Trade Analyzer</a></li>
+                                                <li class="<?php ifbodyclass (1939, 'active-link'); ?>"><a href="/position-difference">Position Difference</a></li>
 											</ul>
 									</li>
 									

@@ -1,7 +1,7 @@
 <?php
 /*
- * Template Name: Get Probowl Player Boxcores
- * Description: Get
+ * Template Name: Build Something
+ * Description: Stuff Goes Here
  */
  ?>
 
@@ -10,7 +10,6 @@
 <?php
 
  ?>
-
 <div class="boxed">
 			
         <!--CONTENT CONTAINER-->
@@ -18,32 +17,26 @@
 
             <!--Page content-->
             <div id="page-content">
+                <H3>Build Something Ideas</H3>
+                <p>This </p>
 
                 <?php
-                //printr($new['2001BradQB'],0);
-                //printr($getseasonids , 0);
-                //printr($rosterarray, 0);
-                //printr($players, 0);
-                //printr($teamrosters, 0);
+
                 ?>
 
-                <div class="col-xs-12">
-                        <div class="panel">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><?php echo $teamid; ?> History Timeline</h3>
-
-                            </div>
-                        </div>
-                </div>
             </div>
-
-            </div><!--End page content-->
-
-        </div><!--END CONTENT CONTAINER-->
+        </div>
+</div>
 
 
-    <?php include_once('main-nav.php'); ?>
-    <?php include_once('aside.php'); ?>
+
+    </div><!--End page content-->
+
+</div><!--END CONTENT CONTAINER-->
+
+
+<?php include_once('main-nav.php'); ?>
+<?php include_once('aside.php'); ?>
 
 </div>
 

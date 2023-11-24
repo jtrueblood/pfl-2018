@@ -272,6 +272,18 @@ img[src='Error.src'] {
 a.player-link:hover {
   text-decoration: underline;
 }
+.ranktext {
+  position: absolute;
+  top: 17px;
+  right: 30px;
+  display: block;
+}
+.greentext {
+  color: green;
+}
+.redtext {
+  color: red;
+}
 .greencell {
   background-color: #deead3;
 }

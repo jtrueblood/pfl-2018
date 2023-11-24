@@ -501,7 +501,7 @@ if($week >= 15):
     }
 endif;
 
-array_pop($insert_player);
+//array_pop($insert_player);
 
 // resort week data indexed by player id
 

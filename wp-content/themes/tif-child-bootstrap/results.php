@@ -22,6 +22,10 @@ $get_update_pdf = get_field('update_pdfs', 'options');
 foreach ($get_update_pdf as $val){
 	$update_pdf[$val['week_id']] = $val['pdf_file'];
 }
+$get_weekly_notes = get_field('week_notes', 'options');
+foreach ($get_weekly_notes as $val){
+    $update_notes[$val['week_id']] = $val['weekly_note'];
+}
 
 global $wpdb;
 
@@ -272,7 +276,7 @@ printr($assoc, 0);
 				
 				<!--Page content-->
 				<div id="page-content">
-								
+
 					
 						
 						<div class="col-xs-24 col-sm-12 col-md-8">	
@@ -934,8 +938,20 @@ printr($assoc, 0);
 								<p>(flipper)</p>
 							</div>
 						</div>
-						
-					
+
+                        <?php if($update_notes[$weekvar]): ?>
+                            <div class="panel panel-dark">
+                                <div class="panel-body">
+                                    <div id="weeklynotes" style="">
+                                        <?php echo $update_notes[$weekvar]; ?>
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    <p>Week Notes</p>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
 					</div>
 					
 					<div class="clear"></div>
@@ -969,15 +985,7 @@ printr($assoc, 0);
 						</div>	
 						
 
-<!--
-						<div class="col-xs-24 col-md-12">
-							<div class="panel panel-dark">
-									<div class="panel-body">
-										<div id="standingschart" style="height: 300px; margin: 0 auto"></div>
-									</div>
-							</div>
-						</div>
--->
+
 			
 					
 			</div>
@@ -1105,6 +1113,8 @@ printr($assoc, 0);
 						endif;
 							
 						//printr($standingweekteam, 0);
+
+
 						?>						
 						
 					

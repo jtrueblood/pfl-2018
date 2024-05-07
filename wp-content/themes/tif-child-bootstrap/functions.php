@@ -76,6 +76,9 @@ function printr($data, $die) {
 	   echo die();
 	   echo exit(0);
    endif;
+   if ($die == 2):
+       var_dump($data);
+   endif;
 }
 
 /* clean print_r */
@@ -113,9 +116,7 @@ function get_attachment_url_by_slug( $slug ) {
   return $header ? wp_get_attachment_url($header->ID) : '';
 }
 
-
 /* Get Single txt file from Cache and store as array.  0 no print, 1 for print on page */
-
 function get_cache($file, $print){
 	$cache = 'http://pfl-data.local/wp-content/themes/tif-child-bootstrap/cache/'.$file.'.txt';
 	$get = file_get_contents($cache, FILE_USE_INCLUDE_PATH);
@@ -138,7 +139,6 @@ function simple_cache($file){
 	$data = unserialize($get); 
 	$_SESSION[$file] = $data;
 }
-
 
 /* Get Player data from cache */
 
@@ -546,6 +546,8 @@ function getallteamids($theweek, $matchup, $franchise){
 	$teamid = $theweek['weeklyResults']['matchup'][$matchup]['franchise'][$franchise]['id'];
 	return $teamid;
 }
+
+
 
 /*
 function getallteamcache ($team){
@@ -1011,7 +1013,8 @@ function get_trades(){
 	
 	foreach ($get as $key => $revisequery){
 		$trades[] = array(
-			'year' => $revisequery[1], 
+            'id' => $revisequery[0],
+            'year' => $revisequery[1],
 			'team1' => $revisequery[2], 
 			'players1' => $revisequery[3], 
 			'picks1' => $revisequery[4], 
@@ -1021,7 +1024,10 @@ function get_trades(){
 			'picks2' => $revisequery[8], 
 			'protections2' => $revisequery[9],
 			'notes' => $revisequery[10],
-			'when' => $revisequery[11]
+			'when' => $revisequery[11],
+            'tradewinner' => $revisequery[12],
+            'tradeloser' => $revisequery[13],
+            'tradewinpoints' => $revisequery[14]
 		);
 	}
 	
@@ -1101,6 +1107,115 @@ function get_protections_player($pid){
 	}
 	
 	return $protections;
+}
+
+// returns an array of the manner in which a player was acquired
+function how_player_was_acquired($playerid, $season, $teamid){
+    // check for protection
+    $getprotections = get_protections_player($playerid);
+    if($getprotections):
+        foreach($getprotections as $key => $value):
+            $protections[$value['year']] = $value['team'];
+        endforeach;
+        if($protections[$season]):
+            $protected = 'Protected';
+        endif;
+    endif;
+
+    // check for drafted
+    $getdrafts = get_drafts_by_year($season);
+    foreach ($getdrafts as $key => $value):
+        $drafts[] = $value['playerid'];
+    endforeach;
+    if(in_array($playerid, $drafts)):
+        $drafted = 'Drafted';
+    endif;
+
+    // check for traded
+    $gettrades = get_trade_by_player($playerid);
+    $seasontrade = $gettrades[$season];
+    if($seasontrade):
+        foreach ($seasontrade as $key => $value):
+            $traded_to_teams[] = $value['traded_to_team'];
+        endforeach;
+    endif;
+    //
+    //printr($traded_to_teams, 0);
+    //echo '<script>console.log("'.$seasontrade.' - WAS TRADED");</script>';
+    if($traded_to_teams):
+        foreach ($traded_to_teams as $key => $value):
+            if($value == $teamid):
+                $traded = 'Traded';
+            endif;
+        endforeach;
+    endif;
+
+    if($traded == '' && $protected == '' && $drafted == ''):
+        $freeagent = 'Free Agent';
+    endif;
+
+    // else was picked up as a free agent
+    //return $seasontrade;
+    $returnarray = array('traded' => $traded,'protected' => $protected,'drafted' => $drafted,'freeagent' => $freeagent);
+    $returnarray = array_filter($returnarray);
+
+    return $returnarray;
+}
+
+//gets all players from the team results by teamid
+function get_just_players_by_team($teamid){
+    $teamresults = get_team_results_expanded_new($teamid);
+    foreach ($teamresults as $key => $value):
+        $getallplayers[$key] = array(
+            'QB1' => $value['qb1'],
+            'RB1' => $value['rb1'],
+            'WR1' => $value['wr1'],
+            'PK1' => $value['pk1'],
+            'Overtime' => array(
+                'QB2' => $value['qb2'],
+                'RB2' => $value['rb2'],
+                'WR2' => $value['wr2'],
+                'PK2' => $value['pk2']
+            )
+        );
+    endforeach;
+    return $getallplayers;
+}
+
+function get_overtime_games_players($teamid, $season){
+    $teamresults = get_just_players_by_team($teamid);
+    foreach ($teamresults as $key => $value):
+        $year = substr($key, 0, 4);
+        if($year == $season):
+            if($value['Overtime']['QB2'] || $value['Overtime']['RB2'] || $value['Overtime']['WR2'] || $value['Overtime']['PK2']):
+                $otarray[$key] = $value['Overtime'];
+            endif;
+        endif;
+    endforeach;
+    return $otarray;
+}
+
+function count_the_nones($teamid, $season){
+    $teamplayers = get_just_players_by_team($teamid);
+    $i = 0;
+    foreach ($teamplayers as $key => $value):
+        $year = substr($key, 0, 4);
+        if($year == $season):
+            if($value['QB1'] == 'None' || $value['QB1'] == '' || $value['QB1'] == NULL):
+                $i++;
+            endif;
+            if($value['RB1'] == 'None' || $value['RB1'] == '' || $value['RB1'] == NULL):
+                $i++;
+            endif;
+            if($value['WR1'] == 'None' || $value['WR1'] == '' || $value['WR1'] == NULL):
+                $i++;
+            endif;
+            if($value['PK1'] == 'None' || $value['PK1'] == '' || $value['PK1'] == NULL):
+                $i++;
+            endif;
+        endif;
+    endforeach;
+    return $i;
 }
 
 // get a standing table by year
@@ -1640,6 +1755,11 @@ global $wpdb;
 	return $ringofhonor;
 }
 
+//get all awards by year
+function get_all_awards(){
+    $mvp = get_award('MVP', 8);
+
+}
 
 // gets the weekly stats from the player table
 function get_player_data($pid) {
@@ -1740,9 +1860,8 @@ function get_player_years_played($pid) {
 	foreach ($getplayer as $key => $revisequery){
 		$player_the_years[] = $revisequery[0];
 	}
-	
-	return array_unique($player_the_years);
-	
+
+    return array_unique($player_the_years);
 }
 
 // gets the weekly stats from the player table
@@ -1764,23 +1883,32 @@ function get_raw_player_data_team($pid, $team) {
 			'location' => $revisequery[9]
 		);
 	}
-	
 	return $playerstats;
-	
+}
+
+function get_player_points_team_season($pid, $team, $season) {
+    global $wpdb;
+    $getplayer = $wpdb->get_results("select * from $pid where team = '$team' AND year = '$season'", ARRAY_N);
+
+    foreach ($getplayer as $key => $revisequery):
+        $playerstats[$revisequery[0]] = $revisequery[3];
+    endforeach;
+
+    return $playerstats;
 }
 
 
 function get_player_basic_info($pid){
 	global $wpdb;
 	$getplayer = $wpdb->get_results("select * from wp_players where p_id = '$pid'", ARRAY_N);
-	
+	$rookieyear = get_player_rookie_year($pid);
 	foreach ($getplayer as $key => $revisequery){
 		$playerinfo[] = array( 
 			'pid' => $revisequery[0],
 			'first' => $revisequery[1], 
 			'last' => $revisequery[2], 
 			'position' => $revisequery[3],  
-			'rookie' => $revisequery[4],
+			'rookie' => $rookieyear, // revised in 2023 to include wp_rosters
 			'mflid' => $revisequery[5],
 			'height' => $revisequery[6],
 			'weight' => $revisequery[7],
@@ -2734,7 +2862,10 @@ function get_player_career_stats_team($pid, $team){
 	}
 }
 
-
+function get_player_career_points($pid){
+    $stats = get_player_career_stats($pid);
+    return $stats['points'];
+}
 
 // gets just the win=1 loss=0 for a particular team by week
 function just_team_record($team, $week){
@@ -2915,6 +3046,16 @@ function get_player_by_pick($pickid){
     return $player['playerid'];
 }
 
+function get_draft_player_team ($pid, $season){
+    global $wpdb;
+    $get = $wpdb->get_results("select * from wp_drafts where year = '$season' && playerid = '$pid'", ARRAY_N);
+
+    foreach ($get as $getdraft) {
+        $teampick = $getdraft[6];
+    }
+    return $teampick;
+}
+
 function get_draft_number_ones() {
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_drafts where round = '01' && picknum = '01'", ARRAY_N);
@@ -3067,7 +3208,122 @@ function probowl_boxscores_player_year($year){
 	
 }
 
+function insert_roster($pid, $teamid, $season){
+    global $wpdb;
+    $dbid = $pid.$season.$teamid;
+    $wpdb->insert(
+        'wp_rosters',
+        array(
+            'id' => $dbid,
+            'pid' => $pid,
+            'year' => $season,
+            'team' => $teamid
+        ),
+        array(
+            '%s','%s','%d','%s'
+        )
+    );
+}
 
+function get_all_rosters(){
+    global $wpdb;
+    $get = $wpdb->get_results("select * from wp_rosters", ARRAY_N);
+
+    foreach ($get as $revisequery){
+        $rosters[$revisequery[0]] = array(
+            'id' => $revisequery[0],
+            'pid' => $revisequery[1],
+            'year' => $revisequery[2],
+            'team' => $revisequery[3]
+        );
+    }
+
+    return $rosters;
+}
+
+function get_rostered_player($pid){
+    $rosters = get_all_rosters();
+    foreach($rosters as $key => $value):
+        if($value['pid'] == $pid):
+            $rostered[$key] = $value;
+        endif;
+    endforeach;
+    return $rostered;
+}
+
+function get_rostered_player_by_season($pid, $season){
+    $rosters = get_all_rosters();
+    foreach($rosters as $key => $value):
+        if($value['pid'] == $pid && $value['year'] == $season):
+            $rostered[$key] = $value;
+        endif;
+    endforeach;
+    return $rostered;
+}
+
+//This returns the teams that players played a game
+function get_player_teams_by_season($pid){
+    $years = the_seasons();
+    foreach ($years as $season):
+        $playerdata = get_player_season_stats($pid, $season);
+        if ($playerdata['teams'] != null) {
+            $teams[$season] = array_unique($playerdata['teams']);
+        }
+    endforeach;
+    foreach($teams as $key => $value):
+        foreach($value as $team):
+            insert_roster($pid, $team, $key);
+        endforeach;
+    endforeach;
+    return $teams;
+}
+
+// This returns teams for seasons where players were ROSTERED.  Not quite the same as the function get_player_teams_by_season
+function get_player_teams_rostered_by_season ($pid){
+    $rostered = get_rostered_player($pid);
+    foreach($rostered as $key => $value):
+        $teams[$value['year']][] = $value['team'];
+    endforeach;
+    return $teams;
+}
+
+//This checks if a player is listed as rostered in a specific week.
+//If they played that week it will add them to the wp_rostered table.
+
+function check_player_rostered($pid, $year){
+    global $wpdb;
+    $get_player_rostered = $wpdb->get_results("select * from wp_rosters where year = $year && pid = '$pid';", ARRAY_N);
+    $yearsplayed = get_player_years_played($pid);
+    $seasonsplayed = get_player_teams_by_season($pid);
+    if(in_array($year, $yearsplayed)):
+        $played = 'played';
+    else:
+        $played = 'not played';
+    endif;
+    if($get_player_rostered):
+        $rostered = 'rostered';
+    else:
+        $rostered =  'not rostered';
+    endif;
+    if($played == 'played' & $rostered == 'not rostered'):
+        foreach($seasonsplayed[$year] as $team):
+            insert_roster($pid, $team, $year);
+        endforeach;
+        $inserted = 'inserted';
+    endif;
+    return $played.' '.$rostered.' '.$inserted;
+}
+
+// This new function created in 2023 accounts for the fact that players may have been on teams but not played at all
+// before the year listed in their PID.  This leverages the new wp_rosters table which is more accurate and flexible
+// in defining the players rookie year.  No need to change PIDs of players.
+function get_player_rookie_year($pid){
+    $rostered = get_rostered_player($pid);
+    if($rostered):
+        $rook = reset($rostered);
+    endif;
+    return $rook['year'];
+}
 
 function get_player_teams_season($pid){
 	$player = get_player_career_stats($pid);
@@ -3241,6 +3497,20 @@ function get_allleaders(){
 
 return $leaders_all;
 
+}
+
+// get all rosters by season
+function get_rosters($year, $team){
+
+    global $wpdb;
+    $get_rosters = $wpdb->get_results("select * from wp_rosters where year = '$year' AND team = '$team'", ARRAY_N);
+
+    foreach ($get_rosters as $revisequery){
+        $pos = pid_to_position($revisequery[1]);
+        $rosters_all[$pos][] = $revisequery[1];
+    }
+
+    return $rosters_all;
 }
 
 function get_player_career_rank($pid){
@@ -3505,6 +3775,8 @@ $printit .= '<div class="panel-heading">';
 						if($pid):
 							$getstats = get_player_season_stats($pid, $year);
 							$seasonpoints = $getstats['points'];
+                        else:
+                            $seasonpoints = 'Never Played';
 						endif;	
 						$printit .= '<td class="text-center"><span class="">'.$position.'</span></td>';
 						$printit .= '<td class="text-center"><span class="">'.$seasonpoints.'</span></td>';
@@ -3525,6 +3797,35 @@ echo $printit;
 
 }
 
+// get list of players who never played in the PFL but were at one point activly rostered.
+function get_non_pfl_players(){
+    global $wpdb;
+    $get = $wpdb->get_results("select * from wp_rosters_nopid", ARRAY_N);
+    
+    foreach ($get as $getplayers){
+        $players[$getplayers[0]] = array(
+            'id' => $getplayers[0],
+            'firstname' => $getplayers[1],
+            'lastname' => $getplayers[2],
+            'position' => $getplayers[3],
+            'team' => $getplayers[4]
+        );
+    }
+    return $players;
+}
+
+function nonpid_to_name($nonpid, $var){
+    $players = get_non_pfl_players();
+    $player = $players[$nonpid];
+    if($var == 0):
+        $printname = $player['firstname'].' '.$player['lastname'];
+    endif;
+    if($var == 1):
+        $printname = $player['firstname'].' '.$player['lastname'].' *';
+    endif;
+    return $printname;
+}
+
 // Points	
 function get_season_leaders($yearval){
 	
@@ -3543,7 +3844,6 @@ function get_season_leaders($yearval){
 	}
 
 return $season_leaders_all;
-
 }
 
 
@@ -3896,10 +4196,20 @@ function get_player_name($playerid){
 
 function pid_to_name($pid, $init){
     $info = get_player_name($pid);
+    $pos = pid_to_position($pid);
+    // Full Name
+    if($init == 0):
+        $t = $info['first'].' '.$info['last'];
+    endif;
+    // F. Name
     if($init == 1):
         $t = substr($info['first'], 0, 1).'. '.$info['last'];
-    else:
-        $t = $info['first'].' '.$info['last'];
+    endif;
+    // Full Name, QB
+    if($init == 2):
+        if($pos):
+            $t = $info['first'].' '.$info['last'].', '.$pos;
+        endif;
     endif;
     return $t;
 }
@@ -4204,6 +4514,14 @@ function format_draft_pick($pickvar){
 		$ex = explode('.', $pickvar);
 		echo $ex[0].' '.ordinal($ex[1]).' Round Pick ('.$ex[1].'.'.$ex[2].')<br/>';
 	}
+}
+
+function format_draft_pick_return($pickvar){
+    if($pickvar != ''){
+        $ex = explode('.', $pickvar);
+        $output = $ex[0].' '.ordinal($ex[1]).' Round Pick ('.$ex[1].'.'.$ex[2].')<br/>';
+    }
+    return $output;
 }
 
 //get values from PVQ table and sort by player id
@@ -5159,6 +5477,18 @@ function teams_for_mfl_history(){
             '0008' => 'HAT',
             '0009' => 'CMN',
             '0010' => 'BUL'
+        ),
+        2023 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
         )
     );
     return $mfl_team_id_history;
@@ -5726,6 +6056,21 @@ function single_team_player_difference($theteam){
     endforeach;
     return $oneteam;
 
+}
+
+function print_array_as_csv($die, $team, $pos){
+    $top_team_qb_test = get_player_leaders_by_team($team, $pos);
+    $i = 0;
+    foreach ($top_team_qb_test as $playerid => $points):
+        if($i < $die):
+            $string .= pid_to_name($playerid, 1) . ', ';
+        else:
+            break;
+        endif;
+        $i++;
+    endforeach;
+    rtrim($string ,", ");
+    return $string;
 }
 
 function team_output($teamid) {

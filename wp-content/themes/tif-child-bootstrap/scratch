@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<script src="https://unpkg.com/@api.video/player-sdk" defer></script>
+
+<style>
+
+.video-container {
+
+width: 960px;
+
+height: 480px;
+
+overflow: hidden;
+
+}
+
+
+
+.video-container iframe {
+
+width: 960px;
+
+height: 480px;
+
+}
+
+
+
+.video-container.alt {
+
+width: 300px;
+
+height: 600px;
+
+overflow: hidden;
+
+position: relative;
+
+}
+
+
+
+.video-container.alt iframe {
+
+width: 1920px;
+
+height: 600px;
+
+left: -800px; /* Crop X px from the left*/
+
+position: absolute;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="video-container" id="videoContainer">
+
+<iframe
+
+src="https://embed.api.video/vod/vi4aOlUuHK478gksm7hF2dW9"
+
+frameborder="0"
+
+allowfullscreen
+
+autoplay
+
+></iframe>
+
+</div>
+
+
+
+<button onclick="toggleStyle()">Switch</button>
+
+<!-- buttons that call player methods to control the video playback -->
+
+<button onclick="javascript:player.play()" id="play-btn">Play</button>
+
+<button onclick="javascript:player.pause()" id="pause-btn" disabled>Pause</button>
+
+<button onclick="javascript:player.mute()">Mute</button>
+
+<button onclick="javascript:player.unmute()">Unmute</button>
+
+
+
+<script>
+
+let player;
+
+
+
+function toggleStyle() {
+
+const videoContainer = document.getElementById("videoContainer");
+
+videoContainer.classList.toggle("alt");
+
+}
+
+
+
+window.onload = function () {
+
+// attach the sdk to the existing player
+
+player = new PlayerSdk("#videoContainer iframe");
+
+
+
+// when the 'play' event is received, disable the 'play' button and enable the 'pause' button
+
+player.addEventListener("play", function () {
+
+document.getElementById("play-btn").disabled = true;
+
+document.getElementById("pause-btn").disabled = false;
+
+});
+
+
+
+// when the 'pause' event is received, disable the 'pause' button and enable the 'play' button
+
+player.addEventListener("pause", function () {
+
+document.getElementById("play-btn").disabled = false;
+
+document.getElementById("pause-btn").disabled = true;
+
+});
+
+player.hideControls();
+
+player.setChromeless();
+
+};
+
+</script>
+
+</body>
+
+</html>

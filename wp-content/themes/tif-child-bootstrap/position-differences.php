@@ -8,22 +8,6 @@
 <?php get_header(); ?>
 
 <?php
-function print_array_as_csv($die, $team, $pos){
-    $top_team_qb_test = get_player_leaders_by_team($team, $pos);
-    $i = 0;
-    foreach ($top_team_qb_test as $playerid => $points):
-        if($i < $die):
-            $string .= pid_to_name($playerid, 1) . ', ';
-        else:
-            break;
-        endif;
-        $i++;
-    endforeach;
-    rtrim($string ,", ");
-    return $string;
-}
-
-
 
 ?>
 <div class="boxed">

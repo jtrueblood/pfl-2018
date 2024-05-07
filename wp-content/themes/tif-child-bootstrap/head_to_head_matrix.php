@@ -8,7 +8,7 @@ get_header();
 
 $teamlist = teamlist();
 
-//printr($pep_vs, 0);
+printr($pep_vs, 0);
 
 function get_head_to_matrix(){
     global $wpdb;
@@ -22,6 +22,8 @@ $tableget = get_head_to_matrix();
 foreach ($tableget as $value):
     $matrix_list[$value[0]] = json_decode($value[1]);
 endforeach;
+
+//printr($matrix_list, 0);
 
 foreach ($teamlist as $k => $name):
     foreach ($matrix_list as $key => $value):
@@ -58,6 +60,7 @@ arsort($cleanedup);
                                     <tr>
                                         <th class="text-center"></th>
                                         <?php
+                                        ksort($cleanedup);
                                         foreach($cleanedup as $key => $value):
                                             echo '<th class="text-center">'.$key.'</th>';
                                         endforeach;
@@ -66,87 +69,16 @@ arsort($cleanedup);
                                 </thead>
                                 <tbody>
                                 <?php
+                                    ksort($cleanedup);
+                                    //printr($cleanedup, 0);
 
                                     foreach($cleanedup as $key => $value):
                                         //arsort($value);
                                         echo '<tr>';
                                             echo '<td class="text-bold">'.$key.'</td>';
-                                                if($value['PEP']):
-                                                echo '<td class="text-center">'.$value['PEP'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['WRZ']):
-                                                echo '<td class="text-center">'.$value['WRZ'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['BUL']):
-                                                echo '<td class="text-center">'.$value['BUL'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['ETS']):
-                                                    echo '<td class="text-center">'.$value['ETS'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['TSG']):
-                                                echo '<td class="text-center">'.$value['TSG'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-
-
-                                                if($value['SNR']):
-                                                echo '<td class="text-center">'.$value['SNR'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['CMN']):
-                                                echo '<td class="text-center">'.$value['CMN'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['PHR']):
-                                                echo '<td class="text-center">'.$value['PHR'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['HAT']):
-                                                echo '<td class="text-center">'.$value['HAT'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
 
                                                 if($value['ATK']):
                                                 echo '<td class="text-center">'.$value['ATK'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['DST']):
-                                                echo '<td class="text-center">'.$value['DST'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['SON']):
-                                                echo '<td class="text-center">'.$value['SON'].'</td>';
-                                                else :
-                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
-                                                endif;
-
-                                                if($value['RBS']):
-                                                echo '<td class="text-center">'.$value['RBS'].'</td>';
                                                 else :
                                                     echo '<td class="text-center" style="background-color: #ddd;"></td>';
                                                 endif;
@@ -157,11 +89,84 @@ arsort($cleanedup);
                                                     echo '<td class="text-center" style="background-color: #ddd;"></td>';
                                                 endif;
 
+                                                if($value['BUL']):
+                                                    echo '<td class="text-center">'.$value['BUL'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['CMN']):
+                                                echo '<td class="text-center">'.$value['CMN'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['DST']):
+                                                echo '<td class="text-center">'.$value['DST'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['ETS']):
+                                                echo '<td class="text-center">'.$value['ETS'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['HAT']):
+                                                echo '<td class="text-center">'.$value['HAT'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
                                                 if($value['MAX']):
                                                 echo '<td class="text-center">'.$value['MAX'].'</td>';
                                                 else :
                                                     echo '<td class="text-center" style="background-color: #ddd;"></td>';
                                                 endif;
+
+                                                if($value['PEP']):
+                                                echo '<td class="text-center">'.$value['PEP'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['PHR']):
+                                                echo '<td class="text-center">'.$value['PHR'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['RBS']):
+                                                echo '<td class="text-center">'.$value['RBS'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['SNR']):
+                                                echo '<td class="text-center">'.$value['SNR'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['SON']):
+                                                echo '<td class="text-center">'.$value['SON'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['TSG']):
+                                                echo '<td class="text-center">'.$value['TSG'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
+                                                if($value['WRZ']):
+                                                    echo '<td class="text-center">'.$value['WRZ'].'</td>';
+                                                else :
+                                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                                endif;
+
                                         echo '</tr>';
                                     endforeach;
                                 ?>

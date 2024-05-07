@@ -18,8 +18,9 @@ $twoseed = $_GET['S2'];
 $threeseed = $_GET['S3'];
 $fourseed = $_GET['S4'];
 
-$mflteams = teams_for_mfl_history();
+$mflteams = teams_for_mfl_history(); // make sure to update the teams list array in this function each season
 $getyearteams = $mflteams[$year];
+
 foreach ($getyearteams as $key => $value):
     $string = strval($key);
     $flipkeys[$value] = $string;
@@ -38,7 +39,7 @@ function get_score_for_playoffs($year, $week, $teams){
     $weekform = sprintf('%02d', $week);
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www48.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWtx0emO1HIZDYeFbox&W=$week&MISSING_AS_BYE=&JSON=1",
+        CURLOPT_URL => "https://www48.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWsx0amO1HIZDYeFbox&W=$week&MISSING_AS_BYE=&JSON=1",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -56,6 +57,7 @@ function get_score_for_playoffs($year, $week, $teams){
 
     $weekresults = json_decode($response, true);
     $franchise = $weekresults['weeklyResults']['matchup'];
+    //printr($franchise, 1);
 
     if($week == 15):
         $teama = $franchise[0]['franchise'][0];
@@ -317,7 +319,7 @@ endif;
 
 
 //printr($winningseeds, 0);
-//printr($insert, 0);
+//printr($insert, 1);
 //printr($team_b_pb_formatted, 0);
 //printr($team_a_pb_starters, 0);
 //printr($mflteams, 0);
@@ -357,20 +359,12 @@ endif;
 
             <!--Page content-->
             <div id="page-content">
-
-                <?php
-                //printr($new['2001BradQB'],0);
-                //printr($getseasonids , 0);
-                //printr($rosterarray, 0);
-                //printr($players, 0);
-                //printr($teamrosters, 0);
-                ?>
-
                 <div class="col-xs-8">
                         <div class="panel">
                             <div class="panel-heading">
                                 <h3 class="panel-title">Get Playoff Scores from MFL (Week 15 & 16)</h3>
                                 <p>Intructions:</p>
+                                <p>First make sure the teams_for_mfl_history function is updated in functions.php to include the list of teams and their MFL IDs.</p>
                                 <p>Week 15:  Enter year and week value and the four team IDs of the playoff teams by seed in the URL.  Keep SQL = 0.  Reload.  If everything looks good change SQL=1 and reload again to insert data into wp_playoffs table.</p>
                                 <p>Week 16:  Change W=16.  Keep all teams in the same seed positions.  Follow same steps as above.</p>
                                 <?php echo 'Week:'.$week.' - '.$year.'<br>'; ?>
@@ -382,14 +376,23 @@ endif;
                 </div>
             </div>
 
-            </div><!--End page content-->
+        </div><!--End page content-->
 
-        </div><!--END CONTENT CONTAINER-->
+</div><!--END CONTENT CONTAINER-->
 
 
-    <?php include_once('main-nav.php'); ?>
-    <?php include_once('aside.php'); ?>
+<?php include_once('main-nav.php'); ?>
+<?php include_once('aside.php'); ?>
 
-</div>
+    </div>
+    </div>
+
+<?php session_destroy(); ?>
+
+    </div>
+    </div>
+
+
+
 
 <?php get_footer(); ?>

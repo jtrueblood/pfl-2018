@@ -12,10 +12,10 @@ header("Refresh: 5; URL=$url1");
 
 $getplayer = $_GET['id'];
 
+
 //$getyear = $_GET['year'];
 // Toggle this value here to set to either all years player played or a simple array of one or a few years.
 //$yearclean = array_values($yearsplayed);
-
 
 //$getyearclean = $_GET['year'];
 //$yearclean = array($getyearclean);
@@ -240,8 +240,8 @@ get_header();
 							<div class="widget-body text-center">
 								<?php
 
-                            // SET YEAR
-                            $yearclean = array(2022);
+                            // SET YEAR HERE -- can be a single value or an array
+                            $yearclean = array(2021);
 
                                 echo $getyearclean.'-'.$weekclean.'<br>';
 								//printr($yearclean, 0);
@@ -266,87 +266,88 @@ get_header();
 											endif;
 										endif;
 
-										// Get the whole stats table for the season
-                                        foreach($htmlgame->find('tbody tr td') as $e){
-                                            $wholetable[$y] .= $e->plaintext.',';
-                                        }
+                                            //check if row is a reason for not playing
+                                            foreach($htmlgame->find('tbody tr [reason]') as $e){
+                                                $reasoncheck[$y] = $e->plaintext;
+                                            }
 
-                                        // Get indivdual elements by data-stat name
-                                        foreach($htmlgame->find('tbody tr [data-stat=week_num]') as $e){
-                                            $week_num[$y] .= $e->plaintext.',';
-                                        }
+                                            // Get the whole stats table for the season
+                                            foreach($htmlgame->find('tbody tr td') as $e){
+                                                $wholetable[$y] .= $e->plaintext.',';
+                                            }
 
-										foreach($htmlgame->find('tbody tr [data-stat=game_date]') as $e){
-											$game_date[$y] .= $e->plaintext.',';
-										}
+                                            // Get indivdual elements by data-stat name
+                                            foreach($htmlgame->find('tbody tr [data-stat=week_num]') as $e){
+                                                $week_num[$y] .= $e->plaintext.',';
+                                            }
 
-										foreach($htmlgame->find('tbody tr [data-stat=team]') as $e){
-											$team[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=game_location]') as $e){
-											$game_location[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=opp]') as $e){
-											$opp[$y] .= $e->plaintext.',';
-										}
+                                            foreach($htmlgame->find('tbody tr [data-stat=game_date]') as $e){
+                                                $game_date[$y] .= $e->plaintext.',';
+                                            }
 
-                                        foreach($htmlgame->find('tbody tr [data-stat=reason]') as $e){
-                                            $reason[$y] .= $e->plaintext.',';
-                                        }
+                                            foreach($htmlgame->find('tbody tr [data-stat=team]') as $e){
+                                                $team[$y] .= $e->plaintext.',';
+                                            }
 
-										foreach($htmlgame->find('tbody tr [data-stat=pass_yds]') as $e){
-											$pass_yds[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=pass_td]') as $e){
-											$pass_td[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=pass_int]') as $e){
-											$pass_int[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=rush_yds]') as $e){
-											$rush_yds[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=rush_td]') as $e){
-											$rush_td[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=rec_yds]') as $e){
-											$rec_yds[$y] .= $e->plaintext.',';
-										}
-										
-										foreach($htmlgame->find('tbody tr [data-stat=rec_td]') as $e){
-											$rec_td[$y] .= $e->plaintext.',';
-										}
-										
-										if($position == 'PK'):
-										
-											foreach($htmlgame->find('tbody tr [data-stat=xpm]') as $e){
-												$xpm[$y] .= $e->plaintext.',';
-											}
-											
-											foreach($htmlgame->find('tbody tr [data-stat=xpa]') as $e){
-												$xpa[$y] .= $e->plaintext.',';
-											}
-											
-											foreach($htmlgame->find('tbody tr [data-stat=fgm]') as $e){
-												$fgm [$y] .= $e->plaintext.',';
-											}
-											
-											foreach($htmlgame->find('tbody tr [data-stat=fga]') as $e){
-												$fga[$y] .= $e->plaintext.',';
-											}
-										
-										endif;
-																		
+                                            foreach($htmlgame->find('tbody tr [data-stat=game_location]') as $e){
+                                                $game_location[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=opp]') as $e){
+                                                $opp[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=pass_yds]') as $e){
+                                                $pass_yds[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=pass_td]') as $e){
+                                                $pass_td[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=pass_int]') as $e){
+                                                $pass_int[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=rush_yds]') as $e){
+                                                $rush_yds[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=rush_td]') as $e){
+                                                $rush_td[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=rec_yds]') as $e){
+                                                    $rec_yds[$y] .= $e->plaintext.',';
+                                            }
+
+                                            foreach($htmlgame->find('tbody tr [data-stat=rec_td]') as $e){
+                                                $rec_td[$y] .= $e->plaintext.',';
+                                            }
+
+                                            if($position == 'PK'):
+
+                                                foreach($htmlgame->find('tbody tr [data-stat=xpm]') as $e){
+                                                    $xpm[$y] .= $e->plaintext.',';
+                                                }
+
+                                                foreach($htmlgame->find('tbody tr [data-stat=xpa]') as $e){
+                                                    $xpa[$y] .= $e->plaintext.',';
+                                                }
+
+                                                foreach($htmlgame->find('tbody tr [data-stat=fgm]') as $e){
+                                                    $fgm [$y] .= $e->plaintext.',';
+                                                }
+
+                                                foreach($htmlgame->find('tbody tr [data-stat=fga]') as $e){
+                                                    $fga[$y] .= $e->plaintext.',';
+                                                }
+
+                                            endif;
 									}
 
                                 //organize the scraped dataset as arrays
+                                $data_week_reason = explode(',', $reasoncheck[$r]);
                                 $data_week_num = explode(',', $week_num[$r]);
                                 $data_passing = explode(',', $pass_yds[$r]);
                                 $data_pass_td = explode(',', $pass_td[$r]);
@@ -360,9 +361,13 @@ get_header();
                                 $data_fgm = explode(',', $fgm[$r]);
                                 $data_fga = explode(',', $fga[$r]);
 
+                                printr($data_rec_yds, 0);
+
 								// Convert $wholetable into an array where the week number is the key.
                                 // Can only use this to get the first things since the table format changes by position and even by season
                                 //
+
+                                //printr($data_week_reason, 0);
 
                                 $expwholetable = explode(',', $wholetable[$r]);
 
@@ -392,33 +397,22 @@ get_header();
                                     endif;
 
                                     $starter = $arr[8];
-                                    if($starter == '*' OR $starter == '' ):
-                                        $pr_data_passing = $data_passing[$j];
-                                        $pr_data_pass_td = $data_pass_td[$j];
-                                        $pr_data_pass_int = $data_pass_int[$j];
-                                        $pr_data_rush_yds = $data_rush_yds[$j];
-                                        $pr_data_rush_td = $data_rush_td[$j];
-                                        $pr_data_rec_yds = $data_rec_yds[$j];
-                                        $pr_data_rec_td = $data_rec_td[$j];
-                                        $pr_data_xpm = $data_xpm[$j];
-                                        $pr_data_xpa = $data_xpa[$j];
-                                        $pr_data_fgm = $data_fgm[$j];
-                                        $pr_data_fga = $data_fga[$j];
-                                        $j++;
-                                    else:
-                                        $pr_data_passing = 0;
-                                        $pr_data_pass_td = 0;
-                                        $pr_data_pass_int = 0;
-                                        $pr_data_rush_yds = 0;
-                                        $pr_data_rush_td = 0;
-                                        $pr_data_rec_yds = 0;
-                                        $pr_data_rec_td = 0;
-                                        $pr_data_xpm = 0;
-                                        $pr_data_xpa = 0;
-                                        $pr_data_fgm = 0;
-                                        $pr_data_fga = 0;
-                                        $j++;
-                                    endif;
+                                        if($starter == 'Inactive' || $starter == 'Did Not Play'):
+                                            $j--;
+                                        endif;
+                                            $pr_data_passing = $data_passing[$j];
+                                            $pr_data_pass_td = $data_pass_td[$j];
+                                            $pr_data_pass_int = $data_pass_int[$j];
+                                            $pr_data_rush_yds = $data_rush_yds[$j];
+                                            $pr_data_rush_td = $data_rush_td[$j];
+                                            $pr_data_rec_yds = $data_rec_yds[$j];
+                                            $pr_data_rec_td = $data_rec_td[$j];
+                                            $pr_data_xpm = $data_xpm[$j];
+                                            $pr_data_xpa = $data_xpa[$j];
+                                            $pr_data_fgm = $data_fgm[$j];
+                                            $pr_data_fga = $data_fga[$j];
+                                            $j++;
+
 
                                     $weekbuild[$arr[2]] = array(
                                         'week_num' =>  $arr[2],

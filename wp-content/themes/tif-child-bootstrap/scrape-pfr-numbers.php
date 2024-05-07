@@ -43,11 +43,23 @@ $position = $featuredplayer[2];
 $rookie = $featuredplayer[3];
 $mflid = $featuredplayer[4];
 
+$playerinfo = get_player_basic_info($randomplayer, 'number');
+$dbrookie = $playerinfo[0]['rookie'];
+$dbnumber = $playerinfo[0]['number'];
+
+echo $dbrookie;
+
 insert_wp_career_leaders($randomplayer);
 $testprint = insert_wp_season_leaders($randomplayer);
 
-$yearsplayed = get_player_years_played($randomplayer);
-//printr($yearsplayed, 1);
+$getyearsplayed = get_player_years_played($randomplayer);
+if($getyearsplayed):
+    $yearsplayed = $getyearsplayed;
+else:
+    $yearsplayed = array($dbrookie => $dbnumber);
+    printr($yearsplayed, 0);
+endif;
+
 
 $stylesheet_uri = get_stylesheet_directory_uri();
 
@@ -184,8 +196,9 @@ get_header();
                                                 $numersclean[$k] = $v[2];
                                             endforeach;
 
+
                                             $yearclean = array_values($yearsplayed);
-                                            //arsort($yearclean);
+                                            printr($yearclean, 0);
                                             $firstyear = reset($yearclean);
                                             $firstnumber = reset($numersclean);
                                             foreach ($yearclean as $year):
@@ -201,8 +214,15 @@ get_header();
 
                                             echo $firstyear.' // '.$firstnumber;
                                             printr($numersclean, 0);
-                                            printr($finalnumbers, 0);
-                                            $encode = json_encode($finalnumbers);
+
+                                            if($getyearsplayed):
+                                                $encode = json_encode($finalnumbers);
+                                                printr($finalnumbers, 0);
+                                            else:
+                                                $yearsplayed = array($dbrookie => $dbnumber);
+                                                $encode = json_encode($yearsplayed);
+                                                printr($yearsplayed, 0);
+                                            endif;
 
                                             // in functions.php insert data into table
                                             $updatetable  = insert_player_number_array($getplayer, $encode);

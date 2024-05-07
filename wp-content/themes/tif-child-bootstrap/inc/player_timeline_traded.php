@@ -41,8 +41,8 @@ if (isset($value['traded'])){
     <div class="timeline-label no-label">
         <p class="protected-by"><span class="text-bold">
             Traded to <?php echo $tradedto; ?></span> during the <?php echo $when; ?></p>
-        <p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_to_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $alongwith_format).' '.format_draft_pick($a_picks); ?></span> </p> 
-		<p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_from_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $sent_format).' '.format_draft_pick($s_picks);?>  </span>
+        <p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_to_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $alongwith_format).' '.$a_picks; ?></span> </p>
+		<p class="protected-by"><span class="text-bold"><?php echo $value['traded'][$i]['traded_from_team'];?></span> &mdash; Get <span class="text-bold"><?php echo implode( ", ", $sent_format).' '.$s_picks;?>  </span>
         </p>
          <p class="protected-by"><?php echo $notes; ?> </p>
     </div>

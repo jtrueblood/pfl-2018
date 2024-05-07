@@ -21,6 +21,7 @@ $set = $_GET['SET'];
 $year = $_GET['Y'];
 $week = $_GET['W'];	
 $run = $_GET['SQL'];
+$touch = $_GET['TOUCH'];
 $curl = $_GET['CURL'];
 
 if($set == 0){
@@ -688,29 +689,40 @@ if($run == 'true' && $week >= 15){
 			</div>
 			
 			<?php
-			// set url CURL value to true to load player pages for all players who played this week and refresh leaders data	
-			if($curl == 'true'){
-				foreach($storetoload as $pid){
-					
-					$ch = curl_init();
 
-					// set URL and other appropriate options
-					$options = array(CURLOPT_URL => "http://pfl-data.local//player/?id=$pid",
-					                 CURLOPT_HEADER => false
-					                );
-					
-					curl_setopt_array($ch, $options);
-					
-					// grab URL and pass it to the browser
-					curl_exec($ch);
-					
-					// close cURL resource, and free up system resources
-					curl_close($ch);
-					
-					echo '<hr/>';
-					echo '<pre>Curled '.$pid.'</pre>';
-				}
-			}
+			// SUNDOWN THIS WITH TOUCH -- set url CURL value to true to load player pages for all players who played this week and refresh leaders data
+
+
+            function touchUrl($url) {
+                $ch = curl_init($url);
+
+                // Set cURL options
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 5); // Set timeout in seconds
+
+                // Execute the request
+                $response = curl_exec($ch);
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+                // Check for errors or success based on HTTP status code
+                if ($httpCode >= 200 && $httpCode < 300) {
+                    // Successful request
+                    return "Successful: HTTP Code - $httpCode";
+                } else {
+                    // Unsuccessful request
+                    return "Unsuccessful: HTTP Code - $httpCode";
+                }
+
+                // Close cURL session
+                curl_close($ch);
+            }
+            touchUrl('http://pfl-data.local/player/?id=2017EkelRB');
+            if($touch == 'true'):
+
+//                foreach($storetoload as $pid):
+//                endforeach;
+            endif;
+
 			?>
 			
 		

@@ -60,6 +60,7 @@
 												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2023">Drafts by Year</a></li>
 												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2023">Standings By Year</a></li>
 												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>
+                                                <li class="<?php ifbodyclass (1967, 'active-link'); ?>"><a href="/team-rosters/?season=2023">Team Rosters</a></li>
 <!--                                                <li class="--><?php //ifbodyclass (252, 'active-link'); ?><!--"><a href="/protections">Protections By Year</a></li>-->
 											</ul>
 									</li>
@@ -123,6 +124,7 @@
                                                 <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202301">Scorigami</a></li>
                                                 <li class="<?php ifbodyclass (1937, 'active-link'); ?>"><a href="/trade-analyzer?TRADE=130">Trade Analyzer</a></li>
                                                 <li class="<?php ifbodyclass (1939, 'active-link'); ?>"><a href="/position-difference">Position Difference</a></li>
+                                                <li class="<?php ifbodyclass (1941, 'active-link'); ?>"><a href="/colleges">Colleges</a></li>
 											</ul>
 									</li>
 									

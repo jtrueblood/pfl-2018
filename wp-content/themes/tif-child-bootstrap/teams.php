@@ -22,9 +22,7 @@ $thisteam = get_team_results('wp_team_'.$teamid);
 
 //$player = get_player_data('2004BreeQB');
 //$player = get_raw_player_data_team('2004BreeQB', $teamid);
-
-
-
+//printr($player, 1);
 foreach ($seasons as $year){
 	$stand[$year] = get_standings_by_team($year, $teamid); 
 }
@@ -60,10 +58,9 @@ if(isset($arr_hall)){
 // get all player awards by team
 $teamawards = get_award_team($teamid);
 if(isset($teamawards)){
-foreach($teamawards as $key => $item){
-   $arr_taward[$item['award']][$key] = $item;
-}
-
+    foreach($teamawards as $key => $item){
+       $arr_taward[$item['award']][$key] = $item;
+    }
 	ksort($arr_taward, SORT_NUMERIC);
 }
 
@@ -76,12 +73,10 @@ foreach ($playersall as $key => $val){
 	$careerstats_team[] = get_player_career_stats_team($key, $teamid);
 }
 //printr($careerstats_team, 1);
-
 ?>
 
 <!--CONTENT CONTAINER-->
 <div class="boxed">
-	
 
 <!--CONTENT CONTAINER-->
 <!--===================================================-->
@@ -92,9 +87,7 @@ foreach ($playersall as $key => $val){
 	<!--Page content-->
 	<!--===================================================-->
 	<div id="page-content">
-		
-		
-		
+
 		<div class="row">
 		
 		<!-- LEFT COLUMN -->

@@ -49,7 +49,8 @@ foreach ($allleaders as $key => $value){
 
                 <!--Value set as 850 in 2015-->
                 <!--Revised to 900 in 2022-->
-                <?php $checkval = 900; ?>
+                <!--Revised to 1000 in 2023-->
+                <?php $checkval = 1000; ?>
 				<h4>3 Years Retired, <?php echo $checkval;?> Career Points min or Already in Hall</h4>
 				<?php 
 					

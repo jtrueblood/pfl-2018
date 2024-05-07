@@ -457,6 +457,8 @@ arsort($playoffsort);
 foreach ($playoffsort as $key => $value){
 	$playoffsort_flat[$key] = $value[1];
 }
+// Add Red Barons to this array
+$playoffsort_flat['RBS'] = 0;
 
 
 $postseasonhighs = $wpdb->get_results("select * from wp_playoffs where points > 20 ", ARRAY_N);
@@ -1066,6 +1068,9 @@ arsort($playerteamunique);
 				
 			</div>
 
+            <!-- NEW ROW -->
+            <div class="row">
+
             <!-- WEEK ONE REMATCH GAME -->
             <div class="col-xs-24 col-sm-12 col-md-6">
 
@@ -1120,11 +1125,43 @@ arsort($playerteamunique);
                 ?>
 
             </div>
-			
+
+            <!-- Colleges -->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+            <?php
+                $playersassoc = get_players_assoc ();
+                $college = array();
+                foreach ($playersassoc as $key => $value):
+                    $college[$value[7]][] =  $key;
+                endforeach;
+
+                foreach ($college as $key => $value):
+                    $collegecount[$key] = count($value);
+                endforeach;
+
+                arsort($collegecount);
+
+                $labels = array('College', 'Count');
+                tablehead('Players by College', $labels);
+
+                foreach ($collegecount as $school => $count):
+                    $printcol .='<tr><td>'.$school.'</td>';
+                    $printcol .='<td>'.$count.'</td></tr>';
+                    if($count <= 10):
+                        break;
+                    endif;
+                endforeach;
+
+            echo $printcol;
+            tablefoot('');
+            ?>
+            </div>
+
+            </div><!-- END ROW -->
 
 			<!-- NEW SECTION -->
 			<div class="col-xs-24">
-				<h4>Team Data - Post Season</h4>
+				<h4>Team Data - Playoffs</h4>
 				<hr>
 			</div>
 			
@@ -1176,7 +1213,7 @@ arsort($playerteamunique);
 			<div class="col-xs-24 col-sm-12 col-md-6">
 				<?php 
 				$labels = array('Team', 'Count/Opps', 'Percent');	
-				tablehead('Post Season Appearances', $labels);	
+				tablehead('Playoff Appearances', $labels);
 				
 				
 				$b = 1;
@@ -1185,7 +1222,7 @@ arsort($playerteamunique);
 					$plperc = $value / $opps;
 					
 					$postprint .='<tr><td>'.$teamlist[$key].'</td>';
-					$postprint .='<td class="min-width text-center">'.$value.' / '.number_format($opps, 1).'</td>';
+					$postprint .='<td class="min-width text-center">'.$value.' / '.number_format($opps, 0).'</td>';
 					$postprint .='<td class="min-width text-right">'.number_format($plperc, 3).'</td></tr>';
 					$b++;
 					
@@ -1247,7 +1284,7 @@ arsort($playerteamunique);
 				//printr($posty, 0);
 				
 				$labels = array('Team', 'Record', 'Win Per');	
-				tablehead('Postseason Winning Percentage', $labels);	
+				tablehead('Playoff Winning Percentage', $labels);
 				
 				foreach ($posty as $key => $value){
 					if($value['games'] != 0){
@@ -1866,7 +1903,7 @@ arsort($playerteamunique);
 
 			<!-- NEW SECTION -->
 			<div class="col-xs-24">
-				<h4>Player Data - Post Season</h4>
+				<h4>Player Data - Playoffs</h4>
 				<hr>
 			</div>
 	
@@ -1917,7 +1954,7 @@ arsort($playerteamunique);
 					//printr($new_playoff_array, 0); 
 
 					$labels = array('Player','Total Points');	
-					tablehead('Post Season Individual Career Points', $labels);	
+					tablehead('Playoffs Individual Career Points', $labels);
 					
 					
 					$c = 1;

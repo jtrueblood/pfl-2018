@@ -36,6 +36,7 @@ $getteams = array();
 $teaminfo = get_teams();
 
 $teams = array_unique($getteams);
+//printr($teams, 1);
 
 if ($lastseason == $year){
 	$active = 1; 
@@ -263,7 +264,8 @@ foreach ($number_ones as $key => $value){
 
 // build the array for constructing the career timeline
 
-$get_player_teams = get_player_teams_season($playerid);
+//$get_player_teams = get_player_teams_season($playerid);
+$get_player_teams = get_player_teams_rostered_by_season($playerid);
 //printr($get_player_teams, 0);
 
 if(!empty($awards)){
@@ -275,6 +277,8 @@ if(!empty($awards)){
 	}
 }
 
+//insert players seasons played into the wp_rosters table.  Used to compile composite rosters. Function in functions.php
+//get_player_teams_by_season($playerid); only needed this for initial roster build purposes.  Now it is handled by the draft insert and mfl .json roster download on results page.
 
 // protections, drafts, trades
 $protections = get_protections_player($playerid);
@@ -339,10 +343,11 @@ $playerbytrade = get_trade_by_player($playerid);
 //printr($playerbytrade, 0);										
 
 //printr($buildtheyears, 0);
-
+//$playersseasons = get_player_teams_by_season($playerid);
 foreach($buildtheyears as $season ){
-	
+
 	$teams = $get_player_teams[$season];
+    //printr($teams, 1);
 	
 	if($season == $rookieyear){
 		$get_rook = $season;
@@ -436,6 +441,9 @@ if($teamall):
 	}
 endif;
 
+// check if player is on the wp_rosters table, if he isn't and he should be, this adds him
+$rosteredif = check_player_rostered($playerid, $year);
+
 //$teamcolors = get_helmet_name_history_by_team('ATK', 1992);
 
 //printr($teamcolors, 1);
@@ -485,8 +493,8 @@ endif;
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">
 					<h3 class="playername"><?php echo $firstname.' '.$lastname; ?></h3>
-					
-					<?php
+
+                    <?php
 					if(!empty($nickname)){
 						echo '<h5><span class="text-muted">"'.$nickname.'"</span></h5>';
 					}	
@@ -496,8 +504,9 @@ endif;
 					if(in_array($playerid, $ringofhonor)){
 						echo '<h5><span class="text-thin">'.$teamids[$honorteam].'</span> Ring of Honor</h5>';
 					}
-					
-				    
+
+                    printr($rosteredif, 0);
+
 				    //printr($curlsuccess, 0);
 				    
 					?>
@@ -512,6 +521,7 @@ endif;
 							if ($curlsuccess == 200){
 								echo ' / <a href="'.$profblink.'" target="_blank">'.$profburi.'</a>';
 							}
+
 							?>
 						</p><br/>
 						<?php if(!empty($college)){ ?>
@@ -985,6 +995,8 @@ endif;
                     endif;
                     if($xpa):
                         $xpper = $xpm / $xpa;
+                    endif;
+                    if($fga):
                         $fgper = $fgm / $fga;
                     endif;
 
@@ -1274,10 +1286,22 @@ endif;
 																			
 																		// condition if the player never played in a particular season	
 																		} else {
+                                                                            $get_rostered_teams = get_player_teams_rostered_by_season($playerid);
+                                                                            $rosteredyear = $get_rostered_teams[$printyear];
 																			$seasonsList .= '<tr>';
 																			$seasonsList .= '<td class="text-bold">'.$printyear.'</td>';
-																			$seasonsList .= '</td>';															
-																			$seasonsList .= '<td class="text-bold">Did Not Play</td>';
+																			$seasonsList .= '</td>';
+                                                                            if($rosteredyear):
+                                                                                $rostered_team_year = '';
+                                                                                $prefix = '';
+                                                                                foreach ($rosteredyear as $key => $value):
+                                                                                    $rostered_team_year .= $prefix . '' . $teamids[$value];
+                                                                                    $prefix = ', ';
+                                                                                endforeach;
+                                                                                $seasonsList .= '<td>'.$rostered_team_year.'</td>';
+                                                                            else:
+																			    $seasonsList .= '<td class="text-bold">Not Rostered</td>';
+                                                                            endif;
 																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
 																			$seasonsList .= '<td class="text-center">-</td>';
@@ -1667,7 +1691,7 @@ endif;
 													<th class="text-center min-width">Yr</th>
 													<th class="text-center min-width">Wk</th>
                                                     <th class="text-center">Date</th>
-													<th class="text-center">Game</th>
+													<th class="text-center max-width">Game</th>
 													<?php if ($playerposition != 'PK'){ ?>
 													<th class="text-center">Pass Yds</th>
 													<th class="text-center">Pass TD</th>
@@ -1690,6 +1714,7 @@ endif;
 											<?php
 
 											if($weeklydata ):
+                                                //printr($weeklydata, 0);
 												foreach ($weeklydata as $key => $data){
 													if(in_array($key, $weeksplayed)):
 
@@ -1950,7 +1975,7 @@ endif;
 								// did not play    
 								if (!empty($value['dnp'])){
 									include('inc/player_timeline_dnp.php');
-								}   
+								}
 								
 								// free agents
 								if (empty($value['dnp'])){

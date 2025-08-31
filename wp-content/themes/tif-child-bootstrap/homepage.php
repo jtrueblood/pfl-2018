@@ -144,15 +144,16 @@ get_header();
 							</div>
 								<div class="panel-body">
 									<div class="col-xs-24">
-                                        <a href="https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a><br>
-                                        <a href="/builds/build-drafts/?SQL=0&Y=2022">Import Draft</a><br>
+                                        <a href="https://api.myfantasyleague.com/2024/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a><br>
+                                        <a href="/builds/build-drafts/?SQL=0&Y=2024">Import Draft</a><br>
                                         <a href="/create-new-player">Create New Player</a><br>
-										<a href="/builds/build-mfl-weekly/?SET=0&Y=2022&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
-                                        <a href="/get-weekly-rosters-mfl/?Y=2022&W=1">Get Weekly Rosters from MFL</a><br>
+										<a href="/builds/build-mfl-weekly/?SET=0&Y=2024&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+                                        <a href="/get-weekly-rosters-mfl/?Y=2024&W=1">Get Weekly Rosters from MFL</a><br>
                                         <a href="/player-ot-score/?SQL=0">Build Overtime Scores from MFL</a><br>
                                         <a href="/get-player-scores-for-playoffs/?SQL=0&Y=2022&W=15&S1=XXX&S2=XXX&S3=XXX&S4=XXX">Build Playoff Data 15 & 16</a><br>
                                         <a href="/scrape-pfr-for-numbers">Srape PFR for Numbers</a><br>
 										<a href="/scrape-pro-football-ref-new/">Scrape PFR for Player Game Stats</a><br>
+                                        <a href="/team-rosters/?season=2024">Create Full Rosters by Season</a><br>
 									</div>	
 								</div>
 							
@@ -169,7 +170,11 @@ get_header();
 										<a href="https://www.pro-football-reference.com/" target="_blank">Pro Football Reference</a><br>
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
 										<a href="https://docs.google.com/document/d/1D8VZPOBn04zVXYQB1gr-xb1NDe2nYLn9Rqgl4oZVhXI/edit?usp=sharing" target="_blank">PFL Rules - Rev 2019</a><br>
-										<hr>
+										<a href="https://wrapbootstrap.com/theme/nifty-responsive-admin-template-WB0048JF7" target="_blank">Nifty for Bootstrap Theme</a><br>
+                                        <a href="https://preview.themeon.net/nifty/index.html" target="_blank">Nifty Theme Demo</a>
+
+                                        <hr>
+                                        <a href="https://www48.myfantasyleague.com/2024/home/38954#0" target="_blank">MFL Website 2023</a><br>
                                         <a href="https://www48.myfantasyleague.com/2023/home/38954#0" target="_blank">MFL Website 2023</a><br>
                                         <a href="https://www48.myfantasyleague.com/2022/home/38954#0" target="_blank">MFL Website 2022</a><br>
                                         <a href="https://www48.myfantasyleague.com/2021/home/38954#0" target="_blank">MFL Website 2021</a><br>

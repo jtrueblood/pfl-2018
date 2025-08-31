@@ -241,7 +241,7 @@ get_header();
 
         // Toggle this value here to set to either all years player played or a simple array of one or a few years.
 								//$yearclean = array_values($yearsplayed);
-                                $yearclean = array(2022);
+                                $yearclean = array(2024);
 								printr($yearclean, 0);
 								
 								$passyards = array();

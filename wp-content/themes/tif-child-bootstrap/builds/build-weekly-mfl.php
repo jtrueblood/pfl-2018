@@ -95,7 +95,7 @@ else:
 	$curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&W=$week&JSON=1",
+        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=weeklyResults&L=38954&W=$week&JSON=1&APIKEY=aRNp1sySvuWqx0CmO1HIZDYeFbox",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -633,7 +633,7 @@ if($run == 'true' && $week >= 15){
 								<li>Reload the page.  Check if any players are not found.  If so create player from MFL using 'Create New Player' widget on Homepage.</li> 
 								<li>Once all player tables are found or created. Change SQL to true to insert into database.</li>
 								<li>Once inserted change SQL back to false and set url CURL value to true to load player pages for all players who played this week and refresh leaders data.</li>
-                                <li>If there is an OVERTIME game, you will need to manually insert that data.  First figure out OT rosters and scores.  Then break the tie(s) and add one point to the winner on the MFL site.  Then add records to the wp_overtime table.  Add OT player ids to the team tables (ex. wp_team_WRZ).  Then add a line record for the game to the individual player tables.</li>
+                                <li>If there is an OVERTIME game, you will need to manually insert that data.  USE THE OT SCORE WIDGET on the homepage -- http://pfl-data.local/player-ot-score/?SQL=0 -- First figure out OT rosters and scores.  Then break the tie(s) and add one point to the winner on the MFL site.  Then add records to the wp_overtime table.  Add OT player ids to the team tables (ex. wp_team_WRZ).  Then add a line record for the game to the individual player tables.</li>
                                 <li>As of 2022 -- This script also works for returning Playoffs and Possebowl player scores and results.  Just pass the week 15 or 16 var into the url.</li>
                             </ol>
 						</div>
@@ -644,6 +644,16 @@ if($run == 'true' && $week >= 15){
 			<div class="row">
 
 				<div class="col-sm-8">
+
+                    <style>
+                        a:active {
+                            color:blue;
+                        }
+                        a:visited {
+                            color:blue;
+                        }
+                    </style>
+
 					<?php 
 						if($run == 'false'){
 							echo '<pre><h3>NO DATA INSERTED</h3></pre>';

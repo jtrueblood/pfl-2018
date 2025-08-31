@@ -13,6 +13,7 @@
 $seasons = the_seasons();
 $teams = get_teams();
 $playerid = $_GET['id'];
+// SET THE SEASON VALUE IN THE URL
 $season = $_GET['season'];
 $weeks = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
 $nonidplayers = get_non_pfl_players();
@@ -101,9 +102,9 @@ function print_roster_table($season, $team){
 
             $firstdig = substr($player, 0, 1);
             if($firstdig != 0):
-                $printtheroster .='<tr><td>'.pid_to_name($player, 0).'</td>';
+                $printtheroster .='<tr><td>'.pid_to_name($player, 0).' - '.$player.'</td>';
             else:
-                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).'</td>';
+                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).' - '.$player.'</td>';
             endif;
 
             $printtheroster .='<td>'.$printacquired.'</td>';
@@ -135,9 +136,9 @@ function print_roster_table($season, $team){
 
             $firstdig = substr($player, 0, 1);
             if($firstdig != 0):
-                $printtheroster .='<tr><td>'.pid_to_name($player, 0).'</td>';
+                $printtheroster .='<tr><td>'.pid_to_name($player, 0).' - '.$player.'</td>';
             else:
-                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).'</td>';
+                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).' - '.$player.'</td>';
             endif;
 
             $printtheroster .='<td>'.$printacquired.'</td>';
@@ -169,9 +170,9 @@ function print_roster_table($season, $team){
 
             $firstdig = substr($player, 0, 1);
             if($firstdig != 0):
-                $printtheroster .='<tr><td>'.pid_to_name($player, 0).'</td>';
+                $printtheroster .='<tr><td>'.pid_to_name($player, 0).' - '.$player.'</td>';
             else:
-                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).'</td>';
+                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).' - '.$player.'</td>';
             endif;
 
             $printtheroster .='<td>'.$printacquired.'</td>';
@@ -203,9 +204,9 @@ function print_roster_table($season, $team){
 
             $firstdig = substr($player, 0, 1);
             if($firstdig != 0):
-                $printtheroster .='<tr><td>'.pid_to_name($player, 0).'</td>';
+                $printtheroster .='<tr><td>'.pid_to_name($player, 0).' - '.$player.'</td>';
             else:
-                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).'</td>';
+                $printtheroster .='<tr><td>'.nonpid_to_name($player, 1).' - '.$player.'</td>';
             endif;
 
             $printtheroster .='<td>'.$printacquired.'</td>';
@@ -316,49 +317,51 @@ function print_roster_table($season, $team){
                 echo '<p>These players were drafted, but never played in a PFL game.  So therefore do not have a PFL ID or page.</p>';
                 printr($cleandraft_others, 0);
 
-                foreach ($cleandraft_others as $key => $value):
-                    $first = $value['firstname'];
-                    $last = $value['lastname'];
-                    $fourname = substr($value['lastname'], 0, 4);
-                    $position = $value['position'];
-                    $team = $value['team'];
-                    $non_pfl_id = '0000'.$fourname.$position;
-                    echo $non_pfl_id.'<br>';
-                    //insert_nopid_players($non_pfl_id, $first, $last, $position, $team);
-                    //insert_roster($non_pfl_id, $team, $season);
-                endforeach;
+                if($cleandraft_others):
+                    foreach ($cleandraft_others as $key => $value):
+                        $first = $value['firstname'];
+                        $last = $value['lastname'];
+                        $fourname = substr($value['lastname'], 0, 4);
+                        $position = $value['position'];
+                        $team = $value['team'];
+                        $non_pfl_id = '0000'.$fourname.$position;
+                        echo $non_pfl_id.'<br>';
+                        //insert_nopid_players($non_pfl_id, $first, $last, $position, $team);
+                        //insert_roster($non_pfl_id, $team, $season);
+                    endforeach;
+                endif;
 
                 //printr($cleandraft, 0);
-                //printr($rosterflat, 0);
+                printr($rosterflat, 0);
 
                 echo '<p>These players did not play, and were not drafted, but were still included on the MFL .json BENCH and IR rosters from 2011-present</p>';
 
-//                foreach($teams as $theteam => $thevalue):
-//                    foreach($weeks as $week):
-//                        if($theteam):
-//                            $mflbench = get_the_bench($season, $week, $theteam);
-//                            if($mflbench['ROSTER']):
-//                                $mflbenchflat = array();
-//                                foreach ($mflbench['ROSTER'] as $key => $value):
-//                                    $mflbenchflat[] = $key;
-//                                endforeach;
-//                            endif;
-//                            if($mflbench['INJURED_RESERVE']):
-//                                $mflirflat = array();
-//                                foreach ($mflbench['INJURED_RESERVE'] as $key => $value):
-//                                    $mflirflat[] = $key;
-//                                endforeach;
-//                            endif;
-//                            if($mflbenchflat):
-//                                $mfl_bench_ir = array_merge($mflbenchflat, $mflirflat);
-//                                $mfl_filter = array_filter($mfl_bench_ir);
-//                            endif;
-//                            if($mfl_bench_ir):
-//                                $mfl_diff[$theteam] = array_diff($mfl_filter, $rosterflat);
-//                            endif;
-//                        endif;
-//                    endforeach;
-//                endforeach;
+                foreach($teams as $theteam => $thevalue):
+                    foreach($weeks as $week):
+                        if($theteam):
+                            $mflbench = get_the_bench($season, $week, $theteam);
+                            if($mflbench['ROSTER']):
+                                $mflbenchflat = array();
+                                foreach ($mflbench['ROSTER'] as $key => $value):
+                                    $mflbenchflat[] = $key;
+                                endforeach;
+                            endif;
+                            if($mflbench['INJURED_RESERVE']):
+                                $mflirflat = array();
+                                foreach ($mflbench['INJURED_RESERVE'] as $key => $value):
+                                    $mflirflat[] = $key;
+                                endforeach;
+                            endif;
+                            if($mflbenchflat):
+                                $mfl_bench_ir = array_merge($mflbenchflat, $mflirflat);
+                                $mfl_filter = array_filter($mfl_bench_ir);
+                            endif;
+                            if($mfl_bench_ir):
+                                $mfl_diff[$theteam] = array_diff($mfl_filter, $rosterflat);
+                            endif;
+                        endif;
+                    endforeach;
+                endforeach;
 
                 //printr($rosterflat, 0);
                 //printr($mfl_bench_ir, 0);
@@ -366,13 +369,13 @@ function print_roster_table($season, $team){
                 printr($mfl_diff, 0);
 
                 //insert the players that were on the MFL rosters but not in any PFL games or drafted
-//                foreach($mfl_diff as $team => $values):
-//                    if($values):
-//                        foreach($values as $player):
-//                            insert_roster($player, $team, $season);
-//                        endforeach;
-//                    endif;
-//                endforeach;
+                foreach($mfl_diff as $team => $values):
+                    if($values):
+                        foreach($values as $player):
+                            insert_roster($player, $team, $season);
+                        endforeach;
+                    endif;
+                endforeach;
 
                 ?>
 

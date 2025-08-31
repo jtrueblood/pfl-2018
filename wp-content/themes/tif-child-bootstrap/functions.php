@@ -313,7 +313,6 @@ function the_weeks(){
 	}
 	
 	return $theweeks;
-	
 }
 
 function the_weeks_with_post(){
@@ -325,11 +324,56 @@ function the_weeks_with_post(){
             $theweeks[] = $year.$week;
         }
     }
-
     return $theweeks;
-
 }
 
+function the_weeks_with_key(){
+    $years = the_seasons();
+    $weeks = array('01','02','03','04','05','06','07','08','09','10','11','12','13','14');
+
+    foreach ($years as $year){
+        foreach ($weeks as $week){
+            $theweeks[$year.$week] = $year.$week;
+        }
+    }
+
+    return $theweeks;
+}
+
+// check if a game was the second half of a head to head matchup
+function checkheadhead($weeka){
+    $schedule = schedule_by_week();
+    $theweekids = the_weeks();
+    $current_array_val = array_search($weeka, $theweekids);
+    $prevweek = $theweekids[$current_array_val-1];
+    $theweeka = $schedule[$weeka];
+    $theweekb = $schedule[$prevweek];
+    $yeara = substr($weeka, 0, 4);
+    $yearb = substr($prevweek, 0, 4);
+
+    if($yeara == $yearb):
+        foreach ($theweeka as $item) {
+            $home = $item['hometeam'];
+            $road = $item['roadteam'];
+            $weekarra[$home] = $road;
+        }
+        if($theweekb):
+            foreach ($theweekb as $item) {
+                $home = $item['hometeam'];
+                $road = $item['roadteam'];
+                $weekarrb[$home] = $road;
+            }
+        endif;
+        foreach($weekarra as $key => $value):
+            if($weekarrb[$value] == $key):
+                $output[$key.'-'.$value] = 1;
+            else:
+                $output[$key.'-'.$value] = 0;
+            endif;
+        endforeach;
+    endif;
+    return $output;
+}
 
 // shorten players name 
 
@@ -388,10 +432,6 @@ function array_flatten($array) {
 	   return $return;
 
 }
-
-
-
-
 
 function pointsleaders($theposition){
 		$i = 0; 
@@ -1808,6 +1848,16 @@ function get_player_data($pid) {
 	
 }
 
+
+function get_player_nfl_team_by_week($pid) {
+    global $wpdb;
+    $getplayer = $wpdb->get_results("select * from $pid", ARRAY_N);
+    foreach ($getplayer as $key => $revisequery){
+        $nflteam[$revisequery[0]] = $revisequery[11];
+    }
+    return $nflteam;
+}
+
 // Player Data Transient
 function allplayerdata_tables_trans() {
     $transient = get_transient( 'allplayerdata_table_trans' );
@@ -1837,10 +1887,17 @@ function get_player_weeks_played($pid) {
 	
 }
 
-// gets the team that a player played for in a given week
+// gets the PFL team that a player played for in a given week
 function get_player_team_played_week($pid, $week) {
     global $wpdb;
     $get = $wpdb->get_results("select team from $pid where week_id ='$week'", ARRAY_N);
+    return $get;
+}
+
+// gets the NFL team that a player played for in a given week
+function get_player_team_played_week_nfl($pid, $week) {
+    global $wpdb;
+    $get = $wpdb->get_results("select nflteam from $pid where week_id ='$week'", ARRAY_N);
     return $get;
 }
 
@@ -1860,8 +1917,9 @@ function get_player_years_played($pid) {
 	foreach ($getplayer as $key => $revisequery){
 		$player_the_years[] = $revisequery[0];
 	}
-
-    return array_unique($player_the_years);
+    if($player_the_years):
+        return array_unique($player_the_years);
+    endif;
 }
 
 // gets the weekly stats from the player table
@@ -2124,8 +2182,7 @@ function get_champions(){
 			'location' => $revisequery[8]
 		);
 	}
-	
-	
+
 	return $champions;
 }
 
@@ -2407,6 +2464,20 @@ function get_pfl_mfl_ids_season(){
             '0011' => '',
             '0012' => ''
         ),
+        2024 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
     );
     return $pflmflids;
 }
@@ -2503,11 +2574,19 @@ function team_record($team){
 
 //used for QB, WR, RB
 function pos_score_converter($year, $passyd, $passtd, $rushyd, $rushtd, $int, $recyd, $rectd){
-	if($int < 0){ $int = 0; }
+
+    if($int < 0){ $int = 0; }
 	if($passyd < 0){ $passyd = 0; }
 	if($rushyd < 0){ $rushyd = 0; }
 	if($recyd < 0){ $recyd = 0; }
-	
+
+    if($passyd == ''):
+        $passyd = 0;
+    endif;
+    if($passtd == ''):
+        $passtd = 0;
+    endif;
+
 	if($year == 1991):
 		$pass_get = floor($passyd / 50);
 		if($pass_get < 0){
@@ -2520,7 +2599,7 @@ function pos_score_converter($year, $passyd, $passtd, $rushyd, $rushtd, $int, $r
 		return $qbscore;
 	else:
 		$posscore = (floor($passyd / 30)) + (floor($rushyd / 10)) + (($passtd + $rushtd + $rectd) * 2) + floor($recyd / 10) - $int ;
-		return $posscore;
+        return $posscore;
 	endif;	
 }
 
@@ -2537,6 +2616,13 @@ function rb_wr_score_converter($year, $rushyd, $rushtd, $recyd, $rectd){
 */
 
 function pk_score_converter($year, $xpm, $fgm){
+    if($xpm == ''):
+        $xpm = 0;
+    endif;
+    if($fgm == ''):
+        $fgm = 0;
+    endif;
+
 	$pkscore = $xpm + ($fgm * 2);
 	return $pkscore;
 }
@@ -3139,6 +3225,11 @@ function get_drafts_player_first_instance($pid){
 	endif;
 }
 
+function get_draft_info(){
+    $post_fields = get_fields( 195 );
+    return $post_fields;
+}
+
 // get probowl by player 
 function probowl_boxscores_player($pid){
 	global $wpdb;
@@ -3270,12 +3361,40 @@ function get_player_teams_by_season($pid){
             $teams[$season] = array_unique($playerdata['teams']);
         }
     endforeach;
-    foreach($teams as $key => $value):
-        foreach($value as $team):
-            insert_roster($pid, $team, $key);
+    if($teams):
+        foreach($teams as $key => $value):
+            foreach($value as $team):
+                insert_roster($pid, $team, $key);
+            endforeach;
         endforeach;
-    endforeach;
+    endif;
     return $teams;
+}
+
+//get only player ids of players that have played for a team
+function get_player_ids_by_team($team){
+    $playerteam = get_players_played_by_team($team);
+    foreach ($playerteam as $key => $value):
+        $newer[] = array_filter_recursive($value, null);
+    endforeach;
+
+    $newqb1[] = array_unique(array_column($newer, 'qb1'));;
+    $newqb2[] = array_unique(array_column($newer, 'qb2'));;
+    $newrb1[] = array_unique(array_column($newer, 'rb1'));;
+    $newrb2[] = array_unique(array_column($newer, 'rb2'));;
+    $newwr1[] = array_unique(array_column($newer, 'wr1'));;
+    $newwr2[] = array_unique(array_column($newer, 'wr2'));;
+    $newpk1[] = array_unique(array_column($newer, 'pk1'));;
+    $newpk2[] = array_unique(array_column($newer, 'pk2'));;
+
+    $merge = array_merge($newqb1, $newqb2, $newrb1, $newrb2, $newwr1, $newwr2, $newpk1, $newpk2);
+    $flattened = array_reduce($merge, function($carry, $item) {
+        return array_merge($carry, is_array($item) ? $item : [$item]);
+    }, []);
+    $teamarray = array_diff($flattened, array('None', '', null, '0', '[Null]', 'null'));
+
+    return $teamarray;
+
 }
 
 // This returns teams for seasons where players were ROSTERED.  Not quite the same as the function get_player_teams_by_season
@@ -3295,21 +3414,23 @@ function check_player_rostered($pid, $year){
     $get_player_rostered = $wpdb->get_results("select * from wp_rosters where year = $year && pid = '$pid';", ARRAY_N);
     $yearsplayed = get_player_years_played($pid);
     $seasonsplayed = get_player_teams_by_season($pid);
-    if(in_array($year, $yearsplayed)):
-        $played = 'played';
-    else:
-        $played = 'not played';
-    endif;
-    if($get_player_rostered):
-        $rostered = 'rostered';
-    else:
-        $rostered =  'not rostered';
-    endif;
-    if($played == 'played' & $rostered == 'not rostered'):
-        foreach($seasonsplayed[$year] as $team):
-            insert_roster($pid, $team, $year);
-        endforeach;
-        $inserted = 'inserted';
+    if($yearsplayed):
+        if(in_array($year, $yearsplayed)):
+            $played = 'played';
+        else:
+            $played = 'not played';
+        endif;
+        if($get_player_rostered):
+            $rostered = 'rostered';
+        else:
+            $rostered =  'not rostered';
+        endif;
+        if($played == 'played' & $rostered == 'not rostered'):
+            foreach($seasonsplayed[$year] as $team):
+                insert_roster($pid, $team, $year);
+            endforeach;
+            $inserted = 'inserted';
+        endif;
     endif;
     return $played.' '.$rostered.' '.$inserted;
 }
@@ -3951,9 +4072,10 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
 	
 	$curl = curl_init();
 
+    // check that the API key hasn't changed.  Updated in 2024.
     // 2022 Updated Request Curl
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1",
+        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1&APIKEY=aRNp1sySvuWrx0GmO1HIZDYeFbox",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -4329,6 +4451,11 @@ function get_boxscore_by_week($weekid){
     return $boxscoreweek;
 }
 
+function get_team_boxscore_by_week($weekid, $teamid){
+    $boxscore = get_boxscore_by_week($weekid);
+    return $boxscore[$teamid];
+}
+
 function get_players_by_week($weekid){
     global $wpdb;
     $teams = get_teams();
@@ -4448,6 +4575,139 @@ function get_team_results_expanded_new($team){
 	return $teamresults;
 }
 
+function get_championships_by_player ($playerid){
+    $ships = get_player_champions();
+    if($ships):
+        foreach ($ships as $key => $value):
+            if($value == $playerid):
+                $output[$key] = $value;
+            endif;
+        endforeach;
+        if($output):
+            foreach ($output as $key => $value):
+                $year = substr($key, 0, 4);
+                $team = substr($key, 4, 3);
+                $newchamps[$year] = $team;
+            endforeach;
+        endif;
+    endif;
+    return $newchamps;
+}
+
+function get_drafted_by_player($playerid){
+    $drafts = get_drafts();
+    foreach ($drafts as $key => $value):
+        $newdraft[$key] = array(
+            'player' => $value['playerid'],
+            'team' => $value['acteam'],
+            'season' => $value['season'],
+            'round' => $value['round'],
+            'pick' => $value['pick'],
+            'overall' => $value['overall']
+        );
+    endforeach;
+    foreach ($newdraft as $key => $value):
+        if($value['player'] == $playerid):
+            $output[$key] = $value;
+        endif;
+    endforeach;
+    return $output;
+}
+
+function get_number_ones_by_player ($playerid){
+    $numberones = get_number_ones();
+    foreach ($numberones as $key => $value):
+        if($value['playerid'] == $playerid):
+            $output[$value['year']] = $value['teams'];
+        endif;
+    endforeach;
+    return $output;
+}
+
+function get_career_high_player($playerid){
+    $stats = get_player_career_stats($playerid);
+    return $stats;
+}
+
+//get extended view of player career with details
+function get_player_complete_history($playerid) {
+    $playertable = get_table($playerid);
+    foreach ($playertable as $key => $value):
+        $gamestats[$value[0]] = array(
+            'weekid' => $value[0],
+            'year' => $value[1],
+            'week' => $value[2],
+            'points' => $value[3],
+            'team' => $value[4],
+            'versus' => $value[5],
+//          '' => $value[6], player id not used
+            'result' => $value[7],
+            'location' => $value[8],
+            'stadium' => $value[9],
+            'date' => $value[10],
+            'nflteam' => $value[11],
+            'nfllocation' => $value[12],
+            'nflversus' => $value[13],
+            'passyards' => $value[14],
+            'passtds' => $value[15],
+            'passints' => $value[16],
+            'rushyards' => $value[17],
+            'rushtds' => $value[18],
+            'recyards' => $value[19],
+            'rectds' => $value[20],
+            'xpm' => $value[21],
+            'xpa' => $value[22],
+            'fgm' => $value[23],
+            'fga' => $value[24],
+            'nflscore' => $value[25],
+            'scoredifference' => $value[26]
+        );
+    endforeach;
+    $generalcareer = get_career_high_player($playerid);
+    $protections = get_protections_player($playerid);
+    $traded = get_trade_by_player($playerid);
+    $awards =  get_player_award($playerid);
+   // $slams = get_grandslams(); for later
+    $champs = get_championships_by_player($playerid);
+    $drafts = get_drafted_by_player($playerid);
+    $potw = get_player_of_the_week_by_player($playerid);
+    $numberones = get_number_ones_by_player($playerid);
+    $gamestreak = get_player_game_streak($playerid);
+    $playoffs = playerplayoffs($playerid);
+    if($playoffs):
+        foreach ($playoffs as $key => $value):
+            $id = $value['year'].$value['week'];
+            $reviseplayoffs[$id] = $value;
+        endforeach;
+    endif;
+    $probowl = probowl_boxscores_player($playerid);
+    if($probowl):
+        foreach ($probowl as $key => $value):
+            $id = $value['year'].'17';
+            $revisedprobowl[$id] = $value;
+        endforeach;
+    endif;
+
+    $finaloutput = array(
+        'generalcareer' => $generalcareer,
+        'weeksplayed' => $gamestats,
+        'protections' => $protections,
+        'traded' => $traded,
+        'awards' => $awards,
+        'grandslams' => $slams,
+        'championships' => $champs,
+        'drafts' => $drafts,
+        'potw' => $potw,
+        'numberones' => $numberones,
+        'gamestreak' => $gamestreak,
+        'playoffs' => $reviseplayoffs,
+        'probowl' => $revisedprobowl
+
+    );
+
+    return $finaloutput;
+}
+
 //get just players played for team
 function get_players_played_by_team($teamid){
     $results = get_team_results_expanded_new($teamid);
@@ -4466,6 +4726,16 @@ function get_players_played_by_team($teamid){
     return $output;
 }
 
+function array_filter_recursive( array $array, callable $callback = null ) {
+    $array = is_callable( $callback ) ? array_filter( $array, $callback ) : array_filter( $array );
+    foreach ( $array as &$value ) {
+        if ( is_array( $value ) ) {
+            $value = call_user_func( __FUNCTION__, $value, $callback );
+        }
+    }
+
+    return $array;
+}
 
 //format number as ordinal
 function ordinal($number) {
@@ -4601,6 +4871,110 @@ global $wpdb;
 		$potw[$p[0]] = $p[1];
 	}
 	return $potw;
+}
+
+function get_player_of_the_week_by_player($playerid){
+    $potw = get_player_of_week();
+    foreach ($potw as $key => $value):
+        if($value == $playerid):
+            $output[$key] = $value;
+        endif;
+    endforeach;
+    return $output;
+}
+
+function all_nfl_teams(){
+    $array = array(
+        'IND' => 'Colts',
+        'GNB' => 'Packers',
+        'PHI' => 'Eagles',
+        'NWE' => 'Patriots',
+        'MIN' => 'Vikings',
+        'ATL' => 'Falcons',
+        'DAL' => 'Cowboys',
+        'DEN' => 'Broncos',
+        'BUF' => 'Bills',
+        'SFO' => '49ers',
+        'NOR' => 'Saints',
+        'CIN' => 'Bengals',
+        'KAN' => 'Chiefs',
+        'SEA' => 'Seahawks',
+        'DET' => 'Lions',
+        'PIT' => 'Steelers',
+        'ARI' => 'Cardinals',
+        'STL' => 'Rams',
+        'SDG' => 'Chargers',
+        'HOU' => 'Oilers/Texans',
+        'MIA' => 'Dolphins',
+        'NYG' => 'Giants',
+        'BAL' => 'Ravens',
+        'WAS' => 'Skins/Commies',
+        'CHI' => 'Bears',
+        'CAR' => 'Panthers',
+        'OAK' => 'Raiders',
+        'TEN' => 'Titans',
+        'JAX' => 'Jaguars',
+        'TAM' => 'Buccaneers',
+        'NYJ' => 'Jets',
+        'CLE' => 'Browns',
+        'LAR' => 'Rams',
+        'LAC' => 'Chargers',
+        'LVR' => 'Raiders',
+        'RAM' => 'Rams',
+        'RAI' => 'Raiders',
+        'PHO' => 'Cardinals'
+    );
+    return $array;
+}
+
+function all_nfl_teams_flipped(){
+    $array = array(
+        'Colts' => 'IND',
+        'Packers' => 'GNB',
+        'Eagles' => 'PHI',
+        'Patriots' => 'NWE',
+        'Vikings' => 'MIN',
+        'Falcons' => 'ATL',
+        'Cowboys' => 'DAL',
+        'Broncos' => 'DEN',
+        'Bills' => 'BUF',
+        '49ers' => 'SFO',
+        'Saints' => 'NOR',
+        'Bengals' => 'CIN',
+        'Chiefs' => 'KAN',
+        'Seahawks' => 'SEA',
+        'Lions' => 'DET',
+        'Steelers' => 'PIT',
+        'Cardinals' => 'ARI',
+        'SL Rams' => 'STL',
+        'Chargers' => 'SDG',
+        'Oilers' => 'HOU',
+        'Texans' => 'HOU',
+        'Dolphins' => 'MIA',
+        'Giants' => 'NYG',
+        'Ravens' => 'BAL',
+        'Redskins' => 'WAS',
+        'Commanders' => 'WAS',
+        'Bears' => 'CHI',
+        'Panthers' => 'CAR',
+        'OAK Raiders' => 'OAK',
+        'LA Raiders' => 'LAR',
+        'LV Raiders' => 'LVR',
+        'Titans' => 'TEN',
+        'Jaguars' => 'JAX',
+        'Buccaneers' => 'TAM',
+        'Jets' => 'NYJ',
+        'Browns' => 'CLE',
+        'Rams' => 'LAR'
+       // 'Chargers' => 'LAC'
+    );
+return $array;
+}
+
+function get_nfl_full_team_name_from_id($tid){
+    $array = all_nfl_teams();
+    $myteam = $array[$tid];
+    return $myteam;
 }
 
 
@@ -4972,6 +5346,8 @@ function supercard($pid){
 				//echo '<a href="/player/?id='.$val['pid'].'"><img src="'.$playerimg.'" class="img-responsive"/></a>';
                 if($playerimg):
 				    echo '<img alt="Profile Picture" class="widget-img img-border-light" style="width:100px; height:100px; left:75%; top:10px;" src="'.$playerimg.'">';
+                else:
+                    echo '<p>No Image - '.$pid.'</p>';
                 endif;
                 ?>
                 <?php
@@ -5302,7 +5678,8 @@ function get_mfl_league_id(){
         2020 => 38954,
         2021 => 38954,
         2022 => 38954,
-        2023 => 38954
+        2023 => 38954,
+        2024 => 38954
     );
     return $leagueids;
 }
@@ -5479,6 +5856,18 @@ function teams_for_mfl_history(){
             '0010' => 'BUL'
         ),
         2023 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2024 => array(
             '0001' => 'TSG',
             '0002' => 'ETS',
             '0003' => 'PEP',

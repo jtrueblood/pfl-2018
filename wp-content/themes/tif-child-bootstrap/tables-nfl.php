@@ -110,6 +110,37 @@ arsort($rectds);
 arsort($counttds);
 arsort($allpurpose);
 
+//NFL Games played by Team Logic
+$playersassoc = get_players_assoc();
+foreach ($playersassoc as $key => $value) {
+    if ($value):
+        $playerdata[] = get_player_nfl_team_by_week($key);
+    endif;
+}
+$new = array_flatten($playerdata);
+$newnew = array_filter($new);
+$count = array_count_values($newnew);
+
+$raiders = $count['OAK'] + $count['LVR'] + $count['RAI'];
+$rams = $count['STL'] + $count['LAR'] + $count['RAM'];
+$chargers = $count['SD'] + $count['LAC'] + $count['SDG'];
+$summed = array(
+    'OAK' => $raiders,
+    'LAR' => $rams,
+    'LAC' => $chargers
+);
+
+unset($count['OAK'], $count['LVR'], $count['RAI'], $count['STL'], $count['LAR'], $count['SD'], $count['LAC'], $count['SDG'], $count['RAM']);
+
+$final = array_merge($count, $summed);
+
+foreach ($final as $key => $value):
+    $get = get_nfl_full_team_name_from_id($key);
+    $nflteamfinal[$get] = $value;
+endforeach;
+
+arsort($nflteamfinal);
+
 ?>
 
 <?php get_header(); ?>
@@ -491,6 +522,22 @@ arsort($allpurpose);
                         echo $tableprint;
                         $tableprint = '';
                         tablefoot('Top 25 / Min 50 Games');
+                        ?>
+                    </div>
+
+                    <!-- Count of Games by NFL Team -->
+                    <div class="col-xs-24 col-sm-12 col-md-6">
+                        <?php
+                        $labels = array('Team', 'Player Games');
+                        tablehead('Games Played for each NFL Team', $labels);
+                        $i = 1;
+                        foreach ($nflteamfinal as $key => $value){
+                            $tableprint .='<tr><td>'.$key.'</td>';
+                            $tableprint .='<td>'.$value.'</td></tr>';
+                        }
+                        echo $tableprint;
+                        $tableprint = '';
+                        tablefoot('Combined Teams - Raiders, Chargers, Rams');
                         ?>
                     </div>
 

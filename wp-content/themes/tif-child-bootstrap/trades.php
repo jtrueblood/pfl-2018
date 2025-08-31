@@ -262,6 +262,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['ATK']):
                                             $thecount = count($value['ATK']);
+                                            $sumATK[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -269,6 +270,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['BST']):
                                             $thecount = count($value['BST']);
+                                            $sumBST[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -276,6 +278,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['BUL']):
                                             $thecount = count($value['BUL']);
+                                            $sumBUL[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -283,6 +286,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['CMN']):
                                             $thecount = count($value['CMN']);
+                                            $sumCMN[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -290,6 +294,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['DST']):
                                             $thecount = count($value['DST']);
+                                            $sumDST[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -297,6 +302,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['ETS']):
                                             $thecount = count($value['ETS']);
+                                            $sumETS[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -304,6 +310,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['HAT']):
                                             $thecount = count($value['HAT']);
+                                            $sumHAT[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -311,6 +318,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['MAX']):
                                             $thecount = count($value['MAX']);
+                                            $sumMAX[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -318,6 +326,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['PEP']):
                                             $thecount = count($value['PEP']);
+                                            $sumPEP[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -325,6 +334,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['PHR']):
                                             $thecount = count($value['PHR']);
+                                            $sumPHR[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -332,6 +342,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['RBS']):
                                             $thecount = count($value['RBS']);
+                                            $sumRBS[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -339,6 +350,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['SNR']):
                                             $thecount = count($value['SNR']);
+                                            $sumSNR[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -346,6 +358,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['SON']):
                                             $thecount = count($value['SON']);
+                                            $sumSON[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -353,6 +366,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['TSG']):
                                             $thecount = count($value['TSG']);
+                                            $sumTSG[] = $thecount;
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -360,6 +374,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         if($value['WRZ']):
                                             $thecount = count($value['WRZ']);
+                                            $sumWRZ[] = count($value['WRZ']);
                                             echo '<td class="text-center">'.$thecount.'</td>';
                                         else :
                                             echo '<td class="text-center" style="background-color: #ddd;"></td>';
@@ -367,6 +382,41 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                         echo '</tr>';
                                     endforeach;
+
+                                        echo '<tr>';
+                                            echo '<td class="text-bold">Total</td>';
+                                                $sum = array_sum($sumATK);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumBST);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumBUL);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumCMN);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumDST);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumETS);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumHAT);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumMAX);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumPEP);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumPHR);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumRBS);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumSNR);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumSON);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumTSG);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                                $sum = array_sum($sumWRZ);
+                                            echo '<td class="text-center">'.$sum.'</td>';
+                                        echo '</tr>';
+
                                     ?>
                                     </tbody>
                                 </table>

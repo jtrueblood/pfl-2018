@@ -52,12 +52,15 @@ function get_score_for_playoffs($year, $week, $teams){
         ),
     ));
 
+
     $response = curl_exec($curl);
     curl_close($curl);
 
-    $weekresults = json_decode($response, true);
-    $franchise = $weekresults['weeklyResults']['matchup'];
-    //printr($franchise, 1);
+    $file =  $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/mfl-weekly-gamelogs/202415.json';
+
+    $my = json_decode($file, false);
+    $franchise = $my['weeklyResults']['matchup'];
+    var_dump($franchise);
 
     if($week == 15):
         $teama = $franchise[0]['franchise'][0];

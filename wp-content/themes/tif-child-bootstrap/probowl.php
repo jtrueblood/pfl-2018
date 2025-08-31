@@ -73,10 +73,11 @@
 				<div id="page-content">
 			
 					<?php
-				foreach ($probowldetails as $key => $value){	
+				foreach ($probowldetails as $key => $value){
+                    $theyear = $key;
 						// get the first row
-					
-					echo '<div class="col-xs-24 col-sm-12 eq-box-sm pro-bowl-box">';
+                echo '<div class="row">';
+					echo '<div class="col-xs-24 col-sm-10 eq-box-sm pro-bowl-box">';
 						echo '<div class="panel panel-bordered panel-dark">';
 							echo '<div class="panel-heading">';
 							echo '<h3 class="panel-title"><span class="text-bold">'.$key.'</span> Pro Bowl</h3>';
@@ -178,20 +179,28 @@
 												?>
 												
 											</div>
-										</div>		
+
+										</div>
+
 										
-								</div>	
-								
+								</div>
+                            <?php
+                            if($theyear == 2023) {
+                                echo '<p>This was the first ever OT Pro Bowl.  All starters scores were used, followed by the backups. Normal OT rules applied.</p>';
+                            }
+                            ?>
 							</div>
 							
 							<?php
 							$theman = $value['mvp'];
 								
-							echo '<hr><div class="row"><div class="pro-mvp">Game MVP: <span class="text-bold text-dark">'.$pname[$theman][0].' '.$pname[$theman][1].'</div></div>';
+							echo '<hr><div class="row">
+                                <div class="pro-mvp">Game MVP: <span class="text-bold text-dark">'.$pname[$theman][0].' '.$pname[$theman][1].'</div>
+                            </div>';
 						
 						echo '</div>';
 					echo '</div>';
-					
+                echo '</div>';
 				}	
 				
 				?>

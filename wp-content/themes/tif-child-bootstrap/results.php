@@ -312,7 +312,7 @@ printr($assoc, 0);
                                 echo '<h4>'.$monthfirst.' '.$expfirst[2].' - '.$monthlast.' '.$explast[2].', '.$year_sel.'</h4>';
                                 //printr($justdates, 0);
                                 $uniquedates = array_unique($justdates);
-                                //printr($uniquedates, 0);
+                                printr($uniquedates, 0);
                             ?>
 						</div>					
 						
@@ -533,6 +533,12 @@ printr($assoc, 0);
 						echo '<a href="/player/?id='.$h_wr1.'">'.checkfornone ($h_wr1_data['first']).' '.$h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$h_pk1.'">'.checkfornone ($h_pk1_data['first']).' '.$h_pk1_data['last'].'</a><span class="pull-right">'.$h_pk1_data['points'].'</span><br>';
 
+                        $checkhometotal = $h_qb1_data['points'] + $h_rb1_data['points'] + $h_wr1_data['points'] + $h_pk1_data['points'];
+                        if($homepoints != $checkhometotal):
+                            $hdiff  = $homepoints - $checkhometotal;
+                            echo '<div style="color: red;">ERROR: Boxscore is '.$checkhometotal.' / Diff: '.$hdiff.'</div>';
+                        endif;
+
                         $startershome = array($h_qb1,$h_rb1,$h_wr1,$h_pk1,$h_qb2,$h_rb2,$h_wr2,$h_pk2);
                         $bench = get_the_bench($year_sel, $nonzeroweek, $hometeam);
                         $benchroster = $bench['ROSTER'];
@@ -575,6 +581,12 @@ printr($assoc, 0);
 						echo '<a href="/player/?id='.$a_rb1.'">'.checkfornone ($a_rb1_data['first']).' '.$a_rb1_data['last'].'</a><span class="pull-right">'.$a_rb1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$a_wr1.'">'.checkfornone ($a_wr1_data['first']).' '.$a_wr1_data['last'].'</a><span class="pull-right">'.$a_wr1_data['points'].'</span><br>';
 						echo '<a href="/player/?id='.$a_pk1.'">'.checkfornone ($a_pk1_data['first']).' '.$a_pk1_data['last'].'</a><span class="pull-right">'.$a_pk1_data['points'].'</span><br>';
+
+                        $checkroadtotal = $a_qb1_data['points'] + $a_rb1_data['points'] + $a_wr1_data['points'] + $a_pk1_data['points'];
+                        if($awaypoints != $checkroadtotal):
+                            $adiff = $awaypoints - $checkroadtotal;
+                            echo '<div style="color: red;">ERROR: Boxscore is '.$checkroadtotal.' / Diff: '.$adiff.'</div>';
+                        endif;
 
                         $startersroad = array($a_qb1,$a_rb1,$a_wr1,$a_pk1,$a_qb2,$a_rb2,$a_wr2,$a_pk2);
                         $bench = get_the_bench($year_sel, $nonzeroweek, $awayteam);

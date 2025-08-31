@@ -1,7 +1,7 @@
 <?php
 /*
- * Template Name: PFR Json Converter
- * Description: For converting PFR json files into arrays and writing them to the player tables in the database
+ * Template Name: PFR Player Score From Raw
+ * Description: Used to check Pro Football Refernce raw player data to help fill in gaps where we know the score of the position, but don't know the player.
  */
  ?>
 

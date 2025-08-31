@@ -174,7 +174,69 @@ arsort($cleanedup);
                             </table>
                             <p>The number to the left in each box belongs to the team on the left.</p>
                         </div>
+                    </div>
+                    <!-- Percentage Table -->
+                    <div class="panel-body text-center">
+                     <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="text-center"></th>
+                                <?php
+                                ksort($cleanedup);
+                                foreach($cleanedup as $key => $value):
+                                    echo '<th class="text-center">'.$key.'</th>';
+                                endforeach;
+                                ?>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php
+                            ksort($cleanedup);
+                            //printr($cleanedup, 0);
 
+                            function show_percent_head($teamid, $value){
+                                if($value[$teamid]):
+                                    $explode = explode('-', $value[$teamid]);
+                                    $pervalue = $explode[0] / ($explode[1] + $explode[0]);
+                                    $showvalue = number_format($pervalue, 3);
+                                    if($showvalue >= 0.5):
+                                        echo '<td class="text-center text-success text-bold">'.$showvalue.'</td>';
+                                    else:
+                                        echo '<td class="text-center text-danger">'.$showvalue.'</td>';
+                                    endif;
+                                else :
+                                    echo '<td class="text-center" style="background-color: #ddd;"></td>';
+                                endif;
+                            }
+
+                            foreach($cleanedup as $key => $value):
+                                echo '<tr>';
+                                echo '<td class="text-bold">'.$key.'</td>';
+
+                                show_percent_head('ATK', $value);
+                                show_percent_head('BST', $value);
+                                show_percent_head('BUL', $value);
+                                show_percent_head('CMN', $value);
+                                show_percent_head('DST', $value);
+                                show_percent_head('ETS', $value);
+                                show_percent_head('HAT', $value);
+                                show_percent_head('MAX', $value);
+                                show_percent_head('PEP', $value);
+                                show_percent_head('PHR', $value);
+                                show_percent_head('RBS', $value);
+                                show_percent_head('SNR', $value);
+                                show_percent_head('SON', $value);
+                                show_percent_head('TSG', $value);
+                                show_percent_head('WRZ', $value);
+
+                                echo '</tr>';
+                            endforeach;
+                            ?>
+                            </tbody>
+                        </table>
+                        <p>The number to the left in each box belongs to the team on the left.</p>
+                    </div>
                     </div>
                 </div>
             </div>

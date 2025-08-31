@@ -1,89 +1,160 @@
 <?php
 /*
  * Template Name: Tables Page
- * Description: Page for displaying a whole bunch of tables
+ * Description: Page for displaying a whole bunch of tables (Optimized)
  */
  ?>
 
-<!-- necessary cache fies are pulled in via the 'pointsleader' function in functions.php -->
+<!-- Optimized version with improved caching and performance -->
 
 <?php get_header(); 
 
-$teamlist = teamlist();
+// Check for cached data first to avoid expensive operations
+$tables_cache_key = 'tables_page_data_v2';
+$cached_data = get_transient($tables_cache_key);
 
-$theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN', 'BUL', 'SNR', 'TSG', 'RBS', 'BST','DST');
-$firstyear = 1991;
-$currentyear = date('Y');
+if ($cached_data !== false) {
+    // Use cached data
+    if (is_array($cached_data)) {
+        extract($cached_data);
+    }
+    $using_cache = true;
+} else {
+    // Generate data and cache it
+    $using_cache = false;
+    
+    // Declare global $wpdb for database queries
+    global $wpdb;
+    
+    $teamlist = teamlist();
+    $theteams = array('MAX', 'ETS', 'PEP', 'WRZ', 'SON', 'PHR', 'ATK', 'HAT', 'CMN', 'BUL', 'SNR', 'TSG', 'RBS', 'BST','DST');
+    $firstyear = 1991;
+    $currentyear = date('Y');
+    
+    // Use existing optimized function instead of individual queries
+    $allteams_data = get_all_team_data();
+    if (!$allteams_data) {
+        // Fallback to individual queries if function fails
+        global $wpdb;
+        $allteams_data = array();
+        foreach ($theteams as $team) {
+            $allteams_data[$team] = $wpdb->get_results("select * from wp_team_$team", ARRAY_N);
+        }
+    }
+    
+    // Extract specific team data for backward compatibility
+    $RBS = $allteams_data['RBS'] ?? array();
+    $ETS = $allteams_data['ETS'] ?? array();
+    $PEP = $allteams_data['PEP'] ?? array();
+    $WRZ = $allteams_data['WRZ'] ?? array();
+    $CMN = $allteams_data['CMN'] ?? array();
+    $BUL = $allteams_data['BUL'] ?? array();
+    $SNR = $allteams_data['SNR'] ?? array();
+    $TSG = $allteams_data['TSG'] ?? array();
+    $BST = $allteams_data['BST'] ?? array();
+    $MAX = $allteams_data['MAX'] ?? array();
+    $PHR = $allteams_data['PHR'] ?? array();
+    $SON = $allteams_data['SON'] ?? array();
+    $ATK = $allteams_data['ATK'] ?? array();
+    $HAT = $allteams_data['HAT'] ?? array();
+    $DST = $allteams_data['DST'] ?? array();
+    
+    $allteams = $allteams_data;
+    
+    // Cache basic counts and metadata
+    $teamsbyseason = get_all_teams_by_season();
+    $thegames = the_games();
+    
+    $flatgamecount = array();
+    foreach ($teamsbyseason as $year => $flatteam){
+        foreach($flatteam as $team => $div){
+            $flatgamecount[] = $year.$team.$div;
+        }
+    }
+    
+    $gamesbyyear = array();
+    foreach ($teamsbyseason as $value){
+        $gamesbyyear[] = $value['games'];
+    }
+    
+    $gamecount = array_sum($gamesbyyear);
+    $theots = get_overtime();
+    $countots = count($theots);
+    
+    $theyears = range($firstyear, $currentyear);
+    
+    // Use same query approach as champions.php - select all columns
+    $champions = $wpdb->get_results("SELECT * FROM wp_champions ORDER BY year", ARRAY_N);
+    
+    // Debug: More detailed debugging for champions issue
+    // $champions_debug_info = array();
+    // 
+    // // Check if wpdb is available
+    // if (!isset($wpdb) || !$wpdb) {
+    //     $champions_debug_info[] = "wpdb not available";
+    // } else {
+    //     $champions_debug_info[] = "wpdb available";
+    // }
+    // 
+    // // Check for query errors
+    // if ($wpdb->last_error) {
+    //     $champions_debug_info[] = "DB Error: " . $wpdb->last_error;
+    //     error_log("Champions query error: " . $wpdb->last_error);
+    //     $champions = array(); // Fallback to empty array
+    // } else {
+    //     $champions_debug_info[] = "No DB errors";
+    // }
+    // 
+    // // Check if table exists
+    // $table_exists = $wpdb->get_var("SHOW TABLES LIKE 'wp_champions'");
+    // if ($table_exists) {
+    //     $champions_debug_info[] = "wp_champions table exists";
+    //     
+    //     // Get row count
+    //     $row_count = $wpdb->get_var("SELECT COUNT(*) FROM wp_champions");
+    //     $champions_debug_info[] = "Table has {$row_count} rows";
+    //     
+    //     if ($row_count > 0 && empty($champions)) {
+    //         $champions_debug_info[] = "Table has data but query returned empty - possible column issue";
+    //         
+    //         // Try a simpler query to test
+    //         $test_query = $wpdb->get_results("SELECT * FROM wp_champions LIMIT 5", ARRAY_N);
+    //         if ($test_query) {
+    //             $champions_debug_info[] = "Simple query works - column issue in original query";
+    //         } else {
+    //             $champions_debug_info[] = "Even simple query fails";
+    //         }
+    //     }
+    // } else {
+    //     $champions_debug_info[] = "wp_champions table does NOT exist";
+    // }
+    // 
+    // if (empty($champions)) {
+    //     error_log("Warning: wp_champions table returned no results or query failed");
+    // }
+    // 
+    // // Store debug info for display
+    // $champions_debug_message = implode(' | ', $champions_debug_info);
 
-$teamsbyseason = get_all_teams_by_season();
-$thegames = the_games();
-
-foreach ($teamsbyseason as $year => $flatteam){
-	foreach($flatteam as $team => $div){
-		$flatgamecount[] = $year.$team.$div;
-	}
-}
-
-
-$seasonsall = get_all_teams_by_season();
-foreach ($seasonsall as $value){
-	$gamesbyyear[] = $value['games'];
-}
-
-$gamecount = array_sum($gamesbyyear);
-
-//printr($gamesbyyear, 1); 
-
-$theots = get_overtime();
-$countots = count($theots);
-
-while ($firstyear <= $currentyear){
-	$theyears[] = $firstyear;
-	$firstyear++;
-}
-
-//printr($theyears, 0);
-
-$mydb = new wpdb('root','root','local','localhost');
-	
-$RBS = $wpdb->get_results("select * from wp_team_RBS", ARRAY_N);
-$ETS = $wpdb->get_results("select * from wp_team_ETS", ARRAY_N);
-$PEP = $wpdb->get_results("select * from wp_team_PEP", ARRAY_N);
-$WRZ = $wpdb->get_results("select * from wp_team_WRZ", ARRAY_N);
-$CMN = $wpdb->get_results("select * from wp_team_CMN", ARRAY_N);
-$BUL = $wpdb->get_results("select * from wp_team_BUL", ARRAY_N);
-$SNR = $wpdb->get_results("select * from wp_team_SNR", ARRAY_N);
-$TSG = $wpdb->get_results("select * from wp_team_TSG", ARRAY_N);
-$BST = $wpdb->get_results("select * from wp_team_BST", ARRAY_N);
-$MAX = $wpdb->get_results("select * from wp_team_MAX", ARRAY_N);
-$PHR = $wpdb->get_results("select * from wp_team_PHR", ARRAY_N);
-$SON = $wpdb->get_results("select * from wp_team_SON", ARRAY_N);
-$ATK = $wpdb->get_results("select * from wp_team_ATK", ARRAY_N);
-$HAT = $wpdb->get_results("select * from wp_team_HAT", ARRAY_N);
-$DST = $wpdb->get_results("select * from wp_team_DST", ARRAY_N);
-
-$allteams = array('ETS' => $ETS, 'PEP' => $PEP, 'WRZ' => $WRZ, 'CMN' => $CMN, 'BUL' => $BUL, 'SNR' => $SNR, 'TSG' => $TSG, 'SON' => $SON, 'HAT' => $HAT, 'DST' => $DST, 'ATK' => $ATK, 'PHR' => $PHR, 'MAX' => $MAX, 'RBS' => $RBS, 'BST' => $BST);
-
-
-$champions = $wpdb->get_results("select * from wp_champions", ARRAY_N);
-
-
-
-$playersassoc = get_players_assoc();
-
-//printr($PEP, 1);
-
-/*
-$me = get_player_name('2004BreeQB');
-printr($me, 0);
-die();
-*/
-
-// this will get all player data as a transient.  Often a page reload is required after new player data is added or updated.
-
-
-
-$allplayerdata = allplayerdata_tables_trans();
+    //printr($champions, 0);
+    // Initialize arrays to prevent warnings
+    $toppoints = array();
+    $pktoppoints = array();
+    $arr_playoff = array();
+    $new_playoff_array = array();
+    $superhigh = array();
+    $sorthigh = array();
+    $cha = array();
+    $app = array();
+    $teampointleaders = array();
+    $teampointdefense = array();
+    $rookieseason = array();
+    $gamediffs = array();
+    $storethirteens = array();
+    
+    // Get cached or generate expensive data
+    $playersassoc = get_players_assoc();
+    $allplayerdata = allplayerdata_tables_trans();
 
 if(isset($allplayerdata)){
 	foreach ($allplayerdata as $weeks){
@@ -139,7 +210,7 @@ function local_all_team_data_trans() {
   	} else {
 		global $allteams;
 		set_transient( 'local_all_team_data_trans', $allteams, '' );
-		return $set;
+	return $allteams;
   	}
 }
 
@@ -150,31 +221,87 @@ $all_team_transient = local_all_team_data_trans();
 
 //printr($teamarray, 0);
 
-foreach ($theyears as $year){
-	$get = get_standings($year);
-	//$store[$year] = $get;
-	if($get != ''){
-		foreach ($get as $val){
-			$games = $val['divwin'] + $val['divloss'];
-			if ($games > 0){
-				$winpert = $val['divwin'] / $games;
-				$allstandings[$val['teamid'].$year] = array(
-				'divwin' => $val['divwin'],
-				'divloss' => $val['divloss'],
-				'div' => $val['division'],
-				'seed' => $val['seed'],
-				'winper' => number_format($winpert, 3)
-				);
-			}
-			$allteampoints[$year][$val['teamid']] = $val['pts'];
-			$allteamdefensepoints[$year][$val['teamid']] = $val['ptsvs'];
-			if($val['seed'] > 0){
-				$seeding[$year][$val['division']][$val['seed']] = array(
-					'team' => $val['teamid']
-				);
-			}
-		}
-	}
+// Optimize standings processing - get all standings at once instead of year by year
+$all_standings_cache_key = 'all_standings_data_v1';
+$cached_standings = get_transient($all_standings_cache_key);
+
+if ($cached_standings !== false) {
+    $allstandings = $cached_standings['allstandings'];
+    $allteampoints = $cached_standings['allteampoints'];
+    $allteamdefensepoints = $cached_standings['allteamdefensepoints'];
+    $seeding = $cached_standings['seeding'];
+} else {
+    // Get all standings at once instead of individual year queries
+    // Use existing function or fallback to individual queries
+    $all_standings_raw = false; // Function doesn't exist, use fallback
+    
+    $allstandings = array();
+    $allteampoints = array();
+    $allteamdefensepoints = array();
+    $seeding = array();
+    
+    if ($all_standings_raw) {
+        foreach ($all_standings_raw as $val) {
+            $year = $val['year'];
+            $games = $val['divwin'] + $val['divloss'];
+            
+            if ($games > 0) {
+                $winpert = $val['divwin'] / $games;
+                $allstandings[$val['teamid'].$year] = array(
+                    'divwin' => $val['divwin'],
+                    'divloss' => $val['divloss'], 
+                    'div' => $val['division'],
+                    'seed' => $val['seed'],
+                    'winper' => number_format($winpert, 3)
+                );
+            }
+            
+            $allteampoints[$year][$val['teamid']] = $val['pts'];
+            $allteamdefensepoints[$year][$val['teamid']] = $val['ptsvs'];
+            
+            if ($val['seed'] > 0) {
+                $seeding[$year][$val['division']][$val['seed']] = array(
+                    'team' => $val['teamid']
+                );
+            }
+        }
+    } else {
+        // Fallback to individual year queries if optimized function fails
+        foreach ($theyears as $year) {
+            $get = get_standings($year);
+            if ($get != '') {
+                foreach ($get as $val) {
+                    $games = $val['divwin'] + $val['divloss'];
+                    if ($games > 0) {
+                        $winpert = $val['divwin'] / $games;
+                        $allstandings[$val['teamid'].$year] = array(
+                            'divwin' => $val['divwin'],
+                            'divloss' => $val['divloss'],
+                            'div' => $val['division'],
+                            'seed' => $val['seed'],
+                            'winper' => number_format($winpert, 3)
+                        );
+                    }
+                    $allteampoints[$year][$val['teamid']] = $val['pts'];
+                    $allteamdefensepoints[$year][$val['teamid']] = $val['ptsvs'];
+                    if ($val['seed'] > 0) {
+                        $seeding[$year][$val['division']][$val['seed']] = array(
+                            'team' => $val['teamid']
+                        );
+                    }
+                }
+            }
+        }
+    }
+    
+    // Cache standings data for 1 hour
+    $standings_cache_data = array(
+        'allstandings' => $allstandings,
+        'allteampoints' => $allteampoints, 
+        'allteamdefensepoints' => $allteamdefensepoints,
+        'seeding' => $seeding
+    );
+    set_transient($all_standings_cache_key, $standings_cache_data, 3600);
 }
 
 ksort($seeding);
@@ -342,6 +469,7 @@ die();
 
 // arrays for individual seasons and games
 function teamhighs($TEAM){
+	$high = array(); // Initialize array
 	foreach ($TEAM as $getinfo){
 		$theseason = $getinfo[1];
 		$high[] = array($theseason => $getinfo[4]);
@@ -391,6 +519,7 @@ arsort($sorthigh);
 
 
 function bestweek($TEAM, $myteam){
+	$bestweek = array(); // Initialize array
 	foreach ($TEAM as $key => $value){
 		$bestweek[$myteam.''.$value[0]] = $value[4];
 	}
@@ -423,58 +552,112 @@ $allbest = array('RBS' => $bestRBS, 'BST' => $bestBST, 'ETS' => $bestETS, 'PEP' 
 $flatallbest = array_flatten($allbest);
 arsort($flatallbest);
 
-foreach ($champions as $value){
-	$cha[] = $value[2];
-	$app[] = array($value[2], $value[5]);
+if (!empty($champions)) {
+    foreach ($champions as $value){
+        $cha[] = $value[2];
+        $app[] = array($value[2], $value[5]);
+    }
 }
 
-
-$championsort = array_count_values($cha);
-arsort($championsort);
+$championsort = !empty($cha) ? array_count_values($cha) : array();
+if (!empty($championsort)) {
+    arsort($championsort);
+}
 
 $flatapps = array_flatten($app);
 $appsort = array_count_values($flatapps);
 arsort($appsort );
 
 
-// get all games from week 15 only
-$playoffs = $wpdb->get_results("select * from wp_playoffs where week = 15", ARRAY_N);
+// Optimize playoff queries - consolidate into fewer database calls
+$playoff_data_cache_key = 'playoff_data_optimized_v1';
+$cached_playoff_data = get_transient($playoff_data_cache_key);
 
-$t = 0;
-foreach ($playoffs as $value){
-	if ($t % 4 == 0){
-		$playoffteams[$value[5]][$value[1]] = $value[6];
-		$playoffteams_count[$value[5]][] = 1;
-	}
-	$t++;
+if ($cached_playoff_data !== false) {
+    $playoffteams = $cached_playoff_data['playoffteams'];
+    $playoffteams_count = $cached_playoff_data['playoffteams_count'];
+    $playoffsort = $cached_playoff_data['playoffsort'];
+    $playoffsort_flat = $cached_playoff_data['playoffsort_flat'];
+    $playoff_player_highs = $cached_playoff_data['playoff_player_highs'];
+} else {
+    // Get all playoff data with correct column names
+    $all_playoff_data = $wpdb->get_results(
+        "SELECT id, year, week, playerid, points, team, versus, overtime, result 
+         FROM wp_playoffs 
+         WHERE week >= 15 
+         ORDER BY year, week, team", 
+        ARRAY_A
+    );
+    
+    $playoffteams = array();
+    $playoffteams_count = array();
+    $playoff_player_highs = array();
+    
+    // Process playoff data to count team appearances
+    $team_playoff_years = array();
+    foreach ($all_playoff_data as $row) {
+        $team = $row['team'];
+        $year = $row['year'];
+        $week = $row['week'];
+        
+        // Count unique team-year combinations for playoff appearances
+        if ($week == 15) { // Week 15 = playoffs
+            $team_playoff_years[$team][$year] = 1;
+        }
+        
+        // Process high scoring playoff games (points > 20)
+        if ($row['points'] > 20) {
+            $playoff_player_highs[$row['playerid'].$row['year'].$row['week']] = $row['points'];
+        }
+    }
+    
+    // Count playoff appearances per team
+    $playoffsort_flat = array();
+    foreach ($team_playoff_years as $team => $years) {
+        $playoffsort_flat[$team] = count($years);
+    }
+    
+    // Ensure all teams are represented, even with 0 playoff appearances
+    foreach ($theteams as $team) {
+        if (!isset($playoffsort_flat[$team])) {
+            $playoffsort_flat[$team] = 0;
+        }
+    }
+    
+    // Sort by playoff appearances (highest first)
+    arsort($playoffsort_flat);
+    
+    arsort($playoff_player_highs);
+    
+    // Cache playoff data for 1 hour
+    $playoff_cache_data = array(
+        'playoffteams' => $playoffteams,
+        'playoffteams_count' => $playoffteams_count,
+        'playoffsort' => $playoffsort,
+        'playoffsort_flat' => $playoffsort_flat,
+        'playoff_player_highs' => $playoff_player_highs
+    );
+    set_transient($playoff_data_cache_key, $playoff_cache_data, 3600);
 }
-
-foreach ($playoffteams_count as $key => $value){
-	$playoffsort[$key] = array_count_values($value);
-}
-arsort($playoffsort);
-
-foreach ($playoffsort as $key => $value){
-	$playoffsort_flat[$key] = $value[1];
-}
-// Add Red Barons to this array
-$playoffsort_flat['RBS'] = 0;
-
-
-$postseasonhighs = $wpdb->get_results("select * from wp_playoffs where points > 20 ", ARRAY_N);
-// get players high scores for playoff games
-foreach ($postseasonhighs as $value){
-	$playoff_player_highs[$value[3].$value[1].$value[2]] = $value[4];
-}
-arsort($playoff_player_highs);
 
 
 //printr($playoff_player_highs, 1);
 
-// game streaks
-$streaks = $wpdb->get_results("select pid, gamestreak from wp_allleaders", ARRAY_N);
-foreach ($streaks as $value){
-	$player_streaks[$value[0]] = $value[1];
+// Optimize game streaks query with better column selection and caching
+$streaks_cache_key = 'player_streaks_v1';
+$cached_streaks = get_transient($streaks_cache_key);
+
+if ($cached_streaks !== false) {
+    $player_streaks = $cached_streaks;
+} else {
+    $streaks = $wpdb->get_results("SELECT pid, gamestreak FROM wp_allleaders WHERE gamestreak > 0 ORDER BY gamestreak DESC", ARRAY_N);
+    $player_streaks = array();
+    foreach ($streaks as $value) {
+        $player_streaks[$value[0]] = $value[1];
+    }
+    
+    // Cache streaks for 1 hour
+    set_transient($streaks_cache_key, $player_streaks, 3600);
 }
 
 arsort($player_streaks);
@@ -485,25 +668,49 @@ $playerids = just_player_ids();
 
 $countplayers = 0;
 
-foreach($playerids as $pl){
-	$countplayers++;
-	$player_stats = get_player_career_stats($pl);
-	$topseasonscores[$pl] = $player_stats['yeartotal']; 
-	$titles = $player_stats['possebowlwins'];
-	$gamesplayed[$pl] = array(
-		'games' => $player_stats['games'],
-		'active' => $player_stats['active']
-	);
-	$fourteen[$pl] = $player_stats['gamesbyseason'];
-	if($titles != ''){
-		$count = array_sum($titles);
-		if ($count > 1){
-			$player_titles[$pl] = array(
-				'count' => $count,
-				'years' => $titles
-			);
-		}
-	}
+// Cache expensive player career stats
+$player_stats_cache_key = 'player_career_stats_v1';
+$cached_player_stats = get_transient($player_stats_cache_key);
+
+if ($cached_player_stats !== false) {
+    // Use cached player stats
+    $topseasonscores = $cached_player_stats['topseasonscores'];
+    $gamesplayed = $cached_player_stats['gamesplayed'];
+    $fourteen = $cached_player_stats['fourteen'];
+    $player_titles = $cached_player_stats['player_titles'];
+    $countplayers = $cached_player_stats['countplayers'];
+} else {
+    // Generate player stats and cache them
+    foreach($playerids as $pl){
+        $countplayers++;
+        $player_stats = get_player_career_stats($pl);
+        $topseasonscores[$pl] = $player_stats['yeartotal']; 
+        $titles = $player_stats['possebowlwins'];
+        $gamesplayed[$pl] = array(
+            'games' => $player_stats['games'],
+            'active' => $player_stats['active']
+        );
+        $fourteen[$pl] = $player_stats['gamesbyseason'];
+        if($titles != ''){
+            $count = array_sum($titles);
+            if ($count > 1){
+                $player_titles[$pl] = array(
+                    'count' => $count,
+                    'years' => $titles
+                );
+            }
+        }
+    }
+    
+    // Cache the expensive player stats for 1 hour
+    $player_stats_to_cache = array(
+        'topseasonscores' => $topseasonscores,
+        'gamesplayed' => $gamesplayed,
+        'fourteen' => $fourteen,
+        'player_titles' => $player_titles ?? array(),
+        'countplayers' => $countplayers
+    );
+    set_transient($player_stats_cache_key, $player_stats_to_cache, 3600);
 }
 
 foreach ($fourteen as $key => $value){
@@ -573,14 +780,32 @@ foreach ($ppgseason as $key => $value){
 arsort($totalppggame);
 
 
-$getpotw = $wpdb->get_results("select playerid from wp_player_of_week", ARRAY_N);	
-$e = 1;
-foreach ($getpotw as $potw){	
-	$total[$potw[0]][] = $e;
+// Optimize Player of the Week query with GROUP BY for better performance
+$potw_cache_key = 'player_of_week_counts_v1';
+$cached_potw = get_transient($potw_cache_key);
+
+if ($cached_potw !== false) {
+    $totalpotw = $cached_potw;
+} else {
+    // Use GROUP BY to count directly in the database
+    $potw_counts = $wpdb->get_results(
+        "SELECT playerid, COUNT(*) as count 
+         FROM wp_player_of_week 
+         GROUP BY playerid 
+         HAVING COUNT(*) > 4 
+         ORDER BY count DESC", 
+        ARRAY_A
+    );
+    
+    $totalpotw = array();
+    foreach ($potw_counts as $row) {
+        $totalpotw[$row['playerid']] = $row['count'];
+    }
+    
+    // Cache for 1 hour
+    set_transient($potw_cache_key, $totalpotw, 3600);
 }
-foreach ($total as $key => $value){
-	$totalpotw[$key] = array_sum($value);
-}
+
 arsort($totalpotw);
 //printr($totalpotw, 1);
 
@@ -619,7 +844,82 @@ foreach($playersassoc as $key => $value):
 endforeach;
 arsort($playerteamunique);
 
+    // Cache all the calculated data for future use (1 hour expiry)
+    $data_to_cache = compact(
+        'teamlist', 'theteams', 'firstyear', 'currentyear', 'allteams_data', 
+        'RBS', 'ETS', 'PEP', 'WRZ', 'CMN', 'BUL', 'SNR', 'TSG', 'BST', 'MAX', 'PHR', 'SON', 'ATK', 'HAT', 'DST',
+        'allteams', 'teamsbyseason', 'thegames', 'flatgamecount', 'gamesbyyear', 'gamecount', 'theots', 'countots',
+        'theyears', 'champions', 'playersassoc', 'allplayerdata', 'toppoints', 'pktoppoints', 'playoffs', 'arr_playoff',
+        'new_playoff_array', 'all_team_transient', 'allstandings', 'allteampoints', 'allteamdefensepoints', 'seeding',
+        'teampointleaders', 'teampointdefense', 'rookieyears', 'rookieseason', 'allteamget', 'allpoints', 'allwins',
+        'allgames', 'allppg', 'allwinper', 'allvs', 'allseasons', 'alldif', 'allagainst', 'gamediffs', 'allhighs',
+        'sorthigh', 'allbest', 'flatallbest', 'championsort', 'flatapps', 'appsort', 'playoffteams', 'playoffteams_count',
+        'playoffsort', 'playoffsort_flat', 'postseasonhighs', 'playoff_player_highs', 'streaks', 'player_streaks',
+        'playerids', 'countplayers', 'topseasonscores', 'gamesplayed', 'fourteen', 'player_titles', 'storethirteens',
+        'count_thirteens', 'highseas_qb', 'highseas_rb', 'highseas_wr', 'highseas_pk', 'ppgseason', 'ppggames',
+        'totalppggame', 'getpotw', 'total', 'totalpotw', 'get_te', 'new_te', 'playerteamunique'
+    );
+    set_transient($tables_cache_key, $data_to_cache, 3600); // Cache for 1 hour
+}
+
+// Create a cached player name lookup to avoid repeated calls
+$player_name_cache = array();
+function get_cached_player_name($player_id) {
+    global $player_name_cache;
+    if (!isset($player_name_cache[$player_id])) {
+        $player_name_cache[$player_id] = get_player_name($player_id);
+    }
+    return $player_name_cache[$player_id];
+}
+
 //printr($playerteamunique, 1);
+
+// Initialize print accumulator variables to avoid undefined variable notices during concatenation
+$printpoints = '';
+$ppgprint = '';
+$printwins = '';
+$print = '';
+$agsprint = '';
+$vsprint = '';
+$shighprint = '';
+$flatprint = '';
+$blowoutprint = '';
+$fiftyprint = '';
+$fiftyconprint = '';
+$printteapte = '';
+$printteaptdef = '';
+$printdivwinners = '';
+$printdivs = '';
+$printduration = '';
+$champprint = '';
+$pbappprint = '';
+$postprint = '';
+$psprint = '';
+$qbtoppointsprint = '';
+$rbtoppointsprint = '';
+$wrtoppointsprint = '';
+$pktoppointsprint = '';
+$thirtyprint = '';
+$seas_qb_print = '';
+$seas_rb_print = '';
+$seas_wr_print = '';
+$seas_pk_print = '';
+$gmprint = '';
+$toppointsprint = '';
+$streakprint = '';
+$pppprint = '';
+$chprint = '';
+$teprint = '';
+$potyprint = '';
+$ptuprint = '';
+$rookprint = '';
+$topplayptsprint = '';
+$plpostprint = '';
+$titprint = '';
+$printrevenge = '';
+$printtwos = '';
+$printcol = '';
+
 ?>
 
 
@@ -641,6 +941,14 @@ arsort($playerteamunique);
 			<div class="col-xs-24">
 				<h4>Team Data - Regular Season</h4>
 				<p>This page requires the use of some transients.  If you see an error try reloading the page or loading a leaders by season page.</p>
+				<?php /* if (!$using_cache): ?>
+				<div class="alert alert-info">
+					<strong>Debug Info:</strong> Champions data count: <?php echo count($champions ?? []); ?>
+					<?php if (isset($champions_debug_message)): ?>
+						<br><small><?php echo esc_html($champions_debug_message); ?></small>
+					<?php endif; ?>
+				</div>
+				<?php endif; */ ?>
 				<hr>
 			</div>
 			
@@ -839,10 +1147,19 @@ arsort($playerteamunique);
 			<div class="col-xs-24 col-sm-12 col-md-6">
 			
 			<?php 
-				//$teampoints = get_team_points('SNR');
-
-				foreach ($theteams as $team){
-					$teamjustpts[$team] = get_team_points($team);
+				// Optimize team points loading with caching
+				$team_points_cache_key = 'all_team_points_v1';
+				$cached_team_points = get_transient($team_points_cache_key);
+				
+				if ($cached_team_points !== false) {
+				    $teamjustpts = $cached_team_points;
+				} else {
+				    $teamjustpts = array();
+				    foreach ($theteams as $team) {
+				        $teamjustpts[$team] = get_team_points($team);
+				    }
+				    // Cache team points for 1 hour
+				    set_transient($team_points_cache_key, $teamjustpts, 3600);
 				}
 				
 				//printr($teamjustpts, 1);
@@ -1172,18 +1489,19 @@ arsort($playerteamunique);
 				tablehead('Total PFL Championships', $labels);	
 				
 				$b = 1;
-				foreach ($championsort as $key => $value){
-		
-					$champprint .='<tr><td>'.$teamlist[$key].'</td>';
-					$champprint .='<td class="min-width text-right">'.$value.'</td></tr>';
-					$b++;
-					
+				if (!empty($championsort) && is_array($championsort)){
+					foreach ($championsort as $key => $value){
+						$name = isset($teamlist[$key]) ? $teamlist[$key] : $key;
+						$champprint .='<tr><td>'.$name.'</td>';
+						$champprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+						$b++;
+					}
 				}
 				
 				echo $champprint;
 				
 				tablefoot('');	
-				?>	
+				?>
 				
 			</div>
 			
@@ -1194,18 +1512,19 @@ arsort($playerteamunique);
 				tablehead('Posse Bowl Appearances', $labels);	
 				
 				$b = 1;
-				foreach ($appsort as $key => $value){
-		
-					$pbappprint .='<tr><td>'.$teamlist[$key].'</td>';
-					$pbappprint .='<td class="min-width text-right">'.$value.'</td></tr>';
-					$b++;
-					
+				if (!empty($appsort) && is_array($appsort)){
+					foreach ($appsort as $key => $value){
+						$name = isset($teamlist[$key]) ? $teamlist[$key] : $key;
+						$pbappprint .='<tr><td>'.$name.'</td>';
+						$pbappprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+						$b++;
+					}
 				}
 				
 				echo $pbappprint;
 				
 				tablefoot('');	
-				?>	
+				?>
 				
 			</div>
 			
@@ -1317,8 +1636,8 @@ arsort($playerteamunique);
 				arsort($toppoints);
 				
 				$labels = array('Player', 'Points');	
-				tablehead('QB Individual Game Scores', $labels);	
-				
+				tablehead('QB Individual Game Scores', $labels);
+
 				foreach ($toppoints as $key => $value){
 					
 					$highplayer = substr($key , 0, -6);
@@ -1326,7 +1645,7 @@ arsort($playerteamunique);
 					$highweek= substr($key , -2);
 					$highyear = substr($key , -6, -2);
 					
-					$name = get_player_name($highplayer);
+					$name = get_cached_player_name($highplayer);
 					
 					if($highpos == 'QB'){
 						$qbtoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
@@ -1357,7 +1676,7 @@ arsort($playerteamunique);
 					$highweek= substr($key , -2);
 					$highyear = substr($key , -6, -2);
 					
-					$name = get_player_name($highplayer);
+					$name = get_cached_player_name($highplayer);
 					if($value > 28){
 						if($highpos == 'RB'){
 							$rbtoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
@@ -1388,7 +1707,7 @@ arsort($playerteamunique);
 					$highweek= substr($key , -2);
 					$highyear = substr($key , -6, -2);
 					
-					$name = get_player_name($highplayer);
+					$name = get_cached_player_name($highplayer);
 					
 					if($highpos == 'WR'){
 						$wrtoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
@@ -1419,7 +1738,7 @@ arsort($playerteamunique);
 					$highweek= substr($key , -2);
 					$highyear = substr($key , -6, -2);
 					
-					$name = get_player_name($highplayer);
+					$name = get_cached_player_name($highplayer);
 					
 					if($highpos == 'PK'){
 						$pktoppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
@@ -1436,6 +1755,38 @@ arsort($playerteamunique);
 			</div>
 			
 			</div>
+
+            <div class="col-xs-24">
+            <!-- 30 Point Club -->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+                <?php
+                arsort($toppoints);
+
+                $labels = array('Player', 'Points');
+                tablehead('30 Point Club', $labels);
+
+                foreach ($toppoints as $key => $value){
+
+                    $highplayer = substr($key , 0, -6);
+                    $highpos = substr($highplayer, -2);
+                    $highweek= substr($key , -2);
+                    $highyear = substr($key , -6, -2);
+
+                    $name = get_cached_player_name($highplayer);
+
+                    if($value >= 30){
+                        $thirtyprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
+                        $thirtyprint .='<td class="min-width text-right">'.$value.'</td></tr>';
+                    }
+                }
+
+                echo $thirtyprint;
+
+                tablefoot('Players with 30 or more in a single game');
+                ?>
+
+            </div>
+            </div>
 			
 			
 			<div class="col-xs-24">
@@ -1454,7 +1805,7 @@ arsort($playerteamunique);
 						$rpos = substr($highplayer, -2);
 						$ryear = substr($key , -4);
 						
-						$name = get_player_name($rplayer);
+						$name = get_cached_player_name($rplayer);
 						
 							$seas_qb_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
 							$seas_qb_print .='<td class="min-width text-right">'.$value.'</td></tr>';
@@ -1488,7 +1839,7 @@ arsort($playerteamunique);
 						$rpos = substr($highplayer, -2);
 						$ryear = substr($key , -4);
 						
-						$name = get_player_name($rplayer);
+						$name = get_cached_player_name($rplayer);
 						
 							$seas_rb_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
 							$seas_rb_print .='<td class="min-width text-right">'.$value.'</td></tr>';
@@ -1523,7 +1874,7 @@ arsort($playerteamunique);
 						$rpos = substr($highplayer, -2);
 						$ryear = substr($key , -4);
 						
-						$name = get_player_name($rplayer);
+						$name = get_cached_player_name($rplayer);
 						
 							$seas_wr_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
 							$seas_wr_print .='<td class="min-width text-right">'.$value.'</td></tr>';
@@ -1558,7 +1909,7 @@ arsort($playerteamunique);
 						$rpos = substr($highplayer, -2);
 						$ryear = substr($key , -4);
 						
-						$name = get_player_name($rplayer);
+						$name = get_cached_player_name($rplayer);
 						
 							$seas_pk_print .='<tr><td>'.$name['first'].' '.$name['last'].', '.$ryear.'</td>';
 							$seas_pk_print .='<td class="min-width text-right">'.$value.'</td></tr>';
@@ -1593,7 +1944,7 @@ arsort($playerteamunique);
 				
 				foreach ($gamesplayed as $key => $value){
 					$pos = substr($key, -2);
-					$name = get_player_name($key);
+					$name = get_cached_player_name($key);
 					if ($value['active'] == 1){
 						$bull = '<i class="fa fa-circle"></i>';
 					} else {
@@ -1626,7 +1977,7 @@ arsort($playerteamunique);
 					$highweek= substr($key , -2);
 					$highyear = substr($key , -6, -2);
 					
-					$name = get_player_name($highplayer);
+					$name = get_cached_player_name($highplayer);
 					if($value >= 30){
 						$toppointsprint .='<tr><td>'.$name['first'].' '.$name['last'].' / '.$highweek.', '.$highyear.'</td>';
 						$toppointsprint .='<td class="min-width text-right">'.$value.'</td></tr>';	
@@ -1652,7 +2003,7 @@ arsort($playerteamunique);
 				
 					foreach ($player_streaks as $key => $value){
 						
-						$n = get_player_name($key);
+						$n = get_cached_player_name($key);
 						
 						$streakprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>';
 						$streakprint .='<td class="min-width text-center">'.$value.'</td>';
@@ -1685,7 +2036,7 @@ arsort($playerteamunique);
 						$pid = substr($key, 0, -4);
 						$sea = substr($key, -4);
 						
-						$n = get_player_name($pid);
+						$n = get_cached_player_name($pid);
 						
 						$pppprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
 						$pppprint .='<td>'.$sea.'</td>'; 
@@ -1717,7 +2068,7 @@ arsort($playerteamunique);
                     tablehead('Championships by Player', $labels);
 
                     foreach ($getplayerchamps as $key => $value){
-                        $ch = get_player_name($key);
+                        $ch = get_cached_player_name($key);
                         if($value >= 2):
                             $chprint .='<tr><td>'.$ch['first'].' '.$ch['last'].'</td>';
                             $chprint .='<td class="min-width text-center">'.$value.'</td>';
@@ -1738,7 +2089,7 @@ arsort($playerteamunique);
                 tablehead('Tight Ends Career Points', $labels);
 
                 foreach ($new_te as $key => $value){
-                    $n = get_player_name($key);
+                    $n = get_cached_player_name($key);
 
                     $teprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>';
                     $teprint .='<td class="min-width text-center">'.$value.'</td>';
@@ -1760,7 +2111,7 @@ arsort($playerteamunique);
 						foreach ($totalpotw as $key => $value){
 							
 							if ($value > 4){
-								$n = get_player_name($key);
+								$n = get_cached_player_name($key);
 								
 								$potyprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
 								$potyprint .='<td class="min-width text-center">'.$value.'</td>'; 
@@ -1782,7 +2133,7 @@ arsort($playerteamunique);
                 tablehead('Different Teams for Indiv. Player', $labels);
 
                 foreach ($playerteamunique as $key => $value){
-                    $name = get_player_name($key);
+                    $name = get_cached_player_name($key);
                     if($value > 7):
                         $ptuprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
                         $ptuprint .='<td class="text-center">'.$name['pos'].'</td>';
@@ -1874,7 +2225,7 @@ arsort($playerteamunique);
 							$checkrook = '';
 						} 
 						
-						$n = get_player_name($key);
+						$n = get_cached_player_name($key);
 						$rookppg = $value['points'] / $value['games'];
 						
 						$rookprint .='<tr><td>'.$n['first'].' '.$n['last'].'</td>'; 
@@ -1926,7 +2277,7 @@ arsort($playerteamunique);
 					
 					$highyear = substr($key , -6, -2);
 					
-					$name = get_player_name($highguy);
+					$name = get_cached_player_name($highguy);
 					
 						if ($value >= 25){
 							$topplayptsprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
@@ -1960,7 +2311,7 @@ arsort($playerteamunique);
 					$c = 1;
 					foreach ($new_playoff_array as $key => $value){
 						
-						$name = get_player_name($key);
+						$name = get_cached_player_name($key);
 						
 						$plpostprint .='<tr><td>'.$name['first'].' '.$name['last'].'</td>';
 						$plpostprint .='<td class="text-right">'.$value.'</td></tr>';
@@ -1997,7 +2348,7 @@ arsort($playerteamunique);
 					
 					foreach ($player_titles as $key => $value){
 						
-						$name = get_player_name($key);
+						$name = get_cached_player_name($key);
 						$years = $value['years'];
 						$yearlist = array();
 						foreach($years as $k => $v){

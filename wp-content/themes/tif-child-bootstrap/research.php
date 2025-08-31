@@ -53,9 +53,15 @@ function get_position_draft_value($round, $position){
 		<div class="row">
 			<div class="col-xs-24 col-sm-6">
 			<?php 
-				$r = '01';
-				$p = 'QB';
-				
+//				$r = '05';
+//				$p = 'QB';
+
+            $rounds = array('01','02','03','04','05','06','07');
+            $positions = array('QB','RB','WR','PK');
+
+            foreach($positions as $p):
+            foreach($rounds as $r):
+
 				$first_pks = get_position_draft_value($r, $p); 
 				
 				foreach($first_pks as $pks){
@@ -84,12 +90,13 @@ function get_position_draft_value($round, $position){
 				
 				$ct = array_sum($countrank);
 				$avgrank = $ct / $i;
-				
-				
-				echo '<h3>Round '.$r.' - '.$p.'</h3>';
-				echo '<p>Players drafted by round and position.</p>';
-				echo '<p>Average Rank for that Season: '.$avgrank.'</p>';
-				printr($summary, 0);
+				        echo '<h3>Round '.$r.' - '.$p.'</h3>';
+				        echo '<p>Players drafted by round and position.</p>';
+				        echo '<p>Average Rank for that Season: '.$avgrank.'</p>';
+                    $avgrank = 0;
+                    endforeach;
+                endforeach;
+				//printr($summary, 0);
 				
 			?>
 			</div>

@@ -17,6 +17,7 @@ get_header();
 // 2. Authenticate in the browser with this url (Change Year) : https://api.myfantasyleague.com/2022/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1
 // 2a.  You may need to go into Postman and setup a new browser autorization cookie
 // 3. Run /builds/build-drafts
+// 3a. http://pfl-data.local/builds/build-drafts/?Y=2024&SQL=0
 // 4. Check the draft list visually.  Also check the array of IDs at the bottom of the page and enter these into the 'Create New Player' area on the homepage to build the new player profiles.
 // 5. Uncomment the section that will insert the draft into wp_drafts.sql table.  Reload the page.
 // 6. Recomment that section.  Save and close.
@@ -27,18 +28,19 @@ $year = $_GET['Y'];
 //$year = 2022;
 $lid = 38954;
 $run = $_GET['SQL'];
-// NO LONGER NEEDED AS OF 2020 -- $apikey = 'aRNp1sySvuKmx1qmO1HIZDYeFbox';
-// Looks like you could pass an API Key instead of the user agent (not totally sure?) the api key for 2020 appears to be &APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox
+$apikey = 'aRNp1sySvuWqx0CmO1HIZDYeFbox';
+//check this key every year.  It may change.  If it does, you will need to update the key in the MFL API settings for your league.
+//https://www48.myfantasyleague.com/2025/api_info?L=38954
 
 // Set the standard draft order below...
-$origorder = array('CMN','HAT','BST','PEP','SNR','TSG','WRZ','BUL','DST','ETS');
+$origorder = array('TSG','HAT','PEP','DST','SNR','CMN','BST','ETS','WRZ','BUL');
 // --------------------------------------------
 
 // get actual draft report for the year from MFL
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://www58.myfantasyleague.com/'.$year.'/export?TYPE=draftResults&L='.$lid.'&JSON=1',
+    CURLOPT_URL => 'https://www58.myfantasyleague.com/'.$year.'/export?TYPE=draftResults&L='.$lid.'&APIKEY='.$apikey.'&JSON=1',
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,

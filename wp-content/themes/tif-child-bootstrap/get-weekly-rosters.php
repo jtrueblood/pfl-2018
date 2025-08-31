@@ -35,7 +35,7 @@ function get_team_mfl_roster_by_week($year, $week){
     $seasonleagueid = $leagueid[$year];
     $curl = curl_init();
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www48.myfantasyleague.com/$year/export?TYPE=rosters&L=$seasonleagueid&W=$week&JSON=1",
+        CURLOPT_URL => "https://www48.myfantasyleague.com/$year/export?TYPE=rosters&L=$seasonleagueid&APIKEY=aRNp1sySvuWrx0GmO1HIZDYeFbox&W=$week&JSON=1",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,

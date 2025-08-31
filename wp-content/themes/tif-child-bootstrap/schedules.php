@@ -15,6 +15,22 @@ $teamdata = get_all_team_data();
 
 $schedule = schedule_by_week();
 //echo $smonth;
+
+$newweeks = the_weeks();
+foreach ($newweeks as $week):
+    $myweekall[$week] = checkheadhead($week);
+endforeach;
+
+foreach ($myweekall as $key => $value):
+    foreach ($value as $k => $v):
+        if($v == 1):
+            $matchup = explode('-', $k);
+            $headgames[$key][$matchup[0]] = $matchup[1];
+        endif;
+    endforeach;
+endforeach;
+
+printr($headgames, 0);
 ?>
 
 <?php get_header(); ?>
@@ -33,7 +49,7 @@ $schedule = schedule_by_week();
 				<!--Page content-->
 				<div id="page-content">
                     <div class="row">
-                    <?php //printr($schedule[199902], 0); ?>
+<!--                    --><?php //printr($schedule[202414], 0); ?>
                     <!-- Extra Point % -->
 
                         <?php
@@ -57,10 +73,8 @@ $schedule = schedule_by_week();
                             //loop through all weeks
                             $i = 1;
                             foreach($weeks as $wk):
-
                             $year = substr($wk, 0, 4);
                             $printwk = 'Week '.substr($wk,-2);
-
                                 if($i == 1):
                                     echo '<div class="clearfix"></div>';
                                     echo '<div class="col-xs-24"><h4>'.$year.'</h4></div>';
@@ -91,6 +105,7 @@ $schedule = schedule_by_week();
                                     echo $tableprint;
 
                                     $tableprint = '';
+
                                     tablefoot('');
                                 echo '</div>';
                                 $i --;

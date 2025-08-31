@@ -488,7 +488,12 @@ $rosteredif = check_player_rostered($playerid, $year);
 		<div class="col-xs-24 col-sm-4 left-column">
 			<div class="panel widget">
 				<div id="player_widget_img" class="player-img-top">
+                    <?php if($image_attributes[0]):?>
 					<img src="<?php echo $image_attributes[0]; ?>" style="height: 200px;"/>
+                    <?php else: ?>
+                    <img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/no-player.jpg" style="height: 200px;"/>
+                        <p></p>
+                    <?php endif; ?>
 				</div>
 				<div class="widget-body text-center">
 					<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $playerposition; ?>.jpg">
@@ -504,15 +509,9 @@ $rosteredif = check_player_rostered($playerid, $year);
 					if(in_array($playerid, $ringofhonor)){
 						echo '<h5><span class="text-thin">'.$teamids[$honorteam].'</span> Ring of Honor</h5>';
 					}
-
-                    printr($rosteredif, 0);
-
-				    //printr($curlsuccess, 0);
 				    
 					?>
-					
-					
-					
+
 					<p class="mar-btm">
 						<span class="text-muted">IDs: </span><?php echo $playerid; ?><?php 
 							if(!empty($mflid)){
@@ -1691,7 +1690,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 													<th class="text-center min-width">Yr</th>
 													<th class="text-center min-width">Wk</th>
                                                     <th class="text-center">Date</th>
-													<th class="text-center max-width">Game</th>
+													<th class="text-center" style="min-width: 80px;">Game</th>
 													<?php if ($playerposition != 'PK'){ ?>
 													<th class="text-center">Pass Yds</th>
 													<th class="text-center">Pass TD</th>
@@ -1914,16 +1913,14 @@ $rosteredif = check_player_rostered($playerid, $year);
 							    foreach ($career_timeline as $key => $value){
 								    $tradechecker[$key] = $value['traded'][0]['when'];
 							    }
-							    
-							    //printr($tradechecker, 0);
-								
+
 								foreach ($career_timeline as $key => $value){
 								?>
 								<!-- post the years -->
 								<div class="timeline-entry">
 									<div class="timeline-stat">
 								        <div class="timeline-icon <?php echo 'val'.$count; ?>"></div>
-								        <div class="timeline-time"><?php echo $key; ?></div> 
+								        <div class="timeline-time"><?php echo $key; ?></div>
 							        </div>
 									
 								</div>
@@ -1939,8 +1936,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 							    </div>
 							    
 							    <?php } 
-								 
-								
+
 								// protected (order based on season or preseason trade)
 								
 								// player not traded
@@ -1959,8 +1955,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 									include('inc/player_timeline_protected.php');					
 							    	include('inc/player_timeline_traded.php');	
 								}
-								
-								
+
 								// rookie season    
 								if ($count == 0){
 								echo '<div class="timeline-entry">
@@ -1969,9 +1964,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 							        </div>
 							    </div>';							    
 							    } 
-								 
-								 
-								 
+
 								// did not play    
 								if (!empty($value['dnp'])){
 									include('inc/player_timeline_dnp.php');
@@ -1991,10 +1984,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 									include('inc/player_timeline_protected.php');					
 							    	include('inc/player_timeline_traded.php');	
 								}
-								
-								
-								
-								
+
 								//reset traded player values in the loop
 								$value['traded']['when'] = array();
 								
@@ -2021,8 +2011,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 							        } ?>
 						    	</div>
 								<?php } 
-								
-								
+
 								if(!empty($value['leader'])){ ?>
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
@@ -2050,8 +2039,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 							        </div>
 						    	</div>
 								<?php } 	
-										    
-								    
+
 								if(!empty($value['pfltitle'])){ ?>
 								<div class="timeline-entry">
 							        <div class="timeline-stat">
@@ -2095,11 +2083,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 								<?php }
 						
 								?>
-
-						 						    
 				        </div>
-						
-					           
 					</div>
 						<!--===================================================-->
 						<!-- End Timeline -->

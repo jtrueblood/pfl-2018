@@ -43,6 +43,7 @@ $mflteamids = array('0005' => 'DST', '0003' => 'PEP', '0004' => 'WRZ', '0002' =>
 
 $weeks = array('1','2','3','4','5','6','7','8','9','10','11','12','13','14');
 $weeks_2dig = array('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14');
+$weeks_2dig_asso = array('0' => '00','1' => '01','2' => '02','3' => '03','4' => '04','5' => '05','6' => '06','7' => '07','8' => '08','9' => '09','10' => '10','11' => '11','12' => '12','13' => '13','14' => '14','15' => '15','16' => '16','17' => '17');
 
 //$testweek = get_weekly_mfl_player_results(10703, $year, $week);
 //printr($testweek, 1);
@@ -582,6 +583,7 @@ if($run == 'true' && $week <= 14){
 				'%d','%d','%d','%d','%s','%s','%s','%d','%s','%s','%s','%s','%s','%s','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d'
 			)
 		);
+        sleep(1);
 	}
 
 	echo '<h3>PLAYERS INSERTED</h3>';
@@ -666,9 +668,14 @@ if($run == 'true' && $week >= 15){
 							echo 'TABLE MISSING --- '.$key.'<br>';
 						} 
 						
-						if(!empty($query)){                 
-						 	echo 'Table Found - <a href="/player/?id='.$key.'" target="_blank">'.$key.'</a><br>';
-						 	$storetoload[] = $key;
+						if(!empty($query)){
+                            $weekid = $year.$weeks_2dig_asso[$week];
+                            $plscore = get_player_score_by_week($key, $weekid);
+                            $thescore = $plscore['points'];
+                            $pos = pid_to_position($key);
+                            $player_full_name = pid_to_name($key, 0);
+                            echo 'Table Found - <a href="/player/?id='.$key.'" target="_blank" class="playerlinks">'.$player_full_name.' / '.$pos.'</a> - '.$thescore.'<br>';
+                            $storetoload[] = $key;
 						}
 					} 
 
@@ -691,51 +698,11 @@ if($run == 'true' && $week >= 15){
 				</div>
 				
 				<div class="col-sm-2">	
-					
-					
+
 				</div>
-			
 
 			</div>
-			
-			<?php
 
-			// SUNDOWN THIS WITH TOUCH -- set url CURL value to true to load player pages for all players who played this week and refresh leaders data
-
-
-            function touchUrl($url) {
-                $ch = curl_init($url);
-
-                // Set cURL options
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 5); // Set timeout in seconds
-
-                // Execute the request
-                $response = curl_exec($ch);
-                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-                // Check for errors or success based on HTTP status code
-                if ($httpCode >= 200 && $httpCode < 300) {
-                    // Successful request
-                    return "Successful: HTTP Code - $httpCode";
-                } else {
-                    // Unsuccessful request
-                    return "Unsuccessful: HTTP Code - $httpCode";
-                }
-
-                // Close cURL session
-                curl_close($ch);
-            }
-            touchUrl('http://pfl-data.local/player/?id=2017EkelRB');
-            if($touch == 'true'):
-
-//                foreach($storetoload as $pid):
-//                endforeach;
-            endif;
-
-			?>
-			
-		
 		</div>
 	</div>
 </div>

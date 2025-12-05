@@ -1,0 +1,218 @@
+[
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Eagles",
+    "player_name": "Kevin Curtis",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Eagles",
+    "player_name": "DeSean Jackson",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Eagles",
+    "player_name": "Brian Westbrook",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Falcons",
+    "player_name": "Matt Ryan",
+    "position": "QB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Chiefs",
+    "player_name": "Dantrell Savage",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Chiefs",
+    "player_name": "Kolby Smith",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Giants",
+    "player_name": "D.J. Ware",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Cardinals",
+    "player_name": "Stephen Spach",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Rams",
+    "player_name": "Marc Bulger",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Rams",
+    "player_name": "Mike Karney",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Lions",
+    "player_name": "Eric Fowler",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Bengals",
+    "player_name": "Bernard Scott",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Colts",
+    "player_name": "Donald Brown",
+    "position": "RB",
+    "injury": "Chest",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Colts",
+    "player_name": "Adam Vinatieri",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Saints",
+    "player_name": "Lance Moore",
+    "position": "WR",
+    "injury": "Ankle, Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Redskins",
+    "player_name": "Clinton Portis",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Steelers",
+    "player_name": "Charlie Batch",
+    "position": "QB",
+    "injury": "left Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Buccaneers",
+    "player_name": "Michael Clayton",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Panthers",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "right Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Panthers",
+    "player_name": "Dwayne Jarrett",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 13,
+    "team": "Ravens",
+    "player_name": "L.J. Smith",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  }
+]

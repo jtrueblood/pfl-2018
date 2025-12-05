@@ -1,0 +1,200 @@
+[
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Bears",
+    "player_name": "Jahdae Walker",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Lions",
+    "player_name": "Sione Vaki",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Jets",
+    "player_name": "Kene Nwangwu",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Jets",
+    "player_name": "Josh Reynolds",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Dolphins",
+    "player_name": "Darren Waller",
+    "position": "TE",
+    "injury": "Hip",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Dolphins",
+    "player_name": "Jaylen Wright",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Rams",
+    "player_name": "Colby Parkinson",
+    "position": "TE",
+    "injury": "Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Titans",
+    "player_name": "Kalel Mullings",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "49ers",
+    "player_name": "Brock Purdy",
+    "position": "QB",
+    "injury": "Shoulder, Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Ravens",
+    "player_name": "Isaiah Likely",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Broncos",
+    "player_name": "Nate Adkins",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Cardinals",
+    "player_name": "Tip Reiman",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Eagles",
+    "player_name": "Dallas Goedert",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Eagles",
+    "player_name": "Will Shipley",
+    "position": "RB",
+    "injury": "Oblique",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Chiefs",
+    "player_name": "Jalen Royals",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Chiefs",
+    "player_name": "Xavier Worthy",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Falcons",
+    "player_name": "Jamal Agnew",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Falcons",
+    "player_name": "Younghoe Koo",
+    "position": "K",
+    "injury": "Not injury related - other",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Falcons",
+    "player_name": "Casey Washington",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Buccaneers",
+    "player_name": "Chris Godwin Jr.",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Texans",
+    "player_name": "Braxton Berrios",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 2,
+    "team": "Texans",
+    "player_name": "Christian Kirk",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  }
+]

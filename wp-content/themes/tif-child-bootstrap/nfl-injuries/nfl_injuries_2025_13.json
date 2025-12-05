@@ -1,0 +1,218 @@
+[
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Packers",
+    "player_name": "Jayden Reed",
+    "position": "WR",
+    "injury": "Foot, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Packers",
+    "player_name": "Savion Williams",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Lions",
+    "player_name": "Kalif Raymond",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Lions",
+    "player_name": "Brock Wright",
+    "position": "TE",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Chiefs",
+    "player_name": "Noah Gray",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Bengals",
+    "player_name": "Tahj Brooks",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Bengals",
+    "player_name": "Jermaine Burton",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Bengals",
+    "player_name": "Tee Higgins",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Ravens",
+    "player_name": "Justice Hill",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Eagles",
+    "player_name": "Xavier Gipson",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Saints",
+    "player_name": "Alvin Kamara",
+    "position": "RB",
+    "injury": "Knee, Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "49ers",
+    "player_name": "Eddy Pineiro",
+    "position": "K",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Browns",
+    "player_name": "Brenden Bates",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Falcons",
+    "player_name": "Drake London",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Cardinals",
+    "player_name": "Trey Benson",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Cardinals",
+    "player_name": "Emari Demercado",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Vikings",
+    "player_name": "J.J. McCarthy",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Seahawks",
+    "player_name": "George Holani",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Raiders",
+    "player_name": "Michael Mayer",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Chargers",
+    "player_name": "Omarion Hampton",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Bills",
+    "player_name": "Curtis Samuel",
+    "position": "WR",
+    "injury": "Elbow, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Broncos",
+    "player_name": "Nate Adkins",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Commanders",
+    "player_name": "Noah Brown",
+    "position": "WR",
+    "injury": "Groin, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 13,
+    "team": "Commanders",
+    "player_name": "Jayden Daniels",
+    "position": "QB",
+    "injury": "Elbow",
+    "game_status": "Out"
+  }
+]

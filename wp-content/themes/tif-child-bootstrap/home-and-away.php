@@ -46,16 +46,18 @@ endforeach;
 
 foreach ($headgames as $key => $value):
     $previous = $prevweeks[$key - 1];
-    foreach ($value as $k => $v):
-        $thegames[$key][] = array(
-            'firstend' => array(
-                $k => get_team_boxscore_by_week($previous, $k)
-            ),
-            'secondend' => array(
-                $v => get_team_boxscore_by_week($key, $v)
-            )
-        );
-    endforeach;
+    if (is_array($value)):
+        foreach ($value as $k => $v):
+            $thegames[$key][] = array(
+                'firstend' => array(
+                    $k => get_team_boxscore_by_week($previous, $k)
+                ),
+                'secondend' => array(
+                    $v => get_team_boxscore_by_week($key, $v)
+                )
+            );
+        endforeach;
+    endif;
 endforeach;
 
 
@@ -79,53 +81,38 @@ endforeach;
                 //loop through all weeks
 
                 foreach($thegames as $key => $thegame):
-                    if($thegame):
-
-
-                    foreach ($thegame as $k => $v):
-                        $result = array();
-
-                        echo '<div class="row">';
-                        foreach ($v as $mykey => $gamer):
-
-                                foreach ($gamer as $t => $z):
-
-                                    if($z['versus_pts'] < $z['points']):
-                                        $result['gameone'] = 'win';
-                                    else:
-                                        $result['gameone'] = 'loss';
-                                    endif;
-
-                                    $printwk = 'Week '.$z['week'].', '.$z['season'];
-
-
-                                    echo '<div class="col-xs-24 col-sm-2 col-md-4 col-lg-6">';
-                                    $labels = array('Home', '', 'Away', '');
-                                    tablehead($printwk, $labels);
-
-                                    $tableprint .='<tr><td class="'.$winh.'">'.team_long($z['versus']).'</td>';
-                                    $tableprint .='<td class="min-width">'.$z['versus_pts'].'</td>';
-                                    $tableprint .='<td class="'.$winr.'">'.team_long($z['team_int']).'</td>';
-                                    $tableprint .='<td class="min-width">'.$z['points'].'</td></tr>';
-
-                                    echo $tableprint;
-
-                                    $tableprint = '';
-
-                                    tablefoot('');
-                                    echo '</div>';
-
+                    if(is_array($thegame) && $thegame):
+                        foreach ($thegame as $k => $v):
+                            $result = array();
+                            echo '<div class="row">';
+                            foreach ($v as $mykey => $gamer):
+                                if (is_array($gamer)):
+                                    foreach ($gamer as $t => $z):
+                                        if($z['versus_pts'] < $z['points']):
+                                            $result['gameone'] = 'win';
+                                        else:
+                                            $result['gameone'] = 'loss';
+                                        endif;
+                                        $printwk = 'Week '.$z['week'].', '.$z['season'];
+                                        echo '<div class="col-xs-24 col-sm-2 col-md-4 col-lg-6">';
+                                        $labels = array('Home', '', 'Away', '');
+                                        tablehead($printwk, $labels);
+                                        $tableprint .='<tr><td class="'.$winh.'">'.team_long($z['versus']).'</td>';
+                                        $tableprint .='<td class="min-width">'.$z['versus_pts'].'</td>';
+                                        $tableprint .='<td class="'.$winr.'">'.team_long($z['team_int']).'</td>';
+                                        $tableprint .='<td class="min-width">'.$z['points'].'</td></tr>';
+                                        echo $tableprint;
+                                        $tableprint = '';
+                                        tablefoot('');
+                                        echo '</div>';
+                                    endforeach;
+                                endif;
                             endforeach;
-
-                        endforeach;
-
                             echo '<div class="col-xs-24 col-sm-2 col-md-4 col-lg-6">';
-                                printr($result, 0);
+                            printr($result, 0);
                             echo '</div>';
-
-                        echo '</div>';
-
-                    endforeach;
+                            echo '</div>';
+                        endforeach;
                     endif;
                 endforeach;
 

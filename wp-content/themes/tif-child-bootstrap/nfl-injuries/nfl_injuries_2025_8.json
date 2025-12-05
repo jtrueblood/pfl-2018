@@ -1,0 +1,236 @@
+[
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Chargers",
+    "player_name": "Hassan Haskins",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Bears",
+    "player_name": "Roschon Johnson",
+    "position": "RB",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Bears",
+    "player_name": "Cole Kmet",
+    "position": "TE",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Ravens",
+    "player_name": "Lamar Jackson",
+    "position": "QB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Dolphins",
+    "player_name": "Julian Hill",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Eagles",
+    "player_name": "A.J. Brown",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "49ers",
+    "player_name": "Ricky Pearsall",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "49ers",
+    "player_name": "Brock Purdy",
+    "position": "QB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Texans",
+    "player_name": "Nico Collins",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Texans",
+    "player_name": "Christian Kirk",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Jets",
+    "player_name": "Kene Nwangwu",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Jets",
+    "player_name": "Josh Reynolds",
+    "position": "WR",
+    "injury": "Hip",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Jets",
+    "player_name": "Stone Smartt",
+    "position": "TE",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Jets",
+    "player_name": "Tyrod Taylor",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Jets",
+    "player_name": "Garrett Wilson",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Josh Palmer",
+    "position": "WR",
+    "injury": "Knee, Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Bryce Young",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Buccaneers",
+    "player_name": "Chris Godwin Jr.",
+    "position": "WR",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Buccaneers",
+    "player_name": "Bucky Irving",
+    "position": "RB",
+    "injury": "Foot, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Titans",
+    "player_name": "Bryce Oliver",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Titans",
+    "player_name": "Calvin Ridley",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Packers",
+    "player_name": "Dontayvion Wicks",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Steelers",
+    "player_name": "Scott Miller",
+    "position": "WR",
+    "injury": "Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Commanders",
+    "player_name": "Jayden Daniels",
+    "position": "QB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Commanders",
+    "player_name": "Matt Gay",
+    "position": "K",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 8,
+    "team": "Commanders",
+    "player_name": "Colson Yankoff",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  }
+]

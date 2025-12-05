@@ -1,0 +1,236 @@
+[
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Jets",
+    "player_name": "Jerricho Cotchery",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Lions",
+    "player_name": "Jason Hanson",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Lions",
+    "player_name": "Tony Scheffler",
+    "position": "TE",
+    "injury": "Rib",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Saints",
+    "player_name": "Ladell Betts",
+    "position": "RB",
+    "injury": "Neck, Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Cowboys",
+    "player_name": "Tony Romo",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Giants",
+    "player_name": "Hakeem Nicks",
+    "position": "WR",
+    "injury": "Lower Leg",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Giants",
+    "player_name": "Steve Smith",
+    "position": "WR",
+    "injury": "Pectoral",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Seahawks",
+    "player_name": "Anthony McCoy",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Panthers",
+    "player_name": "Tyrell Sutton",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Browns",
+    "player_name": "Colt McCoy",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Chargers",
+    "player_name": "Patrick Crayton",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Chargers",
+    "player_name": "Ryan Mathews",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Colts",
+    "player_name": "Joseph Addai",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Colts",
+    "player_name": "Austin Collie",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Steelers",
+    "player_name": "Antonio Brown",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Steelers",
+    "player_name": "Matt Spaeth",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Redskins",
+    "player_name": "Ryan Torain",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Falcons",
+    "player_name": "Antone Smith",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Titans",
+    "player_name": "Kenny Britt",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Texans",
+    "player_name": "Owen Daniels",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Dolphins",
+    "player_name": "Brandon Marshall",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Broncos",
+    "player_name": "Demaryius Thomas",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 12,
+    "team": "Niners",
+    "player_name": "Joe Nedney",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Doubtful"
+  }
+]

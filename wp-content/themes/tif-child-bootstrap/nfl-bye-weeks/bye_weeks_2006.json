@@ -1,0 +1,72 @@
+{
+  "season": 2006,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "DAL",
+        "KAN",
+        "OAK",
+        "SDG"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "DEN",
+        "NYG",
+        "PIT",
+        "TAM"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "ATL",
+        "CIN",
+        "HOU",
+        "SEA"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "CLE",
+        "GNB",
+        "IND",
+        "JAX",
+        "MIN",
+        "NWE"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BAL",
+        "CHI",
+        "NOR",
+        "SFO",
+        "STL",
+        "TEN"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BUF",
+        "DET",
+        "MIA",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "ARI",
+        "CAR",
+        "NYJ",
+        "PHI"
+      ]
+    }
+  ]
+}

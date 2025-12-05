@@ -1,0 +1,68 @@
+{
+  "season": 1991,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "CIN",
+        "CLE",
+        "HOU",
+        "PIT"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ATL",
+        "NOR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CHI",
+        "DEN",
+        "DET",
+        "GNB",
+        "NWE",
+        "TAM"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "DAL",
+        "NYG",
+        "PHI",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "BUF",
+        "IND",
+        "MIA",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "KAN",
+        "OAK",
+        "SDG",
+        "SEA"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "ARI",
+        "MIN"
+      ]
+    }
+  ]
+}

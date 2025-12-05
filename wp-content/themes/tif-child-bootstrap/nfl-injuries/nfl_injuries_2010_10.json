@@ -1,0 +1,191 @@
+[
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Falcons",
+    "player_name": "Justin Peelle",
+    "position": "TE",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Panthers",
+    "player_name": "Jonathan Stewart",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Panthers",
+    "player_name": "Tyrell Sutton",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Panthers",
+    "player_name": "DeAngelo Williams",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Buccaneers",
+    "player_name": "Earnest Graham",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Titans",
+    "player_name": "Kenny Britt",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Texans",
+    "player_name": "Owen Daniels",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Colts",
+    "player_name": "Joseph Addai",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Colts",
+    "player_name": "Austin Collie",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Rams",
+    "player_name": "Danario Alexander",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Rams",
+    "player_name": "Fendi Onobun",
+    "position": "TE",
+    "injury": "Back",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Niners",
+    "player_name": "Alex Smith",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Seahawks",
+    "player_name": "Michael Robinson",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Seahawks",
+    "player_name": "Golden Tate",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Lions",
+    "player_name": "Jason Hanson",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Bills",
+    "player_name": "Roscoe Parrish",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Cowboys",
+    "player_name": "Tony Romo",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Giants",
+    "player_name": "Madison Hedgecock",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Giants",
+    "player_name": "Darius Reynaud",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 10,
+    "team": "Giants",
+    "player_name": "Steve Smith",
+    "position": "WR",
+    "injury": "Pectoral",
+    "game_status": "Out"
+  }
+]

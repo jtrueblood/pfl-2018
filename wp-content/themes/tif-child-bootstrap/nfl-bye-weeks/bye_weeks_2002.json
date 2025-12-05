@@ -1,0 +1,77 @@
+{
+  "season": 2002,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "BAL",
+        "JAX",
+        "OAK",
+        "PIT"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "ATL",
+        "IND",
+        "SFO",
+        "WAS"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "DET",
+        "HOU",
+        "MIN",
+        "SEA"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ARI",
+        "CHI",
+        "NYJ",
+        "PHI"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CIN",
+        "NWE",
+        "NYG",
+        "TEN"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "GNB",
+        "MIA",
+        "SDG",
+        "STL"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CAR",
+        "DEN",
+        "KAN",
+        "NOR"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "BUF",
+        "CLE",
+        "DAL",
+        "TAM"
+      ]
+    }
+  ]
+}

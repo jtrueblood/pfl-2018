@@ -1,0 +1,146 @@
+[
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Panthers",
+    "player_name": "Tony Fiammetta",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Steelers",
+    "player_name": "Arnaz Battle",
+    "position": "WR",
+    "injury": "Chest",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Cardinals",
+    "player_name": "LaRod Stephens-Howling",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Texans",
+    "player_name": "Garrett Graham",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Ravens",
+    "player_name": "David Reed",
+    "position": "WR",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Browns",
+    "player_name": "Robert Royal",
+    "position": "TE",
+    "injury": "Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Chargers",
+    "player_name": "Patrick Crayton",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Chargers",
+    "player_name": "Malcom Floyd",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Chargers",
+    "player_name": "Antonio Gates",
+    "position": "TE",
+    "injury": "Toe, Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Bengals",
+    "player_name": "Brian Leonard",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Jaguars",
+    "player_name": "Maurice Jones-Drew",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Niners",
+    "player_name": "Nate Byham",
+    "position": "TE",
+    "injury": "Heel",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Rams",
+    "player_name": "Michael Hoomanawanui",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Saints",
+    "player_name": "David Thomas",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 16,
+    "team": "Vikings",
+    "player_name": "Brett Favre",
+    "position": "QB",
+    "injury": "Concussion, Neck",
+    "game_status": "Doubtful"
+  }
+]

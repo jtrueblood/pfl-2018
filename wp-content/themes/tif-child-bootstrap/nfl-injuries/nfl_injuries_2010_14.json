@@ -1,0 +1,236 @@
+[
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Joseph Addai",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Austin Collie",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Mike Hart",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Broncos",
+    "player_name": "Spencer Larsen",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Broncos",
+    "player_name": "Demaryius Thomas",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Cardinals",
+    "player_name": "Derek Anderson",
+    "position": "QB",
+    "injury": "Head",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Niners",
+    "player_name": "Joe Nedney",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Niners",
+    "player_name": "DeShawn Wynn",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Steelers",
+    "player_name": "Heath Miller",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Rams",
+    "player_name": "Kenneth Darby",
+    "position": "RB",
+    "injury": "Ribs",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Rams",
+    "player_name": "Michael Hoomanawanui",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Dolphins",
+    "player_name": "Brian Hartline",
+    "position": "WR",
+    "injury": "Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Chiefs",
+    "player_name": "Matt Cassel",
+    "position": "QB",
+    "injury": "Illness",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Chargers",
+    "player_name": "Patrick Crayton",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Chargers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Browns",
+    "player_name": "Evan Moore",
+    "position": "TE",
+    "injury": "Hip",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Bills",
+    "player_name": "Shawn Nelson",
+    "position": "TE",
+    "injury": "Illness",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Cowboys",
+    "player_name": "Marion Barber",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Cowboys",
+    "player_name": "Tony Romo",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Packers",
+    "player_name": "Korey Hall",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Lions",
+    "player_name": "Shaun Hill",
+    "position": "QB",
+    "injury": "right Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Lions",
+    "player_name": "Derrick Williams",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Ravens",
+    "player_name": "Todd Heap",
+    "position": "TE",
+    "injury": "Thigh",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Texans",
+    "player_name": "Garrett Graham",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 14,
+    "team": "Vikings",
+    "player_name": "Percy Harvin",
+    "position": "WR",
+    "injury": "Illness",
+    "game_status": "Doubtful"
+  }
+]

@@ -1,0 +1,209 @@
+[
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Lions",
+    "player_name": "Jahvid Best",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Niners",
+    "player_name": "Bruce Miller",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Dolphins",
+    "player_name": "Dan Carpenter",
+    "position": "K",
+    "injury": "right Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Cowboys",
+    "player_name": "Miles Austin",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Cowboys",
+    "player_name": "Tony Fiammetta",
+    "position": "RB",
+    "injury": "Illness",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Cowboys",
+    "player_name": "Jon Kitna",
+    "position": "QB",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Fred Jackson",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Donald Jones",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Rian Lindell",
+    "position": "K",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Naaman Roosevelt",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Chargers",
+    "player_name": "Malcom Floyd",
+    "position": "WR",
+    "injury": "Hip",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Bengals",
+    "player_name": "Donald Lee",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Eagles",
+    "player_name": "Jeremy Maclin",
+    "position": "WR",
+    "injury": "Hamstring, Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Colts",
+    "player_name": "Dallas Clark",
+    "position": "TE",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Colts",
+    "player_name": "Peyton Manning",
+    "position": "QB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Vikings",
+    "player_name": "Adrian Peterson",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Vikings",
+    "player_name": "Kyle Rudolph",
+    "position": "TE",
+    "injury": "Quadricep",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Texans",
+    "player_name": "Garrett Graham",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Bears",
+    "player_name": "Jay Cutler",
+    "position": "QB",
+    "injury": "right Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Raiders",
+    "player_name": "Jason Campbell",
+    "position": "QB",
+    "injury": "Collarbone",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Raiders",
+    "player_name": "Jacoby Ford",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 12,
+    "team": "Giants",
+    "player_name": "Ahmad Bradshaw",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  }
+]

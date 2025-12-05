@@ -1,0 +1,115 @@
+{
+  "season": 2000,
+  "bye_weeks": [
+    {
+      "week": 2,
+      "teams": [
+        "PIT"
+      ]
+    },
+    {
+      "week": 3,
+      "teams": [
+        "ARI",
+        "IND",
+        "TEN"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "BUF",
+        "CAR",
+        "MIN"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "NOR",
+        "NYJ",
+        "OAK"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "DAL",
+        "KAN",
+        "STL"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "DET",
+        "MIA",
+        "TAM"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "GNB",
+        "NYG",
+        "SDG"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CHI",
+        "DEN",
+        "NWE"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "JAX"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "WAS"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "SEA"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "SFO"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "BAL"
+      ]
+    },
+    {
+      "week": 15,
+      "teams": [
+        "ATL"
+      ]
+    },
+    {
+      "week": 16,
+      "teams": [
+        "PHI"
+      ]
+    },
+    {
+      "week": 17,
+      "teams": [
+        "CLE"
+      ]
+    }
+  ]
+}

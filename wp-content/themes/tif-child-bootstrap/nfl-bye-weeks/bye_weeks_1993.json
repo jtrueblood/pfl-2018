@@ -1,0 +1,111 @@
+{
+  "season": 1993,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "BUF",
+        "CHI",
+        "GNB",
+        "IND",
+        "MIA",
+        "MIN",
+        "NYJ",
+        "TAM"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "DAL",
+        "DEN",
+        "KAN",
+        "NYG",
+        "OAK",
+        "PHI",
+        "SDG",
+        "WAS"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "ARI",
+        "CIN",
+        "CLE",
+        "HOU",
+        "NWE",
+        "PIT"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ATL",
+        "DET",
+        "NOR",
+        "SEA",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BUF",
+        "CHI",
+        "GNB",
+        "IND",
+        "MIA",
+        "MIN",
+        "NYJ",
+        "TAM"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "DAL",
+        "DEN",
+        "KAN",
+        "NYG",
+        "OAK",
+        "PHI",
+        "SDG",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CIN",
+        "CLE",
+        "HOU",
+        "PIT"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "ATL",
+        "NOR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "DET",
+        "NWE"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "ARI",
+        "SEA"
+      ]
+    }
+  ]
+}

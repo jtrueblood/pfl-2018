@@ -1,0 +1,236 @@
+[
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Mecole Hardman",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Dalton Kincaid",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bills",
+    "player_name": "Curtis Samuel",
+    "position": "WR",
+    "injury": "Elbow, Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Texans",
+    "player_name": "C.J. Stroud",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Packers",
+    "player_name": "Jayden Reed",
+    "position": "WR",
+    "injury": "Foot, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Seahawks",
+    "player_name": "Tory Horton",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Titans",
+    "player_name": "Elic Ayomanor",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Ravens",
+    "player_name": "Rashod Bateman",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Giants",
+    "player_name": "Jaxson Dart",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Giants",
+    "player_name": "Thomas Fidone II",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Chiefs",
+    "player_name": "Isiah Pacheco",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bengals",
+    "player_name": "Joe Burrow",
+    "position": "QB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bengals",
+    "player_name": "Samaje Perine",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bears",
+    "player_name": "Travis Homer",
+    "position": "RB",
+    "injury": "Hamstring, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Bears",
+    "player_name": "Roschon Johnson",
+    "position": "RB",
+    "injury": "Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Jaguars",
+    "player_name": "Hunter Long",
+    "position": "TE",
+    "injury": "Hip, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Jaguars",
+    "player_name": "Brian Thomas Jr.",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Cardinals",
+    "player_name": "Trey Benson",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Cardinals",
+    "player_name": "Emari Demercado",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Cardinals",
+    "player_name": "Marvin Harrison Jr.",
+    "position": "WR",
+    "injury": "Illness",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Browns",
+    "player_name": "Dillon Gabriel",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Browns",
+    "player_name": "Jamari Thrash",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Falcons",
+    "player_name": "Drake London",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Saints",
+    "player_name": "Brandin Cooks",
+    "position": "WR",
+    "injury": "Not injury related - personal matter",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "Buccaneers",
+    "player_name": "Bucky Irving",
+    "position": "RB",
+    "injury": "Shoulder, Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 12,
+    "team": "49ers",
+    "player_name": "Eddy Pineiro",
+    "position": "K",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  }
+]

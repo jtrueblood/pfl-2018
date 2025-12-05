@@ -1,0 +1,82 @@
+{
+  "season": 2016,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "GNB",
+        "PHI"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "JAX",
+        "KAN",
+        "NOR",
+        "SEA"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "MIN",
+        "TAM"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CAR",
+        "DAL"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BAL",
+        "LAR",
+        "MIA",
+        "NYG",
+        "PIT",
+        "SFO"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "ARI",
+        "CHI",
+        "CIN",
+        "HOU",
+        "NWE",
+        "WAS"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "BUF",
+        "DET",
+        "IND",
+        "OAK"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "ATL",
+        "DEN",
+        "NYJ",
+        "SDG"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "CLE",
+        "TEN"
+      ]
+    }
+  ]
+}

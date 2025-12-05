@@ -1,0 +1,77 @@
+{
+  "season": 2012,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "IND",
+        "PIT"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "DAL",
+        "DET",
+        "OAK",
+        "TAM"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "CAR",
+        "CHI",
+        "JAX",
+        "NOR"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "ATL",
+        "DEN",
+        "KAN",
+        "MIA",
+        "PHI",
+        "SDG"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BAL",
+        "BUF",
+        "CIN",
+        "HOU"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "NWE",
+        "NYJ",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "ARI",
+        "CLE",
+        "GNB",
+        "WAS"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "MIN",
+        "NYG",
+        "SEA",
+        "TEN"
+      ]
+    }
+  ]
+}

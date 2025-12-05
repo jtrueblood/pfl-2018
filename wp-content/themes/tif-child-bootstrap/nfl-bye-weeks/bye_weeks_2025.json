@@ -1,0 +1,82 @@
+{
+  "season": 2025,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "ATL",
+        "CHI",
+        "GNB",
+        "PIT"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "HOU",
+        "MIN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BAL",
+        "BUF"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ARI",
+        "DET",
+        "JAX",
+        "LAR",
+        "LVR",
+        "SEA"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CLE",
+        "NYJ",
+        "PHI",
+        "TAM"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "CIN",
+        "DAL",
+        "KAN",
+        "TEN"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "IND",
+        "NOR"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "DEN",
+        "LAC",
+        "MIA",
+        "WAS"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "CAR",
+        "NWE",
+        "NYG",
+        "SFO"
+      ]
+    }
+  ]
+}

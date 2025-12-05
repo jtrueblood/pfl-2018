@@ -1,0 +1,191 @@
+[
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Browns",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Chargers",
+    "player_name": "Malcom Floyd",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Chargers",
+    "player_name": "Antonio Gates",
+    "position": "TE",
+    "injury": "Toe, Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Chargers",
+    "player_name": "Nate Kaeding",
+    "position": "K",
+    "injury": "right Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Chargers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Raiders",
+    "player_name": "Zach Miller",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Raiders",
+    "player_name": "Louis Murphy",
+    "position": "WR",
+    "injury": "Chest",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Colts",
+    "player_name": "Joseph Addai",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Saints",
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Panthers",
+    "player_name": "DeAngelo Williams",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Lions",
+    "player_name": "Shaun Hill",
+    "position": "QB",
+    "injury": "left Forearm",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Cowboys",
+    "player_name": "Tony Romo",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Packers",
+    "player_name": "Donald Driver",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Buccaneers",
+    "player_name": "Earnest Graham",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Falcons",
+    "player_name": "Justin Peelle",
+    "position": "TE",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Giants",
+    "player_name": "Madison Hedgecock",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Seahawks",
+    "player_name": "Matt Hasselbeck",
+    "position": "QB",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 9,
+    "team": "Seahawks",
+    "player_name": "Golden Tate",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  }
+]

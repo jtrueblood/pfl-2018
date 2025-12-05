@@ -1,0 +1,68 @@
+{
+  "season": 1992,
+  "bye_weeks": [
+    {
+      "week": 1,
+      "teams": [
+        "MIA",
+        "NWE"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "ARI",
+        "DAL",
+        "IND",
+        "NYG",
+        "PHI",
+        "WAS"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "CIN",
+        "CLE",
+        "HOU",
+        "PIT"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "CHI",
+        "DET",
+        "GNB",
+        "MIN",
+        "SDG",
+        "TAM"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BUF",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ATL",
+        "NOR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "DEN",
+        "KAN",
+        "OAK",
+        "SEA"
+      ]
+    }
+  ]
+}

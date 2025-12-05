@@ -1,0 +1,82 @@
+{
+  "season": 2020,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "PIT",
+        "TEN"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "DEN",
+        "DET",
+        "GNB",
+        "NWE"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "LAC",
+        "LVR",
+        "NOR",
+        "SEA"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BAL",
+        "IND",
+        "MIA",
+        "MIN"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ARI",
+        "HOU",
+        "JAX",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CIN",
+        "CLE",
+        "LAR",
+        "PHI"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "ATL",
+        "DAL",
+        "KAN",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "BUF",
+        "CHI",
+        "NYG",
+        "SFO"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "CAR",
+        "TAM"
+      ]
+    }
+  ]
+}

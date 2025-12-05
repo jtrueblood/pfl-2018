@@ -1,0 +1,155 @@
+[
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Eagles",
+    "player_name": "Kevin Curtis",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Titans",
+    "player_name": "Mark Jones",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Titans",
+    "player_name": "Javon Ringer",
+    "position": "RB",
+    "injury": "Back",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Trent Edwards",
+    "position": "QB",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Corey McIntyre",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Shawn Nelson",
+    "position": "TE",
+    "injury": "Illness",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Packers",
+    "player_name": "Jermichael Finley",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Packers",
+    "player_name": "Korey Hall",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Packers",
+    "player_name": "Jordy Nelson",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Colts",
+    "player_name": "Donald Brown",
+    "position": "RB",
+    "injury": "Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Colts",
+    "player_name": "Adam Vinatieri",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Muhsin Muhammad",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Dante Rosario",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  }
+]

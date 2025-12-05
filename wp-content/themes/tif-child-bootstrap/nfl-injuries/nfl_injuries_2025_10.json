@@ -1,0 +1,218 @@
+[
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Raiders",
+    "player_name": "Aidan O'Connell",
+    "position": "QB",
+    "injury": "Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Broncos",
+    "player_name": "Nate Adkins",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Broncos",
+    "player_name": "Marvin Mims Jr.",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Colts",
+    "player_name": "Anthony Gould",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Dolphins",
+    "player_name": "Dee Eskridge",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Jaguars",
+    "player_name": "Hunter Long",
+    "position": "TE",
+    "injury": "Hip, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Jaguars",
+    "player_name": "Brian Thomas Jr.",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Texans",
+    "player_name": "Ka'imi Fairbairn",
+    "position": "K",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Texans",
+    "player_name": "C.J. Stroud",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Browns",
+    "player_name": "Isaiah Bond",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Buccaneers",
+    "player_name": "Chris Godwin Jr.",
+    "position": "WR",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Buccaneers",
+    "player_name": "Bucky Irving",
+    "position": "RB",
+    "injury": "Foot, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Vikings",
+    "player_name": "Josh Oliver",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Giants",
+    "player_name": "Beaux Collins",
+    "position": "WR",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Giants",
+    "player_name": "Graham Gano",
+    "position": "K",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Bears",
+    "player_name": "Jahdae Walker",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Seahawks",
+    "player_name": "Jake Bobo",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Seahawks",
+    "player_name": "Tory Horton",
+    "position": "WR",
+    "injury": "Groin, Shin",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Seahawks",
+    "player_name": "Dareke Young",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Lions",
+    "player_name": "Jacob Saylors",
+    "position": "RB",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Commanders",
+    "player_name": "Jayden Daniels",
+    "position": "QB",
+    "injury": "Elbow",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Commanders",
+    "player_name": "Terry McLaurin",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "49ers",
+    "player_name": "Ricky Pearsall",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 10,
+    "team": "Steelers",
+    "player_name": "Scott Miller",
+    "position": "WR",
+    "injury": "Finger",
+    "game_status": "Out"
+  }
+]

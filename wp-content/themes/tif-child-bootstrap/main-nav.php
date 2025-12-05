@@ -41,7 +41,7 @@
 											<ul class="collapse in">
 												<li class="<?php ifbodyclass (70, 'active-link'); ?>"><a href="/player/?id=1998MannQB">Individual Players</a></li>
 												<li class="<?php ifbodyclass (62, 'active-link'); ?>"><a href="/leaders">Career Leaders</a></li>
-												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2023">Leaders By Season</a></li>
+												<li class="<?php ifbodyclass (169, 'active-link'); ?>"><a href="/leaders-season/?id=2025">Leaders By Season</a></li>
 												<li class="<?php ifbodyclass (1495, 'active-link'); ?>"><a href="/supercards/">Supercards</a></li>
 											</ul>
 									</li>
@@ -56,11 +56,11 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2023">Seasons</a></li>
-												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2023">Drafts by Year</a></li>
-												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2023">Standings By Year</a></li>
+												<li class="<?php ifbodyclass (1159, 'active-link'); ?>"><a href="/seasons/?id=2025">Seasons</a></li>
+												<li class="<?php ifbodyclass (00, 'active-link'); ?>"><a href="/drafts/?id=2025">Drafts by Year</a></li>
+												<li class="<?php ifbodyclass (283, 'active-link'); ?>"><a href="/standings/?id=2025">Standings By Year</a></li>
 												<li class="<?php ifbodyclass (307, 'active-link'); ?>"><a href="/playoff-brackets">Playoff Brackets</a></li>
-                                                <li class="<?php ifbodyclass (1967, 'active-link'); ?>"><a href="/team-rosters/?season=2023">Team Rosters</a></li>
+                                                <li class="<?php ifbodyclass (1967, 'active-link'); ?>"><a href="/team-rosters/?season=2025">Team Rosters</a></li>
 <!--                                                <li class="--><?php //ifbodyclass (252, 'active-link'); ?><!--"><a href="/protections">Protections By Year</a></li>-->
 											</ul>
 									</li>
@@ -90,7 +90,7 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (45, 'active-link'); ?>"><a href="/results?Y=2023&W=01">Weekly Results</a></li>
+												<li class="<?php ifbodyclass (45, 'active-link'); ?>"><a href="/results?Y=2025&W=01">Weekly Results</a></li>
                                                 <li class="<?php ifbodyclass (1797, 'active-link'); ?>"><a href="/schedules">All Schedules</a></li>
 												<li class="<?php ifbodyclass (1153, 'active-link'); ?>"><a href="/grandslams">Grandslams</a></li>
                                                 <li class="<?php ifbodyclass (2015, 'active-link'); ?>"><a href="/home-and-away">Home and Away</a></li>
@@ -121,33 +121,15 @@
                                                 <li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>
                                                 <li class="<?php ifbodyclass (1502, 'active-link'); ?>"><a href="/uniforms">Unis & Helmets</a></li>
                                                 <li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
+                                                <li class="<?php ifbodyclass (2132, 'active-link'); ?>"><a href="/mr-irrelevant">Mr Irrelevant</a></li>
+                                                <li class="<?php ifbodyclass (2043, 'active-link'); ?>"><a href="/kicker-draft/?draft_year=2025/">Kicker Drafts</a></li>
                                                 <li class="<?php ifbodyclass (1678, 'active-link'); ?>"><a href="/transactions/?pid=2015DiggWR">Transactions</a></li>
-                                                <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202301">Scorigami</a></li>
+                                                <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202501">Scorigami</a></li>
                                                 <li class="<?php ifbodyclass (1937, 'active-link'); ?>"><a href="/trade-analyzer?TRADE=130">Trade Analyzer</a></li>
                                                 <li class="<?php ifbodyclass (1939, 'active-link'); ?>"><a href="/position-difference">Position Difference</a></li>
                                                 <li class="<?php ifbodyclass (1941, 'active-link'); ?>"><a href="/colleges">Colleges</a></li>
 											</ul>
 									</li>
-									
-									<!--Menu list item-->
-									<li class="active-sub">
-										<a href="#">
-											<i class="fa fa-th"></i>
-											<span class="menu-title">Build Tools</span>
-											<i class="arrow"></i>
-										</a>
-											<!--Submenu-->
-											<ul class="collapse in">
-                                                <li class="<?php ifbodyclass (1511, 'active-link'); ?>"><a href="/draft-strategy-2024">Draft Strategy 2024</a></li>
-												<li class="<?php ifbodyclass (1625, 'active-link'); ?>"><a href="/create-new-player">Create New Player</a></li>
-                                                <li class="<?php ifbodyclass (1497, 'active-link'); ?>"><a href="/scrape-pro-football-ref/">Scrape PFR for Player Info</a></li>
-											</ul>
-									</li>
-									
-									
-							
-									
-									
 						
 								</ul>
 

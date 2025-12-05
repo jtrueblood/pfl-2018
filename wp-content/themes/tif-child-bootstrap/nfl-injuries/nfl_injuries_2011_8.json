@@ -1,0 +1,173 @@
+[
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Redskins",
+    "player_name": "Santana Moss",
+    "position": "WR",
+    "injury": "Hand",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Redskins",
+    "player_name": "Mike Sellers",
+    "position": "RB",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Donald Jones",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Browns",
+    "player_name": "Mohamed Massaquoi",
+    "position": "WR",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Niners",
+    "player_name": "Moran Norris",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Ravens",
+    "player_name": "Anthony Allen",
+    "position": "RB",
+    "injury": "Thigh",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Ravens",
+    "player_name": "Lee Evans",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Giants",
+    "player_name": "Henry Hynoski",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Saints",
+    "player_name": "Mark Ingram",
+    "position": "RB",
+    "injury": "Heel",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Rams",
+    "player_name": "Danario Alexander",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Rams",
+    "player_name": "Sam Bradford",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Cowboys",
+    "player_name": "Felix Jones",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Colts",
+    "player_name": "Peyton Manning",
+    "position": "QB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Lions",
+    "player_name": "Jahvid Best",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Lions",
+    "player_name": "Rashied Davis",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Broncos",
+    "player_name": "Willis McGahee",
+    "position": "RB",
+    "injury": "Hand",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Jaguars",
+    "player_name": "Brock Bolen",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Texans",
+    "player_name": "Andre Johnson",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 8,
+    "team": "Chargers",
+    "player_name": "Mike Tolbert",
+    "position": "RB",
+    "injury": "Hamstring, Hand",
+    "game_status": "Doubtful"
+  }
+]

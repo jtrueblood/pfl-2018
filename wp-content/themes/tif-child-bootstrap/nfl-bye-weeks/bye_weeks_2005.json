@@ -1,0 +1,77 @@
+{
+  "season": 2005,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "BAL",
+        "DET",
+        "HOU",
+        "WAS"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "CHI",
+        "CLE",
+        "MIA",
+        "PIT"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "KAN",
+        "MIN",
+        "NYG",
+        "OAK"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ARI",
+        "GNB",
+        "PHI",
+        "SFO"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CAR",
+        "JAX",
+        "NWE",
+        "TAM"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ATL",
+        "IND",
+        "NYJ",
+        "SEA"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "BUF",
+        "DAL",
+        "DEN",
+        "STL"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "CIN",
+        "NOR",
+        "SDG",
+        "TEN"
+      ]
+    }
+  ]
+}

@@ -17,20 +17,25 @@ $schedule = schedule_by_week();
 //echo $smonth;
 
 $newweeks = the_weeks();
-foreach ($newweeks as $week):
-    $myweekall[$week] = checkheadhead($week);
-endforeach;
 
-foreach ($myweekall as $key => $value):
-    foreach ($value as $k => $v):
-        if($v == 1):
-            $matchup = explode('-', $k);
-            $headgames[$key][$matchup[0]] = $matchup[1];
-        endif;
-    endforeach;
-endforeach;
+//BS WINS OF THE YEAR;
+$bswin = get_bswins();
+//printr($bswin, 0);
 
-printr($headgames, 0);
+//foreach ($newweeks as $week):
+//    $myweekall[$week] = checkheadhead($week);
+//endforeach;
+//
+//foreach ($myweekall as $key => $value):
+//    foreach ($value as $k => $v):
+//        if($v == 1):
+//            $matchup = explode('-', $k);
+//            $headgames[$key][$matchup[0]] = $matchup[1];
+//        endif;
+//    endforeach;
+//endforeach;
+
+//printr($headgames, 0);
 ?>
 
 <?php get_header(); ?>
@@ -75,40 +80,46 @@ printr($headgames, 0);
                             foreach($weeks as $wk):
                             $year = substr($wk, 0, 4);
                             $printwk = 'Week '.substr($wk,-2);
-                                if($i == 1):
-                                    echo '<div class="clearfix"></div>';
-                                    echo '<div class="col-xs-24"><h4>'.$year.'</h4></div>';
-                                    $i = 15;
+                            echo '<!-- weekid: ' . htmlspecialchars($wk) . ' -->'; // Echo out the weekid for debugging
+                            if($i == 1):
+                                echo '<div class="clearfix"></div>';
+                                echo '<div class="col-xs-24"><h4>'.$year.'</h4></div>';
+                                $i = 15;
+                            endif;
+
+                            echo '<div class="col-xs-24 col-sm-2 col-md-4 col-lg-6">';
+                                $labels = array('Home', '', 'Away', '');
+                                $isbs = $bswin[$wk];
+                                tablehead($printwk, $labels);
+
+                                $getsched = $schedule[$wk];
+
+                                foreach ($getsched as $key => $value):
+                                        if($value['homescore'] > $value['roadscore']):
+                                            $winh = 'sced-win';
+                                            $winr = '';
+                                        else:
+                                            $winh = '';
+                                            $winr = 'sced-win';
+                                        endif;
+
+                                        $tableprint .='<tr><td class="'.$winh.'">'.team_long($value['hometeam']).'</td>';
+                                        $tableprint .='<td class="min-width">'.$value['homescore'].'</td>';
+                                        $tableprint .='<td class="'.$winr.'">'.team_long($value['roadteam']).'</td>';
+                                        $tableprint .='<td class="min-width">'.$value['roadscore'].'</td></tr>';
+                                endforeach;
+
+                                echo $tableprint;
+
+                                $tableprint = '';
+                                if($isbs):
+                                    tablefoot('<span class="sced-bswin" title="Notes: BS Win of the Year">'.team_long($isbs['winner']).' - BS Win of the Year</span>');
+                                else:
+                                    tablefoot('Notes: None');
                                 endif;
 
-                                echo '<div class="col-xs-24 col-sm-2 col-md-4 col-lg-6">';
-                                    $labels = array('Home', '', 'Away', '');
-                                    tablehead($printwk, $labels);
-
-                                    $getsched = $schedule[$wk];
-
-                                    foreach ($getsched as $key => $value):
-                                            if($value['homescore'] > $value['roadscore']):
-                                                $winh = 'sced-win';
-                                                $winr = '';
-                                            else:
-                                                $winh = '';
-                                                $winr = 'sced-win';
-                                            endif;
-
-                                            $tableprint .='<tr><td class="'.$winh.'">'.team_long($value['hometeam']).'</td>';
-                                            $tableprint .='<td class="min-width">'.$value['homescore'].'</td>';
-                                            $tableprint .='<td class="'.$winr.'">'.team_long($value['roadteam']).'</td>';
-                                            $tableprint .='<td class="min-width">'.$value['roadscore'].'</td></tr>';
-                                    endforeach;
-
-                                    echo $tableprint;
-
-                                    $tableprint = '';
-
-                                    tablefoot('');
-                                echo '</div>';
-                                $i --;
+                            echo '</div>';
+                            $i --;
 
                             endforeach;
                         endif;

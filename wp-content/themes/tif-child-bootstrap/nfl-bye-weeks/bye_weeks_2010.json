@@ -1,0 +1,72 @@
+{
+  "season": 2010,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "DAL",
+        "KAN",
+        "MIN",
+        "TAM"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "MIA",
+        "NWE",
+        "PIT",
+        "SEA"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ARI",
+        "BUF",
+        "CAR",
+        "CIN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "DET",
+        "HOU",
+        "IND",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ATL",
+        "BAL",
+        "CHI",
+        "CLE",
+        "NYG",
+        "PHI"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "DEN",
+        "JAX",
+        "SFO",
+        "STL",
+        "TEN",
+        "WAS"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "GNB",
+        "NOR",
+        "OAK",
+        "SDG"
+      ]
+    }
+  ]
+}

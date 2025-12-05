@@ -482,7 +482,7 @@ $rosteredif = check_player_rostered($playerid, $year);
 			<?php	 
 			$playerimgobj = get_attachment_url_by_slug($playerid);
 			$imgid =  attachment_url_to_postid( $playerimgobj );
-			$image_attributes = wp_get_attachment_image_src($imgid, 'thumbnail');	
+			$image_attributes = wp_get_attachment_image_src($imgid, 300);
 			?>
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-4 left-column">

@@ -249,7 +249,7 @@ function insert_wp_number_ones_pk(){
 }
 insert_wp_number_ones_pk();
 
-if ($yearid == $yearis){
+if ($yearid == ($yearis-1)){
 	$gamelimit = 1;
 } else {
 	$gamelimit = 7;

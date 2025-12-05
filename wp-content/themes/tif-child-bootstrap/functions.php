@@ -9,111 +9,97 @@
  * @subpackage TIF Bootstrap
  * @since TIF Bootstrap 1.0
  */
- 
- 
- /* Enqueue Scripts and Styles */
 
-/*
-function tif_scripts() {	
-	wp_enqueue_script('appjs', get_stylesheet_directory_uri() . '/js/app.js', array());	
-}
-*/
-
-function tif_styles() {	
+// Enqueue stylesheets for the theme
+function tif_styles() {
 	wp_enqueue_style( 'style-bootstrap', get_stylesheet_directory_uri() . '/css/bootstrap.css', array() );
-	wp_enqueue_style( 'style-footable', get_stylesheet_directory_uri() . '/plugins/fooTable/css/footable.core.css', array() );	
+	wp_enqueue_style( 'style-footable', get_stylesheet_directory_uri() . '/plugins/fooTable/css/footable.core.css', array() );
 	wp_enqueue_style( 'style-pace', get_stylesheet_directory_uri() . '/css/pace.min.css', array() );
-	wp_enqueue_style( 'style-bs-result', get_stylesheet_directory_uri() . '/css/result.css', array() );	
-	wp_enqueue_style( 'style-bs-chosen', get_stylesheet_directory_uri() . '/plugins/chosen/chosen.min.css', array() );	
+	wp_enqueue_style( 'style-bs-result', get_stylesheet_directory_uri() . '/css/result.css', array() );
+	wp_enqueue_style( 'style-bs-chosen', get_stylesheet_directory_uri() . '/plugins/chosen/chosen.min.css', array() );
 	wp_enqueue_style( 'style-bs-datatables', get_stylesheet_directory_uri() . '/plugins/datatables/media/css/dataTables.bootstrap.css', array() );
 	wp_enqueue_style( 'style-bs-data-responsive', get_stylesheet_directory_uri() . '/plugins/datatables/extensions/Responsive/css/dataTables.responsive.css', array() );
-	wp_enqueue_style( 'style-nifty', get_stylesheet_directory_uri() . '/css/nifty.css', array() );	
+	wp_enqueue_style( 'style-nifty', get_stylesheet_directory_uri() . '/css/nifty.css', array() );
 }
 
-// add_action( 'wp_enqueue_scripts', 'tif_scripts' );
 add_action( 'wp_enqueue_scripts', 'tif_styles' );
 
-//custom image sizes
+// Custom image sizes
 add_image_size( 'player-mini', 50, 50, true );
+add_image_size( 'player-card', 400, 400, array( 'center', 'top' ) );
 
-
-/* Vars used commonly in functions */
+// Initialize session and common variables
 session_start();
+$season = '';
 $season == date("Y");
 
-/* Store all team IDs and Names in a Session Variable */
+// Store all team IDs and Names in a Session Variable
 $teamids = array( 'RBS'=>'Red Barons', 'ETS'=>'Euro-Trashers', 'PEP'=>'Peppers', 'WRZ'=>'Space Warriorz',  'CMN'=>'C-Men', 'BUL'=>'Raging Bulls', 'SNR'=>'Sixty Niners', 'TSG'=>'Tsongas', 'BST'=>'Booty Bustas', 'SON'=>'Rising Sons',  'PHR'=>'Paraphernalia', 'HAT'=>'Jimmys Hats',  'ATK'=>'Melmac Attack',  'MAX'=>'Mad Max', 'DST'=>'Destruction');
 $_SESSION['teamids'] = $teamids;
 
-/* connect to pflmicro database */
+// Connect to pflmicro database
 $mydb = new wpdb('root','root','pflmicro','localhost');
 
-
+// Add ACF options page if available
 if( function_exists('acf_add_options_page') ) {
-
-$args = array('title' => 'Options');
-	
+	$args = array('title' => 'Options');
 	acf_add_options_page($args);
-	
 }
 
-/* allow plugin updates on localhost */
+// Allow plugin updates on localhost
 if ( is_admin() ) {
-add_filter( 'filesystem_method', create_function( '$a', 'return "direct";' ) );
+	add_filter( 'filesystem_method', create_function( '$a', 'return "direct";' ) );
 	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
 		define( 'FS_CHMOD_DIR', 0751 );
 	}
 }
 
-add_image_size( 'player-card', 400, 400, array( 'center', 'top' ) );
-
-/* clean print_r */
+// Clean print_r output with formatting options
 function printr($data, $die) {
-   echo '<pre>';
-      print_r($data);
-   echo '</pre>';
-   if ($die == 1):
-	   echo die();
-	   echo exit(0);
-   endif;
-   if ($die == 2):
-       var_dump($data);
-   endif;
+	echo '<pre>';
+	print_r($data);
+	echo '</pre>';
+	if ($die == 1):
+		echo die();
+		echo exit(0);
+	endif;
+	if ($die == 2):
+		var_dump($data);
+	endif;
 }
 
-/* clean print_r */
-
+// Clean print_r output with custom label
 function printrlabel($data, $label) {
-   echo '<pre>';
-   echo '<h3>'.$label.'</h3>';	
-   print_r($data);
-   echo '</pre>';
+	echo '<pre>';
+	echo '<h3>'.$label.'</h3>';
+	print_r($data);
+	echo '</pre>';
 }
 
-
-/* Remove special characters from string */
+// Remove special characters from string and replace spaces with hyphens
 function clean($string) {
-   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-
-   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+	$string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+	return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 }
 
+// Check if image exists in WordPress posts by title
 function check_if_image($image_src){
 	global $wpdb;
 	$query = $wpdb->query("SELECT ID FROM wp_posts WHERE post_title = '$image_src'" );
-	return $query;	
+	return $query;
 }
 
+// Get attachment URL by slug
 function get_attachment_url_by_slug( $slug ) {
-  $args = array(
-    'post_type' => 'attachment',
-    'name' => sanitize_title($slug),
-    'posts_per_page' => 1,
-    'post_status' => 'inherit',
-  );
-  $_header = get_posts( $args );
-  $header = $_header ? array_pop($_header) : null;
-  return $header ? wp_get_attachment_url($header->ID) : '';
+	$args = array(
+		'post_type' => 'attachment',
+		'name' => sanitize_title($slug),
+		'posts_per_page' => 1,
+		'post_status' => 'inherit',
+	);
+	$_header = get_posts( $args );
+	$header = $_header ? array_pop($_header) : null;
+	return $header ? wp_get_attachment_url($header->ID) : '';
 }
 
 /* Get Single txt file from Cache and store as array.  0 no print, 1 for print on page */
@@ -141,13 +127,12 @@ function simple_cache($file){
 }
 
 /* Get Player data from cache */
-
 function get_player_cache($file, $print, $year){
 	$playercache = 'http://pfl-data.local/wp-content/themes/tif-child-bootstrap/cache/playerdata/'.$file.'.txt';
 	$playerget = file_get_contents($playercache, FILE_USE_INCLUDE_PATH);
 	$playerdata = unserialize($playerget);
 	$playercount = count(array_keys($playerdata));
-	
+    $indplayerdata =array();
 		$_SESSION[$indplayerdata] = $playerdata ;
 		
  		if ($print == 1){
@@ -352,25 +337,31 @@ function checkheadhead($weeka){
     $yearb = substr($prevweek, 0, 4);
 
     if($yeara == $yearb):
-        foreach ($theweeka as $item) {
-            $home = $item['hometeam'];
-            $road = $item['roadteam'];
-            $weekarra[$home] = $road;
-        }
-        if($theweekb):
-            foreach ($theweekb as $item) {
+        if(is_array($theweeka)):
+            foreach ($theweeka as $item) {
                 $home = $item['hometeam'];
                 $road = $item['roadteam'];
-                $weekarrb[$home] = $road;
+                $weekarra[$home] = $road;
             }
         endif;
-        foreach($weekarra as $key => $value):
-            if($weekarrb[$value] == $key):
-                $output[$key.'-'.$value] = 1;
-            else:
-                $output[$key.'-'.$value] = 0;
+        if(is_array($theweekb)):
+            if($theweekb):
+                foreach ($theweekb as $item) {
+                    $home = $item['hometeam'];
+                    $road = $item['roadteam'];
+                    $weekarrb[$home] = $road;
+                }
             endif;
-        endforeach;
+        endif;
+            if(is_array($weekarra)):
+            foreach($weekarra as $key => $value):
+                if($weekarrb[$value] == $key):
+                    $output[$key.'-'.$value] = 1;
+                else:
+                    $output[$key.'-'.$value] = 0;
+                endif;
+            endforeach;
+            endif;
     endif;
     return $output;
 }
@@ -2194,6 +2185,13 @@ function get_just_champions(){
 	return $champs;
 }
 
+// Get Mr Irrelevant data - last draft pick from each season
+function mr_irrelevant_table(){
+	global $wpdb;
+	$getdata = $wpdb->get_results("SELECT year, round, picknum, team, playerfirst, playerlast, pos, IFNULL(playerid, '') as playerid FROM wp_drafts WHERE id IN (SELECT MAX(id) FROM wp_drafts GROUP BY year) ORDER BY year", ARRAY_A);
+	return $getdata;
+}
+
 // debugging datatbase conncetions
 function wpdb() {
     global $wpdb;
@@ -2478,6 +2476,20 @@ function get_pfl_mfl_ids_season(){
             '0011' => '',
             '0012' => ''
         ),
+        2025 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        )
     );
     return $pflmflids;
 }
@@ -2645,10 +2657,12 @@ function get_score_correct_by_player($pid){
 }
 
 function countthepts($p){
-	foreach ($p as $k => $v){
-		$thecount[] = $v['points'];
-	}
-	return array_sum($thecount);
+    if($p):
+        foreach ($p as $k => $v){
+            $thecount[] = $v['points'];
+        }
+        return array_sum($thecount);
+    endif;
 }
 	
 // gets pvq season multiplier values.  not actually used in the leaders by season pages to calculate pvq on that page.						
@@ -3400,9 +3414,11 @@ function get_player_ids_by_team($team){
 // This returns teams for seasons where players were ROSTERED.  Not quite the same as the function get_player_teams_by_season
 function get_player_teams_rostered_by_season ($pid){
     $rostered = get_rostered_player($pid);
-    foreach($rostered as $key => $value):
-        $teams[$value['year']][] = $value['team'];
-    endforeach;
+        if($rostered):
+            foreach($rostered as $key => $value):
+                $teams[$value['year']][] = $value['team'];
+            endforeach;
+        endif;
     return $teams;
 }
 
@@ -3922,7 +3938,6 @@ echo $printit;
 function get_non_pfl_players(){
     global $wpdb;
     $get = $wpdb->get_results("select * from wp_rosters_nopid", ARRAY_N);
-    
     foreach ($get as $getplayers){
         $players[$getplayers[0]] = array(
             'id' => $getplayers[0],
@@ -4075,7 +4090,7 @@ function get_weekly_mfl_player_results($mflid, $year, $week){
     // check that the API key hasn't changed.  Updated in 2024.
     // 2022 Updated Request Curl
     curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1&APIKEY=aRNp1sySvuWrx0GmO1HIZDYeFbox",
+        CURLOPT_URL => "https://www58.myfantasyleague.com/$year/export?TYPE=playerScores&L=38954&W=$week&YEAR=$year&PLAYERS=$mflid&JSON=1&APIKEY=aRNp1sySvuWqx0CmO1HIZDYeFbox",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
@@ -5679,7 +5694,8 @@ function get_mfl_league_id(){
         2021 => 38954,
         2022 => 38954,
         2023 => 38954,
-        2024 => 38954
+        2024 => 38954,
+        2025 => 38954
     );
     return $leagueids;
 }

@@ -243,7 +243,7 @@ get_header();
 								<?php
 
                             // SET YEAR HERE -- can be a single value or an array
-                            $yearclean = array($gettheyear);
+                            $yearclean = array(2025);
 
                                 echo $getyearclean.'-'.$weekclean.'<br>';
 								//printr($yearclean, 0);

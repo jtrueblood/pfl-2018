@@ -1,0 +1,182 @@
+[
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Buccaneers",
+    "player_name": "Earnest Graham",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Giants",
+    "player_name": "Hakeem Nicks",
+    "position": "WR",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Bengals",
+    "player_name": "Jermaine Gresham",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Bengals",
+    "player_name": "Chad Johnson",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Steelers",
+    "player_name": "Mewelde Moore",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Panthers",
+    "player_name": "Tony Fiammetta",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Jaguars",
+    "player_name": "Maurice Jones-Drew",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Jaguars",
+    "player_name": "Zach Miller",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Texans",
+    "player_name": "Garrett Graham",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Texans",
+    "player_name": "Andre Johnson",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Packers",
+    "player_name": "Korey Hall",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Niners",
+    "player_name": "Nate Byham",
+    "position": "TE",
+    "injury": "Heel",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Donald Jones",
+    "position": "WR",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "David Nelson",
+    "position": "WR",
+    "injury": "Ribs",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Cowboys",
+    "player_name": "Sam Hurd",
+    "position": "WR",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Dolphins",
+    "player_name": "Anthony Fasano",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Chargers",
+    "player_name": "Patrick Crayton",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Chargers",
+    "player_name": "Jacob Hester",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Vikings",
+    "player_name": "Brett Favre",
+    "position": "QB",
+    "injury": "Concussion, Neck",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 17,
+    "team": "Vikings",
+    "player_name": "Sidney Rice",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Doubtful"
+  }
+]

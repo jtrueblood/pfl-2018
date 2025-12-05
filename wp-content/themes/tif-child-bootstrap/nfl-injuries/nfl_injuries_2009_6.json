@@ -1,0 +1,137 @@
+[
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Vikings",
+    "player_name": "Darius Reynaud",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Buccaneers",
+    "player_name": "B.J. Askew",
+    "position": "RB",
+    "injury": "Back, Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Packers",
+    "player_name": "Korey Hall",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Packers",
+    "player_name": "DeShawn Wynn",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Cardinals",
+    "player_name": "Stephen Spach",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Bengals",
+    "player_name": "Brian Leonard",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Bears",
+    "player_name": "Adrian Peterson",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Jets",
+    "player_name": "Jerricho Cotchery",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Jets",
+    "player_name": "Brad Smith",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Titans",
+    "player_name": "Craig Stevens",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Raiders",
+    "player_name": "Luke Lawton",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 6,
+    "team": "Rams",
+    "player_name": "Ruvell Martin",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  }
+]

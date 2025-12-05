@@ -1,0 +1,83 @@
+{
+  "season": 2022,
+  "bye_weeks": [
+    {
+      "week": 6,
+      "teams": [
+        "DET",
+        "HOU",
+        "LVR",
+        "TEN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BUF",
+        "LAR",
+        "MIN",
+        "PHI"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "KAN",
+        "LAC"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CLE",
+        "DAL",
+        "DEN",
+        "NYG",
+        "PIT",
+        "SFO"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "BAL",
+        "CIN",
+        "NWE",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "JAX",
+        "MIA",
+        "SEA",
+        "TAM"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "ARI",
+        "CAR"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "ATL",
+        "CHI",
+        "GNB",
+        "IND",
+        "NOR",
+        "WAS"
+      ]
+    },
+    {
+      "week": 17,
+      "teams": [
+        ""
+      ]
+    }
+  ]
+}

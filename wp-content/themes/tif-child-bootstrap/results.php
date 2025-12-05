@@ -310,9 +310,8 @@ printr($assoc, 0);
                                 $monthlast = date('F', mktime(0, 0, 0, $explast[1], 10));
 
                                 echo '<h4>'.$monthfirst.' '.$expfirst[2].' - '.$monthlast.' '.$explast[2].', '.$year_sel.'</h4>';
-                                //printr($justdates, 0);
                                 $uniquedates = array_unique($justdates);
-                                printr($uniquedates, 0);
+                                //printr($uniquedates, 0);
                             ?>
 						</div>					
 						

@@ -1,0 +1,75 @@
+{
+  "season": 1996,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "ATL",
+        "CAR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "BAL",
+        "CIN",
+        "HOU",
+        "PIT"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "BUF",
+        "IND",
+        "MIA",
+        "NWE"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ARI",
+        "DAL",
+        "NYG",
+        "PHI",
+        "TAM",
+        "WAS"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "DEN",
+        "KAN",
+        "SDG",
+        "SEA"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "CHI",
+        "DET",
+        "GNB",
+        "MIN"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "NOR",
+        "OAK"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "JAX",
+        "NYJ"
+      ]
+    }
+  ]
+}

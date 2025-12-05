@@ -1,0 +1,77 @@
+{
+  "season": 2003,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "CAR",
+        "CHI",
+        "DAL",
+        "PHI"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "MIA",
+        "NYG",
+        "SEA",
+        "TAM"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "BAL",
+        "HOU",
+        "NYJ",
+        "STL"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "CIN",
+        "DET",
+        "MIN",
+        "SDG"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "ARI",
+        "IND",
+        "JAX",
+        "PIT"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ATL",
+        "GNB",
+        "OAK",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "BUF",
+        "CLE",
+        "KAN",
+        "TEN"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "DEN",
+        "NOR",
+        "NWE",
+        "SFO"
+      ]
+    }
+  ]
+}

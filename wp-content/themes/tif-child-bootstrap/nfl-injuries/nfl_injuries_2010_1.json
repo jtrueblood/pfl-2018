@@ -1,0 +1,83 @@
+[
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Saints",
+    "player_name": "Chris Ivory",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Niners",
+    "player_name": "Kyle Williams",
+    "position": "WR",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Panthers",
+    "player_name": "Tyrell Sutton",
+    "position": "RB",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Falcons",
+    "player_name": "Michael Jenkins",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Steelers",
+    "player_name": "Byron Leftwich",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Jaguars",
+    "player_name": "Jarett Dillard",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Chiefs",
+    "player_name": "Dexter McCluster",
+    "position": "WR",
+    "injury": "Illness",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 1,
+    "team": "Ravens",
+    "player_name": "Donte' Stallworth",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  }
+]

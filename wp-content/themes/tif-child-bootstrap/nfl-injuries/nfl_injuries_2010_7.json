@@ -1,0 +1,164 @@
+[
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Redskins",
+    "player_name": "Clinton Portis",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Jaguars",
+    "player_name": "David Garrard",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Eagles",
+    "player_name": "DeSean Jackson",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Bengals",
+    "player_name": "Brian Leonard",
+    "position": "RB",
+    "injury": "Thigh",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Falcons",
+    "player_name": "Justin Peelle",
+    "position": "TE",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Browns",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Browns",
+    "player_name": "Mohamed Massaquoi",
+    "position": "WR",
+    "injury": "Head",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Browns",
+    "player_name": "Seneca Wallace",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Saints",
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Rams",
+    "player_name": "Mardy Gilyard",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Ravens",
+    "player_name": "Donte' Stallworth",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Chargers",
+    "player_name": "Malcom Floyd",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Chargers",
+    "player_name": "Nate Kaeding",
+    "position": "K",
+    "injury": "right Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Chargers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 7,
+    "team": "Giants",
+    "player_name": "Madison Hedgecock",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  }
+]

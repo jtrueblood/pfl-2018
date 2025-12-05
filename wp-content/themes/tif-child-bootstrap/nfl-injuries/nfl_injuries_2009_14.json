@@ -1,0 +1,209 @@
+[
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Bengals",
+    "player_name": "Chase Coffman",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Bengals",
+    "player_name": "Bernard Scott",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Rams",
+    "player_name": "Marc Bulger",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Falcons",
+    "player_name": "Justin Peelle",
+    "position": "TE",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Panthers",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "right Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Donald Brown",
+    "position": "RB",
+    "injury": "Chest",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Adam Vinatieri",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Lions",
+    "player_name": "Casey Fitzsimmons",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Ravens",
+    "player_name": "Mark Clayton",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Ravens",
+    "player_name": "L.J. Smith",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Jets",
+    "player_name": "Mark Sanchez",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Buccaneers",
+    "player_name": "Michael Clayton",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Jaguars",
+    "player_name": "Mike Sims-Walker",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Bills",
+    "player_name": "Justin Jenkins",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Bills",
+    "player_name": "Joe Klopfenstein",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Eagles",
+    "player_name": "Brian Westbrook",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Cowboys",
+    "player_name": "Martellus Bennett",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Redskins",
+    "player_name": "Mike Sellers",
+    "position": "RB",
+    "injury": "Thigh",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Darrius Heyward-Bey",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 14,
+    "team": "Niners",
+    "player_name": "Isaac Bruce",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  }
+]

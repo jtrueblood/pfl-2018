@@ -29,51 +29,32 @@ foreach ($get_weekly_notes as $val){
 
 global $wpdb;
 
-$RBS = $wpdb->get_results("select * from wp_team_RBS", ARRAY_N);
-$ETS = $wpdb->get_results("select * from wp_team_ETS", ARRAY_N);
-$PEP = $wpdb->get_results("select * from wp_team_PEP", ARRAY_N);
-$WRZ = $wpdb->get_results("select * from wp_team_WRZ", ARRAY_N);
-$CMN = $wpdb->get_results("select * from wp_team_CMN", ARRAY_N);
-$BUL = $wpdb->get_results("select * from wp_team_BUL", ARRAY_N);
-$SNR = $wpdb->get_results("select * from wp_team_SNR", ARRAY_N);
-$TSG = $wpdb->get_results("select * from wp_team_TSG", ARRAY_N);
-$BST = $wpdb->get_results("select * from wp_team_BST", ARRAY_N);
-$MAX = $wpdb->get_results("select * from wp_team_MAX", ARRAY_N);
-$PHR = $wpdb->get_results("select * from wp_team_PHR", ARRAY_N);
-$SON = $wpdb->get_results("select * from wp_team_SON", ARRAY_N);
-$ATK = $wpdb->get_results("select * from wp_team_ATK", ARRAY_N);
-$HAT = $wpdb->get_results("select * from wp_team_HAT", ARRAY_N);
-$DST = $wpdb->get_results("select * from wp_team_DST", ARRAY_N);
+// OPTIMIZED: Get only the specific week's data with a single query
+$byweek = get_week_data_optimized($weekvar);
 
 
-foreach ($WRZ as $value){
-	$years[] = $value[1];
-	$nextweek[$value[0]] = array( $value[1], sprintf("%02d", $value[2]) ); 
+// Get seasons for selector
+$allSeasons = the_seasons();
+
+// Calculate prev/next week navigation
+$prev_week_num = (int)$week_sel - 1;
+$next_week_num = (int)$week_sel + 1;
+
+if ($prev_week_num < 1) {
+	$prev_year = $year_sel - 1;
+	$prev_week = '14';
+} else {
+	$prev_year = $year_sel;
+	$prev_week = sprintf("%02d", $prev_week_num);
 }
-$allSeasons = array_unique($years);
 
-$prev_year = $nextweek[$weekvar - 1][0];
-$prev_week = $nextweek[$weekvar - 1][1];
-$next_year = $nextweek[$weekvar + 1][0];
-$next_week = $nextweek[$weekvar + 1][1];
-
-$teamarrays = array (
-	'RBS' => $RBS, 
-	'ETS' => $ETS,
-	'PEP' => $PEP,
-	'WRZ' => $WRZ,
-	'CMN' => $CMN,
-	'BUL' => $BUL,
-	'SNR' => $SNR,
-	'TSG' => $TSG,
-	'BST' => $BST,
-	'MAX' => $MAX,
-	'PHR' => $PHR,
-	'SON' => $SON,
-	'ATK' => $ATK,
-	'HAT' => $HAT,
-	'DST' => $DST	
-);
+if ($next_week_num > 14) {
+	$next_year = $year_sel + 1;
+	$next_week = '01';
+} else {
+	$next_year = $year_sel;
+	$next_week = sprintf("%02d", $next_week_num);
+}
 
 $teamlist = array(
 	'RBS' => 'Red Barons',
@@ -130,37 +111,10 @@ function insertpotw($y,$w,$player){
 	
 }
 
+// byweek array now comes from get_week_data_optimized() above
 
-// get array of all team / all week data and index the values
-foreach ($teamarrays as $key => $value){
-	foreach ($value as $week){
-		$byweek[$key][$week[0]] = array(
-			'id' 		=> $week[0],
-			'season' 	=> $week[1],
-			'week' 		=> $week[2],
-			'team_int' 	=> $week[3],
-			'points' 	=> $week[4],
-			'vs' 		=> $week[5],
-			'vs_points' => $week[6],
-			'home_away' => $week[7],
-			'stadium' 	=> $week[8],
-			'result' 	=> $week[9],
-			'QB1' 		=> $week[10],
-			'RB1' 		=> $week[11],
-			'WR1' 		=> $week[12],
-			'PK1' 		=> $week[13],
-			'uniform'   => $week[20],
-			'overtime' 	=> array (
-				'is_overtime' => $week[14], 
-				'QB2' 		=> $week[15],
-				'RB2' 		=> $week[16],
-				'WR2' 		=> $week[17],
-				'PK2' 		=> $week[18],
-				'extra_ot'	=> $week[19]
-			)
-		);
-	}
-}
+// OPTIMIZED: Pre-load all helmet data once
+$helmet_cache = get_all_helmets_cached();
 
 // get an array of one specific week
 
@@ -362,6 +316,31 @@ printr($assoc, 0);
 				$w = 1;	
 					
 				if(isset($schedulewk)){
+					// OPTIMIZED: Collect all player IDs first
+					$all_player_ids = array();
+					foreach ($schedulewk as $hteam => $ateam) {
+						$all_player_ids[] = $getwk[$hteam]['QB1'];
+						$all_player_ids[] = $getwk[$hteam]['RB1'];
+						$all_player_ids[] = $getwk[$hteam]['WR1'];
+						$all_player_ids[] = $getwk[$hteam]['PK1'];
+						$all_player_ids[] = $getwk[$ateam]['QB1'];
+						$all_player_ids[] = $getwk[$ateam]['RB1'];
+						$all_player_ids[] = $getwk[$ateam]['WR1'];
+						$all_player_ids[] = $getwk[$ateam]['PK1'];
+						if ($getwk[$hteam]['overtime']['is_overtime'] == 1) {
+							$all_player_ids[] = $getwk[$hteam]['overtime']['QB2'];
+							$all_player_ids[] = $getwk[$hteam]['overtime']['RB2'];
+							$all_player_ids[] = $getwk[$hteam]['overtime']['WR2'];
+							$all_player_ids[] = $getwk[$hteam]['overtime']['PK2'];
+							$all_player_ids[] = $getwk[$ateam]['overtime']['QB2'];
+							$all_player_ids[] = $getwk[$ateam]['overtime']['RB2'];
+							$all_player_ids[] = $getwk[$ateam]['overtime']['WR2'];
+							$all_player_ids[] = $getwk[$ateam]['overtime']['PK2'];
+						}
+					}
+					// Batch fetch all player data
+					$player_data_cache = get_players_week_batch($all_player_ids, $weekvar);
+					
 					foreach ($schedulewk as $key => $value){
 							
 							$hometeam = $key;
@@ -386,15 +365,16 @@ printr($assoc, 0);
 							$a_pk1 = $getwk[$awayteam]['PK1'];
 						
 							
-							$h_qb1_data = get_player_week($h_qb1, $weekvar);
-							$h_rb1_data = get_player_week($h_rb1, $weekvar);
-							$h_wr1_data = get_player_week($h_wr1, $weekvar);
-							$h_pk1_data = get_player_week($h_pk1, $weekvar);
+							// OPTIMIZED: Get player data from batch cache
+							$h_qb1_data = isset($player_data_cache[$h_qb1]) ? $player_data_cache[$h_qb1] : array('first' => '', 'last' => '', 'points' => 0);
+							$h_rb1_data = isset($player_data_cache[$h_rb1]) ? $player_data_cache[$h_rb1] : array('first' => '', 'last' => '', 'points' => 0);
+							$h_wr1_data = isset($player_data_cache[$h_wr1]) ? $player_data_cache[$h_wr1] : array('first' => '', 'last' => '', 'points' => 0);
+							$h_pk1_data = isset($player_data_cache[$h_pk1]) ? $player_data_cache[$h_pk1] : array('first' => '', 'last' => '', 'points' => 0);
 							
-							$a_qb1_data = get_player_week($a_qb1, $weekvar);
-							$a_rb1_data = get_player_week($a_rb1, $weekvar);
-							$a_wr1_data = get_player_week($a_wr1, $weekvar);
-							$a_pk1_data = get_player_week($a_pk1, $weekvar);
+							$a_qb1_data = isset($player_data_cache[$a_qb1]) ? $player_data_cache[$a_qb1] : array('first' => '', 'last' => '', 'points' => 0);
+							$a_rb1_data = isset($player_data_cache[$a_rb1]) ? $player_data_cache[$a_rb1] : array('first' => '', 'last' => '', 'points' => 0);
+							$a_wr1_data = isset($player_data_cache[$a_wr1]) ? $player_data_cache[$a_wr1] : array('first' => '', 'last' => '', 'points' => 0);
+							$a_pk1_data = isset($player_data_cache[$a_pk1]) ? $player_data_cache[$a_pk1] : array('first' => '', 'last' => '', 'points' => 0);
 							
 							
 							// overtime player data
@@ -410,15 +390,16 @@ printr($assoc, 0);
 							$a_wr2 = $getwk[$awayteam]['overtime']['WR2'];
 							$a_pk2 = $getwk[$awayteam]['overtime']['PK2'];
 							
-							$h_qb2_data = get_player_week($h_qb2, $weekvar);
-							$h_rb2_data = get_player_week($h_rb2, $weekvar);
-							$h_wr2_data = get_player_week($h_wr2, $weekvar);
-							$h_pk2_data = get_player_week($h_pk2, $weekvar);
+							// OPTIMIZED: Get OT player data from batch cache  
+							$h_qb2_data = isset($player_data_cache[$h_qb2]) ? $player_data_cache[$h_qb2] : array('first' => '', 'last' => '', 'points' => 0);
+							$h_rb2_data = isset($player_data_cache[$h_rb2]) ? $player_data_cache[$h_rb2] : array('first' => '', 'last' => '', 'points' => 0);
+							$h_wr2_data = isset($player_data_cache[$h_wr2]) ? $player_data_cache[$h_wr2] : array('first' => '', 'last' => '', 'points' => 0);
+							$h_pk2_data = isset($player_data_cache[$h_pk2]) ? $player_data_cache[$h_pk2] : array('first' => '', 'last' => '', 'points' => 0);
 							
-							$a_qb2_data = get_player_week($a_qb2, $weekvar);
-							$a_rb2_data = get_player_week($a_rb2, $weekvar);
-							$a_wr2_data = get_player_week($a_wr2, $weekvar);
-							$a_pk2_data = get_player_week($a_pk2, $weekvar);
+							$a_qb2_data = isset($player_data_cache[$a_qb2]) ? $player_data_cache[$a_qb2] : array('first' => '', 'last' => '', 'points' => 0);
+							$a_rb2_data = isset($player_data_cache[$a_rb2]) ? $player_data_cache[$a_rb2] : array('first' => '', 'last' => '', 'points' => 0);
+							$a_wr2_data = isset($player_data_cache[$a_wr2]) ? $player_data_cache[$a_wr2] : array('first' => '', 'last' => '', 'points' => 0);
+							$a_pk2_data = isset($player_data_cache[$a_pk2]) ? $player_data_cache[$a_pk2] : array('first' => '', 'last' => '', 'points' => 0);
 							
 							$is_extra_ot = $getwk[$hometeam]['overtime']['extra_ot'];
 							
@@ -493,9 +474,9 @@ printr($assoc, 0);
 									
 							echo '<div class="panel-body">';
 							
-							// get team name and helmet logo by season from the wp_helmet_history table - function above
-							$get_the_helmet_home = get_helmet($hometeam, $year_sel);
-							$get_the_helmet_away = get_helmet($awayteam, $year_sel);
+							// OPTIMIZED: get team name and helmet logo from cache
+							$get_the_helmet_home = get_helmet_from_cache($hometeam, $year_sel, $helmet_cache);
+							$get_the_helmet_away = get_helmet_from_cache($awayteam, $year_sel, $helmet_cache);
 									
 							if ($homepoints > $awaypoints){
 								echo '<span class="text-2x text-bold">'.$get_the_helmet_home['name'].'</span><span class="text-2x pull-right text-bold">'.$homepoints.'</span><br>';
@@ -1178,15 +1159,16 @@ if(isset($schedulewk)){
 		$spid_a_wr1 = $getwk[$awayteam]['WR1'];
 		$spid_a_pk1 = $getwk[$awayteam]['PK1'];
 									
-		$spid_h_qb1_data = get_player_week($spid_h_qb1, $weekvar);
-		$spid_h_rb1_data = get_player_week($spid_h_rb1, $weekvar);
-		$spid_h_wr1_data = get_player_week($spid_h_wr1, $weekvar);
-		$spid_h_pk1_data = get_player_week($spid_h_pk1, $weekvar);
+		// OPTIMIZED: Use cached player data for spider charts
+		$spid_h_qb1_data = isset($player_data_cache[$spid_h_qb1]) ? $player_data_cache[$spid_h_qb1] : array('first' => '', 'last' => '', 'points' => 0);
+		$spid_h_rb1_data = isset($player_data_cache[$spid_h_rb1]) ? $player_data_cache[$spid_h_rb1] : array('first' => '', 'last' => '', 'points' => 0);
+		$spid_h_wr1_data = isset($player_data_cache[$spid_h_wr1]) ? $player_data_cache[$spid_h_wr1] : array('first' => '', 'last' => '', 'points' => 0);
+		$spid_h_pk1_data = isset($player_data_cache[$spid_h_pk1]) ? $player_data_cache[$spid_h_pk1] : array('first' => '', 'last' => '', 'points' => 0);
 		
-		$spid_a_qb1_data = get_player_week($spid_a_qb1, $weekvar);
-		$spid_a_rb1_data = get_player_week($spid_a_rb1, $weekvar);
-		$spid_a_wr1_data = get_player_week($spid_a_wr1, $weekvar);
-		$spid_a_pk1_data = get_player_week($spid_a_pk1, $weekvar);
+		$spid_a_qb1_data = isset($player_data_cache[$spid_a_qb1]) ? $player_data_cache[$spid_a_qb1] : array('first' => '', 'last' => '', 'points' => 0);
+		$spid_a_rb1_data = isset($player_data_cache[$spid_a_rb1]) ? $player_data_cache[$spid_a_rb1] : array('first' => '', 'last' => '', 'points' => 0);
+		$spid_a_wr1_data = isset($player_data_cache[$spid_a_wr1]) ? $player_data_cache[$spid_a_wr1] : array('first' => '', 'last' => '', 'points' => 0);
+		$spid_a_pk1_data = isset($player_data_cache[$spid_a_pk1]) ? $player_data_cache[$spid_a_pk1] : array('first' => '', 'last' => '', 'points' => 0);
 	
 ?>
 

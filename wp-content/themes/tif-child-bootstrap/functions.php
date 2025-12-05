@@ -6517,3 +6517,140 @@ function get_or_set_comps(){
     }
 }
 
+// ========================================
+// RESULTS PAGE OPTIMIZATION FUNCTIONS
+// ========================================
+
+// Get all team data for a specific week with a single query
+function get_week_data_optimized($weekvar) {
+    global $wpdb;
+    $teams = array('RBS', 'ETS', 'PEP', 'WRZ', 'CMN', 'BUL', 'SNR', 'TSG', 'BST', 'MAX', 'PHR', 'SON', 'ATK', 'HAT', 'DST');
+    
+    $query_parts = array();
+    foreach ($teams as $team) {
+        $query_parts[] = "SELECT '{$team}' as team_code, t.* FROM wp_team_{$team} t WHERE id = '{$weekvar}'";
+    }
+    
+    $union_query = implode(' UNION ALL ', $query_parts);
+    $results = $wpdb->get_results($union_query, ARRAY_A);
+    
+    $formatted = array();
+    foreach ($results as $row) {
+        $team = $row['team_code'];
+        $formatted[$team][$weekvar] = array(
+            'id' => $row['id'],
+            'season' => $row['season'],
+            'week' => $row['week'],
+            'team_int' => $row['team_int'],
+            'points' => $row['points'],
+            'vs' => $row['vs'],
+            'vs_points' => $row['vs_points'],
+            'home_away' => $row['home_away'],
+            'stadium' => $row['stadium'],
+            'result' => $row['result'],
+            'QB1' => $row['QB1'],
+            'RB1' => $row['RB1'],
+            'WR1' => $row['WR1'],
+            'PK1' => $row['PK1'],
+            'uniform' => $row['uniform'],
+            'overtime' => array(
+                'is_overtime' => $row['overtime'],
+                'QB2' => $row['QB2'],
+                'RB2' => $row['RB2'],
+                'WR2' => $row['WR2'],
+                'PK2' => $row['PK2'],
+                'extra_ot' => $row['extra_ot']
+            )
+        );
+    }
+    
+    return $formatted;
+}
+
+// Batch fetch player data for multiple players in a single week
+function get_players_week_batch($player_ids, $weekvar) {
+    global $wpdb;
+    
+    // Remove empty/None values
+    $player_ids = array_filter($player_ids, function($id) {
+        return !empty($id) && $id != 'None';
+    });
+    
+    if (empty($player_ids)) {
+        return array();
+    }
+    
+    // Build UNION query for all players
+    $query_parts = array();
+    foreach ($player_ids as $pid) {
+        $query_parts[] = "SELECT * FROM {$pid} WHERE week_id = '{$weekvar}'";
+    }
+    
+    if (empty($query_parts)) {
+        return array();
+    }
+    
+    $union_query = implode(' UNION ALL ', $query_parts);
+    $results = $wpdb->get_results($union_query, ARRAY_A);
+    
+    // Format results by player ID
+    $formatted = array();
+    foreach ($results as $row) {
+        $pid = $row['pid'];
+        $formatted[$pid] = array(
+            'first' => get_player_name($pid)['first'],
+            'last' => get_player_name($pid)['last'],
+            'points' => $row['points'],
+            'team' => $row['team'],
+            'versus' => $row['versus'],
+            'result' => $row['result']
+        );
+    }
+    
+    return $formatted;
+}
+
+// Pre-load all helmet data once
+function get_all_helmets_cached() {
+    global $wpdb;
+    
+    $helmets = $wpdb->get_results("SELECT * FROM wp_helmet_history", ARRAY_A);
+    
+    $formatted = array();
+    foreach ($helmets as $row) {
+        $team = $row['team'];
+        $year = $row['year'];
+        $formatted[$team][$year] = array(
+            'name' => $row['name'],
+            'helmet' => $row['helmet']
+        );
+    }
+    
+    return $formatted;
+}
+
+// Get helmet using pre-loaded data
+function get_helmet_from_cache($team, $year, $helmet_cache) {
+    global $season;
+    
+    if (!isset($helmet_cache[$team])) {
+        return array('name' => $team, 'helmet' => '1');
+    }
+    
+    $helmets = $helmet_cache[$team];
+    $x = 1991;
+    $active = array('name' => $team, 'helmet' => '1');
+    
+    while ($x <= $season) {
+        if (isset($helmets[$x])) {
+            $myhelmets[$x] = $helmets[$x];
+            $active = $helmets[$x];
+        } else {
+            $myhelmets[$x] = $active;
+        }
+        $x++;
+    }
+    
+    return isset($myhelmets[$year]) ? $myhelmets[$year] : $active;
+}
+

@@ -331,8 +331,8 @@ def insert_player_stats_to_db(p_id, year, week, stats):
             except:
                 pass  # pfl_points stays 0 if query fails or no record exists
             
-            # Calculate score difference: nflscore - points
-            score_diff = nfl_score - pfl_points
+            # Calculate score difference: points - nflscore
+            score_diff = pfl_points - nfl_score
             
             # Prepare SQL for INSERT or UPDATE
             # Note: ON DUPLICATE KEY UPDATE does NOT update 'points' - that's managed manually in PFL
@@ -366,7 +366,7 @@ def insert_player_stats_to_db(p_id, year, week, stats):
                     fgm = VALUES(fgm),
                     fga = VALUES(fga),
                     nflscore = VALUES(nflscore),
-                    scorediff = VALUES(nflscore) - points
+                    scorediff = points - VALUES(nflscore)
             """
             
             values = (

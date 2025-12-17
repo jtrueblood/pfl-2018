@@ -63,7 +63,7 @@
 				<div id="page-title">
 					<?php while (have_posts()) : the_post(); ?>
 						<h1 class="page-header text-bold"><?php the_title();?></h1>
-					<?php endwhile; wp_reset_query(); ?>	
+					<?php endwhile; wp_reset_query(); ?>
 				</div>
 				
 				<!--Page content-->
@@ -75,12 +75,37 @@
 						<div class="col-xs-24 col-sm-12">
 							<?php 
 								getdraft($year, $year_array);
-							?>					
+							?>
 						</div>
-						
+
+                        <!-- Previous/Next Year Navigation -->
+                        <div class="text-center mar-btm">
+                            <?php
+                            $prev_year = $year - 1;
+                            $next_year = $year + 1;
+                            $current_year = date("Y");
+
+                            // Check if previous draft exists (assuming drafts start from 1991)
+                            if ($prev_year >= 1991) {
+                                echo '<a href="?id=' . $prev_year . '" class="btn btn-primary"><i class="fa fa-chevron-left"></i> ' . $prev_year . ' Draft</a> ';
+                            } else {
+                                echo '<a href="#" class="btn btn-default disabled"><i class="fa fa-chevron-left"></i> Previous</a> ';
+                            }
+
+                            echo '<span class="text-bold" style="margin: 0 15px;">' . $year . ' Draft</span>';
+
+                            // Check if next draft exists (don't go beyond current year)
+                            if ($next_year <= $current_year) {
+                                echo ' <a href="?id=' . $next_year . '" class="btn btn-primary">' . $next_year . ' Draft <i class="fa fa-chevron-right"></i></a>';
+                            } else {
+                                echo ' <a href="#" class="btn btn-default disabled">Next <i class="fa fa-chevron-right"></i></a>';
+                            }
+                            ?>
+                        </div>
+
 						<!-- start sidebar -->
 						
-						<div class="col-xs-24 col-sm-8">
+						<div class="col-xs-24 col-sm-12">
 							<?php selectseason(); ?>							
 						</div>
 							
@@ -110,9 +135,10 @@
 									$det_att = get_sub_field('attendees');
 									$det_phone = get_sub_field('attendees_phone');
 									$det_notes = get_sub_field('notes');
+                                    $det_pick_notes = get_sub_field('best_pick_notes');
 									
 									if ($det_year == $year){
-										$detdraft[$det_year] = array($det_att, $det_phone, $det_notes);
+										$detdraft[$det_year] = array($det_att, $det_phone, $det_notes, $det_pick_notes);
 									}
 
 								endwhile;
@@ -120,14 +146,14 @@
 							endif;
 							
 							foreach ($currdraft as $getnew){
-								$verynew = array($getnew[0], $getnew[1], $getnew[2],);
+								$verynew = array($getnew[0], $getnew[1], $getnew[2],$getnew[3]);
 							}
 							foreach ($detdraft as $getnew){
-								$thenew = array($getnew[0], $getnew[1], $getnew[2],);
+								$thenew = array($getnew[0], $getnew[1], $getnew[2],$getnew[3]);
 							}
 						
 							?>
-							<div class="col-xs-24 col-sm-8">
+							<div class="col-xs-24 col-sm-12">
 								<div class="panel">
 									<div class="panel-body">
 										
@@ -157,6 +183,25 @@
 									
 									</div>
 								</div>
+
+                                <div class="panel">
+                                    <div class="panel-body">
+                                        <p class="text-primary">Draft Analysis:</p>
+                                        <?php 
+                                        // Read draft analysis from HTML file
+                                        $analysis_file = get_stylesheet_directory() . '/draft-analysis/draft_analysis_' . $year . '.html';
+                                        if (file_exists($analysis_file)) {
+                                            echo file_get_contents($analysis_file);
+                                        } else {
+                                            echo '<p class="text-muted">No analysis available for this draft year. Looking for: ' . $analysis_file . '</p>';
+                                        }
+                                        if($season - $year >= 10){
+                                            echo '<br>';
+                                            echo '<p class="text-primary">This draft is at least 10 years old, so the analysis is final.</p>';
+                                        }
+                                       ?>
+                                    </div>
+                                </div>
 							</div>
 					
 						</div>

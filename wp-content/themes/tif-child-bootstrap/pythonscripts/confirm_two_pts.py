@@ -107,7 +107,7 @@ def add_two_point_conversion(player_id, year, week):
     1. Identify the player table based on player_id
     2. Ensure twopt column exists
     3. Find the game record for the given year/week
-    4. Set twopt = 1
+    4. Increment twopt by 1
     5. Increment nflscore by 1
     6. Decrement scorediff by 1
     """
@@ -166,11 +166,11 @@ def add_two_point_conversion(player_id, year, week):
         print(f"   Current twopt: {game_record['twopt']}")
         
         # Update the record
-        # Set twopt = 1, increment nflscore, decrement scorediff
+        # Increment twopt, increment nflscore, decrement scorediff
         update_query = f"""
             UPDATE {table_name}
             SET 
-                twopt = 1,
+                twopt = twopt + 1,
                 nflscore = nflscore + 1,
                 scorediff = scorediff - 1
             WHERE year = %s AND week = %s
@@ -242,7 +242,7 @@ def main():
         print("\nNOTE: This script will:")
         print("  1. Create 'twopt' column if it doesn't exist")
         print("  2. Auto-fill all 'twopt' values with 0")
-        print("  3. Set twopt = 1 for the specified game")
+        print("  3. Increment twopt by 1 for the specified game")
         print("  4. Increment nflscore by 1")
         print("  5. Decrement scorediff by 1")
         print("\n" + "=" * 60)

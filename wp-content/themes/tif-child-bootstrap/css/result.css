@@ -151,6 +151,9 @@ a {
 .overtime * {
   font-size: 12px !important;
 }
+.overtime div[style*="font-size: 10px"] {
+  font-size: 10px !important;
+}
 div.dataTables_paginate {
   text-align: center !important;
   clear: both;

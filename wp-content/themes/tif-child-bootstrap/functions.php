@@ -5767,6 +5767,49 @@ function get_pfr_linescores_by_player($playerid){
 	return $playerlines;
 }
 
+# format player linescore for display underneath player name in boxscore
+function format_player_linescore($playerid, $weekvar) {
+	// weekvar is already in YEARWEEK format (e.g., 202103)
+	$week_id = $weekvar;
+	
+	// Get all player data from their individual table
+	$playerdata = get_player_data($playerid);
+	
+	// Check if we have data for this game (week_id)
+	if (!isset($playerdata[$week_id])) {
+		return '';
+	}
+	
+	$game = $playerdata[$week_id];
+	$parts = array();
+	
+	// Pass stats (Pass Yds/TDs/INTs)
+	if ($game['pass_yds'] > 0 || $game['pass_td'] > 0 || $game['pass_int'] > 0) {
+		$parts[] = 'Pass: ' . $game['pass_yds'] . '/' . $game['pass_td'] . '/' . $game['pass_int'];
+	}
+	
+	// Rush stats (Rush Yds/TDs)
+	if ($game['rush_yds'] > 0 || $game['rush_td'] > 0) {
+		$parts[] = 'Rush: ' . $game['rush_yds'] . '/' . $game['rush_td'];
+	}
+	
+	// Rec stats (Rec Yds/TDs)
+	if ($game['rec_yds'] > 0 || $game['rec_td'] > 0) {
+		$parts[] = 'Rec: ' . $game['rec_yds'] . '/' . $game['rec_td'];
+	}
+	
+	// Kicking stats (FGM/XPM)
+	if ($game['fgm'] > 0 || $game['xpm'] > 0) {
+		$parts[] = 'K: ' . $game['fgm'] . '/' . $game['xpm'];
+	}
+	
+	if (empty($parts)) {
+		return '';
+	}
+	
+	return '<div style="font-size: 10px; color: #515151; line-height: 1.2em; margin-bottom: 5px;">' . implode(' | ', $parts) . '</div>';
+}
+
 function labeltheseaward($awardid){
 	if ($awardid == 'mvp'){
 		echo 'Most Valuable Player';

@@ -643,6 +643,7 @@ printr($assoc, 0);
 						}
 						$h_qb1_scorediff_display = ($h_qb1_scorediff != 0) ? format_scorediff($h_qb1_scorediff, $year_sel) : '';
 						echo $h_qb1_buttons . $h_qb1_pfr_button . ' <a href="/player/?id='.$h_qb1.'">' . ($h_qb1_data['first'] ? $h_qb1_data['first'] : 'None') . ' ' . $h_qb1_data['last'].'</a><span class="pull-right">'.$h_qb1_data['points'].$h_qb1_scorediff_display.'</span><br>';
+						echo format_player_linescore($h_qb1, $weekvar);
 						$h_rb1_pos = substr($h_rb1, -2);
 						$h_rb1_pfr_url = get_player_game_pfr_url($h_rb1, $weekvar);
 						$h_rb1_pfr_button = (($h_rb1_scorediff != 0 || $homeboxscoreerror) && !empty($h_rb1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_rb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
@@ -658,6 +659,7 @@ printr($assoc, 0);
 						}
 						$h_rb1_scorediff_display = ($h_rb1_scorediff != 0) ? format_scorediff($h_rb1_scorediff, $year_sel) : '';
 						echo $h_rb1_buttons . $h_rb1_pfr_button . ' <a href="/player/?id='.$h_rb1.'">' . ($h_rb1_data['first'] ? $h_rb1_data['first'] : 'None') . ' ' . $h_rb1_data['last'].'</a><span class="pull-right">'.$h_rb1_data['points'].$h_rb1_scorediff_display.'</span><br>'; 
+						echo format_player_linescore($h_rb1, $weekvar);
 						$h_wr1_pos = substr($h_wr1, -2);
 						$h_wr1_pfr_url = get_player_game_pfr_url($h_wr1, $weekvar);
 						$h_wr1_pfr_button = (($h_wr1_scorediff != 0 || $homeboxscoreerror) && !empty($h_wr1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_wr1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
@@ -673,6 +675,7 @@ printr($assoc, 0);
 						}
 						$h_wr1_scorediff_display = ($h_wr1_scorediff != 0) ? format_scorediff($h_wr1_scorediff, $year_sel) : '';
 						echo $h_wr1_buttons . $h_wr1_pfr_button . ' <a href="/player/?id='.$h_wr1.'">' . ($h_wr1_data['first'] ? $h_wr1_data['first'] : 'None') . ' ' . $h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].$h_wr1_scorediff_display.'</span><br>';
+						echo format_player_linescore($h_wr1, $weekvar);
 						$h_pk1_pos = substr($h_pk1, -2);
 						$h_pk1_pfr_url = get_player_game_pfr_url($h_pk1, $weekvar);
 						$h_pk1_pfr_button = (($h_pk1_scorediff != 0 || $homeboxscoreerror) && !empty($h_pk1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_pk1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
@@ -688,6 +691,7 @@ printr($assoc, 0);
 						}
 						$h_pk1_scorediff_display = ($h_pk1_scorediff != 0) ? format_scorediff($h_pk1_scorediff, $year_sel) : '';
 						echo $h_pk1_buttons . $h_pk1_pfr_button . ' <a href="/player/?id='.$h_pk1.'">' . ($h_pk1_data['first'] ? $h_pk1_data['first'] : 'None') . ' ' . $h_pk1_data['last'].'</a><span class="pull-right">'.$h_pk1_data['points'].$h_pk1_scorediff_display.'</span><br>';
+						echo format_player_linescore($h_pk1, $weekvar);
 
                         if($homeboxscoreerror):
                             echo '<div style="color: red;">ERROR: Boxscore is '.$checkhometotal.' / Diff: '.$hdiff_check.'</div>';
@@ -809,6 +813,7 @@ printr($assoc, 0);
 						}
 						$a_qb1_scorediff_display = ($a_qb1_scorediff != 0) ? format_scorediff($a_qb1_scorediff, $year_sel) : '';
 						echo $a_qb1_buttons . $a_qb1_pfr_button . ' <a href="/player/?id='.$a_qb1.'">' . ($a_qb1_data['first'] ? $a_qb1_data['first'] : 'None') . ' ' . $a_qb1_data['last'].'</a><span class="pull-right">'.$a_qb1_data['points'].$a_qb1_scorediff_display.'</span><br>';
+						echo format_player_linescore($a_qb1, $weekvar);
 						$a_rb1_pos = substr($a_rb1, -2);
 						$a_rb1_pfr_url = get_player_game_pfr_url($a_rb1, $weekvar);
 						$a_rb1_pfr_button = (($a_rb1_scorediff != 0 || $awayboxscoreerror) && !empty($a_rb1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_rb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
@@ -824,6 +829,7 @@ printr($assoc, 0);
 						}
 						$a_rb1_scorediff_display = ($a_rb1_scorediff != 0) ? format_scorediff($a_rb1_scorediff, $year_sel) : '';
 						echo $a_rb1_buttons . $a_rb1_pfr_button . ' <a href="/player/?id='.$a_rb1.'">' . ($a_rb1_data['first'] ? $a_rb1_data['first'] : 'None') . ' ' . $a_rb1_data['last'].'</a><span class="pull-right">'.$a_rb1_data['points'].$a_rb1_scorediff_display.'</span><br>';
+						echo format_player_linescore($a_rb1, $weekvar);
 						$a_wr1_pos = substr($a_wr1, -2);
 						$a_wr1_pfr_url = get_player_game_pfr_url($a_wr1, $weekvar);
 						$a_wr1_pfr_button = (($a_wr1_scorediff != 0 || $awayboxscoreerror) && !empty($a_wr1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_wr1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
@@ -839,6 +845,7 @@ printr($assoc, 0);
 						}
 						$a_wr1_scorediff_display = ($a_wr1_scorediff != 0) ? format_scorediff($a_wr1_scorediff, $year_sel) : '';
 						echo $a_wr1_buttons . $a_wr1_pfr_button . ' <a href="/player/?id='.$a_wr1.'">' . ($a_wr1_data['first'] ? $a_wr1_data['first'] : 'None') . ' ' . $a_wr1_data['last'].'</a><span class="pull-right">'.$a_wr1_data['points'].$a_wr1_scorediff_display.'</span><br>';
+						echo format_player_linescore($a_wr1, $weekvar);
 						$a_pk1_pos = substr($a_pk1, -2);
 						$a_pk1_pfr_url = get_player_game_pfr_url($a_pk1, $weekvar);
 						$a_pk1_pfr_button = (($a_pk1_scorediff != 0 || $awayboxscoreerror) && !empty($a_pk1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_pk1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
@@ -854,6 +861,7 @@ printr($assoc, 0);
 						}
 						$a_pk1_scorediff_display = ($a_pk1_scorediff != 0) ? format_scorediff($a_pk1_scorediff, $year_sel) : '';
 						echo $a_pk1_buttons . $a_pk1_pfr_button . ' <a href="/player/?id='.$a_pk1.'">' . ($a_pk1_data['first'] ? $a_pk1_data['first'] : 'None') . ' ' . $a_pk1_data['last'].'</a><span class="pull-right">'.$a_pk1_data['points'].$a_pk1_scorediff_display.'</span><br>';
+						echo format_player_linescore($a_pk1, $weekvar);
 
                         if($awayboxscoreerror):
                             echo '<div style="color: red;">ERROR: Boxscore is '.$checkroadtotal.' / Diff: '.$adiff_check.'</div>';
@@ -983,9 +991,10 @@ printr($assoc, 0);
 										}
 										$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_qb2_data['first'] . '\', \''. $h_qb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$h_qb2_scorediff_display = ($h_qb2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_qb2_scorediff, $year_sel) : '';
-									echo $h_qb2_buttons . '<a href="/player/?id='.$h_qb2.'">' . ($h_qb2_data['first'] ? $h_qb2_data['first'] : 'None') . ' ' . $h_qb2_data['last'].'</a><span class="pull-right">'.$h_qb2_data['points'].$h_qb2_scorediff_display.'</span><br>';
-									$h_rb2_pos = substr($h_rb2, -2);
+							$h_qb2_scorediff_display = ($h_qb2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_qb2_scorediff, $year_sel) : '';
+							echo $h_qb2_buttons . '<a href="/player/?id='.$h_qb2.'">' . ($h_qb2_data['first'] ? $h_qb2_data['first'] : 'None') . ' ' . $h_qb2_data['last'].'</a><span class="pull-right">'.$h_qb2_data['points'].$h_qb2_scorediff_display.'</span><br>';
+							echo format_player_linescore($h_qb2, $weekvar);
+							$h_rb2_pos = substr($h_rb2, -2);
 									$h_rb2_show_buttons = ($h_rb2_scorediff != 0 || $homeboxscoreerror);
 									$h_rb2_show_2pt_btn = ($h_rb2_scorediff == 1 && $year_sel >= 1994);
 									$h_rb2_buttons = '';
@@ -997,9 +1006,10 @@ printr($assoc, 0);
 										}
 										$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_rb2_data['first'] . '\', \''. $h_rb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$h_rb2_scorediff_display = ($h_rb2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_rb2_scorediff, $year_sel) : '';
-									echo $h_rb2_buttons . '<a href="/player/?id='.$h_rb2.'">' . ($h_rb2_data['first'] ? $h_rb2_data['first'] : 'None') . ' ' . $h_rb2_data['last'].'</a><span class="pull-right">'.$h_rb2_data['points'].$h_rb2_scorediff_display.'</span><br>';
-									$h_wr2_pos = substr($h_wr2, -2);
+							$h_rb2_scorediff_display = ($h_rb2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_rb2_scorediff, $year_sel) : '';
+							echo $h_rb2_buttons . '<a href="/player/?id='.$h_rb2.'">' . ($h_rb2_data['first'] ? $h_rb2_data['first'] : 'None') . ' ' . $h_rb2_data['last'].'</a><span class="pull-right">'.$h_rb2_data['points'].$h_rb2_scorediff_display.'</span><br>';
+							echo format_player_linescore($h_rb2, $weekvar);
+							$h_wr2_pos = substr($h_wr2, -2);
 									$h_wr2_show_buttons = ($h_wr2_scorediff != 0 || $homeboxscoreerror);
 									$h_wr2_show_2pt_btn = ($h_wr2_scorediff == 1 && $year_sel >= 1994);
 									$h_wr2_buttons = '';
@@ -1011,9 +1021,10 @@ printr($assoc, 0);
 										}
 										$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_wr2_data['first'] . '\', \''. $h_wr2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$h_wr2_scorediff_display = ($h_wr2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_wr2_scorediff, $year_sel) : '';
-									echo $h_wr2_buttons . '<a href="/player/?id='.$h_wr2.'">' . ($h_wr2_data['first'] ? $h_wr2_data['first'] : 'None') . ' ' . $h_wr2_data['last'].'</a><span class="pull-right">'.$h_wr2_data['points'].$h_wr2_scorediff_display.'</span><br>';
-									$h_pk2_pos = substr($h_pk2, -2);
+							$h_wr2_scorediff_display = ($h_wr2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_wr2_scorediff, $year_sel) : '';
+							echo $h_wr2_buttons . '<a href="/player/?id='.$h_wr2.'">' . ($h_wr2_data['first'] ? $h_wr2_data['first'] : 'None') . ' ' . $h_wr2_data['last'].'</a><span class="pull-right">'.$h_wr2_data['points'].$h_wr2_scorediff_display.'</span><br>';
+							echo format_player_linescore($h_wr2, $weekvar);
+							$h_pk2_pos = substr($h_pk2, -2);
 									$h_pk2_show_buttons = ($h_pk2_scorediff != 0 || $homeboxscoreerror);
 									$h_pk2_show_2pt_btn = ($h_pk2_scorediff == 1 && $year_sel >= 1994);
 									$h_pk2_buttons = '';
@@ -1025,10 +1036,11 @@ printr($assoc, 0);
 										}
 										$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_pk2_data['first'] . '\', \''. $h_pk2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$h_pk2_scorediff_display = ($h_pk2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_pk2_scorediff, $year_sel) : '';
-									echo $h_pk2_buttons . '<a href="/player/?id='.$h_pk2.'">' . ($h_pk2_data['first'] ? $h_pk2_data['first'] : 'None') . ' ' . $h_pk2_data['last'].'</a><span class="pull-right">'.$h_pk2_data['points'].$h_pk2_scorediff_display.'</span><br>';
-									
-									// Home OT Totals
+							$h_pk2_scorediff_display = ($h_pk2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_pk2_scorediff, $year_sel) : '';
+							echo $h_pk2_buttons . '<a href="/player/?id='.$h_pk2.'">' . ($h_pk2_data['first'] ? $h_pk2_data['first'] : 'None') . ' ' . $h_pk2_data['last'].'</a><span class="pull-right">'.$h_pk2_data['points'].$h_pk2_scorediff_display.'</span><br>';
+							echo format_player_linescore($h_pk2, $weekvar);
+							
+							// Home OT Totals
 										$h_ot_total = intval($h_qb2_data['points']) + intval($h_rb2_data['points']) + intval($h_wr2_data['points']) + intval($h_pk2_data['points']);
 										echo '<div style="border-top: 1px solid #ddd; padding-top: 5px; font-size: 14px; color: #666;"><strong>OT Total:</strong> <span class="pull-right">' . $h_ot_total . '</span></div>';
 
@@ -1054,9 +1066,10 @@ printr($assoc, 0);
 										}
 										$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_qb2_data['first'] . '\', \''. $a_qb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$a_qb2_scorediff_display = ($a_qb2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_qb2_scorediff, $year_sel) : '';
-									echo $a_qb2_buttons . '<a href="/player/?id='.$a_qb2.'">' . ($a_qb2_data['first'] ? $a_qb2_data['first'] : 'None') . ' ' . $a_qb2_data['last'].'</a><span class="pull-right">'.$a_qb2_data['points'].$a_qb2_scorediff_display.'</span><br>';
-									$a_rb2_pos = substr($a_rb2, -2);
+							$a_qb2_scorediff_display = ($a_qb2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_qb2_scorediff, $year_sel) : '';
+							echo $a_qb2_buttons . '<a href="/player/?id='.$a_qb2.'">' . ($a_qb2_data['first'] ? $a_qb2_data['first'] : 'None') . ' ' . $a_qb2_data['last'].'</a><span class="pull-right">'.$a_qb2_data['points'].$a_qb2_scorediff_display.'</span><br>';
+							echo format_player_linescore($a_qb2, $weekvar);
+							$a_rb2_pos = substr($a_rb2, -2);
 									$a_rb2_show_buttons = ($a_rb2_scorediff != 0 || $awayboxscoreerror);
 									$a_rb2_show_2pt_btn = ($a_rb2_scorediff == 1 && $year_sel >= 1994);
 									$a_rb2_buttons = '';
@@ -1068,9 +1081,10 @@ printr($assoc, 0);
 										}
 										$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_rb2_data['first'] . '\', \''. $a_rb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$a_rb2_scorediff_display = ($a_rb2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_rb2_scorediff, $year_sel) : '';
-									echo $a_rb2_buttons . '<a href="/player/?id='.$a_rb2.'">' . ($a_rb2_data['first'] ? $a_rb2_data['first'] : 'None') . ' ' . $a_rb2_data['last'].'</a><span class="pull-right">'.$a_rb2_data['points'].$a_rb2_scorediff_display.'</span><br>';
-									$a_wr2_pos = substr($a_wr2, -2);
+							$a_rb2_scorediff_display = ($a_rb2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_rb2_scorediff, $year_sel) : '';
+							echo $a_rb2_buttons . '<a href="/player/?id='.$a_rb2.'">' . ($a_rb2_data['first'] ? $a_rb2_data['first'] : 'None') . ' ' . $a_rb2_data['last'].'</a><span class="pull-right">'.$a_rb2_data['points'].$a_rb2_scorediff_display.'</span><br>';
+							echo format_player_linescore($a_rb2, $weekvar);
+							$a_wr2_pos = substr($a_wr2, -2);
 									$a_wr2_show_buttons = ($a_wr2_scorediff != 0 || $awayboxscoreerror);
 									$a_wr2_show_2pt_btn = ($a_wr2_scorediff == 1 && $year_sel >= 1994);
 									$a_wr2_buttons = '';
@@ -1082,9 +1096,10 @@ printr($assoc, 0);
 										}
 										$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_wr2_data['first'] . '\', \''. $a_wr2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$a_wr2_scorediff_display = ($a_wr2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_wr2_scorediff, $year_sel) : '';
-									echo $a_wr2_buttons . '<a href="/player/?id='.$a_wr2.'">' . ($a_wr2_data['first'] ? $a_wr2_data['first'] : 'None') . ' ' . $a_wr2_data['last'].'</a><span class="pull-right">'.$a_wr2_data['points'].$a_wr2_scorediff_display.'</span><br>';
-									$a_pk2_pos = substr($a_pk2, -2);
+							$a_wr2_scorediff_display = ($a_wr2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_wr2_scorediff, $year_sel) : '';
+							echo $a_wr2_buttons . '<a href="/player/?id='.$a_wr2.'">' . ($a_wr2_data['first'] ? $a_wr2_data['first'] : 'None') . ' ' . $a_wr2_data['last'].'</a><span class="pull-right">'.$a_wr2_data['points'].$a_wr2_scorediff_display.'</span><br>';
+							echo format_player_linescore($a_wr2, $weekvar);
+							$a_pk2_pos = substr($a_pk2, -2);
 									$a_pk2_show_buttons = ($a_pk2_scorediff != 0 || $awayboxscoreerror);
 									$a_pk2_show_2pt_btn = ($a_pk2_scorediff == 1 && $year_sel >= 1994);
 									$a_pk2_buttons = '';
@@ -1096,10 +1111,11 @@ printr($assoc, 0);
 										}
 										$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_pk2_data['first'] . '\', \''. $a_pk2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 									}
-									$a_pk2_scorediff_display = ($a_pk2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_pk2_scorediff, $year_sel) : '';
-									echo $a_pk2_buttons . '<a href="/player/?id='.$a_pk2.'">' . ($a_pk2_data['first'] ? $a_pk2_data['first'] : 'None') . ' ' . $a_pk2_data['last'].'</a><span class="pull-right">'.$a_pk2_data['points'].$a_pk2_scorediff_display.'</span><br>';
-									
-									// Away OT Totals
+							$a_pk2_scorediff_display = ($a_pk2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_pk2_scorediff, $year_sel) : '';
+							echo $a_pk2_buttons . '<a href="/player/?id='.$a_pk2.'">' . ($a_pk2_data['first'] ? $a_pk2_data['first'] : 'None') . ' ' . $a_pk2_data['last'].'</a><span class="pull-right">'.$a_pk2_data['points'].$a_pk2_scorediff_display.'</span><br>';
+							echo format_player_linescore($a_pk2, $weekvar);
+							
+							// Away OT Totals
 										$a_ot_total = intval($a_qb2_data['points']) + intval($a_rb2_data['points']) + intval($a_wr2_data['points']) + intval($a_pk2_data['points']);
 										echo '<div style="border-top: 1px solid #ddd; padding-top: 5px; font-size: 14px; color: #666;"><span class="pull-right">' . $a_ot_total . '</span></div>';
 

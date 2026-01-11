@@ -113,6 +113,7 @@ a {
 }
 .results .boxscorebox {
   padding-left: 0px;
+  font-size: 14px;
 }
 .results .notes-area {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
@@ -144,8 +145,11 @@ a {
   padding-top: 10px;
   display: block;
   clear: both;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.4em;
+}
+.overtime * {
+  font-size: 12px !important;
 }
 div.dataTables_paginate {
   text-align: center !important;

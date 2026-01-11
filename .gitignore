@@ -114,3 +114,6 @@ csv_files/*
 # Add in our db install files.
 !install_tables.php
 !importCSV.php
+
+wp-content/plugins/
+wp-content/themes/tif-child-bootstrap/pi@10.0.0.115

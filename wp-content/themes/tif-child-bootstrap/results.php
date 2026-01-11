@@ -1101,7 +1101,7 @@ printr($assoc, 0);
 									
 									// Away OT Totals
 										$a_ot_total = intval($a_qb2_data['points']) + intval($a_rb2_data['points']) + intval($a_wr2_data['points']) + intval($a_pk2_data['points']);
-										echo '<div style="border-top: 1px solid #ddd; padding-top: 5px; font-size: 14px; color: #666;"><strong>OT Total:</strong> <span class="pull-right">' . $a_ot_total . '</span></div>';
+										echo '<div style="border-top: 1px solid #ddd; padding-top: 5px; font-size: 14px; color: #666;"><span class="pull-right">' . $a_ot_total . '</span></div>';
 
 									echo '</div>';
 

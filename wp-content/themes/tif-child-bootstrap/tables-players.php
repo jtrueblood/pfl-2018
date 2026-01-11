@@ -819,6 +819,29 @@ foreach ($get_te as $item) {
 arsort($new_te);
 //printr($new_te, 1);
 
+// TWO-POINT CONVERSIONS - Calculate total two-point conversions for all players
+$player_twopts = array();
+foreach ($playersassoc as $player_id => $player_info) {
+    // Check if the player table has a twopt column
+    $table_name = $player_id;
+    
+    // Try to get sum of twopt column if it exists
+    try {
+        $twopt_result = $wpdb->get_var($wpdb->prepare(
+            "SELECT SUM(twopt) FROM `{$table_name}` WHERE twopt IS NOT NULL AND twopt > 0"
+        ));
+        
+        if ($twopt_result && $twopt_result > 0) {
+            $player_twopts[$player_id] = (int)$twopt_result;
+        }
+    } catch (Exception $e) {
+        // Column doesn't exist or other error - skip this player
+        continue;
+    }
+}
+arsort($player_twopts);
+//printr($player_twopts, 1);
+
 foreach($playersassoc as $key => $value):
     $teamall = get_player_record($key);
     //printr($teamall, 0);
@@ -857,7 +880,7 @@ arsort($playerteamunique);
         'playoffsort', 'playoffsort_flat', 'postseasonhighs', 'playoff_player_highs', 'streaks', 'player_streaks',
         'playerids', 'countplayers', 'topseasonscores', 'gamesplayed', 'fourteen', 'player_titles', 'storethirteens',
         'count_thirteens', 'highseas_qb', 'highseas_rb', 'highseas_wr', 'highseas_pk', 'ppgseason', 'ppggames',
-        'totalppggame', 'getpotw', 'total', 'totalpotw', 'get_te', 'new_te', 'playerteamunique'
+        'totalppggame', 'getpotw', 'total', 'totalpotw', 'get_te', 'new_te', 'playerteamunique', 'player_twopts'
     );
     set_transient($tables_cache_key, $data_to_cache, 3600); // Cache for 1 hour
 }
@@ -919,6 +942,7 @@ $titprint = '';
 $printrevenge = '';
 $printtwos = '';
 $printcol = '';
+$twoptprint = '';
 
 ?>
 
@@ -1439,6 +1463,35 @@ $printcol = '';
 				
 				tablefoot('5 times POTW or more.');		
 			?>
+			</div>
+
+			<!-- Two-Point Conversion Leaders -->
+			<div class="col-xs-24 col-sm-12 col-md-6">
+				<?php
+				$labels = array('Rank', 'Player', 'Position', 'Total');
+				tablehead('Two-Point Conversion Leaders', $labels);
+				
+				$rank = 1;
+				foreach ($player_twopts as $player_id => $total_twopts) {
+					if ($rank > 25) break; // Top 25 only
+					
+					$player_name = get_cached_player_name($player_id);
+					$position = $player_name['pos'];
+					
+					$twoptprint .= '<tr>';
+					$twoptprint .= '<td class="min-width text-center">' . $rank . '</td>';
+					$twoptprint .= '<td><a href="/player/?id=' . $player_id . '">' . $player_name['first'] . ' ' . $player_name['last'] . '</a></td>';
+					$twoptprint .= '<td class="min-width text-center">' . $position . '</td>';
+					$twoptprint .= '<td class="min-width text-center"><strong>' . $total_twopts . '</strong></td>';
+					$twoptprint .= '</tr>';
+					
+					$rank++;
+				}
+				
+				echo $twoptprint;
+				
+				tablefoot('Career regular season two-point conversions.');
+				?>
 			</div>
 
 

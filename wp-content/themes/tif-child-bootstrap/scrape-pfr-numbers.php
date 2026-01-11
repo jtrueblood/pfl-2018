@@ -1,9 +1,65 @@
 <?php
 /*
- * Template Name: Scrape PFR for Two Point Conversions
- * Description: Script to Scrape Player Numbers From Pro Football Reference
+ * Template Name: Scrape ESPN for Player Numbers
+ * Description: Script to Get Player Numbers From ESPN API
  */
 
+// Helper function to fetch player jersey number from ESPN API
+function get_espn_player_jersey($first_name, $last_name, $year = null) {
+	$jersey_number = null;
+	
+	// Try to search for player in ESPN API
+	// Note: ESPN API doesn't have a direct player search, so we'll try team rosters
+	// This is a simplified approach - you may need to enhance this based on available data
+	
+	try {
+		// Current season approach - get all NFL teams and search rosters
+		$teams_url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams";
+		$teams_response = @file_get_contents($teams_url);
+		
+		if($teams_response) {
+			$teams_data = json_decode($teams_response, true);
+			
+			if(isset($teams_data['sports'][0]['leagues'][0]['teams'])) {
+				foreach($teams_data['sports'][0]['leagues'][0]['teams'] as $team) {
+					if(isset($team['team']['id'])) {
+						$team_id = $team['team']['id'];
+						
+						// Get team roster
+						$roster_url = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{$team_id}/roster";
+						$roster_response = @file_get_contents($roster_url);
+						
+						if($roster_response) {
+							$roster_data = json_decode($roster_response, true);
+							
+							if(isset($roster_data['athletes'])) {
+								foreach($roster_data['athletes'] as $athlete_group) {
+									if(isset($athlete_group['items'])) {
+										foreach($athlete_group['items'] as $athlete) {
+											// Check if name matches
+											$full_name = isset($athlete['fullName']) ? $athlete['fullName'] : '';
+											$search_full = strtolower($first_name . ' ' . $last_name);
+											
+											if(strtolower($full_name) == $search_full) {
+												if(isset($athlete['jersey'])) {
+													return $athlete['jersey'];
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	} catch (Exception $e) {
+		// Silently fail if API is unavailable
+	}
+	
+	return $jersey_number;
+}
 
 /*
 $url1=$_SERVER['REQUEST_URI'];
@@ -166,92 +222,225 @@ get_header();
 						<div class="panel widget">
 							<div class="widget-body text-center">
 								<?php 
-
-
-								$firstInitCap = strtoupper($last[0]);
-								$pfr_id = $featuredplayer[10];	
+								// ESPN API LOGIC
+								$espn_numbers_found = false;
+								$finalnumbers = array();
+								$manual_entry_needed = false;
+								$espn_status_message = '';
 								
+								// Load existing numberarray from database
+								$existing_numbers_obj = get_numbers_by_season($randomplayer);
+								$existing_numbers = array();
+								if($existing_numbers_obj):
+									// Convert stdClass to array
+									foreach($existing_numbers_obj as $year => $number):
+										$existing_numbers[$year] = $number;
+									endforeach;
+								endif;
 								
-								include_once('simplehtmldom/simple_html_dom.php');
-								$html = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'.htm');
-
-                                echo '<h2>TESTING HERE</h2>';
-
-								if($pfr_id):					
-										if($html):
-//
-                                            foreach($html->find('.uni_holder a=[data-tip]') as $element):
-                                                $teamyear[] = explode('<', $element->outertext);
-                                            endforeach;
-                                            foreach($teamyear as $values):
-                                                $newnumber[] = explode( '"', $values[1]);
-                                            endforeach;
-
-                                            foreach($newnumber as $value):
-                                                $i = substr($value[5],  -4);
-                                                $numberagain[$i] = explode( '=', $value[1]);
-                                            endforeach;
-
-                                            foreach($numberagain as $k => $v):
-                                                $numersclean[$k] = $v[2];
-                                            endforeach;
-
-
-                                            $yearclean = array_values($yearsplayed);
-                                            printr($yearclean, 0);
-                                            $firstyear = reset($yearclean);
-                                            $firstnumber = reset($numersclean);
-                                            foreach ($yearclean as $year):
-
-                                                    if($numersclean[$year]):
-                                                        $finalnumbers[$year] = $numberagain[$year][2];
-                                                        $set = $numberagain[$year][2];
-                                                    else:
-                                                        $finalnumbers[$year] = $firstnumber;
-                                                    endif;
-
-                                            endforeach;
-
-                                            echo $firstyear.' // '.$firstnumber;
-                                            printr($numersclean, 0);
-
-                                            if($getyearsplayed):
-                                                $encode = json_encode($finalnumbers);
-                                                printr($finalnumbers, 0);
-                                            else:
-                                                $yearsplayed = array($dbrookie => $dbnumber);
-                                                $encode = json_encode($yearsplayed);
-                                                printr($yearsplayed, 0);
-                                            endif;
-
-                                            // in functions.php insert data into table
-                                            $updatetable  = insert_player_number_array($getplayer, $encode);
-											
-											else:
-											
-											$report_message = $randomplayer." -- ref page not found || ";
-											echo '<script>console.log("'.$randomplayer.' - ref page not found");</script>';
-											echo $report_message;
-											
+								// Start with existing numbers (preserve what we already have)
+								$finalnumbers = $existing_numbers;
+								
+								// Try to find player on ESPN by searching for their name
+								$search_name = urlencode($first . ' ' . $last);
+								
+								// Get years player played
+								$yearclean = array_values($yearsplayed);
+								
+								// Try to find player data from ESPN for each year they played
+								if($yearclean && count($yearclean) > 0):
+									// First, try to get current jersey number from ESPN API
+									$espn_jersey = get_espn_player_jersey($first, $last);
+									
+									if($espn_jersey):
+										if(!empty($existing_numbers)):
+											$espn_status_message = '<div class="alert alert-success">Found jersey number #'.$espn_jersey.' from ESPN API. Will be added to years without existing numbers.</div>';
+										else:
+											$espn_status_message = '<div class="alert alert-success">Found jersey number #'.$espn_jersey.' from ESPN API (will be applied to all years)</div>';
 										endif;
-									
+										$espn_numbers_found = true;
 									else:
+										if(!empty($existing_numbers)):
+											$espn_status_message = '<div class="alert alert-info">Player not found in current ESPN rosters. Using existing numbers from database. Manual entry available for new years.</div>';
+										else:
+											$espn_status_message = '<div class="alert alert-warning">Player not found in current ESPN rosters. Manual entry required.</div>';
+										endif;
+									endif;
 									
-										$report_message = $randomplayer." -- ref player PFR ID not found || ";
-										echo '<script>console.log("'.$randomplayer.' - ref player PFR ID not found");</script>';
-										echo $report_message;
+									foreach($yearclean as $year):
+										// Skip years that already have numbers in the database (don't overwrite)
+										if(isset($existing_numbers[$year]) && $existing_numbers[$year]):
+											// Already have a number for this year, keep it
+											continue;
+										endif;
 										
-									endif;	
+										// Try ESPN API to get roster data for this year
+										// Note: ESPN API doesn't easily provide historical jersey numbers
+										// We'll use the current number for new years unless manually overridden
+										$found_number = $espn_jersey;
+										
+										if(!$found_number):
+											// Check if we have a manual entry
+											if(isset($_POST['manual_numbers']) && isset($_POST['manual_numbers'][$year])):
+												$found_number = sanitize_text_field($_POST['manual_numbers'][$year]);
+											endif;
+										endif;
+										
+										if($found_number):
+											$finalnumbers[$year] = $found_number;
+										else:
+											$manual_entry_needed = true;
+											// Use existing number from DB if available, or fallback to dbnumber
+											if(isset($existing_numbers[$year])):
+												$finalnumbers[$year] = $existing_numbers[$year];
+											elseif($dbnumber):
+												$finalnumbers[$year] = $dbnumber;
+											endif;
+										endif;
+									endforeach;
+								else:
+									$yearsplayed = array($dbrookie => $dbnumber);
+									$finalnumbers = $yearsplayed;
+								endif;
+								
+								// Check if we have new numbers to save (ESPN found something or we have complete data)
+								$should_auto_save = false;
+								$data_changed = false;
+								
+								// Check if finalnumbers is different from existing_numbers
+								if(!empty($finalnumbers)):
+									// Compare arrays to see if anything changed
+									if(json_encode($finalnumbers) !== json_encode($existing_numbers)):
+										$data_changed = true;
+									endif;
+								endif;
+								
+								if(($espn_numbers_found || !empty($finalnumbers)) && $data_changed):
+									// We have new data to save
+									$should_auto_save = true;
+								endif;
+								
+								// Handle form submission for manual entry
+								if(isset($_POST['save_numbers']) && isset($_POST['manual_numbers'])):
+									$manual_numbers = $_POST['manual_numbers'];
+									// Merge manual entries with existing numbers (manual entries take precedence)
+									foreach($manual_numbers as $year => $number):
+										if($number && is_numeric($number)):
+											$finalnumbers[$year] = sanitize_text_field($number);
+										endif;
+									endforeach;
 									
+									// Sort by year for cleaner JSON output
+									ksort($finalnumbers);
+									
+									$encode = json_encode($finalnumbers);
+									$updatetable = insert_player_number_array($getplayer, $encode);
+									$manual_entry_needed = false;
+									echo '<div class="alert alert-success">Numbers saved successfully! (Merged with existing data)</div>';
+								elseif($should_auto_save && !isset($_POST['save_numbers'])):
+									// Auto-save when ESPN found numbers on initial load
+									ksort($finalnumbers);
+									$encode = json_encode($finalnumbers);
+									$updatetable = insert_player_number_array($getplayer, $encode);
+									echo '<div class="alert alert-success">Auto-saved: ESPN numbers merged with existing data!<br>';
+									echo '<small>Player ID: '.$getplayer.' | Result: '.$updatetable.'</small></div>';
+								endif;
+								?>
+								
+								<div class="well" style="background: #f5f5f5; padding: 10px; margin: 10px 0;">
+									<h5>Debug Info:</h5>
+									<p><strong>Player ID:</strong> <?php echo $getplayer; ?></p>
+									<p><strong>Years Played:</strong> <?php printr($yearclean, 0); ?></p>
+									<p><strong>ESPN Found:</strong> <?php echo $espn_numbers_found ? 'Yes' : 'No'; ?></p>
+									<p><strong>Data Changed:</strong> <?php echo isset($data_changed) && $data_changed ? 'Yes' : 'No'; ?></p>
+									<p><strong>Should Auto-Save:</strong> <?php echo isset($should_auto_save) && $should_auto_save ? 'Yes' : 'No'; ?></p>
+								</div>
+								
+								<?php if(!empty($existing_numbers)): ?>
+									<div class="alert alert-info"><strong>Existing Numbers in Database:</strong><br>
+									<?php foreach($existing_numbers as $yr => $num): ?>
+										Year <?php echo $yr; ?>: #<?php echo $num; ?><br>
+									<?php endforeach; ?>
+									</div>
+								<?php endif; ?>
+								
+								<div class="well" style="background: #f5f5f5; padding: 10px; margin: 10px 0;">
+									<strong>Final Numbers Array:</strong>
+									<?php printr($finalnumbers, 0); ?>
+								</div>
+								
+								<?php
+								// Sort by year for cleaner JSON
+								if(!empty($finalnumbers)):
+									ksort($finalnumbers);
+								endif;
+								
+								if($getyearsplayed):
+									$encode = json_encode($finalnumbers);
+								else:
+									$yearsplayed = array($dbrookie => $dbnumber);
+									$encode = json_encode($yearsplayed);
+								endif;
 								?>
 
 								<div class="panel-heading">
-									<h3 class="panel-title">Player Info Scraped from Pro Football Reference</h3>
-									
+									<h3 class="panel-title">Player Jersey Numbers from ESPN API</h3>
 								</div>
 								<div class="panel-body">
-<!--								<p>Pro Football Ref ID: --><?php //echo $firstInit.'/'.$pfr_id; ?><!--</p>-->
-<!--								--><?php echo $encode; ?>
+									<?php echo $espn_status_message; ?>
+									<?php if($manual_entry_needed && !isset($_POST['save_numbers'])): ?>
+										<div class="alert alert-warning">
+											<strong>Manual Entry Required:</strong> Jersey numbers could not be automatically retrieved from ESPN API.
+											Please enter the jersey numbers manually for each year below.
+										</div>
+										
+										<form method="post" action="">
+											<h4>Enter Jersey Numbers by Year:</h4>
+											<?php foreach($yearclean as $year): ?>
+												<div class="form-group">
+													<label for="number_<?php echo $year; ?>">Year <?php echo $year; ?>:</label>
+													<input type="number" 
+														class="form-control" 
+														id="number_<?php echo $year; ?>" 
+														name="manual_numbers[<?php echo $year; ?>]" 
+														value="<?php echo isset($finalnumbers[$year]) ? $finalnumbers[$year] : ''; ?>" 
+														min="0" 
+														max="99" 
+														required>
+												</div>
+											<?php endforeach; ?>
+											<button type="submit" name="save_numbers" class="btn btn-primary">Save Numbers</button>
+										</form>
+									<?php else: ?>
+										<p><strong>Jersey Numbers (JSON):</strong></p>
+										<pre><?php echo $encode; ?></pre>
+										
+										<form method="post" action="" style="margin-top: 15px;">
+											<h4>Edit Jersey Numbers by Year:</h4>
+											<p class="text-muted"><small>You can edit or add numbers for any year. Existing numbers can be overridden.</small></p>
+											<?php foreach($yearclean as $year): 
+												$has_existing = isset($existing_numbers[$year]) && $existing_numbers[$year];
+											?>
+												<div class="form-group">
+													<label for="number_<?php echo $year; ?>">
+														Year <?php echo $year; ?>:
+														<?php if($has_existing): ?>
+															<span class="label label-info">Existing: #<?php echo $existing_numbers[$year]; ?></span>
+														<?php endif; ?>
+													</label>
+													<input type="number" 
+														class="form-control" 
+														id="number_<?php echo $year; ?>" 
+														name="manual_numbers[<?php echo $year; ?>]" 
+														value="<?php echo isset($finalnumbers[$year]) ? $finalnumbers[$year] : ''; ?>" 
+														min="0" 
+														max="99"
+														placeholder="<?php echo $has_existing ? 'Change from '.$existing_numbers[$year] : 'Enter number'; ?>">
+												</div>
+											<?php endforeach; ?>
+											<button type="submit" name="save_numbers" class="btn btn-primary">Update Numbers</button>
+										</form>
+									<?php endif; ?>
 								</div>
 					
 							</div>

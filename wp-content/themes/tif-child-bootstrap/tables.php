@@ -1292,27 +1292,12 @@ $printcol = '';
 					$labels = array('Year', 'PFL', 'EGAD', 'DGAS', 'MGAC');		
 					tablehead('Division Winners by Year', $labels);	
 					
-					foreach ($seeding as $key => $value){
-							if(is_array($value['PFL'])){
-								$pflwin = reset($value['PFL']);
-							} else {
-								$pflwin = $value['PFL'];
-							}
-							if(is_array($value['EGAD'])){
-								$egadwin = reset($value['EGAD']);
-							} else {
-								$egadwin = $value['EGAD'];
-							}
-							if(is_array($value['DGAS'])){
-								$dgaswin = reset($value['DGAS']);
-							} else {
-								$dgaswin = $value['DGAS'];
-							}
-							if(is_array($value['MGAC'])){
-								$mgacwin = reset($value['MGAC']);
-							} else {
-								$mgacwin = $value['MGAC'];
-							}	
+				foreach ($seeding as $key => $value){
+						// Get seed 1 (division winner) for each division
+						$pflwin = isset($value['PFL'][1]) ? $value['PFL'][1] : (is_array($value['PFL']) ? reset($value['PFL']) : $value['PFL']);
+						$egadwin = isset($value['EGAD'][1]) ? $value['EGAD'][1] : (is_array($value['EGAD']) ? reset($value['EGAD']) : $value['EGAD']);
+						$dgaswin = isset($value['DGAS'][1]) ? $value['DGAS'][1] : (is_array($value['DGAS']) ? reset($value['DGAS']) : $value['DGAS']);
+						$mgacwin = isset($value['MGAC'][1]) ? $value['MGAC'][1] : (is_array($value['MGAC']) ? reset($value['MGAC']) : $value['MGAC']);
 					
 						    $printdivwinners .='<tr><td>'.$key.'</td>';
 							$printdivwinners .='<td>'.$pflwin['team'].'</td>';
@@ -1438,6 +1423,59 @@ $printcol = '';
                 echo $printtwos;
 
                 tablefoot('Team having the second highest score in a week but still losing.');
+
+                ?>
+
+            </div>
+
+            <!-- Bullshit Win of the Year -->
+            <div class="col-xs-24 col-sm-12 col-md-6">
+
+                <?php
+                $bswoty_data = get_bswins();
+
+                $labels = array('Season', 'Week', 'Winner', 'Loser', 'Score');
+                tablehead('Bullshit Win of the Year', $labels);
+
+                $bswoty_count = array();
+                foreach ($bswoty_data as $key => $val){
+                    $season = substr($key, 0, 4);
+                    $week = ltrim(substr($key, 4), '0');
+                    $winner_full = team_long($val['winner']);
+                    $loser_full = team_long($val['loser']);
+                    
+                    // Get scores for the game
+                    $winner_results = get_team_results_by_week($val['winner'], $key);
+                    $winner_score = $winner_results[$key]['points'];
+                    $loser_score = $winner_results[$key]['versus_pts'];
+                    $score_display = $winner_score . '-' . $loser_score;
+                    
+                    $printbswoty .='<tr><td>'.$season.'</td>';
+                    $printbswoty .='<td>'.$week.'</td>';
+                    $printbswoty .='<td>'.$winner_full.'</td>';
+                    $printbswoty .='<td>'.$loser_full.'</td>';
+                    $printbswoty .='<td>'.$score_display.'</td></tr>';
+                    
+                    // Count wins by team
+                    if (!isset($bswoty_count[$winner_full])) {
+                        $bswoty_count[$winner_full] = 0;
+                    }
+                    $bswoty_count[$winner_full]++;
+                }
+
+                echo $printbswoty;
+
+                // Sort by count descending
+                arsort($bswoty_count);
+                
+                // Build CSV string
+                $csv_parts = array();
+                foreach ($bswoty_count as $team => $count) {
+                    $csv_parts[] = $team . ' (' . $count . ')';
+                }
+                $bswoty_csv = implode(', ', $csv_parts);
+
+                tablefoot($bswoty_csv);
 
                 ?>
 

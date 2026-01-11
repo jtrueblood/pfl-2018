@@ -1,0 +1,574 @@
+{
+  "draftResults": {
+    "draftUnit": {
+      "static_url": "https://www48.myfantasyleague.com/fflnetdynamic2024/38954_LEAGUE_draft_results.xml",
+      "round1DraftOrder": "0002,0006,0009,0007,0002,0003,0001,0008,0010,0009,",
+      "draftPick": [
+        {
+          "pick": "01",
+          "franchise": "0002",
+          "round": "01",
+          "player": "16614",
+          "comments": "[Pick traded from Space Warriorz.\nPick made by Commissioner.] ",
+          "timestamp": "1725131015"
+        },
+        {
+          "round": "01",
+          "player": "16581",
+          "pick": "02",
+          "franchise": "0006",
+          "timestamp": "1725131015",
+          "comments": "[Pick made from Pre-Draft List] "
+        },
+        {
+          "timestamp": "1725131563",
+          "comments": "[Pick traded from Sixty Niners.\nPick made by Commissioner.] ",
+          "round": "01",
+          "player": "14104",
+          "franchise": "0009",
+          "pick": "03"
+        },
+        {
+          "timestamp": "1725131586",
+          "comments": "[Pick traded from C-Men.\nPick made by Commissioner.] ",
+          "player": "16152",
+          "round": "01",
+          "franchise": "0007",
+          "pick": "04"
+        },
+        {
+          "timestamp": "1725131595",
+          "comments": "[Pick made by Commissioner.] ",
+          "round": "01",
+          "player": "16579",
+          "franchise": "0002",
+          "pick": "05"
+        },
+        {
+          "franchise": "0003",
+          "pick": "06",
+          "player": "16167",
+          "round": "01",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725131769"
+        },
+        {
+          "timestamp": "1725131876",
+          "comments": "[Pick made by Commissioner.] ",
+          "player": "16615",
+          "round": "01",
+          "franchise": "0001",
+          "pick": "07"
+        },
+        {
+          "pick": "08",
+          "franchise": "0008",
+          "player": "15698",
+          "round": "01",
+          "comments": "",
+          "timestamp": "1725131886"
+        },
+        {
+          "player": "15749",
+          "round": "01",
+          "pick": "09",
+          "franchise": "0010",
+          "timestamp": "1725132068",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "comments": "[Pick traded from Destruction.\nPick made by Commissioner.] ",
+          "timestamp": "1725132406",
+          "pick": "10",
+          "franchise": "0009",
+          "player": "15721",
+          "round": "01"
+        },
+        {
+          "comments": "[Pick made from Pre-Draft List] ",
+          "timestamp": "1725132406",
+          "franchise": "0004",
+          "pick": "01",
+          "player": "12620",
+          "round": "02"
+        },
+        {
+          "pick": "02",
+          "franchise": "0006",
+          "round": "02",
+          "player": "16620",
+          "comments": "[Pick made from Pre-Draft List] ",
+          "timestamp": "1725132406"
+        },
+        {
+          "round": "02",
+          "player": "10976",
+          "franchise": "0002",
+          "pick": "03",
+          "timestamp": "1725132418",
+          "comments": "[Pick traded from Sixty Niners.\nPick made by Commissioner.] "
+        },
+        {
+          "pick": "04",
+          "franchise": "0007",
+          "round": "02",
+          "player": "15751",
+          "comments": "[Pick traded from C-Men.\nPick made by Commissioner.] ",
+          "timestamp": "1725133147"
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725133154",
+          "pick": "05",
+          "franchise": "0002",
+          "round": "02",
+          "player": "15754"
+        },
+        {
+          "round": "02",
+          "player": "15715",
+          "pick": "06",
+          "franchise": "0003",
+          "timestamp": "1725133165",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "timestamp": "1725133317",
+          "comments": "[Pick made by Commissioner.] ",
+          "player": "14778",
+          "round": "02",
+          "pick": "07",
+          "franchise": "0001"
+        },
+        {
+          "comments": "",
+          "timestamp": "1725133344",
+          "pick": "08",
+          "franchise": "0008",
+          "player": "14136",
+          "round": "02"
+        },
+        {
+          "franchise": "0010",
+          "pick": "09",
+          "player": "13354",
+          "round": "02",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725133417"
+        },
+        {
+          "comments": "[Pick traded from Destruction.\nPick made by Commissioner.] ",
+          "timestamp": "1725133547",
+          "franchise": "0009",
+          "pick": "10",
+          "round": "02",
+          "player": "16414"
+        },
+        {
+          "comments": "[Pick made from Pre-Draft List] ",
+          "timestamp": "1725133547",
+          "franchise": "0004",
+          "pick": "01",
+          "player": "13303",
+          "round": "03"
+        },
+        {
+          "timestamp": "1725133760",
+          "comments": "[Pick traded from Booty Bustas.] ",
+          "round": "03",
+          "player": "14073",
+          "franchise": "0004",
+          "pick": "02"
+        },
+        {
+          "franchise": "0007",
+          "pick": "03",
+          "player": "13832",
+          "round": "03",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725134104"
+        },
+        {
+          "timestamp": "1725134143",
+          "comments": "[Pick made by Commissioner.] ",
+          "player": "16597",
+          "round": "03",
+          "pick": "04",
+          "franchise": "0009"
+        },
+        {
+          "franchise": "0002",
+          "pick": "05",
+          "player": "15290",
+          "round": "03",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725134154"
+        },
+        {
+          "player": "15368",
+          "round": "03",
+          "franchise": "0003",
+          "pick": "06",
+          "timestamp": "1725134328",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "player": "15711",
+          "round": "03",
+          "franchise": "0001",
+          "pick": "07",
+          "timestamp": "1725134340",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "round": "03",
+          "player": "16214",
+          "pick": "08",
+          "franchise": "0008",
+          "timestamp": "1725134425",
+          "comments": ""
+        },
+        {
+          "timestamp": "1725134446",
+          "comments": "[Pick made by Commissioner.] ",
+          "round": "03",
+          "player": "14842",
+          "pick": "09",
+          "franchise": "0010"
+        },
+        {
+          "timestamp": "1725134491",
+          "comments": "[Pick made by Commissioner.] ",
+          "round": "03",
+          "player": "11945",
+          "pick": "10",
+          "franchise": "0005"
+        },
+        {
+          "timestamp": "1725134491",
+          "comments": "[Pick made from Pre-Draft List] ",
+          "round": "04",
+          "player": "13164",
+          "franchise": "0004",
+          "pick": "01"
+        },
+        {
+          "franchise": "0006",
+          "pick": "02",
+          "round": "04",
+          "player": "14983",
+          "comments": "[Pick made from Pre-Draft List] ",
+          "timestamp": "1725134491"
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725135045",
+          "franchise": "0007",
+          "pick": "03",
+          "player": "14797",
+          "round": "04"
+        },
+        {
+          "round": "04",
+          "player": "11675",
+          "franchise": "0009",
+          "pick": "04",
+          "timestamp": "1725135133",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "comments": "[Pick traded from Euro-Trashers.\nPick made from Pre-Draft List] ",
+          "timestamp": "1725135133",
+          "franchise": "0004",
+          "pick": "05",
+          "round": "04",
+          "player": "16594"
+        },
+        {
+          "franchise": "0006",
+          "pick": "06",
+          "player": "13132",
+          "round": "04",
+          "comments": "[Pick traded from Peppers.\nPick made by Commissioner.] ",
+          "timestamp": "1725135425"
+        },
+        {
+          "franchise": "0001",
+          "pick": "07",
+          "round": "04",
+          "player": "16286",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725135458"
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725135565",
+          "pick": "08",
+          "franchise": "0008",
+          "round": "04",
+          "player": "15979"
+        },
+        {
+          "player": "16616",
+          "round": "04",
+          "pick": "09",
+          "franchise": "0010",
+          "timestamp": "1725135748",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725135766",
+          "franchise": "0005",
+          "pick": "10",
+          "player": "11671",
+          "round": "04"
+        },
+        {
+          "player": "14840",
+          "round": "05",
+          "pick": "01",
+          "franchise": "0004",
+          "timestamp": "1725135876",
+          "comments": ""
+        },
+        {
+          "franchise": "0006",
+          "pick": "02",
+          "round": "05",
+          "player": "13635",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725136023"
+        },
+        {
+          "pick": "03",
+          "franchise": "0007",
+          "round": "05",
+          "player": "12860",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725136640"
+        },
+        {
+          "franchise": "0009",
+          "pick": "04",
+          "round": "05",
+          "player": "15329",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725137004"
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725137074",
+          "pick": "05",
+          "franchise": "0002",
+          "player": "16149",
+          "round": "05"
+        },
+        {
+          "timestamp": "1725137107",
+          "comments": "[Pick made by Commissioner.] ",
+          "player": "13590",
+          "round": "05",
+          "pick": "06",
+          "franchise": "0003"
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725137171",
+          "pick": "07",
+          "franchise": "0001",
+          "player": "15714",
+          "round": "05"
+        },
+        {
+          "player": "12447",
+          "round": "05",
+          "franchise": "0008",
+          "pick": "08",
+          "timestamp": "1725137210",
+          "comments": ""
+        },
+        {
+          "timestamp": "1725137656",
+          "comments": "[Pick made by Commissioner.] ",
+          "player": "15254",
+          "round": "05",
+          "pick": "09",
+          "franchise": "0010"
+        },
+        {
+          "timestamp": "1725137675",
+          "comments": "[Pick made by Commissioner.] ",
+          "player": "14800",
+          "round": "05",
+          "pick": "10",
+          "franchise": "0005"
+        },
+        {
+          "comments": "[Pick made from Pre-Draft List] ",
+          "timestamp": "1725137675",
+          "franchise": "0004",
+          "pick": "01",
+          "round": "06",
+          "player": "12437"
+        },
+        {
+          "player": "16584",
+          "round": "06",
+          "pick": "02",
+          "franchise": "0006",
+          "timestamp": "1725137675",
+          "comments": "[Pick made from Pre-Draft List] "
+        },
+        {
+          "player": "16580",
+          "round": "06",
+          "pick": "03",
+          "franchise": "0007",
+          "timestamp": "1725138050",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725138262",
+          "franchise": "0009",
+          "pick": "04",
+          "round": "06",
+          "player": "16610"
+        },
+        {
+          "franchise": "0002",
+          "pick": "05",
+          "player": "13403",
+          "round": "06",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725138299"
+        },
+        {
+          "player": "16846",
+          "round": "06",
+          "franchise": "0003",
+          "pick": "06",
+          "timestamp": "1725138618",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "player": "16626",
+          "round": "06",
+          "pick": "07",
+          "franchise": "0001",
+          "timestamp": "1725138635",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "round": "06",
+          "player": "16190",
+          "franchise": "0008",
+          "pick": "08",
+          "timestamp": "1725138654",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "round": "06",
+          "player": "7836",
+          "pick": "09",
+          "franchise": "0010",
+          "timestamp": "1725138856",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725138891",
+          "franchise": "0005",
+          "pick": "10",
+          "round": "06",
+          "player": "9431"
+        },
+        {
+          "timestamp": "1725138891",
+          "comments": "[Pick made from Pre-Draft List] ",
+          "player": "16148",
+          "round": "07",
+          "pick": "01",
+          "franchise": "0004"
+        },
+        {
+          "player": "8930",
+          "round": "07",
+          "franchise": "0006",
+          "pick": "02",
+          "timestamp": "1725138891",
+          "comments": "[Pick made from Pre-Draft List] "
+        },
+        {
+          "franchise": "0007",
+          "pick": "03",
+          "player": "16618",
+          "round": "07",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725139171"
+        },
+        {
+          "player": "13718",
+          "round": "07",
+          "franchise": "0009",
+          "pick": "04",
+          "timestamp": "1725139212",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "round": "07",
+          "player": "14071",
+          "pick": "05",
+          "franchise": "0002",
+          "timestamp": "1725139441",
+          "comments": "[Pick made by Commissioner.] "
+        },
+        {
+          "timestamp": "1725139865",
+          "comments": "[Pick made by Commissioner.] ",
+          "round": "07",
+          "player": "13319",
+          "franchise": "0003",
+          "pick": "06"
+        },
+        {
+          "franchise": "0001",
+          "pick": "07",
+          "round": "07",
+          "player": "14244",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725139872"
+        },
+        {
+          "timestamp": "1725140042",
+          "comments": "",
+          "player": "12186",
+          "round": "07",
+          "franchise": "0008",
+          "pick": "08"
+        },
+        {
+          "timestamp": "1725140066",
+          "comments": "[Pick made by Commissioner.] ",
+          "round": "07",
+          "player": "10868",
+          "franchise": "0010",
+          "pick": "09"
+        },
+        {
+          "franchise": "0005",
+          "pick": "10",
+          "player": "16204",
+          "round": "07",
+          "comments": "[Pick made by Commissioner.] ",
+          "timestamp": "1725140093"
+        }
+      ],
+      "unit": "LEAGUE",
+      "draftType": "SAME"
+    }
+  },
+  "version": "1.0",
+  "encoding": "utf-8"
+}

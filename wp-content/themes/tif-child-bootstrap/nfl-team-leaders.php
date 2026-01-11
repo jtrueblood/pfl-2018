@@ -27,8 +27,8 @@ $weeks = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
         <!--CONTENT CONTAINER-->
         <div id="content-container">
 
-            <div class="row">
-                <div class="col-xs-24 col-sm-4">
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-xs-24">
                 <?php
 
                 function playerlistbynflteam ($teamvar){
@@ -80,6 +80,7 @@ $weeks = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
                // printr($forprint, 1);
                 echo '<div class="row">';
                 foreach ($forprint as $key => $value){
+                    echo '<div class="col-xs-24 col-md-6">';
                     $labels = array('Player', 'Games');
                     tablehead($nflteams[$key], $labels);
 
@@ -93,6 +94,7 @@ $weeks = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
                     echo $nflteamprint;
                     $nflteamprint = '';
                     tablefoot('');
+                    echo '</div>';
                 }
 
 
@@ -101,35 +103,12 @@ $weeks = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14);
                 </div>
                 </div>
             </div>
+        </div><!--END CONTENT CONTAINER-->
 
+    <?php include_once('main-nav.php'); ?>
+    <?php include_once('aside.php'); ?>
 
-
-
-
-
-            <div class="row">
-                <div class="col-xs-24 col-sm-8">
-
-
-                ?>
-
-                </div>
-            </div>
-        </div>
-
-    <?php
-
-    ?>
-
-    </div><!--End page content-->
-
-</div><!--END CONTENT CONTAINER-->
-
-
-<?php include_once('main-nav.php'); ?>
-<?php include_once('aside.php'); ?>
-
-</div>
+</div><!--END BOXED-->
 
     <?php
     $jusplayerids = just_player_ids();

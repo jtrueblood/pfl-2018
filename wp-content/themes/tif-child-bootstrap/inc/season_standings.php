@@ -4,6 +4,19 @@ foreach($standing as $key => $item){
    $arr_resort[$item['division']][$key] = $item;
 }
 
+// Sort each division by win percentage (descending)
+foreach($arr_resort as $div => $teams){
+    usort($arr_resort[$div], function($a, $b) {
+        $winper_a = $a['win'] / 14;
+        $winper_b = $b['win'] / 14;
+        // Sort descending (highest win % first)
+        if ($winper_a == $winper_b) {
+            return 0;
+        }
+        return ($winper_a > $winper_b) ? -1 : 1;
+    });
+}
+
 ?>
 <div class="panel">
 

@@ -1,0 +1,574 @@
+{
+  "draftResults": {
+    "draftUnit": {
+      "static_url": "https://www48.myfantasyleague.com/fflnetdynamic2016/38954_LEAGUE_draft_results.xml",
+      "round1DraftOrder": "0007,0005,0002,0010,0001,0006,0009,0008,0002,0001,",
+      "unit": "LEAGUE",
+      "draftPick": [
+        {
+          "pick": "01",
+          "franchise": "0007",
+          "round": "01",
+          "player": "12625",
+          "comments": "",
+          "timestamp": "1471721755"
+        },
+        {
+          "franchise": "0005",
+          "pick": "02",
+          "player": "10708",
+          "round": "01",
+          "comments": "",
+          "timestamp": "1471721784"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471721812",
+          "pick": "03",
+          "franchise": "0002",
+          "round": "01",
+          "player": "4925"
+        },
+        {
+          "player": "12169",
+          "round": "01",
+          "pick": "04",
+          "franchise": "0010",
+          "timestamp": "1471722008",
+          "comments": ""
+        },
+        {
+          "franchise": "0001",
+          "pick": "05",
+          "round": "01",
+          "player": "11657",
+          "comments": "",
+          "timestamp": "1471722026"
+        },
+        {
+          "franchise": "0006",
+          "pick": "06",
+          "player": "9884",
+          "round": "01",
+          "comments": "  I am in trouble (Comments Added Sat Aug 20 3:50:17 p.m. ET 2016)",
+          "timestamp": "1471722135"
+        },
+        {
+          "timestamp": "1471722230",
+          "comments": "",
+          "round": "01",
+          "player": "9118",
+          "franchise": "0009",
+          "pick": "07"
+        },
+        {
+          "pick": "08",
+          "franchise": "0008",
+          "round": "01",
+          "player": "8360",
+          "comments": "",
+          "timestamp": "1471722397"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471722419",
+          "pick": "09",
+          "franchise": "0002",
+          "player": "8359",
+          "round": "01"
+        },
+        {
+          "player": "10313",
+          "round": "01",
+          "pick": "10",
+          "franchise": "0001",
+          "timestamp": "1471722450",
+          "comments": ""
+        },
+        {
+          "round": "02",
+          "player": "10722",
+          "franchise": "0007",
+          "pick": "01",
+          "timestamp": "1471722672",
+          "comments": ""
+        },
+        {
+          "player": "9319",
+          "round": "02",
+          "pick": "02",
+          "franchise": "0005",
+          "timestamp": "1471722698",
+          "comments": ""
+        },
+        {
+          "player": "9054",
+          "round": "02",
+          "pick": "03",
+          "franchise": "0008",
+          "timestamp": "1471722861",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1471723013",
+          "franchise": "0010",
+          "pick": "04",
+          "round": "02",
+          "player": "11671"
+        },
+        {
+          "round": "02",
+          "player": "11674",
+          "pick": "05",
+          "franchise": "0001",
+          "timestamp": "1471723030",
+          "comments": ""
+        },
+        {
+          "round": "02",
+          "player": "6929",
+          "pick": "06",
+          "franchise": "0006",
+          "timestamp": "1471723054",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1471723241",
+          "franchise": "0009",
+          "pick": "07",
+          "player": "12610",
+          "round": "02"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471723268",
+          "pick": "08",
+          "franchise": "0002",
+          "player": "11454",
+          "round": "02"
+        },
+        {
+          "pick": "09",
+          "franchise": "0004",
+          "player": "7391",
+          "round": "02",
+          "comments": "",
+          "timestamp": "1471723332"
+        },
+        {
+          "franchise": "0007",
+          "pick": "10",
+          "round": "02",
+          "player": "11673",
+          "comments": "",
+          "timestamp": "1471723434"
+        },
+        {
+          "timestamp": "1471723454",
+          "comments": "",
+          "player": "10506",
+          "round": "03",
+          "franchise": "0007",
+          "pick": "01"
+        },
+        {
+          "timestamp": "1471723476",
+          "comments": "",
+          "player": "11670",
+          "round": "03",
+          "pick": "02",
+          "franchise": "0005"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471723493",
+          "franchise": "0008",
+          "pick": "03",
+          "round": "03",
+          "player": "11222"
+        },
+        {
+          "pick": "04",
+          "franchise": "0010",
+          "player": "10413",
+          "round": "03",
+          "comments": "",
+          "timestamp": "1471723550"
+        },
+        {
+          "timestamp": "1471723598",
+          "comments": "",
+          "player": "11644",
+          "round": "03",
+          "pick": "05",
+          "franchise": "0002"
+        },
+        {
+          "round": "03",
+          "player": "11390",
+          "franchise": "0006",
+          "pick": "06",
+          "timestamp": "1471723615",
+          "comments": ""
+        },
+        {
+          "timestamp": "1471723698",
+          "comments": "",
+          "player": "11936",
+          "round": "03",
+          "pick": "07",
+          "franchise": "0009"
+        },
+        {
+          "timestamp": "1471723711",
+          "comments": "",
+          "player": "10729",
+          "round": "03",
+          "pick": "08",
+          "franchise": "0002"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471723864",
+          "pick": "09",
+          "franchise": "0004",
+          "round": "03",
+          "player": "11193"
+        },
+        {
+          "round": "03",
+          "player": "9694",
+          "pick": "10",
+          "franchise": "0001",
+          "timestamp": "1471723893",
+          "comments": ""
+        },
+        {
+          "timestamp": "1471724111",
+          "comments": "",
+          "player": "10700",
+          "round": "04",
+          "franchise": "0007",
+          "pick": "01"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471724146",
+          "pick": "02",
+          "franchise": "0005",
+          "round": "04",
+          "player": "10697"
+        },
+        {
+          "franchise": "0008",
+          "pick": "03",
+          "player": "7813",
+          "round": "04",
+          "comments": "",
+          "timestamp": "1471724315"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471724362",
+          "pick": "04",
+          "franchise": "0010",
+          "player": "10389",
+          "round": "04"
+        },
+        {
+          "timestamp": "1471724398",
+          "comments": "",
+          "player": "9851",
+          "round": "04",
+          "franchise": "0001",
+          "pick": "05"
+        },
+        {
+          "pick": "06",
+          "franchise": "0006",
+          "round": "04",
+          "player": "8742",
+          "comments": "",
+          "timestamp": "1471724408"
+        },
+        {
+          "pick": "07",
+          "franchise": "0009",
+          "round": "04",
+          "player": "12626",
+          "comments": "",
+          "timestamp": "1471724512"
+        },
+        {
+          "player": "10721",
+          "round": "04",
+          "franchise": "0002",
+          "pick": "08",
+          "timestamp": "1471724523",
+          "comments": ""
+        },
+        {
+          "round": "04",
+          "player": "10976",
+          "pick": "09",
+          "franchise": "0004",
+          "timestamp": "1471724524",
+          "comments": "Pick made based on Pre-Draft List"
+        },
+        {
+          "round": "04",
+          "player": "12611",
+          "franchise": "0003",
+          "pick": "10",
+          "timestamp": "1471724744",
+          "comments": ""
+        },
+        {
+          "player": "2842",
+          "round": "05",
+          "pick": "01",
+          "franchise": "0007",
+          "timestamp": "1471725038",
+          "comments": ""
+        },
+        {
+          "player": "10302",
+          "round": "05",
+          "pick": "02",
+          "franchise": "0005",
+          "timestamp": "1471725049",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1471725343",
+          "pick": "03",
+          "franchise": "0008",
+          "player": "12157",
+          "round": "05"
+        },
+        {
+          "franchise": "0010",
+          "pick": "04",
+          "player": "7150",
+          "round": "05",
+          "comments": "",
+          "timestamp": "1471725410"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471725434",
+          "pick": "05",
+          "franchise": "0001",
+          "player": "9436",
+          "round": "05"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471725468",
+          "pick": "06",
+          "franchise": "0006",
+          "player": "12151",
+          "round": "05"
+        },
+        {
+          "player": "12156",
+          "round": "05",
+          "franchise": "0009",
+          "pick": "07",
+          "timestamp": "1471725562",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1471725608",
+          "franchise": "0002",
+          "pick": "08",
+          "round": "05",
+          "player": "12162"
+        },
+        {
+          "franchise": "0004",
+          "pick": "09",
+          "player": "7393",
+          "round": "05",
+          "comments": "Pick made based on Pre-Draft List",
+          "timestamp": "1471725609"
+        },
+        {
+          "timestamp": "1471725652",
+          "comments": "",
+          "player": "11960",
+          "round": "05",
+          "pick": "10",
+          "franchise": "0003"
+        },
+        {
+          "player": "10960",
+          "round": "06",
+          "pick": "01",
+          "franchise": "0007",
+          "timestamp": "1471725730",
+          "comments": ""
+        },
+        {
+          "comments": "Pick Skipped By Commissioner",
+          "timestamp": "1471725989",
+          "franchise": "0005",
+          "pick": "02",
+          "player": "----",
+          "round": "06"
+        },
+        {
+          "timestamp": "1471726013",
+          "comments": "",
+          "round": "06",
+          "player": "11247",
+          "franchise": "0008",
+          "pick": "03"
+        },
+        {
+          "player": "11783",
+          "round": "06",
+          "franchise": "0010",
+          "pick": "04",
+          "timestamp": "1471726055",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1471726116",
+          "pick": "05",
+          "franchise": "0001",
+          "player": "7859",
+          "round": "06"
+        },
+        {
+          "round": "06",
+          "player": "10308",
+          "franchise": "0006",
+          "pick": "06",
+          "timestamp": "1471726171",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1471726268",
+          "pick": "07",
+          "franchise": "0009",
+          "player": "12645",
+          "round": "06"
+        },
+        {
+          "timestamp": "1471726360",
+          "comments": "",
+          "round": "06",
+          "player": "9831",
+          "franchise": "0002",
+          "pick": "08"
+        },
+        {
+          "franchise": "0004",
+          "pick": "09",
+          "player": "9101",
+          "round": "06",
+          "comments": "Pick made based on Pre-Draft List",
+          "timestamp": "1471726361"
+        },
+        {
+          "timestamp": "1471726452",
+          "comments": "",
+          "round": "06",
+          "player": "11676",
+          "pick": "10",
+          "franchise": "0003"
+        },
+        {
+          "round": "07",
+          "player": "9427",
+          "pick": "01",
+          "franchise": "0007",
+          "timestamp": "1471726642",
+          "comments": ""
+        },
+        {
+          "franchise": "0005",
+          "pick": "02",
+          "player": "11677",
+          "round": "07",
+          "comments": "",
+          "timestamp": "1471726679"
+        },
+        {
+          "comments": "",
+          "timestamp": "1471726782",
+          "pick": "03",
+          "franchise": "0008",
+          "player": "11680",
+          "round": "07"
+        },
+        {
+          "timestamp": "1471726869",
+          "comments": "",
+          "round": "07",
+          "player": "12187",
+          "franchise": "0010",
+          "pick": "04"
+        },
+        {
+          "round": "07",
+          "player": "9693",
+          "franchise": "0003",
+          "pick": "05",
+          "timestamp": "1471726983",
+          "comments": ""
+        },
+        {
+          "timestamp": "1471726993",
+          "comments": "",
+          "player": "9064",
+          "round": "07",
+          "pick": "06",
+          "franchise": "0006"
+        },
+        {
+          "pick": "07",
+          "franchise": "0009",
+          "round": "07",
+          "player": "11947",
+          "comments": "",
+          "timestamp": "1471727060"
+        },
+        {
+          "timestamp": "1471727157",
+          "comments": "",
+          "player": "10696",
+          "round": "07",
+          "pick": "08",
+          "franchise": "0002"
+        },
+        {
+          "round": "07",
+          "player": "10872",
+          "pick": "09",
+          "franchise": "0004",
+          "timestamp": "1471727158",
+          "comments": "Pick made based on Pre-Draft List"
+        },
+        {
+          "pick": "10",
+          "franchise": "0003",
+          "player": "11966",
+          "round": "07",
+          "comments": "",
+          "timestamp": "1471727222"
+        }
+      ],
+      "draftType": "SAME"
+    }
+  },
+  "encoding": "utf-8",
+  "version": "1.0"
+}

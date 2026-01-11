@@ -14,10 +14,13 @@
 			
         <!--CONTENT CONTAINER-->
         <div id="content-container">
+        
+            <div id="page-title">
+                <h1 class="page-header text-bold">Playoff Probability</h1>
+            </div>
 
             <!--Page content-->
             <div id="page-content">
-                <H3>Playoff Probability</H3>
                 <?php
                 $getyears = the_seasons();
 
@@ -96,12 +99,10 @@
 
                 <div class="col-xs-14 mar-btm">
                         <div class="panel">
-                            <div class="panel-heading">
-
+                            <div class="panel-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped week-probability-table">
+                                    <table class="table table-striped">
                                         <thead>
-                                        <h4>Playoff Probibility</h4>
                                         <tr>
                                             <th>WEEK --><br>WINS</th>
                                             <th class="text-center">1</th>
@@ -171,9 +172,10 @@
                                     //printr($new, 0);
                                 ?>
 
-                            </div>
-                        </div>
-                </div>
+                                </div><!-- end table-responsive -->
+                            </div><!-- end panel-body -->
+                        </div><!-- end panel -->
+                </div><!-- end col-xs-14 -->
 
                     <?php //printr($getyears, 0);?>
 
@@ -181,10 +183,9 @@
 
         </div><!--END CONTENT CONTAINER-->
 
-
     <?php include_once('main-nav.php'); ?>
     <?php include_once('aside.php'); ?>
 
-</div>
+</div><!--END BOXED-->
 
 <?php get_footer(); ?>

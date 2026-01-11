@@ -4,173 +4,296 @@
   "transactions": {
     "transaction": [
       {
-        "franchise": "0005",
+        "transaction": "12186,|",
+        "timestamp": "1765394495",
+        "by_commish": "1",
         "type": "FREE_AGENT",
+        "franchise": "0003"
+      },
+      {
+        "activated": "17044,",
+        "timestamp": "1765394395",
+        "deactivated": "",
+        "by_commish": "1",
+        "type": "IR",
+        "franchise": "0003"
+      },
+      {
+        "timestamp": "1765391475",
+        "transaction": "|10413,13347,",
+        "franchise": "0003",
+        "type": "FREE_AGENT"
+      },
+      {
+        "timestamp": "1765337824",
+        "activated": "13163,",
+        "type": "IR",
+        "franchise": "0005",
+        "deactivated": ""
+      },
+      {
+        "timestamp": "1765337808",
+        "transaction": "|17071,",
+        "type": "FREE_AGENT",
+        "franchise": "0005"
+      },
+      {
+        "timestamp": "1765128745",
+        "transaction": "16843,|15369,",
+        "franchise": "0007",
+        "by_commish": "1",
+        "type": "FREE_AGENT"
+      },
+      {
+        "added": "15369,",
+        "type": "WAIVER",
+        "dropped": "16286,",
+        "franchise": "0007",
+        "timestamp": "1765033200"
+      },
+      {
+        "timestamp": "1764946800",
+        "added": "13347,",
+        "type": "WAIVER",
+        "franchise": "0003",
+        "dropped": "15282,"
+      },
+      {
+        "added": "10413,",
+        "dropped": "15742,",
+        "franchise": "0003",
+        "type": "WAIVER",
+        "timestamp": "1764946800"
+      },
+      {
+        "activated": "16150,",
+        "timestamp": "1764813349",
+        "deactivated": "",
+        "franchise": "0004",
+        "type": "IR"
+      },
+      {
+        "timestamp": "1764813349",
+        "transaction": "|15261,",
+        "franchise": "0004",
+        "type": "FREE_AGENT"
+      },
+      {
+        "timestamp": "1764774000",
+        "added": "16286,",
+        "dropped": "16186,",
+        "franchise": "0007",
+        "type": "WAIVER"
+      },
+      {
+        "deactivated": "",
+        "franchise": "0007",
+        "type": "IR",
+        "activated": "16598,",
+        "timestamp": "1764762275"
+      },
+      {
+        "type": "FREE_AGENT",
+        "franchise": "0007",
+        "timestamp": "1764762268",
+        "transaction": "|13980,"
+      },
+      {
+        "type": "IR",
+        "franchise": "0005",
+        "deactivated": "",
+        "timestamp": "1764681173",
+        "activated": "14109,"
+      },
+      {
+        "timestamp": "1764681140",
+        "transaction": "|11244,",
+        "franchise": "0005",
+        "type": "FREE_AGENT"
+      },
+      {
+        "type": "IR",
+        "franchise": "0002",
+        "activated": "17032,",
+        "deactivated": "",
+        "by_commish": "1",
+        "timestamp": "1764678079"
+      },
+      {
+        "type": "FREE_AGENT",
+        "by_commish": "1",
+        "franchise": "0002",
+        "timestamp": "1764678079",
+        "transaction": "|12140,"
+      },
+      {
         "timestamp": "1764260487",
         "transaction": "11244,|16681,",
+        "type": "FREE_AGENT",
+        "franchise": "0005",
         "by_commish": "1"
       },
       {
         "franchise": "0007",
-        "type": "WAIVER",
         "dropped": "9064,",
-        "timestamp": "1764255600",
-        "added": "12616,"
+        "type": "WAIVER",
+        "added": "12616,",
+        "timestamp": "1764255600"
       },
       {
-        "timestamp": "1764255600",
-        "franchise": "0005",
-        "type": "WAIVER",
         "dropped": "",
-        "added": "17071,"
-      },
-      {
-        "franchise": "0005",
-        "type": "IR",
-        "timestamp": "1764174853",
-        "deactivated": "14835,",
-        "activated": ""
-      },
-      {
-        "dropped": "15698,",
-        "franchise": "0002",
         "type": "WAIVER",
-        "timestamp": "1764169200",
-        "added": "12140,"
+        "franchise": "0005",
+        "added": "17071,",
+        "timestamp": "1764255600"
+      },
+      {
+        "deactivated": "14835,",
+        "type": "IR",
+        "franchise": "0005",
+        "activated": "",
+        "timestamp": "1764174853"
       },
       {
         "timestamp": "1764169200",
+        "added": "12140,",
+        "type": "WAIVER",
+        "dropped": "15698,",
+        "franchise": "0002"
+      },
+      {
         "franchise": "0004",
         "type": "WAIVER",
         "dropped": "15238,",
-        "added": "13138,"
+        "added": "13138,",
+        "timestamp": "1764169200"
       },
       {
-        "type": "WAIVER_REQUEST",
         "franchise": "0002",
+        "type": "WAIVER_REQUEST",
         "timestamp": "1764080584",
         "transaction": "1|12140_15698"
       },
       {
-        "timestamp": "1763983917",
-        "franchise": "0004",
         "type": "FREE_AGENT",
+        "by_commish": "1",
+        "franchise": "0004",
         "transaction": "15237,|",
-        "by_commish": "1"
+        "timestamp": "1763983917"
       },
       {
-        "added": "15711,",
         "timestamp": "1763737200",
-        "type": "WAIVER",
         "franchise": "0003",
-        "dropped": "15237,"
-      },
-      {
+        "dropped": "15237,",
         "type": "WAIVER",
-        "franchise": "0002",
-        "dropped": "15711,",
-        "timestamp": "1763650800",
-        "added": "17043,"
+        "added": "15711,"
       },
       {
+        "timestamp": "1763650800",
+        "added": "17043,",
+        "dropped": "15711,",
+        "franchise": "0002",
+        "type": "WAIVER"
+      },
+      {
+        "timestamp": "1763650800",
         "added": "16681,",
         "type": "WAIVER",
-        "franchise": "0005",
         "dropped": "",
-        "timestamp": "1763650800"
+        "franchise": "0005"
       },
       {
-        "added": "17031,",
+        "timestamp": "1763650800",
         "dropped": "16190,",
         "type": "WAIVER",
         "franchise": "0009",
-        "timestamp": "1763650800"
+        "added": "17031,"
       },
       {
-        "franchise": "0005",
-        "type": "IR",
         "timestamp": "1763614955",
-        "deactivated": "16583,",
-        "activated": ""
+        "activated": "",
+        "type": "IR",
+        "franchise": "0005",
+        "deactivated": "16583,"
       },
       {
         "transaction": "1|17043_15711",
-        "franchise": "0002",
+        "timestamp": "1763584819",
         "type": "WAIVER_REQUEST",
-        "timestamp": "1763584819"
+        "franchise": "0002"
       },
       {
+        "type": "IR",
+        "by_commish": "1",
+        "franchise": "0006",
         "deactivated": "16581,",
         "timestamp": "1763569354",
-        "type": "IR",
-        "franchise": "0006",
-        "by_commish": "1",
         "activated": "16584,13319,13299,"
       },
       {
         "activated": "12860,",
-        "by_commish": "1",
-        "type": "IR",
-        "franchise": "0002",
         "timestamp": "1763569300",
-        "deactivated": ""
-      },
-      {
-        "transaction": "|16681,",
+        "deactivated": "",
         "by_commish": "1",
         "franchise": "0002",
-        "type": "FREE_AGENT",
-        "timestamp": "1763569300"
-      },
-      {
-        "timestamp": "1763564400",
-        "type": "WAIVER",
-        "franchise": "0004",
-        "dropped": "",
-        "added": "15238,"
-      },
-      {
-        "timestamp": "1763564400",
-        "dropped": "",
-        "type": "WAIVER",
-        "franchise": "0005",
-        "added": "15794,"
-      },
-      {
-        "activated": "",
-        "type": "IR",
-        "franchise": "0004",
-        "deactivated": "16150,",
-        "timestamp": "1763514536"
-      },
-      {
-        "activated": "",
-        "deactivated": "15751,",
-        "timestamp": "1763471951",
-        "franchise": "0005",
         "type": "IR"
       },
       {
-        "activated": "",
-        "type": "IR",
-        "franchise": "0004",
-        "deactivated": "14800,",
-        "timestamp": "1763321840"
-      },
-      {
-        "transaction": "15698,|",
-        "by_commish": "1",
-        "timestamp": "1763320816",
+        "timestamp": "1763569300",
+        "transaction": "|16681,",
         "type": "FREE_AGENT",
+        "by_commish": "1",
         "franchise": "0002"
       },
       {
-        "timestamp": "1763320668",
-        "deactivated": "17032,",
-        "franchise": "0002",
+        "timestamp": "1763564400",
+        "added": "15238,",
+        "dropped": "",
+        "type": "WAIVER",
+        "franchise": "0004"
+      },
+      {
+        "added": "15794,",
+        "type": "WAIVER",
+        "franchise": "0005",
+        "dropped": "",
+        "timestamp": "1763564400"
+      },
+      {
+        "deactivated": "16150,",
+        "franchise": "0004",
         "type": "IR",
         "activated": "",
-        "by_commish": "1"
+        "timestamp": "1763514536"
+      },
+      {
+        "deactivated": "15751,",
+        "type": "IR",
+        "franchise": "0005",
+        "activated": "",
+        "timestamp": "1763471951"
+      },
+      {
+        "type": "IR",
+        "franchise": "0004",
+        "deactivated": "14800,",
+        "timestamp": "1763321840",
+        "activated": ""
+      },
+      {
+        "franchise": "0002",
+        "type": "FREE_AGENT",
+        "by_commish": "1",
+        "timestamp": "1763320816",
+        "transaction": "15698,|"
+      },
+      {
+        "franchise": "0002",
+        "type": "IR",
+        "by_commish": "1",
+        "deactivated": "17032,",
+        "timestamp": "1763320668",
+        "activated": ""
       },
       {
         "franchise": "0009",
@@ -180,99 +303,99 @@
         "activated": "16641,"
       },
       {
+        "transaction": "|15698,",
         "timestamp": "1763310129",
-        "type": "FREE_AGENT",
         "franchise": "0010",
-        "transaction": "|15698,"
+        "type": "FREE_AGENT"
       },
       {
-        "added": "14835,",
-        "dropped": "",
         "franchise": "0005",
+        "dropped": "",
         "type": "WAIVER",
+        "added": "14835,",
         "timestamp": "1763305200"
       },
       {
-        "franchise": "0005",
         "type": "FREE_AGENT",
+        "franchise": "0005",
         "timestamp": "1763266609",
         "transaction": "|16188,"
       },
       {
         "timestamp": "1763046000",
+        "added": "13719,",
         "dropped": "15238,",
-        "type": "WAIVER",
         "franchise": "0007",
-        "added": "13719,"
+        "type": "WAIVER"
       },
       {
-        "timestamp": "1763046000",
-        "type": "WAIVER",
+        "added": "17051,",
         "franchise": "0008",
+        "type": "WAIVER",
         "dropped": "",
-        "added": "17051,"
+        "timestamp": "1763046000"
       },
       {
+        "timestamp": "1762959600",
         "dropped": "13719,",
         "franchise": "0007",
         "type": "WAIVER",
-        "timestamp": "1762959600",
         "added": "11945,"
       },
       {
-        "franchise": "0009",
         "type": "FREE_AGENT",
-        "timestamp": "1762719988",
+        "by_commish": "1",
+        "franchise": "0009",
         "transaction": "11947,|16757,",
-        "by_commish": "1"
+        "timestamp": "1762719988"
       },
       {
-        "transaction": "16681,|",
-        "by_commish": "1",
         "type": "FREE_AGENT",
+        "by_commish": "1",
         "franchise": "0002",
+        "transaction": "16681,|",
         "timestamp": "1762702209"
       },
       {
-        "deactivated": "12860,",
+        "activated": "",
         "timestamp": "1762701935",
-        "franchise": "0002",
+        "deactivated": "12860,",
         "type": "IR",
-        "activated": ""
+        "franchise": "0002"
       },
       {
-        "timestamp": "1762698727",
-        "deactivated": "",
-        "franchise": "0010",
         "type": "IR",
+        "franchise": "0010",
+        "deactivated": "",
+        "timestamp": "1762698727",
         "activated": "13593,"
       },
       {
         "franchise": "0010",
         "type": "FREE_AGENT",
-        "timestamp": "1762698727",
-        "transaction": "|14835,"
+        "transaction": "|14835,",
+        "timestamp": "1762698727"
       },
       {
-        "added": "15282,",
-        "timestamp": "1762527600",
         "dropped": "",
         "type": "WAIVER",
-        "franchise": "0003"
+        "franchise": "0003",
+        "added": "15282,",
+        "timestamp": "1762527600"
       },
       {
-        "timestamp": "1762527600",
-        "dropped": "",
         "franchise": "0005",
         "type": "WAIVER",
-        "added": "16583,"
+        "dropped": "",
+        "added": "16583,",
+        "timestamp": "1762527600"
       },
       {
-        "activated": "",
+        "deactivated": "16222,",
         "type": "IR",
         "franchise": "0005",
-        "timestamp": "1762492126",
-        "deactivated": "16222,"
+        "activated": "",
+        "timestamp": "1762492126"
       },
       {
         "franchise": "0003",
@@ -281,249 +404,249 @@
         "transaction": "|16286,"
       },
       {
-        "added": "15711,",
+        "timestamp": "1762441200",
         "dropped": "17256,",
+        "type": "WAIVER",
         "franchise": "0002",
+        "added": "15711,"
+      },
+      {
+        "added": "16292,",
+        "franchise": "0001",
+        "dropped": "17051,",
         "type": "WAIVER",
         "timestamp": "1762441200"
       },
       {
-        "added": "16292,",
-        "timestamp": "1762441200",
-        "dropped": "17051,",
-        "type": "WAIVER",
-        "franchise": "0001"
-      },
-      {
-        "transaction": "1|15711_17256",
         "type": "WAIVER_REQUEST",
         "franchise": "0002",
+        "transaction": "1|15711_17256",
         "timestamp": "1762431087"
       },
       {
-        "by_commish": "1",
+        "timestamp": "1762430828",
         "activated": "14104,",
-        "type": "IR",
         "franchise": "0002",
-        "deactivated": "",
-        "timestamp": "1762430828"
+        "type": "IR",
+        "by_commish": "1",
+        "deactivated": ""
       },
       {
-        "franchise": "0002",
-        "type": "FREE_AGENT",
-        "timestamp": "1762430812",
         "transaction": "|15282,",
+        "timestamp": "1762430812",
+        "type": "FREE_AGENT",
+        "franchise": "0002",
         "by_commish": "1"
       },
       {
-        "added": "15238,",
+        "timestamp": "1762354800",
+        "dropped": "17071,",
         "type": "WAIVER",
         "franchise": "0007",
-        "dropped": "17071,",
-        "timestamp": "1762354800"
+        "added": "15238,"
       },
       {
         "timestamp": "1762101870",
+        "transaction": "|16148,",
         "type": "FREE_AGENT",
-        "franchise": "0010",
-        "transaction": "|16148,"
+        "franchise": "0010"
       },
       {
-        "added": "17071,",
+        "timestamp": "1762095600",
+        "dropped": "",
         "franchise": "0007",
         "type": "WAIVER",
-        "dropped": "",
-        "timestamp": "1762095600"
+        "added": "17071,"
       },
       {
         "deactivated": "17045,",
-        "timestamp": "1762086378",
         "franchise": "0007",
         "type": "IR",
-        "activated": ""
+        "activated": "",
+        "timestamp": "1762086378"
       },
       {
-        "activated": "16211,",
-        "type": "IR",
-        "franchise": "0004",
         "deactivated": "",
+        "franchise": "0004",
+        "type": "IR",
+        "activated": "16211,",
         "timestamp": "1762029005"
       },
       {
+        "timestamp": "1761919200",
         "added": "16222,",
-        "type": "WAIVER",
-        "franchise": "0005",
         "dropped": "",
-        "timestamp": "1761919200"
+        "type": "WAIVER",
+        "franchise": "0005"
       },
       {
-        "by_commish": "1",
-        "activated": "15290,",
-        "franchise": "0002",
         "type": "IR",
-        "deactivated": "",
-        "timestamp": "1761768245"
-      },
-      {
-        "timestamp": "1761768227",
-        "type": "FREE_AGENT",
-        "franchise": "0002",
-        "transaction": "|15972,",
-        "by_commish": "1"
-      },
-      {
-        "type": "WAIVER_REQUEST",
         "by_commish": "1",
         "franchise": "0002",
+        "deactivated": "",
+        "timestamp": "1761768245",
+        "activated": "15290,"
+      },
+      {
+        "transaction": "|15972,",
+        "timestamp": "1761768227",
+        "by_commish": "1",
+        "type": "FREE_AGENT",
+        "franchise": "0002"
+      },
+      {
+        "original_timestamp": "1761768041",
+        "transaction": "1|17071_15972",
         "action": "DEL",
         "timestamp": "1761768205",
-        "transaction": "1|17071_15972",
-        "original_timestamp": "1761768041"
+        "franchise": "0002",
+        "by_commish": "1",
+        "type": "WAIVER_REQUEST"
       },
       {
-        "type": "WAIVER_REQUEST",
         "franchise": "0002",
-        "timestamp": "1761768041",
+        "type": "WAIVER_REQUEST",
         "by_commish": "1",
+        "timestamp": "1761768041",
         "transaction": "1|17071_15972"
       },
       {
         "timestamp": "1761746400",
-        "dropped": "15756,",
-        "type": "WAIVER",
         "franchise": "0003",
+        "type": "WAIVER",
+        "dropped": "15756,",
         "added": "17220,"
       },
       {
-        "added": "16757,",
+        "timestamp": "1761746400",
         "type": "WAIVER",
-        "franchise": "0009",
         "dropped": "17071,",
-        "timestamp": "1761746400"
+        "franchise": "0009",
+        "added": "16757,"
       },
       {
-        "transaction": "7836,|",
-        "by_commish": "1",
-        "franchise": "0008",
         "type": "FREE_AGENT",
-        "timestamp": "1761513678"
-      },
-      {
-        "transaction": "14782,|",
         "by_commish": "1",
-        "timestamp": "1761513663",
-        "franchise": "0010",
-        "type": "FREE_AGENT"
+        "franchise": "0008",
+        "timestamp": "1761513678",
+        "transaction": "7836,|"
       },
       {
-        "timestamp": "1761504073",
+        "franchise": "0010",
+        "by_commish": "1",
+        "type": "FREE_AGENT",
+        "timestamp": "1761513663",
+        "transaction": "14782,|"
+      },
+      {
         "deactivated": "16152,11671,",
-        "type": "IR",
         "franchise": "0008",
-        "activated": ""
+        "type": "IR",
+        "activated": "",
+        "timestamp": "1761504073"
       },
       {
         "timestamp": "1761493921",
-        "deactivated": "16148,",
+        "activated": "",
         "franchise": "0010",
         "type": "IR",
-        "activated": ""
+        "deactivated": "16148,"
       },
       {
         "timestamp": "1761417450",
-        "franchise": "0002",
+        "transaction": "16181,|",
         "type": "FREE_AGENT",
         "by_commish": "1",
-        "transaction": "16181,|"
+        "franchise": "0002"
       },
       {
-        "franchise": "0002",
+        "by_commish": "1",
         "type": "FREE_AGENT",
+        "franchise": "0002",
         "timestamp": "1761417159",
-        "transaction": "15282,|",
-        "by_commish": "1"
+        "transaction": "15282,|"
       },
       {
         "by_commish": "1",
-        "activated": "",
         "franchise": "0002",
         "type": "IR",
         "deactivated": "14104,15290,",
-        "timestamp": "1761417021"
-      },
-      {
-        "timestamp": "1761228000",
-        "type": "WAIVER",
-        "franchise": "0007",
-        "dropped": "14244,",
-        "added": "13980,"
-      },
-      {
-        "dropped": "15711,",
-        "franchise": "0003",
-        "type": "WAIVER",
-        "timestamp": "1761228000",
-        "added": "15742,"
-      },
-      {
-        "added": "15253,",
-        "dropped": "16617,",
-        "type": "WAIVER",
-        "franchise": "0005",
-        "timestamp": "1761228000"
-      },
-      {
-        "type": "FREE_AGENT",
-        "franchise": "0004",
-        "timestamp": "1761153967",
-        "transaction": "|13718,"
-      },
-      {
-        "timestamp": "1761141600",
-        "type": "WAIVER",
-        "franchise": "0007",
-        "dropped": "15238,",
-        "added": "9064,"
-      },
-      {
-        "added": "16194,",
-        "timestamp": "1760882400",
-        "dropped": "13980,",
-        "type": "WAIVER",
-        "franchise": "0007"
-      },
-      {
-        "type": "IR",
-        "franchise": "0003",
-        "timestamp": "1760855578",
-        "deactivated": "",
-        "activated": "14832,"
-      },
-      {
-        "transaction": "|15779,",
-        "type": "FREE_AGENT",
-        "franchise": "0003",
-        "timestamp": "1760855563"
-      },
-      {
-        "added": "13630,",
-        "type": "WAIVER",
-        "franchise": "0004",
-        "dropped": "",
-        "timestamp": "1760796000"
-      },
-      {
-        "timestamp": "1760729224",
-        "deactivated": "16211,",
-        "type": "IR",
-        "franchise": "0004",
+        "timestamp": "1761417021",
         "activated": ""
       },
       {
-        "added": "13718,",
-        "dropped": "17031,",
+        "timestamp": "1761228000",
+        "type": "WAIVER",
+        "dropped": "14244,",
+        "franchise": "0007",
+        "added": "13980,"
+      },
+      {
+        "franchise": "0003",
+        "dropped": "15711,",
+        "type": "WAIVER",
+        "added": "15742,",
+        "timestamp": "1761228000"
+      },
+      {
+        "timestamp": "1761228000",
+        "type": "WAIVER",
+        "franchise": "0005",
+        "dropped": "16617,",
+        "added": "15253,"
+      },
+      {
+        "timestamp": "1761153967",
+        "transaction": "|13718,",
+        "franchise": "0004",
+        "type": "FREE_AGENT"
+      },
+      {
+        "added": "9064,",
+        "franchise": "0007",
+        "type": "WAIVER",
+        "dropped": "15238,",
+        "timestamp": "1761141600"
+      },
+      {
+        "timestamp": "1760882400",
+        "added": "16194,",
+        "dropped": "13980,",
+        "franchise": "0007",
+        "type": "WAIVER"
+      },
+      {
+        "deactivated": "",
+        "franchise": "0003",
+        "type": "IR",
+        "activated": "14832,",
+        "timestamp": "1760855578"
+      },
+      {
+        "transaction": "|15779,",
+        "timestamp": "1760855563",
+        "franchise": "0003",
+        "type": "FREE_AGENT"
+      },
+      {
         "type": "WAIVER",
         "franchise": "0004",
+        "dropped": "",
+        "added": "13630,",
+        "timestamp": "1760796000"
+      },
+      {
+        "activated": "",
+        "timestamp": "1760729224",
+        "deactivated": "16211,",
+        "franchise": "0004",
+        "type": "IR"
+      },
+      {
+        "added": "13718,",
+        "franchise": "0004",
+        "type": "WAIVER",
+        "dropped": "17031,",
         "timestamp": "1760709600"
       },
       {
@@ -534,396 +657,396 @@
         "added": "13980,"
       },
       {
+        "timestamp": "1760623200",
         "added": "12860,",
-        "dropped": "16775,",
-        "type": "WAIVER",
         "franchise": "0002",
-        "timestamp": "1760623200"
+        "dropped": "16775,",
+        "type": "WAIVER"
       },
       {
-        "transaction": "1|12860_16775",
-        "timestamp": "1760546881",
+        "franchise": "0002",
         "type": "WAIVER_REQUEST",
-        "franchise": "0002"
+        "timestamp": "1760546881",
+        "transaction": "1|12860_16775"
       },
       {
-        "added": "16186,",
         "timestamp": "1760536800",
-        "type": "WAIVER",
         "franchise": "0007",
-        "dropped": "14860,"
+        "type": "WAIVER",
+        "dropped": "14860,",
+        "added": "16186,"
       },
       {
-        "added": "14059,",
-        "timestamp": "1760536800",
         "franchise": "0001",
         "type": "WAIVER",
-        "dropped": "11150,"
+        "dropped": "11150,",
+        "added": "14059,",
+        "timestamp": "1760536800"
       },
       {
         "activated": "",
-        "franchise": "0005",
-        "type": "IR",
         "timestamp": "1760498804",
-        "deactivated": "13163,"
+        "deactivated": "13163,",
+        "type": "IR",
+        "franchise": "0005"
       },
       {
-        "timestamp": "1760298041",
-        "franchise": "0007",
         "type": "FREE_AGENT",
         "by_commish": "1",
-        "transaction": "14860,|12860,"
+        "franchise": "0007",
+        "transaction": "14860,|12860,",
+        "timestamp": "1760298041"
       },
       {
-        "type": "TRADE",
-        "expires": "1760893200",
-        "by_commish": "1",
-        "timestamp": "1760289715",
-        "franchise": "0007",
         "franchise1_gave_up": "FP_0007_2027_1,",
+        "by_commish": "1",
         "franchise2": "0009",
+        "timestamp": "1760289715",
+        "expires": "1760893200",
+        "type": "TRADE",
+        "franchise": "0007",
         "franchise2_gave_up": ""
       },
       {
-        "type": "TRADE",
-        "expires": "1760832000",
         "by_commish": "1",
+        "franchise2": "0009",
+        "franchise1_gave_up": "11675,",
         "timestamp": "1760289222",
         "franchise": "0007",
-        "franchise1_gave_up": "11675,",
-        "franchise2": "0009",
+        "type": "TRADE",
+        "expires": "1760832000",
         "franchise2_gave_up": "15256,"
       },
       {
-        "type": "FREE_AGENT",
         "franchise": "0009",
-        "timestamp": "1760288390",
         "by_commish": "1",
+        "type": "FREE_AGENT",
+        "timestamp": "1760288390",
         "transaction": "9431,|"
       },
       {
         "type": "FREE_AGENT",
+        "by_commish": "1",
         "franchise": "0009",
         "timestamp": "1760288376",
-        "by_commish": "1",
         "transaction": "15721,|"
       },
       {
-        "by_commish": "1",
         "transaction": "17071,|17075,",
-        "type": "FREE_AGENT",
+        "timestamp": "1760288354",
         "franchise": "0009",
-        "timestamp": "1760288354"
+        "by_commish": "1",
+        "type": "FREE_AGENT"
       },
       {
-        "deactivated": "14056,16641,",
-        "timestamp": "1760285296",
-        "type": "IR",
         "franchise": "0009",
         "by_commish": "1",
+        "type": "IR",
+        "deactivated": "14056,16641,",
+        "timestamp": "1760285296",
         "activated": ""
       },
       {
         "added": "13719,",
         "dropped": "14059,",
-        "type": "WAIVER",
         "franchise": "0007",
+        "type": "WAIVER",
         "timestamp": "1760277600"
       },
       {
-        "franchise": "0003",
-        "type": "WAIVER",
-        "dropped": "",
         "timestamp": "1760277600",
+        "dropped": "",
+        "type": "WAIVER",
+        "franchise": "0003",
         "added": "15711,"
       },
       {
-        "type": "FREE_AGENT",
-        "franchise": "0002",
+        "transaction": "16775,|14782,",
         "timestamp": "1760277039",
         "by_commish": "1",
-        "transaction": "16775,|14782,"
+        "type": "FREE_AGENT",
+        "franchise": "0002"
       },
       {
-        "type": "FREE_AGENT",
-        "franchise": "0010",
         "timestamp": "1760277004",
         "transaction": "15762,|11945,",
-        "by_commish": "1"
+        "franchise": "0010",
+        "by_commish": "1",
+        "type": "FREE_AGENT"
       },
       {
-        "franchise": "0003",
-        "type": "IR",
+        "activated": "",
         "timestamp": "1760238843",
         "deactivated": "17044,",
-        "activated": ""
+        "franchise": "0003",
+        "type": "IR"
       },
       {
-        "dropped": "17053,",
-        "franchise": "0007",
-        "type": "WAIVER",
         "timestamp": "1760018400",
+        "dropped": "17053,",
+        "type": "WAIVER",
+        "franchise": "0007",
         "added": "14823,"
       },
       {
         "timestamp": "1759932000",
+        "type": "WAIVER",
         "dropped": "",
         "franchise": "0007",
-        "type": "WAIVER",
         "added": "14244,"
       },
       {
-        "added": "17256,",
-        "timestamp": "1759932000",
-        "type": "WAIVER",
         "franchise": "0002",
-        "dropped": "17071,"
+        "dropped": "17071,",
+        "type": "WAIVER",
+        "added": "17256,",
+        "timestamp": "1759932000"
       },
       {
         "activated": "",
-        "deactivated": "16896,",
         "timestamp": "1759915648",
+        "deactivated": "16896,",
         "franchise": "0007",
         "type": "IR"
       },
       {
-        "original_timestamp": "1759868626",
         "transaction": "1|17256_17071",
+        "original_timestamp": "1759868626",
         "timestamp": "1759868753",
-        "franchise": "0002",
         "action": "EDIT",
+        "franchise": "0002",
         "type": "WAIVER_REQUEST"
       },
       {
         "timestamp": "1759868738",
         "action": "DEL",
-        "franchise": "0002",
-        "type": "WAIVER_REQUEST",
+        "transaction": "2|17256_17071",
         "original_timestamp": "1759868626",
-        "transaction": "2|17256_17071"
-      },
-      {
-        "type": "WAIVER_REQUEST",
-        "timestamp": "1759868735",
-        "action": "EDIT",
-        "franchise": "0002",
-        "original_timestamp": "1759868626",
-        "transaction": "2|17256_17071"
-      },
-      {
-        "transaction": "2|17256_17071,14244_14782",
-        "original_timestamp": "1759868626",
-        "franchise": "0002",
-        "action": "SORT",
-        "type": "WAIVER_REQUEST",
-        "timestamp": "1759868658"
-      },
-      {
-        "original_timestamp": "1759868626",
-        "transaction": "2|14244_14782,17256_17071",
-        "timestamp": "1759868651",
-        "franchise": "0002",
-        "type": "WAIVER_REQUEST"
-      },
-      {
-        "timestamp": "1759868626",
-        "type": "WAIVER_REQUEST",
-        "action": "ADD",
-        "franchise": "0002",
-        "transaction": "1|14244_14782,17256_17071"
-      },
-      {
-        "transaction": "1|14244_14782",
-        "timestamp": "1759868603",
         "type": "WAIVER_REQUEST",
         "franchise": "0002"
       },
       {
+        "franchise": "0002",
+        "type": "WAIVER_REQUEST",
+        "action": "EDIT",
+        "timestamp": "1759868735",
+        "original_timestamp": "1759868626",
+        "transaction": "2|17256_17071"
+      },
+      {
+        "franchise": "0002",
+        "type": "WAIVER_REQUEST",
+        "action": "SORT",
+        "timestamp": "1759868658",
+        "original_timestamp": "1759868626",
+        "transaction": "2|17256_17071,14244_14782"
+      },
+      {
+        "timestamp": "1759868651",
+        "original_timestamp": "1759868626",
+        "transaction": "2|14244_14782,17256_17071",
+        "type": "WAIVER_REQUEST",
+        "franchise": "0002"
+      },
+      {
+        "action": "ADD",
+        "timestamp": "1759868626",
+        "transaction": "1|14244_14782,17256_17071",
+        "franchise": "0002",
+        "type": "WAIVER_REQUEST"
+      },
+      {
+        "type": "WAIVER_REQUEST",
+        "franchise": "0002",
+        "timestamp": "1759868603",
+        "transaction": "1|14244_14782"
+      },
+      {
+        "timestamp": "1759688453",
         "transaction": "12437,|17048,",
         "by_commish": "1",
         "franchise": "0010",
-        "type": "FREE_AGENT",
-        "timestamp": "1759688453"
+        "type": "FREE_AGENT"
       },
       {
         "by_commish": "1",
-        "transaction": "16148,|",
-        "franchise": "0010",
         "type": "FREE_AGENT",
+        "franchise": "0010",
+        "transaction": "16148,|",
         "timestamp": "1759685534"
       },
       {
         "franchise": "0010",
         "type": "FREE_AGENT",
+        "by_commish": "1",
         "timestamp": "1759685518",
-        "transaction": "13592,|",
-        "by_commish": "1"
+        "transaction": "13592,|"
       },
       {
+        "type": "IR",
+        "franchise": "0010",
         "activated": "",
         "by_commish": "1",
-        "franchise": "0010",
-        "type": "IR",
-        "timestamp": "1759685438",
-        "deactivated": "15698,"
+        "deactivated": "15698,",
+        "timestamp": "1759685438"
       },
       {
-        "franchise": "0010",
         "type": "IR",
-        "timestamp": "1759678773",
+        "franchise": "0010",
         "deactivated": "13593,",
+        "timestamp": "1759678773",
         "activated": ""
       },
       {
-        "added": "17045,",
-        "dropped": "",
+        "timestamp": "1759672800",
         "franchise": "0007",
         "type": "WAIVER",
-        "timestamp": "1759672800"
+        "dropped": "",
+        "added": "17045,"
       },
       {
-        "type": "IR",
-        "franchise": "0007",
-        "deactivated": "16598,",
         "timestamp": "1759527552",
-        "activated": ""
-      },
-      {
-        "added": "13163,",
-        "dropped": "",
-        "type": "WAIVER",
-        "franchise": "0005",
-        "timestamp": "1759500000"
-      },
-      {
         "activated": "",
-        "franchise": "0005",
         "type": "IR",
+        "franchise": "0007",
+        "deactivated": "16598,"
+      },
+      {
+        "timestamp": "1759500000",
+        "added": "13163,",
+        "franchise": "0005",
+        "dropped": "",
+        "type": "WAIVER"
+      },
+      {
         "deactivated": "14109,",
+        "type": "IR",
+        "franchise": "0005",
+        "activated": "",
         "timestamp": "1759453937"
       },
       {
-        "dropped": "15711,",
-        "franchise": "0007",
-        "type": "WAIVER",
         "timestamp": "1759413600",
-        "added": "15253,"
+        "added": "15253,",
+        "type": "WAIVER",
+        "franchise": "0007",
+        "dropped": "15711,"
       },
       {
         "timestamp": "1759413600",
+        "dropped": "",
         "type": "WAIVER",
         "franchise": "0003",
-        "dropped": "",
         "added": "15284,"
       },
       {
-        "activated": "",
-        "timestamp": "1759334922",
         "deactivated": "14832,",
+        "type": "IR",
         "franchise": "0003",
-        "type": "IR"
+        "activated": "",
+        "timestamp": "1759334922"
       },
       {
+        "timestamp": "1759327200",
         "added": "17053,",
-        "timestamp": "1759327200",
-        "dropped": "17074,",
+        "franchise": "0007",
         "type": "WAIVER",
-        "franchise": "0007"
+        "dropped": "17074,"
       },
       {
-        "added": "15779,",
-        "timestamp": "1759327200",
-        "dropped": "11222,",
         "franchise": "0003",
-        "type": "WAIVER"
+        "type": "WAIVER",
+        "dropped": "11222,",
+        "added": "15779,",
+        "timestamp": "1759327200"
       },
       {
-        "timestamp": "1759327200",
+        "added": "16188,",
         "type": "WAIVER",
         "franchise": "0005",
         "dropped": "",
-        "added": "16188,"
+        "timestamp": "1759327200"
       },
       {
         "added": "16616,",
-        "timestamp": "1759327200",
         "franchise": "0001",
         "type": "WAIVER",
-        "dropped": ""
+        "dropped": "",
+        "timestamp": "1759327200"
       },
       {
-        "franchise": "0001",
-        "type": "IR",
-        "deactivated": "16615,",
+        "activated": "",
         "timestamp": "1759253480",
-        "activated": ""
+        "deactivated": "16615,",
+        "type": "IR",
+        "franchise": "0001"
       },
       {
+        "activated": "",
         "timestamp": "1759250333",
         "deactivated": "12801,",
         "type": "IR",
-        "franchise": "0005",
-        "activated": ""
+        "franchise": "0005"
       },
       {
-        "activated": "15238,",
-        "deactivated": "",
         "timestamp": "1759073927",
-        "type": "IR",
-        "franchise": "0007"
-      },
-      {
-        "transaction": "|15253,",
+        "activated": "15238,",
         "franchise": "0007",
-        "type": "FREE_AGENT",
-        "timestamp": "1759073920"
-      },
-      {
-        "activated": "15698,",
-        "franchise": "0010",
         "type": "IR",
-        "timestamp": "1759067895",
         "deactivated": ""
       },
       {
-        "transaction": "|16583,",
-        "timestamp": "1759067895",
-        "franchise": "0010",
+        "transaction": "|15253,",
+        "timestamp": "1759073920",
+        "franchise": "0007",
         "type": "FREE_AGENT"
       },
       {
-        "added": "11222,",
-        "timestamp": "1758895200",
-        "dropped": "",
-        "franchise": "0003",
-        "type": "WAIVER"
+        "type": "IR",
+        "franchise": "0010",
+        "deactivated": "",
+        "timestamp": "1759067895",
+        "activated": "15698,"
       },
       {
-        "type": "IR",
+        "timestamp": "1759067895",
+        "transaction": "|16583,",
+        "type": "FREE_AGENT",
+        "franchise": "0010"
+      },
+      {
         "franchise": "0003",
-        "timestamp": "1758843287",
+        "type": "WAIVER",
+        "dropped": "",
+        "added": "11222,",
+        "timestamp": "1758895200"
+      },
+      {
+        "franchise": "0003",
+        "type": "IR",
         "deactivated": "13146,",
+        "timestamp": "1758843287",
         "activated": ""
       },
       {
+        "timestamp": "1758808800",
         "added": "17032,",
         "dropped": "16181,",
-        "type": "WAIVER",
         "franchise": "0002",
-        "timestamp": "1758808800"
+        "type": "WAIVER"
       },
       {
-        "added": "16680,",
         "timestamp": "1758808800",
+        "added": "16680,",
+        "dropped": "15749,",
         "franchise": "0005",
-        "type": "WAIVER",
-        "dropped": "15749,"
+        "type": "WAIVER"
       },
       {
-        "dropped": "14085,",
+        "timestamp": "1758808800",
         "franchise": "0001",
         "type": "WAIVER",
-        "timestamp": "1758808800",
+        "dropped": "14085,",
         "added": "17051,"
       },
       {
@@ -933,209 +1056,209 @@
         "type": "WAIVER_REQUEST"
       },
       {
-        "added": "15972,",
-        "franchise": "0002",
+        "timestamp": "1758722400",
         "type": "WAIVER",
         "dropped": "",
+        "franchise": "0002",
+        "added": "15972,"
+      },
+      {
+        "franchise": "0002",
+        "dropped": "17032,",
+        "type": "WAIVER",
+        "added": "17081,",
         "timestamp": "1758722400"
       },
       {
-        "timestamp": "1758722400",
-        "dropped": "17032,",
-        "franchise": "0002",
-        "type": "WAIVER",
-        "added": "17081,"
-      },
-      {
-        "timestamp": "1758648574",
-        "franchise": "0002",
-        "type": "WAIVER_REQUEST",
         "action": "ADD",
-        "transaction": "1|17081_17032,15972_0000,16775_0000"
+        "timestamp": "1758648574",
+        "transaction": "1|17081_17032,15972_0000,16775_0000",
+        "franchise": "0002",
+        "type": "WAIVER_REQUEST"
       },
       {
+        "original_timestamp": "1758643182",
+        "transaction": "2|15972_0000",
+        "action": "EDIT",
         "timestamp": "1758648557",
         "franchise": "0002",
-        "action": "EDIT",
-        "type": "WAIVER_REQUEST",
-        "original_timestamp": "1758643182",
-        "transaction": "2|15972_0000"
-      },
-      {
-        "original_timestamp": "1758643182",
-        "transaction": "2|17081_17032,15972_0000",
-        "timestamp": "1758648539",
-        "franchise": "0002",
         "type": "WAIVER_REQUEST"
       },
       {
+        "type": "WAIVER_REQUEST",
+        "franchise": "0002",
+        "timestamp": "1758648539",
+        "original_timestamp": "1758643182",
+        "transaction": "2|17081_17032,15972_0000"
+      },
+      {
+        "type": "WAIVER_REQUEST",
+        "franchise": "0002",
         "original_timestamp": "1758643182",
         "transaction": "1|17081_17032,15972_0000",
-        "timestamp": "1758643287",
-        "franchise": "0002",
         "action": "SORT",
-        "type": "WAIVER_REQUEST"
+        "timestamp": "1758643287"
       },
       {
-        "action": "SORT",
+        "type": "WAIVER_REQUEST",
         "franchise": "0002",
         "timestamp": "1758643266",
+        "action": "SORT",
         "transaction": "1|15972_0000,17081_17032",
-        "original_timestamp": "1758643182",
-        "type": "WAIVER_REQUEST"
+        "original_timestamp": "1758643182"
       },
       {
         "transaction": "1|17081_17032,15972_0000",
-        "franchise": "0002",
+        "timestamp": "1758643182",
         "action": "ADD",
-        "type": "WAIVER_REQUEST",
-        "timestamp": "1758643182"
+        "franchise": "0002",
+        "type": "WAIVER_REQUEST"
       },
       {
-        "timestamp": "1758643110",
+        "franchise": "0002",
         "type": "FREE_AGENT",
-        "franchise": "0002",
-        "transaction": "|17043,"
+        "transaction": "|17043,",
+        "timestamp": "1758643110"
       },
       {
-        "original_timestamp": "1758643091",
-        "transaction": "1|17081_17032",
-        "timestamp": "1758643106",
         "franchise": "0002",
         "type": "WAIVER_REQUEST",
-        "action": "EDIT"
+        "action": "EDIT",
+        "timestamp": "1758643106",
+        "original_timestamp": "1758643091",
+        "transaction": "1|17081_17032"
       },
       {
         "transaction": "1|17081_17032,15972_17032",
-        "timestamp": "1758643091",
         "action": "ADD",
+        "timestamp": "1758643091",
         "type": "WAIVER_REQUEST",
         "franchise": "0002"
       },
       {
-        "transaction": "1|17081_17032",
         "timestamp": "1758643019",
+        "transaction": "1|17081_17032",
         "franchise": "0002",
         "type": "WAIVER_REQUEST"
       },
       {
         "timestamp": "1758376800",
-        "dropped": "17051,",
+        "added": "17031,",
         "franchise": "0004",
         "type": "WAIVER",
-        "added": "17031,"
+        "dropped": "17051,"
       },
       {
-        "added": "16896,",
-        "timestamp": "1758290400",
         "type": "WAIVER",
         "franchise": "0007",
-        "dropped": "14244,"
+        "dropped": "14244,",
+        "added": "16896,",
+        "timestamp": "1758290400"
       },
       {
+        "transaction": "12141,|",
         "timestamp": "1758213093",
         "franchise": "0006",
-        "type": "FREE_AGENT",
-        "transaction": "12141,|",
-        "by_commish": "1"
+        "by_commish": "1",
+        "type": "FREE_AGENT"
       },
       {
-        "type": "IR",
-        "deactivated": "16584,13319,13299,",
+        "timestamp": "1758213073",
         "by_commish": "1",
+        "deactivated": "16584,13319,13299,",
         "activated": "",
-        "franchise": "0006",
-        "timestamp": "1758213073"
+        "type": "IR",
+        "franchise": "0006"
       },
       {
         "added": "14059,",
+        "franchise": "0007",
         "dropped": "",
         "type": "WAIVER",
-        "franchise": "0007",
         "timestamp": "1758204000"
       },
       {
-        "timestamp": "1758204000",
         "dropped": "",
         "franchise": "0009",
         "type": "WAIVER",
-        "added": "16190,"
-      },
-      {
-        "franchise": "0009",
-        "type": "IR",
-        "timestamp": "1758190582",
-        "deactivated": "14777,",
-        "activated": ""
-      },
-      {
-        "timestamp": "1758189182",
-        "deactivated": "15238,",
-        "type": "IR",
-        "franchise": "0007",
-        "activated": ""
-      },
-      {
-        "timestamp": "1758117600",
-        "type": "WAIVER",
-        "franchise": "0010",
-        "dropped": "",
-        "added": "16583,"
-      },
-      {
-        "timestamp": "1758117600",
-        "franchise": "0009",
-        "type": "WAIVER",
-        "dropped": "17068,",
-        "added": "15256,"
-      },
-      {
-        "activated": "17051,",
-        "type": "IR",
-        "franchise": "0004",
-        "deactivated": "",
-        "timestamp": "1758069471"
-      },
-      {
-        "transaction": "|17031,",
-        "type": "FREE_AGENT",
-        "franchise": "0004",
-        "timestamp": "1758069471"
+        "added": "16190,",
+        "timestamp": "1758204000"
       },
       {
         "activated": "",
-        "franchise": "0010",
+        "timestamp": "1758190582",
+        "deactivated": "14777,",
         "type": "IR",
-        "deactivated": "15698,",
-        "timestamp": "1757860697"
+        "franchise": "0009"
       },
       {
-        "added": "14800,",
-        "timestamp": "1757512800",
-        "franchise": "0004",
+        "deactivated": "15238,",
+        "type": "IR",
+        "franchise": "0007",
+        "activated": "",
+        "timestamp": "1758189182"
+      },
+      {
+        "added": "16583,",
         "type": "WAIVER",
-        "dropped": ""
+        "franchise": "0010",
+        "dropped": "",
+        "timestamp": "1758117600"
+      },
+      {
+        "dropped": "17068,",
+        "type": "WAIVER",
+        "franchise": "0009",
+        "added": "15256,",
+        "timestamp": "1758117600"
+      },
+      {
+        "type": "IR",
+        "franchise": "0004",
+        "deactivated": "",
+        "timestamp": "1758069471",
+        "activated": "17051,"
+      },
+      {
+        "franchise": "0004",
+        "type": "FREE_AGENT",
+        "timestamp": "1758069471",
+        "transaction": "|17031,"
+      },
+      {
+        "deactivated": "15698,",
+        "franchise": "0010",
+        "type": "IR",
+        "activated": "",
+        "timestamp": "1757860697"
       },
       {
         "timestamp": "1757512800",
         "dropped": "",
         "type": "WAIVER",
         "franchise": "0004",
-        "added": "8930,"
+        "added": "14800,"
       },
       {
-        "added": "16617,",
+        "franchise": "0004",
+        "type": "WAIVER",
+        "dropped": "",
+        "added": "8930,",
+        "timestamp": "1757512800"
+      },
+      {
         "timestamp": "1757512800",
-        "dropped": "13629,",
+        "type": "WAIVER",
         "franchise": "0005",
-        "type": "WAIVER"
+        "dropped": "13629,",
+        "added": "16617,"
       },
       {
-        "timestamp": "1757512800",
+        "added": "17032,",
         "dropped": "14778,",
         "franchise": "0002",
         "type": "WAIVER",
-        "added": "17032,"
+        "timestamp": "1757512800"
       },
       {
         "timestamp": "1757512800",
@@ -1145,18 +1268,18 @@
         "added": "15253,"
       },
       {
+        "timestamp": "1757511997",
         "activated": "",
         "type": "IR",
         "franchise": "0004",
-        "timestamp": "1757511997",
         "deactivated": "17051,14983,"
       },
       {
-        "transaction": "1|17032_14778",
-        "original_timestamp": "1757447451",
-        "franchise": "0002",
         "action": "EDIT",
         "timestamp": "1757447473",
+        "original_timestamp": "1757447451",
+        "transaction": "1|17032_14778",
+        "franchise": "0002",
         "type": "WAIVER_REQUEST"
       },
       {
@@ -1168,180 +1291,180 @@
       },
       {
         "timestamp": "1757447415",
+        "transaction": "1|17032_14778",
         "type": "WAIVER_REQUEST",
-        "franchise": "0002",
-        "transaction": "1|17032_14778"
-      },
-      {
-        "type": "FREE_AGENT",
-        "franchise": "0001",
-        "timestamp": "1757183645",
-        "by_commish": "1",
-        "transaction": "14085,|"
-      },
-      {
-        "timestamp": "1757031583",
-        "franchise": "0010",
-        "type": "FREE_AGENT",
-        "by_commish": "1",
-        "transaction": "11945,|"
-      },
-      {
-        "timestamp": "1757026833",
-        "deactivated": "13832,",
-        "franchise": "0010",
-        "type": "IR",
-        "activated": ""
-      },
-      {
-        "transaction": "|16680,",
-        "by_commish": "1",
-        "timestamp": "1756831556",
-        "type": "FREE_AGENT",
         "franchise": "0002"
       },
       {
         "type": "FREE_AGENT",
-        "franchise": "0009",
-        "timestamp": "1756584011",
-        "transaction": "|13403,"
+        "by_commish": "1",
+        "franchise": "0001",
+        "transaction": "14085,|",
+        "timestamp": "1757183645"
       },
       {
+        "franchise": "0010",
         "type": "FREE_AGENT",
-        "franchise": "0004",
-        "timestamp": "1755980470",
         "by_commish": "1",
+        "timestamp": "1757031583",
+        "transaction": "11945,|"
+      },
+      {
+        "timestamp": "1757026833",
+        "activated": "",
+        "type": "IR",
+        "franchise": "0010",
+        "deactivated": "13832,"
+      },
+      {
+        "franchise": "0002",
+        "type": "FREE_AGENT",
+        "by_commish": "1",
+        "timestamp": "1756831556",
+        "transaction": "|16680,"
+      },
+      {
+        "franchise": "0009",
+        "type": "FREE_AGENT",
+        "transaction": "|13403,",
+        "timestamp": "1756584011"
+      },
+      {
+        "franchise": "0004",
+        "by_commish": "1",
+        "type": "FREE_AGENT",
+        "timestamp": "1755980470",
         "transaction": "17051,|"
       },
       {
         "timestamp": "1755790843",
-        "type": "FREE_AGENT",
-        "franchise": "0001",
         "transaction": "|14782,",
+        "franchise": "0001",
+        "type": "FREE_AGENT",
         "by_commish": "1"
       },
       {
+        "type": "TRADE",
+        "franchise": "0007",
+        "expires": "1756393200",
         "franchise2_gave_up": "DP_2_0,",
+        "by_commish": "1",
         "franchise2": "0001",
         "franchise1_gave_up": "16582,",
-        "franchise": "0007",
-        "timestamp": "1755790833",
-        "by_commish": "1",
-        "expires": "1756393200",
-        "type": "TRADE"
+        "timestamp": "1755790833"
       },
       {
         "transaction": "16582,|",
+        "timestamp": "1755790761",
         "by_commish": "1",
         "franchise": "0007",
-        "type": "FREE_AGENT",
-        "timestamp": "1755790761"
+        "type": "FREE_AGENT"
       },
       {
-        "by_commish": "1",
-        "transaction": "|13131,",
-        "type": "FREE_AGENT",
         "franchise": "0008",
-        "timestamp": "1755616192"
+        "by_commish": "1",
+        "type": "FREE_AGENT",
+        "timestamp": "1755616192",
+        "transaction": "|13131,"
       },
       {
+        "timestamp": "1755616177",
+        "franchise1_gave_up": "DP_1_1,",
         "by_commish": "1",
-        "type": "TRADE",
-        "expires": "1756220400",
         "franchise2": "0002",
         "franchise2_gave_up": "14802,DP_3_7,",
-        "timestamp": "1755616177",
-        "franchise": "0008",
-        "franchise1_gave_up": "DP_1_1,"
+        "expires": "1756220400",
+        "type": "TRADE",
+        "franchise": "0008"
       },
       {
-        "by_commish": "1",
-        "transaction": "14802,|",
         "franchise": "0002",
+        "by_commish": "1",
         "type": "FREE_AGENT",
-        "timestamp": "1755616145"
+        "timestamp": "1755616145",
+        "transaction": "14802,|"
       },
       {
+        "deactivated": "",
+        "by_commish": "1",
         "franchise": "0006",
         "type": "IR",
-        "timestamp": "1750706024",
-        "deactivated": "",
         "activated": "16584,",
-        "by_commish": "1"
+        "timestamp": "1750706024"
       },
       {
-        "deactivated": "",
-        "timestamp": "1750706002",
-        "franchise": "0008",
         "type": "IR",
+        "franchise": "0008",
+        "activated": "12186,",
         "by_commish": "1",
-        "activated": "12186,"
+        "deactivated": "",
+        "timestamp": "1750706002"
       },
       {
-        "by_commish": "1",
-        "activated": "16597,",
         "franchise": "0009",
         "type": "IR",
+        "activated": "16597,",
+        "by_commish": "1",
         "deactivated": "",
         "timestamp": "1750705982"
       },
       {
-        "by_commish": "1",
         "activated": "14071,",
         "franchise": "0010",
         "type": "IR",
+        "timestamp": "1750705965",
         "deactivated": "",
-        "timestamp": "1750705965"
-      },
-      {
-        "by_commish": "1",
-        "activated": "14800,16194,",
-        "deactivated": "",
-        "timestamp": "1750700743",
-        "franchise": "0005",
-        "type": "IR"
-      },
-      {
-        "franchise": "0004",
-        "timestamp": "1750700731",
-        "type": "IR",
-        "deactivated": "",
-        "activated": "12620,13163,14258,",
         "by_commish": "1"
+      },
+      {
+        "activated": "14800,16194,",
+        "type": "IR",
+        "franchise": "0005",
+        "timestamp": "1750700743",
+        "deactivated": "",
+        "by_commish": "1"
+      },
+      {
+        "timestamp": "1750700731",
+        "activated": "12620,13163,14258,",
+        "franchise": "0004",
+        "by_commish": "1",
+        "type": "IR",
+        "deactivated": ""
       },
       {
         "franchise": "0002",
         "type": "IR",
-        "timestamp": "1750700714",
+        "by_commish": "1",
         "deactivated": "",
-        "activated": "15754,",
-        "by_commish": "1"
+        "timestamp": "1750700714",
+        "activated": "15754,"
       },
       {
+        "timestamp": "1750700697",
+        "deactivated": "",
         "by_commish": "1",
         "activated": "13130,16080,",
-        "deactivated": "",
-        "timestamp": "1750700697",
-        "franchise": "0001",
-        "type": "IR"
+        "type": "IR",
+        "franchise": "0001"
       },
       {
-        "deactivated": "",
         "timestamp": "1750700675",
+        "activated": "15237,",
         "type": "IR",
         "franchise": "0003",
         "by_commish": "1",
-        "activated": "15237,"
+        "deactivated": ""
       },
       {
-        "by_commish": "1",
-        "type": "TRADE",
-        "expires": "1751299200",
-        "franchise2": "0004",
-        "franchise2_gave_up": "DP_0_8,",
         "timestamp": "1750697832",
+        "franchise1_gave_up": "DP_1_8,",
+        "franchise2": "0004",
+        "by_commish": "1",
+        "franchise2_gave_up": "DP_0_8,",
+        "expires": "1751299200",
         "franchise": "0002",
-        "franchise1_gave_up": "DP_1_8,"
+        "type": "TRADE"
       }
     ]
   }

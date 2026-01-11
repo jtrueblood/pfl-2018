@@ -30,7 +30,7 @@ jQuery(document).ready(function($) {
 	} );
 	
 	$('.leaders-season').DataTable( {
-	    "order": [[ 1, "desc" ]],
+	    "order": [[ 2, "desc" ]],
 	    "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]]
 	} );
 	

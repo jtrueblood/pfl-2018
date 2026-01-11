@@ -8,6 +8,19 @@
 					<div id="mainnav-menu-wrap">
 						<div class="nano">
 							<div class="nano-content">
+								<?php
+								// Check if sidebar_navigation menu exists, otherwise fall back to hardcoded menu
+								if ( has_nav_menu( 'sidebar_navigation' ) ) {
+									wp_nav_menu( array(
+										'theme_location' => 'sidebar_navigation',
+										'menu_id'        => 'mainnav-menu',
+										'menu_class'     => 'list-group',
+										'container'      => false,
+										'walker'         => new Sidebar_Nav_Walker()
+									) );
+								} else {
+									// Fallback to hardcoded menu if WordPress menu is not set up
+									?>
 								<ul id="mainnav-menu" class="list-group">
 						
 									<!--Category name-->
@@ -21,11 +34,12 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (35, 'active-link'); ?>"><a href="/hall-of-fame">Hall of Fame</a></li>
+											<li class="<?php ifbodyclass (35, 'active-link'); ?>"><a href="/hall-of-fame">Hall of Fame</a></li>
 												<li class="<?php ifbodyclass (23, 'active-link'); ?>"><a href="/mvp">Most Valuable Player</a></li>
 												<li class="<?php ifbodyclass (28, 'active-link'); ?>"><a href="/rookie">Rookie of the Year</a></li>
 												<li class="<?php ifbodyclass (32, 'active-link'); ?>"><a href="/posse-bowl-mvp">Posse Bowl MVP</a></li>
 												<li class="<?php ifbodyclass (30, 'active-link'); ?>"><a href="/pro-bowl-mvp">Pro Bowl MVP</a></li>
+												<li><a href="/all-awards">All Awards</a></li>
 												
 											</ul>
 									</li>
@@ -99,7 +113,27 @@
 												<li class="<?php ifbodyclass (38, 'active-link'); ?>"><a href="/pro-bowl">The Pro Bowl</a></li>										
 											</ul>
 									</li>
-									
+
+
+                                    <!--Menu list item-->
+                                    <li class="active-sub">
+                                        <a href="#">
+                                            <i class="fa fa-th"></i>
+                                            <span class="menu-title">Table Data</span>
+                                            <i class="arrow"></i>
+                                        </a>
+                                        <!--Submenu-->
+                                        <ul class="collapse in">
+                                            <!--<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables (All)</a></li>-->
+                                            <li class="<?php ifbodyclass (2182, 'active-link'); ?>"><a href="/tables-players">Tables - Players</a></li>
+                                            <li class="<?php ifbodyclass (2184, 'active-link'); ?>"><a href="/tables-teams">Tables - Teams</a></li>
+                                            <li class="<?php ifbodyclass (2186, 'active-link'); ?>"><a href="/tables-postseason">Tables - Postseason</a></li>
+                                            <li class="<?php ifbodyclass (1791, 'active-link'); ?>"><a href="/tables-nfl">Tables - NFL</a></li>
+                                            <li class="<?php ifbodyclass (2188, 'active-link'); ?>"><a href="/tables-drafts">Tables - Drafts</a></li>
+                                            <li class="<?php ifbodyclass (1795, 'active-link'); ?>"><a href="/scoring-title-pages">Tables - Scoring Title</a></li>
+                                            <li class="<?php ifbodyclass (2190, 'active-link'); ?>"><a href="/tables-other">Tables - Other</a></li>
+                                        </ul>
+                                    </li>
 									
 									<!--Menu list item-->
 									<li class="active-sub">
@@ -110,29 +144,28 @@
 										</a>
 											<!--Submenu-->
 											<ul class="collapse in">
-												<li class="<?php ifbodyclass (96, 'active-link'); ?>"><a href="/tables">Tables</a></li>
-                                                <li class="<?php ifbodyclass (1791, 'active-link'); ?>"><a href="/tables-nfl">NFL Tables</a></li>
                                                 <li class="<?php ifbodyclass (1993, 'active-link'); ?>"><a href="/nfl-team-page">Players by NFL Team</a></li>
-                                                <li class="<?php ifbodyclass (1795, 'active-link'); ?>"><a href="/scoring-title-pages">Scoring Title Tables</a></li>
                                                 <li class="<?php ifbodyclass (1722, 'active-link'); ?>"><a href="/timeline">Timeline</a></li>
 												<li class="<?php ifbodyclass (264, 'active-link'); ?>"><a href="/hall-eligible-players">HOF Eligibility</a></li>
-                                                <li class="<?php ifbodyclass (1676, 'active-link'); ?>"><a href="/head-to-head">Head to Head Matrix</a></li><li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
+                                                <li class="<?php ifbodyclass (1676, 'active-link'); ?>"><a href="/head-to-head">Head to Head Matrix</a></li>
+                                                <li class="<?php ifbodyclass (302, 'active-link'); ?>"><a href="/trades">Trades</a></li>
+                                                <li class="<?php ifbodyclass (1937, 'active-link'); ?>"><a href="/trade-analyzer?TRADE=130">Trade Analyzer</a></li>
                                                 <li class="<?php ifbodyclass (1928, 'active-link'); ?>"><a href="/playoff-probability">Playoff Probability</a></li>
-                                                <li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Research</a></li>
+                                                <li class="<?php ifbodyclass (1505, 'active-link'); ?>"><a href="/research">Draft Research</a></li>
                                                 <li class="<?php ifbodyclass (1502, 'active-link'); ?>"><a href="/uniforms">Unis & Helmets</a></li>
                                                 <li class="<?php ifbodyclass (1487, 'active-link'); ?>"><a href="/number-ones">Number Ones</a></li>
                                                 <li class="<?php ifbodyclass (2132, 'active-link'); ?>"><a href="/mr-irrelevant">Mr Irrelevant</a></li>
                                                 <li class="<?php ifbodyclass (2043, 'active-link'); ?>"><a href="/kicker-draft/?draft_year=2025/">Kicker Drafts</a></li>
-                                                <li class="<?php ifbodyclass (1678, 'active-link'); ?>"><a href="/transactions/?pid=2015DiggWR">Transactions</a></li>
+<!--                                                <li class="--><?php //ifbodyclass (1678, 'active-link'); ?><!--"><a href="/transactions/?pid=2015DiggWR">Transactions</a></li> this info is just now on the players page-->
                                                 <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202501">Scorigami</a></li>
-                                                <li class="<?php ifbodyclass (1937, 'active-link'); ?>"><a href="/trade-analyzer?TRADE=130">Trade Analyzer</a></li>
                                                 <li class="<?php ifbodyclass (1939, 'active-link'); ?>"><a href="/position-difference">Position Difference</a></li>
                                                 <li class="<?php ifbodyclass (1941, 'active-link'); ?>"><a href="/colleges">Colleges</a></li>
+                                                <li><a href="<?php echo home_url('/error-check'); ?>">Error Check</a></li>
 											</ul>
 									</li>
 						
 								</ul>
-
+								<?php } ?>
 
 							</div>
 						</div>

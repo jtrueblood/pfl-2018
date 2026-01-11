@@ -1044,11 +1044,11 @@ $rosteredif = check_player_rostered($playerid, $year);
                     endif;
 
                     if($playerposition == 'PK'):
-                        $stat1 = number_format((float)$xpm, '0', '.', ',');
+                        $stat1 = $xpm.' / '.$xpa;
                         $label1 = 'Extra Points';
                         $stat2 = number_format((float)$xpper, '3', '.', ',');
                         $label2 = 'XP Percent';
-                        $stat3 = number_format((float)$fgm, '0', '.', ',');
+                        $stat3 = $fgm.' / '.$fga;
                         $label3 = 'Field Goals';
                         $stat4 = number_format((float)$fgper, '3', '.', ',');
                         $label4 = 'FG Percent';
@@ -1703,6 +1703,7 @@ $rosteredif = check_player_rostered($playerid, $year);
                                                         <th class="text-center min-width">XP</th>
                                                         <th class="text-center min-width">FG</th>
                                                     <?php } ?>
+                                                    <th class="text-center">2PT</th>
                                                     <th class="text-center">NFL</th>
 
 													<th class="text-center">PFL</th>
@@ -1744,11 +1745,12 @@ $rosteredif = check_player_rostered($playerid, $year);
 															echo '<td class="text-center">'.$data['rush_yds'].'</td>';
 															echo '<td class="text-center">'.$data['rush_td'].'</td>';
 															echo '<td class="text-center">'.$data['rec_yds'].'</td>';
-															echo '<td class="text-center">'.$data['rec_td'].'</td>';
+														echo '<td class="text-center">'.$data['rec_td'].'</td>';
 														} else {
 															echo '<td class="text-center">'.$data['xpm'].' / '.$data['xpa'].'</td>';
 															echo '<td class="text-center">'.$data['fgm'].' / '.$data['fga'].'</td>';
 														}
+														echo '<td class="text-center">'.$data['twopt'].'</td>';
 														echo '<td class="text-center" style="border-left:2px solid grey;">'.$data['nflscore'].'</td>';
 														echo '<td class="text-center">'.$data['points'].'</td>';
 														echo '<td class="text-center">'.$data['scorediff'].'</td>';
@@ -1787,8 +1789,142 @@ $rosteredif = check_player_rostered($playerid, $year);
                     <p>2011 - Present.  Must export json of Transactions from MFL api each season and save to 'mfl-transactions' directory.</p>
                     <?php
                     $printit = new_mfl_transactions($playerid);
-                    $removeempty = array_filter($printit);
-                    if($removeempty): ?>
+                    
+                    // NOTE: Using array_unshift() means events are injected in REVERSE order of display
+                    // Want to display: PROTECTED, DRAFT, RELEASED
+                    // So inject in reverse: RELEASED, DRAFT, PROTECTED
+                    
+                    // Get released events for this player and merge them in
+                    $released_events = get_released_player($playerid);
+                    
+                    // Inject released events into printit array (will appear LAST)
+                    if (!empty($released_events)) {
+                        foreach ($released_events as $released) {
+                            $released_year = $released['year'];
+                            
+                            // Skip years 2026 and beyond
+                            if ($released_year >= 2026) {
+                                continue;
+                            }
+                            
+                            // Use the same date as the draft for that year
+                            $released_date = get_draft_date_for_player($released_year);
+                            $released_timestamp = $released_date . ' 00:00:00';
+                            
+                            // Create released event in same format as MFL transactions
+                            $released_event = array(
+                                'type' => 'RELEASED',
+                                'realtime' => $released_timestamp,
+                                'franchise' => $released['team'],
+                                'action' => 'Released',
+                                'is_released' => true
+                            );
+                            
+                            // Add to printit array for that year
+                            if (!isset($printit[$released_year])) {
+                                $printit[$released_year] = array();
+                            }
+                            // Prepend released event to beginning of year's transactions
+                            array_unshift($printit[$released_year], $released_event);
+                        }
+                    }
+                    
+                    // Get draft events for this player and merge them in
+                    $draft_events = get_drafts_player($playerid);
+                    
+                    // Inject draft events into printit array (will appear SECOND)
+                    if (!empty($draft_events)) {
+                        foreach ($draft_events as $draft) {
+                            $draft_year = $draft['season'];
+                            $round_num = intval($draft['round']);
+                            $pick_num = intval($draft['pick']);
+                            $pick_format = 'R' . $round_num . '-' . str_pad($pick_num, 2, '0', STR_PAD_LEFT);
+                            
+                            // Try to get actual draft timestamp from MFL JSON (2011+)
+                            // Otherwise use default date
+                            $draft_timestamp = get_mfl_draft_timestamp($draft_year, $mflid);
+                            if (!$draft_timestamp) {
+                                $draft_date = get_draft_date_for_player($draft_year);
+                                $draft_timestamp = $draft_date . ' 00:00:00';
+                            }
+                            
+                            // Create draft event in same format as MFL transactions
+                            $draft_event = array(
+                                'type' => 'DRAFT',
+                                'realtime' => $draft_timestamp,
+                                'franchise' => $draft['acteam'],
+                                'action' => 'Drafted ' . $pick_format,
+                                'is_draft' => true
+                            );
+                            
+                            // Add to printit array for that year
+                            if (!isset($printit[$draft_year])) {
+                                $printit[$draft_year] = array();
+                            }
+                            // Prepend draft event to beginning of year's transactions
+                            array_unshift($printit[$draft_year], $draft_event);
+                        }
+                    }
+                    
+                    // Get protection events for this player and merge them in
+                    $protection_events = get_protections_player($playerid);
+                    
+                    // Inject protection events into printit array (will appear FIRST)
+                    if (!empty($protection_events)) {
+                        foreach ($protection_events as $protection) {
+                            $protection_year = $protection['year'];
+                            
+                            // Skip years 2026 and beyond
+                            if ($protection_year >= 2026) {
+                                continue;
+                            }
+                            
+                            // Use the same date as the draft for that year
+                            $protection_date = get_draft_date_for_player($protection_year);
+                            $protection_timestamp = $protection_date . ' 00:00:00';
+                            
+                            // Create protection event in same format as MFL transactions
+                            $protection_event = array(
+                                'type' => 'PROTECTED',
+                                'realtime' => $protection_timestamp,
+                                'franchise' => $protection['team'],
+                                'action' => 'Protected',
+                                'is_protection' => true
+                            );
+                            
+                            // Add to printit array for that year
+                            if (!isset($printit[$protection_year])) {
+                                $printit[$protection_year] = array();
+                            }
+                            // Prepend protection event to beginning of year's transactions
+                            array_unshift($printit[$protection_year], $protection_event);
+                        }
+                    }
+                    
+                    // Check if there's an error in the returned data
+                    if (isset($printit['error'])): ?>
+                        <div class="alert alert-danger" role="alert">
+                            <h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> Configuration Error</h4>
+                            <p><strong><?php echo $printit['error']['message']; ?></strong></p>
+                            <hr>
+                            <p class="mb-0"><?php echo $printit['error']['instruction']; ?></p>
+                            <p class="mb-0"><small>Missing years: <code><?php echo implode(', ', $printit['error']['missing_years']); ?></code></small></p>
+                        </div>
+                    </div>
+                    <?php else:
+                        $removeempty = array_filter($printit);
+                        if($removeempty): 
+                            // Sort years in descending order (newest first)
+                            krsort($removeempty);
+                            
+                            // Sort transactions within each year by realtime (newest first)
+                            foreach($removeempty as $year => &$transactions) {
+                                usort($transactions, function($a, $b) {
+                                    return strtotime($b['realtime']) - strtotime($a['realtime']);
+                                });
+                            }
+                            unset($transactions); // break reference
+                        ?>
                     <div class="table-responsive">
                         <table id="transactionstable" class="transactions-table table table-hover table-vcenter stripe">
                             <thead>
@@ -1808,18 +1944,65 @@ $rosteredif = check_player_rostered($playerid, $year);
                                 foreach($removeempty as $year):
                                     foreach($year as $key => $value):
                                     $type = $value['type'];
-                                        if($type == 'TRADE'):
+                                        if($type == 'DRAFT'):
+                                            // Handle draft events
+                                            $timeexplode = explode(' ',$value['realtime']);
+                                            $dateexplode = explode('-', $timeexplode[0]);
+                                            // Extract time part, or show '-' if it's 00:00:00 (default)
+                                            $time_part = isset($timeexplode[1]) ? $timeexplode[1] : '00:00:00';
+                                            $display_time = ($time_part == '00:00:00') ? '-' : $time_part;
+                                            ?>
+                                            <tr>
+                                                <td class="text-bold">DRAFT</td>
+                                                <td><?php echo $firstname.' '.$lastname; ?></td>
+                                                <td><?php echo $dateexplode[0]; ?></td>
+                                                <td><?php echo $dateexplode[1].'/'.$dateexplode[2]; ?></td>
+                                                <td><?php echo $display_time; ?></td>
+                                                <td><?php echo $value['franchise']; ?></td>
+                                                <td><?php echo $value['action']; ?></td>
+                                            </tr>
+                                        <?php elseif($type == 'PROTECTED'):
+                                            // Handle protection events
+                                            $timeexplode = explode(' ',$value['realtime']);
+                                            $dateexplode = explode('-', $timeexplode[0]);
+                                            ?>
+                                            <tr>
+                                                <td class="text-bold">PROTECTED</td>
+                                                <td><?php echo $firstname.' '.$lastname; ?></td>
+                                                <td><?php echo $dateexplode[0]; ?></td>
+                                                <td><?php echo $dateexplode[1].'/'.$dateexplode[2]; ?></td>
+                                                <td>-</td>
+                                                <td><?php echo $value['franchise']; ?></td>
+                                                <td><?php echo $value['action']; ?></td>
+                                            </tr>
+                                        <?php elseif($type == 'RELEASED'):
+                                            // Handle released events
+                                            $timeexplode = explode(' ',$value['realtime']);
+                                            $dateexplode = explode('-', $timeexplode[0]);
+                                            ?>
+                                            <tr>
+                                                <td class="text-bold">RELEASED</td>
+                                                <td><?php echo $firstname.' '.$lastname; ?></td>
+                                                <td><?php echo $dateexplode[0]; ?></td>
+                                                <td><?php echo $dateexplode[1].'/'.$dateexplode[2]; ?></td>
+                                                <td>-</td>
+                                                <td><?php echo $value['franchise']; ?></td>
+                                                <td><?php echo $value['action']; ?></td>
+                                            </tr>
+                                        <?php elseif($type == 'TRADE'):
+                                            // TRADE format is MM-DD-YYYY HH:MMam/pm
                                             $timeexplodet = explode(' ',$value['realtime']);
-                                            $dateexplodet = explode('-', $timeexplode[0]);
+                                            $dateexplodet = explode('-', $timeexplodet[0]);
+                                            // dateexplodet[0]=MM, [1]=DD, [2]=YYYY
                                             ?>
                                             <tr>
                                                 <td class="text-bold">TRADE</td>
                                                 <td><?php echo $firstname.' '.$lastname; ?></td>
-                                                <td><?php echo $dateexplode[2]; ?></td>
+                                                <td><?php echo $dateexplodet[2]; ?></td>
                                                 <td><?php echo $dateexplodet[0].'/'.$dateexplodet[1]; ?></td>
                                                 <td>-</td>
-                                                <td>-</td>
-                                                <td><?php echo $value['franchise1'].' from '.$value['franchise2']; ?></td>
+                                                <td><?php echo $value['franchise2']; ?></td>
+                                                <td>Traded from <?php echo $value['franchise1']; ?></td>
                                             </tr>
                                         <?php else:
                                             $action = in_array($playerid, $value['dropped']) ? 'Dropped':
@@ -1852,7 +2035,8 @@ $rosteredif = check_player_rostered($playerid, $year);
                     <?php else:
                         echo '<h5>No MFL Transaction Data Found</h5>';
                         echo '</div>';
-                    endif;?>
+                    endif;
+                    endif; // End error check ?>
             </div>
 
         </div>

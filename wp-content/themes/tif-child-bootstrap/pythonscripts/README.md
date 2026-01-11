@@ -274,8 +274,18 @@ QB Leaders:
 ## getplayernfldata.py Usage
 
 ```bash
-python3 getplayernfldata.py "Player Name" YEAR WEEK
+python3 getplayernfldata.py "Player Name" YEAR WEEK [INSERT]
 ```
+
+### Parameters
+
+- **Player Name**: Full name of the player (e.g., "Josh Allen")
+- **YEAR**: Season year (e.g., 2024)
+- **WEEK**: Week number(s) - can be:
+  - Single week: `13`
+  - Comma-separated weeks: `"11,12,13"`
+  - All weeks player has data for: `all`
+- **INSERT**: Optional - `Yes` to insert into database, `No` to just display (default: `No`)
 
 ### Examples
 
@@ -283,12 +293,23 @@ python3 getplayernfldata.py "Player Name" YEAR WEEK
 # Get Josh Allen's stats for Week 13, 2024
 python3 getplayernfldata.py "Josh Allen" 2024 13
 
-# Get Patrick Mahomes' stats for Week 12, 2024
-python3 getplayernfldata.py "Patrick Mahomes" 2024 12
+# Get Patrick Mahomes' stats for Week 12, 2024 and insert to database
+python3 getplayernfldata.py "Patrick Mahomes" 2024 12 Yes
 
-# Get Justin Tucker's (kicker) stats
-python3 getplayernfldata.py "Justin Tucker" 2024 13
+# Get Justin Tucker's stats for multiple weeks
+python3 getplayernfldata.py "Justin Tucker" 2024 "11,12,13" Yes
+
+# Get all weeks of data for Josh Allen in 2024 (uses existing week data from database)
+python3 getplayernfldata.py "Josh Allen" 2024 all Yes
 ```
+
+### 'all' Parameter
+
+When using `all` for the WEEK parameter:
+- The script retrieves all weeks the player has in their player table for the specified year
+- Only processes weeks where the player has existing data in the database
+- Requires the player to exist in the `wp_players` table
+- Useful for updating NFL stats for all weeks a player has already played
 
 ## Output
 
@@ -304,6 +325,8 @@ The script returns the following statistics for a given player and week:
 - **Receiving Stats**: Rec Yds, Rec TD
 - **Kicking Stats**: XP Made, XP Att, FG Made, FG Att
 - **Other**: 2pt conversions
+- **NFL Score**: Calculated fantasy score based on NFL stats
+- **DIFF**: Difference between PFL score and NFL score (PFL - NFL)
 
 ## Database Configuration
 

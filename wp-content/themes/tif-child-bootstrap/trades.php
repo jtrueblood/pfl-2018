@@ -44,7 +44,7 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 								$picks2 = explode(',', $value['picks2']);
 								$protections2 = explode(',', $value['protections2']);
 								
-								$newtrades[$value['year'].$value['team1'].$value['team2'].$c] = array(
+								$newtrades[] = array(
 									'id' => $value['id'],
                                     'year' => $value['year'],
 									'team1' => $value['team1'],
@@ -56,12 +56,33 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 									'picks2' => $picks2,
 									'protections2' => $protections2,
 									'notes' => $value['notes'],
-									'when' => $value['when']
+									'when' => $value['when'],
+									'tradewinner' => $value['tradewinner'],
+									'tradeloser' => $value['tradeloser'],
+									'tradewinpoints' => $value['tradewinpoints']
 								);
 								$c++;
 							}
 
-							asort($newtrades);
+							// Sort by year ascending (oldest first), then by when (Preseason, Draft, Postseason), then by id
+							usort($newtrades, function($a, $b) {
+								// First sort by year
+								if ($a['year'] != $b['year']) {
+									return $a['year'] - $b['year'];
+								}
+								
+								// Within same year, sort by trade timing
+								$order = array('Preseason' => 1, 'Draft' => 2, 'Postseason' => 3);
+								$a_order = isset($order[$a['when']]) ? $order[$a['when']] : 999;
+								$b_order = isset($order[$b['when']]) ? $order[$b['when']] : 999;
+								
+								if ($a_order != $b_order) {
+									return $a_order - $b_order;
+								}
+								
+								// If same timing, sort by id
+								return $a['id'] - $b['id'];
+							});
 							//get or set transient
                             $newtradestrans = get_or_set($newtrades, 'newtrades', 1200);
 
@@ -92,10 +113,27 @@ $trades = get_or_set($gettrades, 'trades', 1200);
                             endforeach;
                             //printr($printteam, 0);
 
-							$x = 0;			
+							$x = 0;
+							$current_year = null;
 							foreach ($newtradestrans as $key => $value){
 							
-							if ($x % 3 == 2) : 
+							// Check if year has changed
+							if ($current_year !== $value['year']) :
+								// Close previous row if it exists
+								if ($current_year !== null && $x % 3 != 0) :
+									echo '</div><!-- close previous row -->';
+								endif;
+								
+							// Year section break
+							echo '<div class="clearfix"></div>';
+							echo '<div class="col-xs-24"><hr><h2 class="text-bold">'.$value['year'].'</h2></div>';
+							echo '<div class="clearfix"></div>';
+								
+								$current_year = $value['year'];
+								$x = 0; // Reset counter for new year
+							endif;
+							
+							if ($x % 3 == 0) : 
 								echo '<div class="row">';
 							endif;
 							?>
@@ -158,7 +196,19 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
 
 										<div class="panel-footer">
-											<p><?php echo 'Note: '. $value['notes']; ?></p>
+											<?php if($value['notes']): ?>
+												<p><?php echo 'Note: '. $value['notes']; ?></p>
+											<?php endif; ?>
+											<?php 
+												// Debug for trade 163
+												if($value['id'] == 163):
+													echo '<script>console.log("Trade 163 - Winner: '.($value['tradewinner'] ? $value['tradewinner'] : 'empty').', Points: '.($value['tradewinpoints'] ? $value['tradewinpoints'] : 'empty').'");</script>';
+												endif;
+												if(!empty($value['tradewinner']) && isset($value['tradewinpoints'])):
+													$winner_team = $teamlist[$value['tradewinner']];
+													echo '<p class="text-bold"><span class="text-success">'.$winner_team.'</span> won by '.$value['tradewinpoints'].' points</p>';
+												endif;
+											?>
                                             <?php echo '<a href="/trade-analyzer/?TRADE='.$value['id'].'">Trade Analyzer - '.$value['id'].'</a>'; ?>
 										</div>
 									</div>
@@ -432,7 +482,13 @@ $trades = get_or_set($gettrades, 'trades', 1200);
                                 'id' => $value['id'],
                                 'winner' => $value['tradewinner'],
                                 'loser' => $value['tradeloser'],
-                                'points' => $value['tradewinpoints']
+                                'points' => $value['tradewinpoints'],
+                                'team1' => $value['team1'],
+                                'team2' => $value['team2'],
+                                'players1' => $value['players1'],
+                                'players2' => $value['players2'],
+                                'picks1' => $value['picks1'],
+                                'picks2' => $value['picks2']
                             );
                             endforeach;
                             foreach ($analyze as $key => $value):
@@ -446,33 +502,65 @@ $trades = get_or_set($gettrades, 'trades', 1200);
                                 //printr($winnerbyteam, 0);
                             echo '</div>';
                             echo '<div class="col-xs-24 col-sm-6">';
+                                // Calculate totals, counts, and averages
+                                // First, get total trade count per team (both wins and losses)
+                                $total_trades_by_team = array();
+                                foreach ($analyze as $trade):
+                                    if(!empty($trade['team1'])):
+                                        if(!isset($total_trades_by_team[$trade['team1']])):
+                                            $total_trades_by_team[$trade['team1']] = 0;
+                                        endif;
+                                        $total_trades_by_team[$trade['team1']]++;
+                                    endif;
+                                    if(!empty($trade['team2'])):
+                                        if(!isset($total_trades_by_team[$trade['team2']])):
+                                            $total_trades_by_team[$trade['team2']] = 0;
+                                        endif;
+                                        $total_trades_by_team[$trade['team2']]++;
+                                    endif;
+                                endforeach;
+                                
+                                $winner_stats = array();
                                 foreach ($winnerbyteam as $team => $points):
-                                    $addwinners[$team] = array_sum($points);
+                                    $total = array_sum($points);
+                                    $count = isset($total_trades_by_team[$team]) ? $total_trades_by_team[$team] : count($points);
+                                    $average = $count > 0 ? round($total / $count, 1) : 0;
+                                    $winner_stats[$team] = array(
+                                        'total' => $total,
+                                        'count' => $count,
+                                        'average' => $average
+                                    );
                                 endforeach;
-                                arsort($addwinners);
+                                
+                                // Sort by average descending
+                                uasort($winner_stats, function($a, $b) {
+                                    return $b['average'] <=> $a['average'];
+                                });
+                                
                                 echo '<h4>Winners</h4>';
-                                //printr($addwinners, 0);
-                                $labels = array('Team', 'Points');
+                                $labels = array('Team', 'Total', 'Trades', 'Avg');
                                 tablehead('Total Trade Points Winners', $labels);
-                                foreach ($addwinners as $key => $value):
-                                    echo '<tr><td>'.$key.'</td>';
-                                    echo '<td>'.$value.'</td></tr>';
+                                foreach ($winner_stats as $team => $stats):
+                                    echo '<tr><td>'.$team.'</td>';
+                                    echo '<td class="text-center">'.$stats['total'].'</td>';
+                                    echo '<td class="text-center">'.$stats['count'].'</td>';
+                                    echo '<td class="text-center"><strong>'.$stats['average'].'</strong></td></tr>';
                                 endforeach;
-                                tablefoot('');
+                                tablefoot('Sorted by average points per winning trade');
 
                                 //winners minus losers
-                                foreach ($losersbyteam as $team => $points):
-                                    $losewinners[$team] = array_sum($points);
-                                endforeach;
-                                asort($losewinners);
-                                echo '<h4>Losers</h4>';
+//                                foreach ($losersbyteam as $team => $points):
+//                                    $losewinners[$team] = array_sum($points);
+//                                endforeach;
+//                                asort($losewinners);
+//                                echo '<h4>Losers</h4>';
                                 //printr($losewinners, 0);
 
-                                foreach($addwinners as $key => $value):
-                                    $getit[$key] = $value - $losewinners[$key];
-                                endforeach;
-                                arsort($getit);
-                                echo '<h4>Total Plus/Minus</h4>';
+//                                foreach($addwinners as $key => $value):
+//                                    $getit[$key] = $value - $losewinners[$key];
+//                                endforeach;
+//                                arsort($getit);
+//                                echo '<h4>Total Plus/Minus</h4>';
                                 //printr($getit, 0);
 
 
@@ -486,6 +574,93 @@ $trades = get_or_set($gettrades, 'trades', 1200);
 
                                 ?>
 
+                        </div>
+                    </div>
+                    
+                    <!-- Top 20 Biggest Trade Wins -->
+                    <div class="row">
+                        <div class="col-xs-24">
+                            <?php
+                            // Filter out trades without winner data and sort by points descending
+                            $biggest_wins = array();
+                            foreach($analyze as $trade):
+                                if(!empty($trade['winner']) && isset($trade['points']) && $trade['points'] > 0):
+                                    $biggest_wins[] = $trade;
+                                endif;
+                            endforeach;
+                            
+                            // Already sorted from usort above, just take top 20
+                            $top_20 = array_slice($biggest_wins, 0, 20);
+                            
+                            $labels = array('Rank', 'Trade ID', 'Winner', 'Winner Gets', 'Loser', 'Loser Gets', 'Points');
+                            tablehead('Top 20 Biggest Trade Wins', $labels);
+                            
+                            $rank = 1;
+                            foreach($top_20 as $trade):
+                                // Determine which side won
+                                $winner_gets_players = ($trade['winner'] == $trade['team1']) ? $trade['players1'] : $trade['players2'];
+                                $winner_gets_picks = ($trade['winner'] == $trade['team1']) ? $trade['picks1'] : $trade['picks2'];
+                                $loser_gets_players = ($trade['loser'] == $trade['team1']) ? $trade['players1'] : $trade['players2'];
+                                $loser_gets_picks = ($trade['loser'] == $trade['team1']) ? $trade['picks1'] : $trade['picks2'];
+                                
+                                // Format winner's assets
+                                $winner_assets = '';
+                                if(!empty($winner_gets_players)):
+                                    $players_array = explode(',', $winner_gets_players);
+                                    foreach($players_array as $pid):
+                                        $pid = trim($pid);
+                                        if($pid):
+                                            $pname = get_player_name($pid);
+                                            $winner_assets .= $pname['first'].' '.$pname['last'].'<br>';
+                                        endif;
+                                    endforeach;
+                                endif;
+                                if(!empty($winner_gets_picks)):
+                                    $picks_array = explode(',', $winner_gets_picks);
+                                    foreach($picks_array as $pick):
+                                        $pick = trim($pick);
+                                        if($pick):
+                                            $winner_assets .= format_draft_pick_return($pick);
+                                        endif;
+                                    endforeach;
+                                endif;
+                                
+                                // Format loser's assets
+                                $loser_assets = '';
+                                if(!empty($loser_gets_players)):
+                                    $players_array = explode(',', $loser_gets_players);
+                                    foreach($players_array as $pid):
+                                        $pid = trim($pid);
+                                        if($pid):
+                                            $pname = get_player_name($pid);
+                                            $loser_assets .= $pname['first'].' '.$pname['last'].'<br>';
+                                        endif;
+                                    endforeach;
+                                endif;
+                                if(!empty($loser_gets_picks)):
+                                    $picks_array = explode(',', $loser_gets_picks);
+                                    foreach($picks_array as $pick):
+                                        $pick = trim($pick);
+                                        if($pick):
+                                            $loser_assets .= format_draft_pick_return($pick);
+                                        endif;
+                                    endforeach;
+                                endif;
+                                
+                                echo '<tr>';
+                                echo '<td class="text-center">'.$rank.'</td>';
+                                echo '<td class="text-center"><a href="/trade-analyzer/?TRADE='.$trade['id'].'">'.$trade['id'].'</a></td>';
+                                echo '<td class="text-bold">'.$teamlist[$trade['winner']].'</td>';
+                                echo '<td><small>'.$winner_assets.'</small></td>';
+                                echo '<td>'.$teamlist[$trade['loser']].'</td>';
+                                echo '<td><small>'.$loser_assets.'</small></td>';
+                                echo '<td class="text-center text-success text-bold">'.$trade['points'].'</td>';
+                                echo '</tr>';
+                                $rank++;
+                            endforeach;
+                            
+                            tablefoot('');
+                            ?>
                         </div>
                     </div>
 

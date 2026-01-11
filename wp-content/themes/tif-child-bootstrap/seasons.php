@@ -47,6 +47,7 @@ $teamlist = teamlist();
                 include_once('inc/season_playerofweek.php');
                 include_once('inc/season_weekhighs.php');
                 include_once('inc/season_fifties.php');
+                include_once('inc/season_iron_men.php');
                 ?>
 				
 			</div>		
@@ -54,11 +55,15 @@ $teamlist = teamlist();
 			<!-- MIDDLE COL -->
 			<div class="col-xs-24 col-md-9">
 
-				<?php 
-					selectseason();
-					include_once('inc/season_standings.php');
-					include_once('inc/season_draft.php');
-				?>
+			<style>
+				#seasondraft { overflow: visible; max-height: none; height: auto; }
+			</style>
+			<?php 
+				selectseason();
+				include_once('inc/season_standings.php');
+				include_once('inc/season_draft.php');
+				include_once('inc/season_trades.php');
+			?>
 				
 			</div>
 			
@@ -68,7 +73,7 @@ $teamlist = teamlist();
 			<!-- RIGHT COL -->
 			<div class="col-xs-24 col-sm-9">
 					
-				<?php 
+			<?php 
 				include_once('inc/season_awards.php');
 				include_once('inc/season_leaders.php');
 				?>

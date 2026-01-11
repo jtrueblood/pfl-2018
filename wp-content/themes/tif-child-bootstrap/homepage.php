@@ -139,39 +139,62 @@ get_header();
 						
 						
 						<div class="panel panel-bordered panel-light">
-							<div class="panel-heading">
-								<h3 class="panel-title">PHP Scripts</h3>
-							</div>
-								<div class="panel-body">
-									<div class="col-xs-24">
-                                        <a href="https://api.myfantasyleague.com/2024/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a><br>
-                                        <a href="/builds/build-drafts/?SQL=0&Y=2024">Import Draft</a><br>
-                                        <a href="/create-new-player">Create New Player</a><br>
-                                        <a href="/scrape-pfr-for-numbers/?id=1991AndePK">Scrape for Player Numbers</a><br>
-										<a href="/builds/build-mfl-weekly/?SET=0&Y=2024&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
-                                        <a href="/get-weekly-rosters-mfl/?Y=2024&W=1">Get Weekly Rosters from MFL</a><br>
-                                        <a href="/player-ot-score/?SQL=0">Build Overtime Scores from MFL</a><br>
-                                        <a href="/get-player-scores-for-playoffs/?SQL=0&Y=2022&W=15&S1=XXX&S2=XXX&S3=XXX&S4=XXX">Build Playoff Data 15 & 16</a><br>
-                                        <a href="/team-rosters/?season=2024">Create Full Rosters by Season</a><br>
-                                    </div>
-								</div>
+<div class="panel-heading">
+    <h3 class="panel-title">PHP Scripts</h3>
+</div>
+    <div class="panel-body">
+        <div class="col-xs-24">
+            <a href="https://api.myfantasyleague.com/2024/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a><br>
+            <a href="/builds/build-drafts/?SQL=0&Y=2024">Import Draft</a><br>
+            <a href="/create-new-player">Create New Player</a><br>
+            <a href="/scrape-pfr-for-numbers/?id=1991AndePK">Scrape for Player Numbers</a><br>
+            <a href="/builds/build-mfl-weekly/?SET=0&Y=2024&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+            <a href="/get-weekly-rosters-mfl/?Y=2024&W=1">Get Weekly Rosters from MFL</a><br>
+            <a href="/player-ot-score/?SQL=0">Build Overtime Scores from MFL</a><br>
+            <a href="/get-player-scores-for-playoffs/?SQL=0&Y=2022&W=15&S1=XXX&S2=XXX&S3=XXX&S4=XXX">Build Playoff Data 15 & 16</a><br>
+            <a href="/team-rosters/?season=2024">Create Full Rosters by Season</a><br>
+        </div>
+    </div>
 
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Python Scripts</h3>
-                            </div>
-                            <div class="panel-body">
-                                <div class="col-xs-24">
-                                    <h5>Navigate to Python Scripts Directory</h5>
-                                    <pre>cd /Users/jamietrueblood/Local\ Sites/posse-football-league/app/public/wp-content/themes/tif-child-bootstrap/pythonscripts</pre>
-                                    <h5>Get Image for Player from Google Images</h5> <!--python script -->
-                                    <pre>python3 getpflimage.py</pre>
-                                    <h5>ESPN API For NFL Player Game Stats</h5>
-                                    <pre>python3 getplayernfldata.py "Josh Allen" 2025 "1,2,3" No</pre>
-                                    <h5>Download all MFL Transactions for year to json</h5>
-                                    <pre>getmfltransactions.py 2025</pre>
-                                    <h5>Find and Replace Player ID -- used to fix errors</h5>
-                                    <pre>replace_player_id.py</pre>
-                                </div>
+<div class="panel-heading">
+    <h3 class="panel-title">Python Scripts</h3>
+</div>
+<div class="panel-body">
+    <div class="col-xs-24">
+<h5>Navigate to Python Scripts Directory</h5>
+<pre>cd /Users/jamietrueblood/Local\ Sites/posse-football-league/app/public/wp-content/themes/tif-child-bootstrap/pythonscripts</pre>
+<h5>Get Image for Player from Google Images</h5> <!--python script -->
+<pre>python3 getpflimage.py</pre>
+<h5>ESPN API For NFL Player Game Stats</h5>
+<pre>python3 getplayernfldata.py "Josh Allen" 2025 "1,2,3" No</pre>
+<h5>Download all MFL Transactions for year to json</h5>
+<pre>getmfltransactions.py 2025</pre>
+<h5>Find and Replace Player ID -- used to fix errors</h5>
+<pre>replace_player_id.py</pre>
+<h5>Get Player Boxscore from Database / Make Corrections</h5>
+<pre>python3 player_boxscore.py 1993BoniPK 1995 2</pre>
+<h5>Insert single player game data into database</h5>
+<pre># Using PFL Player ID
+python3 build-single-player-mfl.py 2018AlleQB 2024 13
+# Using player name
+python3 build-single-player-mfl.py "Josh Allen" 2024 13
+# Using MFL ID
+python3 build-single-player-mfl.py 14477 2024 13</pre>
+<h5>Insert end of season standings from week 14 to standYEAR</h5>
+<pre># You will still need to manually update playoff seeds
+python3 update-standings-table.py 2025</pre>
+<h5>Import from Season Leaders into Probowl Boxscore</h5>
+<pre>python3 insert_probowl_leaders.py 2025</pre>
+<h5>Get Draft json data from MFL</h5>
+<pre>python3 fetch_mfl_drafts.py --all</pre>
+<h5>Analyze Draft Year</h5>
+<pre>python3 analyze_draft_db.py 1998</pre>
+
+
+
+
+
+</div>
                             </div>
 						</div>
 

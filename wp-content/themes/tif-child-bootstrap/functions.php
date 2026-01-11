@@ -595,6 +595,11 @@ function leadersbyseason ($array, $year, $labelpos){
 
     $playersassoc = get_players_assoc ();
     
+    // Sort array by points in descending order
+    usort($array, function($a, $b) {
+        return $b['points'] - $a['points'];
+    });
+    
     $probowl = probowl_boxscores_player_year($year);
     if(isset($probowl)){
 		foreach($probowl as $key => $value){
@@ -612,7 +617,7 @@ function leadersbyseason ($array, $year, $labelpos){
 				$printval .= '<table class="table table-striped leaders-season">';
 					$printval .= '<thead>';
 						$printval .= '<tr>';
-							$printval .= '<th>Player</th><th class="text-center">Points</th><th class="text-center">Games</th><th class="text-center">Teams</th><th class="text-center min-width">Pro</th>';
+							$printval .= '<th class="copy-col"></th><th>Player</th><th class="text-center">Points</th><th class="text-center">Games</th><th class="text-center">Teams</th><th class="text-center min-width">Pro</th>';
 						$printval .= '</tr>';
 					$printval .= '</thead>';
 					$printval .= '<tbody>';
@@ -665,6 +670,8 @@ function leadersbyseason ($array, $year, $labelpos){
 								}
 								
 // 								$printval .= '<td>'.$rank.'.</td>';
+								$pythonCmd = 'python3 getplayernfldata.py "' . $first . ' ' . $last . '" ' . $year . ' all Yes';
+								$printval .= '<td class="copy-col"><button class="copy-python-btn" data-command="'.htmlspecialchars($pythonCmd, ENT_QUOTES, 'UTF-8').'" title="Copy Python command"><i class="fa fa-clipboard"></i></button></td>';
 								$printval .= '<td><a href="/player/?id='.$getvars['playerid'].'" class="btn-link">'.$first.' '.$last.'</a>'.$pr_rook.'</td>';
 								$printval .= '<td class="text-center min-width">'.$getvars['points'].'</td>';
 								$printval .= '<td class="text-center min-width">'.$getvars['games'].'</td>';
@@ -1140,8 +1147,45 @@ function get_protections_player($pid){
 	return $protections;
 }
 
+// Get released players - players on roster in year N but not protected in year N+1
+function get_released_player($pid){
+	global $wpdb;
+	
+	// Get all rosters for this player
+	$rosters = $wpdb->get_results("select * from wp_rosters where pid = '$pid' ORDER BY year", ARRAY_N);
+	
+	// Get all protections for this player
+	$protections_raw = $wpdb->get_results("select * from wp_protections where playerid = '$pid'", ARRAY_N);
+	
+	// Build protections lookup by year
+	$protected_years = array();
+	foreach ($protections_raw as $prot) {
+		$protected_years[$prot[1]] = true; // $prot[1] is the year
+	}
+	
+	$released = array();
+	
+	// Check each roster year
+	foreach ($rosters as $roster) {
+		$current_year = $roster[2]; // year field
+		$next_year = $current_year + 1;
+		$team = $roster[3]; // team field
+		
+		// If player was on roster in year N and NOT protected in year N+1, they were RELEASED
+		if (!isset($protected_years[$next_year])) {
+			$released[] = array(
+				'year' => $next_year,
+				'team' => $team,
+				'playerid' => $pid
+			);
+		}
+	}
+	
+	return $released;
+}
+
 // returns an array of the manner in which a player was acquired
-function how_player_was_acquired($playerid, $season, $teamid){
+function how_player_was_acquired($playerid, $season, $teamid, $season_drafts = null){
     // check for protection
     $getprotections = get_protections_player($playerid);
     if($getprotections):
@@ -1154,12 +1198,16 @@ function how_player_was_acquired($playerid, $season, $teamid){
     endif;
 
     // check for drafted
-    $getdrafts = get_drafts_by_year($season);
-    foreach ($getdrafts as $key => $value):
-        $drafts[] = $value['playerid'];
-    endforeach;
-    if(in_array($playerid, $drafts)):
-        $drafted = 'Drafted';
+    // Use pre-fetched drafts if provided, otherwise query
+    $getdrafts = $season_drafts !== null ? $season_drafts : get_drafts_by_year($season);
+    if($getdrafts):
+        foreach ($getdrafts as $key => $value):
+            // Only mark as drafted if THIS team drafted them
+            if($value['playerid'] == $playerid && $value['acteam'] == $teamid):
+                $drafted = 'Drafted';
+                break;
+            endif;
+        endforeach;
     endif;
 
     // check for traded
@@ -1735,6 +1783,253 @@ function get_season_award($year){
 }
 
 
+// get highest individual game score for a season
+function get_highest_individual_game_score($year){
+	global $wpdb;
+	$players = get_players_assoc();
+	
+	$maxpoints = 0;
+	$maxplayerinfo = array();
+	
+	foreach($players as $pid => $player){
+		$playerdata = $wpdb->get_results("SELECT * FROM `".$pid."` WHERE year = ".$year." ORDER BY points DESC LIMIT 1", ARRAY_N);
+		
+		if(!empty($playerdata)){
+			if($playerdata[0][3] > $maxpoints){
+				$maxpoints = $playerdata[0][3];
+				$maxplayerinfo = array(
+					'first' => $player[0],
+					'last' => $player[1],
+					'position' => $player[2],
+					'team' => $playerdata[0][4],
+					'points' => $maxpoints,
+					'pid' => $pid
+				);
+			}
+		}
+	}
+	
+	return $maxplayerinfo;
+}
+
+// get best bench player for a season (player with 5 or fewer games, highest PPG, not an early starter)
+// Priority: more games > higher PPG > more games in second half (weeks 8+)
+function get_best_bench_player($year){
+	global $wpdb;
+	$players = get_players_assoc();
+	
+	$maxgames = 0;
+	$maxppg = 0;
+	$maxlatergames = 0;
+	$benchplayers = array();
+	
+	foreach($players as $pid => $player){
+		$playerdata = @$wpdb->get_results("SELECT COUNT(*) as games, SUM(points) as total FROM `".$pid."` WHERE year = ".$year, ARRAY_N);
+		
+		if(!empty($playerdata) && $playerdata[0][0] > 0 && $playerdata[0][0] <= 5){
+			// Check if player is an early starter (5+ games in first 7 weeks)
+			$earlygames = @$wpdb->get_results("SELECT COUNT(*) as early FROM `".$pid."` WHERE year = ".$year." AND week <= 7", ARRAY_N);
+			
+			if(!empty($earlygames) && $earlygames[0][0] >= 5) {
+				// Skip players who started early
+				continue;
+			}
+			
+			// Calculate PPG (points per game)
+			$ppg = $playerdata[0][1] / $playerdata[0][0];
+			$games = $playerdata[0][0];
+			
+			// Count games in second half (weeks 8+)
+			$laterdata = @$wpdb->get_results("SELECT COUNT(*) as latergames FROM `".$pid."` WHERE year = ".$year." AND week >= 8", ARRAY_N);
+			$latergames = !empty($laterdata) ? $laterdata[0][0] : 0;
+			
+			// Check if this player should replace current best
+			// Priority: more games first, then higher PPG, then more games in second half
+			if($games > $maxgames || ($games == $maxgames && $ppg > $maxppg) || ($games == $maxgames && $ppg == $maxppg && $latergames > $maxlatergames)){
+				if($games > $maxgames) {
+					// New highest game count, reset the list
+					$benchplayers = array();
+					$maxgames = $games;
+					$maxppg = $ppg;
+					$maxlatergames = $latergames;
+				} else if($games == $maxgames && $ppg > $maxppg) {
+					// Same game count but higher PPG, reset the list
+					$benchplayers = array();
+					$maxppg = $ppg;
+					$maxlatergames = $latergames;
+				} else if($games == $maxgames && $ppg == $maxppg && $latergames > $maxlatergames) {
+					// Same games and PPG but more second-half games, reset the list
+					$benchplayers = array();
+					$maxlatergames = $latergames;
+				}
+				
+				$teamdata = @$wpdb->get_results("SELECT team FROM `".$pid."` WHERE year = ".$year." LIMIT 1", ARRAY_N);
+				$benchplayers[] = array(
+					'first' => $player[0],
+					'last' => $player[1],
+					'position' => $player[2],
+					'team' => !empty($teamdata) ? $teamdata[0][0] : '',
+					'points' => $playerdata[0][1],
+					'games' => $games,
+					'ppg' => $ppg,
+					'pid' => $pid
+				);
+			} else if($games == $maxgames && $ppg == $maxppg && $latergames == $maxlatergames) {
+				// Tie: same games, PPG, and second-half games
+				$teamdata = @$wpdb->get_results("SELECT team FROM `".$pid."` WHERE year = ".$year." LIMIT 1", ARRAY_N);
+				$benchplayers[] = array(
+					'first' => $player[0],
+					'last' => $player[1],
+					'position' => $player[2],
+					'team' => !empty($teamdata) ? $teamdata[0][0] : '',
+					'points' => $playerdata[0][1],
+					'games' => $games,
+					'ppg' => $ppg,
+					'pid' => $pid
+				);
+			}
+		}
+	}
+	
+	return $benchplayers;
+}
+
+// Get all players tied for position leader (handles ties)
+function get_position_leaders($year, $position) {
+	global $wpdb;
+	
+	$leaderdata = $wpdb->get_results($wpdb->prepare("SELECT playerid, MAX(points) as points FROM wp_season_leaders WHERE season = %d AND playerid LIKE %s GROUP BY playerid", $year, $position.'%'), ARRAY_A);
+	
+	$players_assoc = get_players_assoc();
+	$maxpoints = 0;
+	$topplayers = array();
+	
+	foreach($leaderdata as $leader) {
+		if($leader['points'] > $maxpoints) {
+			$maxpoints = $leader['points'];
+			$topplayers = array();
+		}
+		
+		if($leader['points'] >= $maxpoints) {
+			$player_info = $players_assoc[$leader['playerid']];
+			$topplayers[] = array(
+				'playerid' => $leader['playerid'],
+				'first' => $player_info[0],
+				'last' => $player_info[1],
+				'position' => $player_info[2],
+				'points' => $leader['points']
+			);
+		}
+	}
+	
+	return $topplayers;
+}
+
+// Helper function to generate HTML for position title winners with tie support
+function render_position_title_winner($players, $title, $year, $teamlist) {
+	$html = '<div class="col-xs-24 col-sm-6">';
+	
+	if(count($players) == 2) {
+		// Two tied players
+		$html .= '<div class="panel">';
+		$html .= '<div style="display: flex;">';
+		
+		foreach($players as $player_info) {
+			$html .= '<div style="flex: 1;">';
+			
+			$playerimgobj = get_attachment_url_by_slug($player_info['playerid']);
+			$imgid = attachment_url_to_postid($playerimgobj);
+			$image_attributes = wp_get_attachment_image_src($imgid, array(400, 400));
+			$playerimg = $image_attributes[0];
+			
+			$html .= '<div class="widget-header" style="height: 150px; overflow: hidden; position: relative;">';
+			$html .= '<img class="widget-bg img-responsive" src="'.$playerimg.'" alt="Image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">';
+			$html .= '</div>';
+			
+			$playerteam = get_player_teams_season($player_info['playerid']);
+			$teams = $playerteam[$year];
+			if(is_array($teams)) {
+				$tags = implode(', ', $teams);
+			} else {
+				$tags = $teams;
+			}
+			
+			$html .= '<div class="widget-body text-center" style="padding: 10px;">';
+			$html .= '<h6 class="mar-no text-center" style="font-size: 12px;">'.$player_info['first'].'<br>'.$player_info['last'].'</h6>';
+			$html .= '<p class="text-light text-center mar-top" style="font-size: 12px;">'.$player_info['points'].' pts</p>';
+			$html .= '<p class="text-light text-center" style="font-size: 11px;">'.$tags.'</p>';
+			$html .= '</div>';
+			$html .= '</div>';
+		}
+		
+		$html .= '</div>';
+		$html .= '<div style="text-align: center; padding: 10px; border-top: 1px solid #ddd;">';
+		$html .= '<h5 style="margin: 0;">'.$year.' '.$title.' (Tied)</h5>';
+		$html .= '</div>';
+		$html .= '</div>';
+	} else {
+		// Single player
+		$player_info = $players[0];
+		$html .= '<div class="panel">';
+		
+		$playerimgobj = get_attachment_url_by_slug($player_info['playerid']);
+		$imgid = attachment_url_to_postid($playerimgobj);
+		$image_attributes = wp_get_attachment_image_src($imgid, array(400, 400));
+		$playerimg = $image_attributes[0];
+		
+		$html .= '<div class="widget-header" style="height: 200px; overflow: hidden; position: relative;">';
+		$html .= '<img class="widget-bg img-responsive" src="'.$playerimg.'" alt="Image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">';
+		$html .= '</div>';
+		
+		$playerteam = get_player_teams_season($player_info['playerid']);
+		$teams = $playerteam[$year];
+		if(is_array($teams)) {
+			$tags = implode(', ', $teams);
+		} else {
+			$tags = $teams;
+		}
+		
+		$html .= '<div class="widget-body text-center">';
+		$html .= '<h5>'.$year.' '.$title.'</h5>';
+		$html .= '<h4 class="mar-no text-center">'.$player_info['first'].'<br>'.$player_info['last'].'</h4>';
+		$html .= '<p class="text-light text-center mar-top">Points: '.$player_info['points'].'</p>';
+		$html .= '<p class="text-light text-center">'.$tags.'</p>';
+		$html .= '</div>';
+		$html .= '</div>';
+	}
+	
+	$html .= '</div>';
+	return $html;
+}
+
+// get iron men for a season (players who played 13+ games)
+function get_iron_men($year){
+	global $wpdb;
+	$players = get_players_assoc();
+	$ironmen = array();
+	
+	foreach($players as $pid => $player){
+		$playerdata = @$wpdb->get_results("SELECT COUNT(*) as games FROM `".$pid."` WHERE year = ".$year, ARRAY_N);
+		
+		if(!empty($playerdata) && !empty($playerdata[0]) && $playerdata[0][0] >= 13){
+			$teamdata = @$wpdb->get_results("SELECT team FROM `".$pid."` WHERE year = ".$year." LIMIT 1", ARRAY_N);
+			
+			if(!empty($teamdata) && !empty($teamdata[0]) && !empty($teamdata[0][0])) {
+				$ironmen[] = array(
+					'first' => $player[0],
+					'last' => $player[1],
+					'position' => $player[2],
+					'team' => $teamdata[0][0],
+					'games' => $playerdata[0][0],
+					'pid' => $pid
+				);
+			}
+		}
+	}
+	
+	return $ironmen;
+}
+
 // get hall of fame inductees only
 function get_award_hall(){
 	global $wpdb;
@@ -1831,6 +2126,7 @@ function get_player_data($pid) {
             'fga' => $revisequery[24],
             'nflscore' => $revisequery[25],
             'scorediff' => $revisequery[26],
+            'twopt' => $revisequery[27],
 		);
 
 	}
@@ -1947,12 +2243,48 @@ function get_player_points_team_season($pid, $team, $season) {
 }
 
 
+// gets the PFR URL for a player
+function get_player_pfr_url($pid) {
+	global $wpdb;
+	$getplayer = $wpdb->get_results("select pfruri, playerLast from wp_players where p_id = '$pid'", ARRAY_N);
+	if (!empty($getplayer)) {
+		$pfruri = $getplayer[0][0];
+		$lastname = $getplayer[0][1];
+		if (!empty($pfruri) && !empty($lastname)) {
+			$first_initial = strtoupper(substr($lastname, 0, 1));
+			return 'https://www.pro-football-reference.com/players/' . $first_initial . '/' . $pfruri . '.htm';
+		}
+	}
+	return '';
+}
+
+// gets the PFR boxscore URL for a player's game in a specific week
+function get_player_game_pfr_url($pid, $weekid) {
+	global $wpdb;
+	$playerdata = $wpdb->get_results("select game_date, nflteam, game_location, nflopp from $pid where week_id = '$weekid'", ARRAY_N);
+	if (!empty($playerdata) && !empty($playerdata[0])) {
+		$game_date = $playerdata[0][0];
+		$nflteam = $playerdata[0][1];
+		$game_location = $playerdata[0][2];
+		$nflopp = $playerdata[0][3];
+		
+		if (!empty($game_date) && !empty($nflteam) && !empty($nflopp) && !empty($game_location)) {
+			// Format: YYYYMMDD0{hometeam}.htm
+			$date_formatted = str_replace('-', '', $game_date);
+			// Home team is the one with 'vs' (home), away is '@'
+			$home_team = ($game_location == 'vs' || $game_location == 'V') ? strtolower($nflteam) : strtolower($nflopp);
+			return 'https://www.pro-football-reference.com/boxscores/' . $date_formatted . '0' . $home_team . '.htm';
+		}
+	}
+	return '';
+}
+
 function get_player_basic_info($pid){
 	global $wpdb;
 	$getplayer = $wpdb->get_results("select * from wp_players where p_id = '$pid'", ARRAY_N);
 	$rookieyear = get_player_rookie_year($pid);
 	foreach ($getplayer as $key => $revisequery){
-		$playerinfo[] = array( 
+		$playerinfo[] = array(
 			'pid' => $revisequery[0],
 			'first' => $revisequery[1], 
 			'last' => $revisequery[2], 
@@ -2274,6 +2606,24 @@ function get_teams(){
 	
 	return $teams;
 	
+}
+
+// gets teams that were active in a specific season
+function get_teams_by_season($season){
+    $allteams = get_teams();
+    $activeteams = array();
+    
+    foreach ($allteams as $teamid => $teamdata){
+        $first_season = $teamdata['first_season'];
+        $folded = $teamdata['folded'];
+        
+        // Team is active if season >= first_season AND (folded is empty OR season < folded)
+        if ($season >= $first_season && ($folded == '' || $folded == null || $season < $folded)){
+            $activeteams[$teamid] = $teamdata;
+        }
+    }
+    
+    return $activeteams;
 }
 
 // gets team PFL & MFL IDs by Season
@@ -2608,7 +2958,7 @@ function pos_score_converter($year, $passyd, $passtd, $rushyd, $rushtd, $int, $r
 		}
 		
 		$posscore = $passdata + (floor($rushyd / 25)) + (($passtd + $rushtd + $rectd) * 2) + floor($recyd / 25) - $int;
-		return $qbscore;
+		return $posscore;
 	else:
 		$posscore = (floor($passyd / 30)) + (floor($rushyd / 10)) + (($passtd + $rushtd + $rectd) * 2) + floor($recyd / 10) - $int ;
         return $posscore;
@@ -2711,7 +3061,8 @@ function getpvqmultipliers($year){
 //gets season winner of PVQ score. 1.000
 function get_season_pvq_leader(){
 	global $wpdb;
-	$get = $wpdb->get_results("select * from wp_player_pvqs where pvq = '1.00000000'", ARRAY_N);
+	// Use numeric comparison to handle different precision levels
+	$get = $wpdb->get_results("select * from wp_player_pvqs where CAST(pvq AS DECIMAL(10,8)) >= 0.99999999", ARRAY_N);
 	
 	foreach ($get as $revisequery){
 		$sealeadpvq[$revisequery[2]] = array(
@@ -3244,7 +3595,7 @@ function get_draft_info(){
     return $post_fields;
 }
 
-// get probowl by player 
+// get probowl by player
 function probowl_boxscores_player($pid){
 	global $wpdb;
 	$get = $wpdb->get_results("select * from wp_probowlbox where playerid = '$pid'", ARRAY_N);
@@ -3843,7 +4194,7 @@ $printit .= '<div class="panel-heading">';
 					$printit .= '<th>Name</th>';
 					$printit .= '<th class="min-width">Pos</th>';
 					$printit .= '<th class="min-width">Season PTS</th>';
-					$printit .= '<th class="min-width">Career PTS</th>';
+					//$printit .= '<th class="min-width">Career PTS</th>';
 				$printit .= '</tr>';
 		$printit .= '</thead>';
 		$printit .= '<tbody>';
@@ -3917,7 +4268,7 @@ $printit .= '<div class="panel-heading">';
 						endif;	
 						$printit .= '<td class="text-center"><span class="">'.$position.'</span></td>';
 						$printit .= '<td class="text-center"><span class="">'.$seasonpoints.'</span></td>';
-						$printit .= '<td class="text-center"><span class="">'.$careerdraftvalue['points'].'</span></td>';
+						//$printit .= '<td class="text-center"><span class="">'.$careerdraftvalue['points'].'</span></td>';  replaced by more logical ai python script in 2025
 						//printr($careerdraftvalue['seasons'], 0);
 					$printit .= '</tr>';
 					
@@ -3979,7 +4330,155 @@ function get_season_leaders($yearval){
 		);
 	}
 
-return $season_leaders_all;
+	return $season_leaders_all;
+}
+
+// Get position leader(s) for a season including ties
+function get_position_leader($season, $position){
+	$season_leaders = get_season_leaders($season);
+	$playersassoc = get_players_assoc();
+	
+	if(!$season_leaders){
+		return null;
+	}
+	
+	// Filter by position and sort by points
+	$position_leaders = array();
+	foreach ($season_leaders as $leader){
+		if(substr($leader['playerid'], -2) == $position){
+			$position_leaders[$leader['playerid']] = $leader['points'];
+		}
+	}
+	
+	if(empty($position_leaders)){
+		return null;
+	}
+	
+	// Sort by points descending
+	arsort($position_leaders, SORT_NUMERIC);
+	
+	// Get the highest point value
+	$max_points = reset($position_leaders);
+	
+	// Get all players with that point value (handles ties)
+	$leaders = array();
+	foreach($position_leaders as $pid => $points){
+		if($points == $max_points){
+			// Get player's team for that season
+			$player_stats = get_player_season_stats($pid, $season);
+			$teams = $player_stats['teams'];
+			$team = is_array($teams) ? $teams[0] : $teams;
+			
+			$leaders[] = array(
+				'pid' => $pid,
+				'first' => $playersassoc[$pid][0],
+				'last' => $playersassoc[$pid][1],
+				'team' => $team,
+				'points' => $points
+			);
+		}
+	}
+	
+	return $leaders;
+}
+
+// Get division winners for a season
+function get_division_winners($season){
+	$standings = get_standings($season);
+	$teamids = $_SESSION['teamids'];
+	
+	if(!$standings){
+		return array('EGAD' => null, 'DGAS' => null, 'MGAC' => null);
+	}
+	
+	$division_winners = array();
+	
+	// Group teams by division
+	$divisions = array();
+	foreach ($standings as $team){
+		$division = $team['division'];
+		if(!isset($divisions[$division])){
+			$divisions[$division] = array();
+		}
+		$divisions[$division][] = $team;
+	}
+	
+	// Find winner in each division (team with gb == 0)
+	foreach ($divisions as $div_name => $teams){
+		foreach ($teams as $team){
+			if($team['gb'] == 0){
+				$team_id = $team['teamid'];
+				$team_name = isset($teamids[$team_id]) ? $teamids[$team_id] : $team_id;
+				$division_winners[$div_name] = $team_name;
+				break; // Found the winner for this division
+			}
+		}
+	}
+	
+	return $division_winners;
+}
+
+// Get player(s) with highest PVQ for a season (handles ties)
+function get_highest_pvq_player($season){
+	global $wpdb;
+	$playersassoc = get_players_assoc();
+	
+	// Query all PVQ data for the season and find the max
+	$getpvq = $wpdb->get_results("SELECT * FROM wp_player_pvqs WHERE year = '$season' ORDER BY CAST(pvq AS DECIMAL(10,8)) DESC", ARRAY_N);
+	
+	if(empty($getpvq)){
+		return null;
+	}
+	
+	// Get the highest PVQ value (first row after ordering)
+	$max_pvq = floatval($getpvq[0][3]);
+	
+	// Get all players with that PVQ value (handles ties)
+	$leaders = array();
+	foreach($getpvq as $row){
+		$pid = $row[1];
+		$pvq_value = floatval($row[3]);
+		
+		// Only include players with the maximum PVQ
+		if(abs($pvq_value - $max_pvq) < 0.0001){
+			// Check if player exists in playersassoc
+			if(!isset($playersassoc[$pid])){
+				// Try to find the player by matching the last 6 characters (name+position)
+				// e.g., 1991CarnPK should match 1991CarnPK
+				$name_suffix = substr($pid, 4); // Get everything after the year
+				$found_pid = null;
+				foreach($playersassoc as $key => $value){
+					if(substr($key, 4) == $name_suffix){
+						$found_pid = $key;
+						break;
+					}
+				}
+				if($found_pid){
+					$pid = $found_pid; // Use the correct player ID
+				} else {
+					continue; // Skip this player if still not found
+				}
+			}
+			
+			// Get player's team for that season
+			$player_stats = get_player_season_stats($pid, $season);
+			$teams = isset($player_stats['teams']) ? $player_stats['teams'] : null;
+			$team = is_array($teams) ? $teams[0] : $teams;
+			
+			$leaders[] = array(
+				'pid' => $pid,
+				'first' => $playersassoc[$pid][0],
+				'last' => $playersassoc[$pid][1],
+				'team' => $team,
+				'pvq' => $pvq_value
+			);
+		} else {
+			// Since we're sorted descending, once we hit a lower value we can break
+			break;
+		}
+	}
+	
+	return $leaders;
 }
 
 
@@ -4171,7 +4670,8 @@ function get_player_week($playerid, $weekid){
         'team'		=>	$array[$weekid][4],
         'first' 	=>  $plarray[$playerid][1],
         'last' 		=>  $plarray[$playerid][2],
-        'position' 	=>  $plarray[$playerid][3]
+        'position' 	=>  $plarray[$playerid][3],
+        'scorediff' =>  $array[$weekid][26]
     );
     return $playerbyweek;
 }
@@ -5701,7 +6201,7 @@ function get_mfl_league_id(){
 }
 
 // wp_teams table shows current team mfl ID.  This array accounts for the fact that the ids have shifted a bit over the years.
-function teams_for_mfl_history(){
+function teams_for_mfl_history($check_year = null){
     $mfl_team_id_history = array(
         2010 => array(
             '0001' => 'BST',
@@ -5894,8 +6394,38 @@ function teams_for_mfl_history(){
             '0008' => 'HAT',
             '0009' => 'CMN',
             '0010' => 'BUL'
+        ),
+        2025 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL'
+        ),
+        2026 => array(
+                '0001' => 'TSG',
+                '0002' => 'ETS',
+                '0003' => 'PEP',
+                '0004' => 'WRZ',
+                '0005' => 'DST',
+                '0006' => 'BST',
+                '0007' => 'SNR',
+                '0008' => 'HAT',
+                '0009' => 'CMN',
+                '0010' => 'BUL'
         )
     );
+    
+    // Check if a specific year was requested and if it exists in the array
+    if ($check_year !== null && !isset($mfl_team_id_history[$check_year])) {
+        return false; // Year not found
+    }
+    
     return $mfl_team_id_history;
 }
 
@@ -5982,7 +6512,26 @@ function new_mfl_transactions($pid){
     $convertids = playerid_mfl_to_pfl();
     $yearslist = mfl_years();
     $teambyid = teams_for_mfl_history();
-
+    
+    // Check if current year exists in team mapping
+    $current_year = date('Y');
+    $missing_years = array();
+    foreach ($yearslist as $year) {
+        if (!isset($teambyid[$year])) {
+            $missing_years[] = $year;
+        }
+    }
+    
+    // If there are missing years, return error message
+    if (!empty($missing_years)) {
+        $error_data = array();
+        $error_data['error'] = array(
+            'message' => 'MFL Team mapping missing for year(s): ' . implode(', ', $missing_years),
+            'instruction' => 'Please update the teams_for_mfl_history() function in functions.php to include team mappings for the missing year(s).',
+            'missing_years' => $missing_years
+        );
+        return $error_data;
+    }
 
     foreach ($yearslist as $year):
         $cleantrans = array();
@@ -6517,3 +7066,316 @@ function get_or_set_comps(){
     }
 }
 
+/**
+ * Get draft timestamp from MFL draft results JSON files
+ * 
+ * @param int $year The draft year
+ * @param string $player_mfl_id The MFL player ID
+ * @return string|null The draft timestamp in 'YYYY-MM-DD HH:MM:SS' format, or null if not found
+ */
+function get_mfl_draft_timestamp($year, $player_mfl_id) {
+    $draft_file = get_stylesheet_directory() . '/mfl-drafts/' . $year . '_draft_results.json';
+    
+    // Check if file exists
+    if (!file_exists($draft_file)) {
+        return null;
+    }
+    
+    try {
+        // Read and decode JSON file
+        $json_content = file_get_contents($draft_file);
+        $draft_data = json_decode($json_content, true);
+        
+        // Navigate to draftPick array
+        if (!isset($draft_data['draftResults']['draftUnit']['draftPick'])) {
+            return null;
+        }
+        
+        $draft_picks = $draft_data['draftResults']['draftUnit']['draftPick'];
+        
+        // Handle case where draftPick is a single object instead of array
+        if (!is_array($draft_picks) || (isset($draft_picks['player']) && !isset($draft_picks[0]))) {
+            $draft_picks = [$draft_picks];
+        }
+        
+        // Search for the player's pick
+        foreach ($draft_picks as $pick) {
+            if (isset($pick['player']) && $pick['player'] == $player_mfl_id && isset($pick['timestamp'])) {
+                // Convert Unix timestamp to MySQL datetime format
+                $timestamp = intval($pick['timestamp']);
+                return date('Y-m-d H:i:s', $timestamp);
+            }
+        }
+        
+    } catch (Exception $e) {
+        // Silent fail - will fall back to default date
+        return null;
+    }
+    
+    return null;
+}
+
+/**
+ * Get draft date for display (without time)
+ * 
+ * @param int $year The draft year
+ * @param string $player_mfl_id The MFL player ID (optional)
+ * @return string Draft date in 'YYYY-MM-DD' format
+ */
+function get_draft_date_for_player($year, $player_mfl_id = null) {
+    // Try to get actual timestamp from MFL data if player ID provided
+    if ($player_mfl_id) {
+        $timestamp = get_mfl_draft_timestamp($year, $player_mfl_id);
+        
+        if ($timestamp) {
+            return substr($timestamp, 0, 10); // Extract just the date part
+        }
+    }
+    
+    // Try to get date from ACF post meta (post ID 195 - Draft Info page)
+    $draft_info = get_fields(195);
+    
+    if ($draft_info && isset($draft_info['draft_info'])) {
+        // Search through draft_info array for matching year
+        foreach ($draft_info['draft_info'] as $draft) {
+            if (isset($draft['year']) && intval($draft['year']) == intval($year)) {
+                if (isset($draft['date']) && !empty($draft['date'])) {
+                    // Convert MM-DD-YYYY format to YYYY-MM-DD
+                    $date_parts = explode('-', $draft['date']);
+                    if (count($date_parts) == 3) {
+                        return $date_parts[2] . '-' . $date_parts[0] . '-' . $date_parts[1];
+                    }
+                }
+            }
+        }
+    }
+    
+    // Ultimate fallback - August 1st of the year
+    return $year . '-08-01';
+}
+
+
+/**
+ * Custom Walker for Sidebar Navigation
+ * Handles the specific structure needed for the Bootstrap sidebar menu
+ */
+class Sidebar_Nav_Walker extends Walker_Nav_Menu {
+    
+    function start_lvl( &$output, $depth = 0, $args = null ) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "\n$indent<ul class=\"collapse in\">\n";
+    }
+    
+    function end_lvl( &$output, $depth = 0, $args = null ) {
+        $indent = str_repeat("\t", $depth);
+        $output .= "$indent</ul>\n";
+    }
+    
+    function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
+        $indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+        
+        $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+        $classes[] = 'menu-item-' . $item->ID;
+        
+        // Add active-link class if this is the current page
+        if ( $item->current ) {
+            $classes[] = 'active-link';
+        }
+        
+        $class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth ) );
+        
+        // Top level items need special class
+        if ( $depth == 0 ) {
+            $class_names = 'active-sub';
+        }
+        
+        $class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+        
+        $id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args, $depth );
+        $id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
+        
+        $output .= $indent . '<li' . $id . $class_names .'>';
+        
+        $atts = array();
+        $atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
+        $atts['target'] = ! empty( $item->target )     ? $item->target     : '';
+        $atts['rel']    = ! empty( $item->xfn )        ? $item->xfn        : '';
+        $atts['href']   = ! empty( $item->url )        ? $item->url        : '';
+        
+        $atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth );
+        
+        $attributes = '';
+        foreach ( $atts as $attr => $value ) {
+            if ( ! empty( $value ) ) {
+                $value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
+                $attributes .= ' ' . $attr . '="' . $value . '"';
+            }
+        }
+        
+        $item_output = $args->before;
+        
+        // Top level items need icon and arrow
+        if ( $depth == 0 ) {
+            $item_output .= '<a'. $attributes .'>';
+            $item_output .= '<i class="fa fa-th"></i>';
+            $item_output .= '<span class="menu-title">' . $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after . '</span>';
+            $item_output .= '<i class="arrow"></i>';
+            $item_output .= '</a>';
+        } else {
+            $item_output .= '<a'. $attributes .'>';
+            $item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+            $item_output .= '</a>';
+        }
+        
+        $item_output .= $args->after;
+        
+        $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+    }
+    
+    function end_el( &$output, $item, $depth = 0, $args = null ) {
+        $output .= "</li>\n";
+    }
+}
+
+/**
+ * Build Sidebar Navigation Menu - One-time setup function
+ * To trigger: Add ?build_sidebar_menu=1 to any admin page URL
+ */
+function build_sidebar_navigation_menu() {
+    // Only run if explicitly requested and user is admin
+    if (!isset($_GET['build_sidebar_menu']) || !current_user_can('manage_options')) {
+        return;
+    }
+    
+    // Delete existing menu if it exists
+    $existing_menu = wp_get_nav_menu_object('Sidebar Navigation');
+    if ($existing_menu) {
+        wp_delete_nav_menu($existing_menu->term_id);
+    }
+    
+    // Create new menu
+    $menu_id = wp_create_nav_menu('Sidebar Navigation');
+    
+    // Define the menu structure
+    $menu_structure = array(
+        'Awards' => array(
+            'url' => '#',
+            'children' => array(
+                'Hall of Fame' => '/hall-of-fame',
+                'Most Valuable Player' => '/mvp',
+                'Rookie of the Year' => '/rookie',
+                'Posse Bowl MVP' => '/posse-bowl-mvp',
+                'Pro Bowl MVP' => '/pro-bowl-mvp',
+                'All Awards' => '/all-awards'
+            )
+        ),
+        'Players' => array(
+            'url' => '#',
+            'children' => array(
+                'Individual Players' => '/player/?id=1998MannQB',
+                'Career Leaders' => '/leaders',
+                'Leaders By Season' => '/leaders-season/?id=2025',
+                'Supercards' => '/supercards/'
+            )
+        ),
+        'Seasons' => array(
+            'url' => '#',
+            'children' => array(
+                'Seasons' => '/seasons/?id=2025',
+                'Drafts by Year' => '/drafts/?id=2025',
+                'Standings By Year' => '/standings/?id=2025',
+                'Playoff Brackets' => '/playoff-brackets',
+                'Team Rosters' => '/team-rosters/?season=2025'
+            )
+        ),
+        'Teams' => array(
+            'url' => '#',
+            'children' => array(
+                'Teams' => '/teams/?id=ETS',
+                'Eras' => '/eras/?id=ETS',
+                'Protections By Team' => '/protections-team/?Y=&TEAM='
+            )
+        ),
+        'Games' => array(
+            'url' => '#',
+            'children' => array(
+                'Weekly Results' => '/results?Y=2025&W=01',
+                'All Schedules' => '/schedules',
+                'Grandslams' => '/grandslams',
+                'Home and Away' => '/home-and-away',
+                'The Playoffs' => '/playoffs',
+                'The Posse Bowl' => '/champions',
+                'The Pro Bowl' => '/pro-bowl'
+            )
+        ),
+        'Table Data' => array(
+            'url' => '#',
+            'children' => array(
+                'Tables - Players' => '/tables-players',
+                'Tables - Teams' => '/tables-teams',
+                'Tables - Postseason' => '/tables-postseason',
+                'Tables - NFL' => '/tables-nfl',
+                'Tables - Drafts' => '/tables-drafts',
+                'Tables - Scoring Title' => '/scoring-title-pages',
+                'Tables - Other' => '/tables-other'
+            )
+        ),
+        'Resources' => array(
+            'url' => '#',
+            'children' => array(
+                'Players by NFL Team' => '/nfl-team-page',
+                'Timeline' => '/timeline',
+                'HOF Eligibility' => '/hall-eligible-players',
+                'Head to Head Matrix' => '/head-to-head',
+                'Trades' => '/trades',
+                'Trade Analyzer' => '/trade-analyzer?TRADE=130',
+                'Playoff Probability' => '/playoff-probability',
+                'Draft Research' => '/research',
+                'Unis & Helmets' => '/uniforms',
+                'Number Ones' => '/number-ones',
+                'Mr Irrelevant' => '/mr-irrelevant',
+                'Kicker Drafts' => '/kicker-draft/?draft_year=2025/',
+                'Scorigami' => '/scorigami/?W=202501',
+                'Position Difference' => '/position-difference',
+                'Colleges' => '/colleges',
+                'Error Check' => '/error-check'
+            )
+        )
+    );
+    
+    // Recursive function to add menu items
+    function add_sidebar_menu_items($menu_id, $menu_structure, $parent_id = 0) {
+        $position = 0;
+        
+        foreach ($menu_structure as $title => $data) {
+            $position++;
+            
+            $item_data = array(
+                'menu-item-title' => $title,
+                'menu-item-url' => is_array($data) ? $data['url'] : $data,
+                'menu-item-status' => 'publish',
+                'menu-item-parent-id' => $parent_id,
+                'menu-item-position' => $position
+            );
+            
+            $item_id = wp_update_nav_menu_item($menu_id, 0, $item_data);
+            
+            if (is_array($data) && isset($data['children'])) {
+                add_sidebar_menu_items($menu_id, $data['children'], $item_id);
+            }
+        }
+    }
+    
+    // Build the menu
+    add_sidebar_menu_items($menu_id, $menu_structure);
+    
+    // Assign menu to location
+    $locations = get_theme_mod('nav_menu_locations');
+    $locations['sidebar_navigation'] = $menu_id;
+    set_theme_mod('nav_menu_locations', $locations);
+    
+    // Redirect to menu editor
+    wp_redirect(admin_url('nav-menus.php?action=edit&menu=' . $menu_id));
+    exit;
+}
+add_action('admin_init', 'build_sidebar_navigation_menu');

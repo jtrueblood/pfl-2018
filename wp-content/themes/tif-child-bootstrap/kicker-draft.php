@@ -245,10 +245,13 @@ $weekids = the_weeks();
 <?php include_once('main-nav.php'); ?>
 <?php include_once('aside.php'); ?>
 
+</div><!--END BOXED-->
 
-    <?php
-    $jusplayerids = just_player_ids();
-    $currentid = array_search($playerid, $jusplayerids);
-    $nextplayer = $jusplayerids[$currentid + 1];
-    $holeplayer = $jusplayerids[$currentid + 2];
-    ?>
+<?php
+$jusplayerids = just_player_ids();
+$currentid = array_search($playerid, $jusplayerids);
+$nextplayer = $jusplayerids[$currentid + 1];
+$holeplayer = $jusplayerids[$currentid + 2];
+?>
+
+<?php get_footer(); ?>

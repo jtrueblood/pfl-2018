@@ -22,11 +22,13 @@ Added `get_espn_player_jersey($first_name, $last_name, $year = null)` function t
 
 ### 3. Updated Main Logic
 The page now:
-1. Attempts to fetch jersey number from ESPN API for the current roster
-2. If found, applies that number to all years the player was active
-3. If not found, prompts user for manual entry
-4. Displays status messages indicating whether ESPN data was found
-5. Saves data to `wp_players.numberarray` field as JSON (same format as before)
+1. **Loads existing numberarray** from database (preserves historical data)
+2. Attempts to fetch jersey number from ESPN API for the current roster
+3. If found, applies that number **only to years without existing numbers** (append mode)
+4. If not found, uses existing numbers and prompts for manual entry for new years
+5. Displays status messages indicating whether ESPN data was found
+6. **Merges new data with existing data** before saving (never overwrites existing numbers)
+7. Saves merged data to `wp_players.numberarray` field as JSON
 
 ### 4. Enhanced User Interface
 - Added status alerts showing ESPN API results
@@ -57,9 +59,27 @@ Numbers are stored in the `wp_players` table, `numberarray` column as JSON:
 {
   "2020": "87",
   "2021": "87",
-  "2022": "13"
+  "2022": "13",
+  "2023": "87",
+  "2024": "13",
+  "2025": "92"
 }
 ```
+
+### Merge/Append Behavior
+**The script NEVER overwrites existing numbers** unless explicitly changed via the edit form:
+
+- If database has `{"2023": "13", "2024": "13"}` and you run the script for 2025
+- ESPN API finds number `92` for current season
+- Result will be `{"2023": "13", "2024": "13", "2025": "92"}`
+- The existing 2023 and 2024 numbers are preserved
+
+**To override an existing number:**
+1. Load the player in the script
+2. Use the "Edit Jersey Numbers" form
+3. Change the value for the specific year
+4. Click "Update Numbers"
+5. The form shows existing values with blue labels
 
 ## Important Notes
 

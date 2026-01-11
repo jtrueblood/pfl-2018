@@ -20,10 +20,10 @@ $nonidplayers = get_non_pfl_players();
 //$weeks = array(1,2,3,14);
 
 //$rosters = get_all_rosters();
-$rostered_players = get_rostered_player('1992StoyPK');
+//$rostered_players = get_rostered_player('1992StoyPK');
 //$rookie = get_player_rookie_year('');
-$basic_info = get_team_results_expanded_new('1992StoyPK');
-$teams_rostered = get_player_teams_rostered_by_season('2016HenrRB');
+//$basic_info = get_team_results_expanded_new('1992StoyPK');
+//$teams_rostered = get_player_teams_rostered_by_season('2016HenrRB');
 //printr($teams_rostered, 1);
 
 function check_if_drafted_is_rostered($playerid, $season)
@@ -62,7 +62,7 @@ function insert_nopid_players($nonid, $first, $last, $pos, $team){
 }
 
 
-function print_roster_table($season, $team){
+function print_roster_table($season, $team, $season_drafts = null){
     $getroster = get_rosters($season, $team);
     $teams = get_teams();
 
@@ -92,7 +92,7 @@ function print_roster_table($season, $team){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].'  '.$acquired['protected'];
@@ -126,7 +126,7 @@ function print_roster_table($season, $team){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].' / '.$acquired['protected'];
@@ -160,7 +160,7 @@ function print_roster_table($season, $team){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].' / '.$acquired['protected'];
@@ -194,7 +194,7 @@ function print_roster_table($season, $team){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].' / '.$acquired['protected'];
@@ -265,19 +265,40 @@ function print_roster_table($season, $team){
 
                 //foreach ($seasons as $season):
                     echo '<h3>'.$season.'</h3>';
+                    // Fetch drafts once for the season
+                    $yeardraft = get_drafts_by_year($season);
+                    
+                    // Initialize arrays
+                    $rosterseason = array();
+                    $rosterflat = array();
+                    $cleandraft = array();
+                    $cleandraft_others = array();
+                    
+                    // Get list of teams that were active this season (have drafts or rosters)
+                    $season_teams = array();
+                    if($yeardraft):
+                        foreach($yeardraft as $draft):
+                            if($draft['acteam'] && !in_array($draft['acteam'], $season_teams)):
+                                $season_teams[] = $draft['acteam'];
+                            endif;
+                        endforeach;
+                    endif;
+                    
                     foreach($teams as $key => $value):
+                        // Skip teams not active in this season
+                        if(!in_array($key, $season_teams) && get_rosters($season, $key) == null):
+                            continue;
+                        endif;
                         $getroster = get_rosters($season, $key);
                         if ($getroster != null):
                             echo '<h4>'.$key.'</h4>';
                             //printr($getroster, 0);
-                            print_roster_table($season, $key);
+                            print_roster_table($season, $key, $yeardraft);
                             $rosterseason[$season][$key] = $getroster;
                             $rosterflat = array_flatten($rosterseason);
                         endif;
                     endforeach;
                 //endforeach;
-
-                $yeardraft = get_drafts_by_year($season);
                 foreach ($yeardraft as $key => $value):
                     if($value['playerid'] != ''):
                         if($value['playerid'] == 0):
@@ -337,30 +358,27 @@ function print_roster_table($season, $team){
                 echo '<p>These players did not play, and were not drafted, but were still included on the MFL .json BENCH and IR rosters from 2011-present</p>';
 
                 foreach($teams as $theteam => $thevalue):
+                    $team_all_players = array();
                     foreach($weeks as $week):
                         if($theteam):
                             $mflbench = get_the_bench($season, $week, $theteam);
                             if($mflbench['ROSTER']):
-                                $mflbenchflat = array();
                                 foreach ($mflbench['ROSTER'] as $key => $value):
-                                    $mflbenchflat[] = $key;
+                                    $team_all_players[] = $key;
                                 endforeach;
                             endif;
                             if($mflbench['INJURED_RESERVE']):
-                                $mflirflat = array();
                                 foreach ($mflbench['INJURED_RESERVE'] as $key => $value):
-                                    $mflirflat[] = $key;
+                                    $team_all_players[] = $key;
                                 endforeach;
-                            endif;
-                            if($mflbenchflat):
-                                $mfl_bench_ir = array_merge($mflbenchflat, $mflirflat);
-                                $mfl_filter = array_filter($mfl_bench_ir);
-                            endif;
-                            if($mfl_bench_ir):
-                                $mfl_diff[$theteam] = array_diff($mfl_filter, $rosterflat);
                             endif;
                         endif;
                     endforeach;
+                    // After collecting all weeks, get unique players and diff once per team
+                    if($team_all_players):
+                        $team_all_players = array_unique(array_filter($team_all_players));
+                        $mfl_diff[$theteam] = array_diff($team_all_players, $rosterflat);
+                    endif;
                 endforeach;
 
                 //printr($rosterflat, 0);
@@ -369,13 +387,15 @@ function print_roster_table($season, $team){
                 printr($mfl_diff, 0);
 
                 //insert the players that were on the MFL rosters but not in any PFL games or drafted
-                foreach($mfl_diff as $team => $values):
-                    if($values):
-                        foreach($values as $player):
-                            insert_roster($player, $team, $season);
-                        endforeach;
-                    endif;
-                endforeach;
+                if($mfl_diff):
+                    foreach($mfl_diff as $team => $values):
+                        if($values):
+                            foreach($values as $player):
+                                insert_roster($player, $team, $season);
+                            endforeach;
+                        endif;
+                    endforeach;
+                endif;
 
                 ?>
 

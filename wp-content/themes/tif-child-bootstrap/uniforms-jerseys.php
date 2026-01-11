@@ -206,11 +206,14 @@ get_header();
 
 						</div>
 					</div>
-				</div>
-				</div>
-			</div>
-</div>
+					</div>
+				</div><!--End page content-->
+				
+			</div><!--END CONTENT CONTAINER-->
+			
+	<?php include_once('main-nav.php'); ?>
+	<?php include_once('aside.php'); ?>
+			
+</div><!--END BOXED-->
 
-
-		
 <?php get_footer(); ?>

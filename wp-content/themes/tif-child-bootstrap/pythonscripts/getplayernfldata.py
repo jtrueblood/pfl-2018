@@ -1,21 +1,26 @@
 #!/usr/bin/env python3
 """
-Script to fetch NFL player data using ESPN's unofficial API
+Script to fetch NFL player data using ESPN's unofficial API (2001+) or wp_stathead_* tables (1991-2000)
 
 Usage:
     python3 getplayernfldata.py "Player Name" YEAR WEEK [INSERT]
     
 Parameters:
     Player Name - Full name of the player (e.g., "Josh Allen")
-    YEAR        - Season year (e.g., 2024)
-    WEEK        - Week number(s): single week (13) or comma-separated weeks (11,12,13)
+    YEAR        - Season year (1991-2100)
+    WEEK        - Week number(s): single week (13), comma-separated weeks (11,12,13), or 'all'
     INSERT      - Optional: 'Yes' to insert into database, 'No' to just display (default: 'No')
+
+Data Sources:
+    - Years 1991-2000: wp_stathead_QB, wp_stathead_RB, wp_stathead_WR, wp_stathead_PK tables
+    - Years 2001+: ESPN API
     
 Examples:
     python3 getplayernfldata.py "Josh Allen" 2024 13
     python3 getplayernfldata.py "Josh Allen" 2024 13 Yes
     python3 getplayernfldata.py "Josh Allen" 2024 "11,12,13" Yes
-    python3 getplayernfldata.py "Josh Allen" 2024 "1,2,3,4,5" No
+    python3 getplayernfldata.py "Warren Moon" 1991 5 Yes
+    python3 getplayernfldata.py "Emmitt Smith" 1995 all Yes
 """
 
 import requests
@@ -199,6 +204,60 @@ def _load_wp_db_config():
 _load_wp_db_config()
 
 
+def check_required_columns(cursor, table_name):
+    """Check if table has the required columns (nflteam, game_location, nflopp)
+    
+    Parameters
+    ----------
+    cursor : mysql.connector.cursor
+        Database cursor
+    table_name : str
+        Name of the table to check
+        
+    Returns
+    -------
+    list
+        List of missing column names
+    """
+    required_columns = ['nflteam', 'game_location', 'nflopp']
+    
+    cursor.execute(f"SHOW COLUMNS FROM `{table_name}`")
+    existing_columns = [col[0] for col in cursor.fetchall()]
+    
+    missing_columns = [col for col in required_columns if col not in existing_columns]
+    
+    return missing_columns
+
+def add_missing_columns(cursor, connection, table_name, missing_columns):
+    """Add missing columns to the table
+    
+    Parameters
+    ----------
+    cursor : mysql.connector.cursor
+        Database cursor
+    connection : mysql.connector.connection
+        Database connection
+    table_name : str
+        Name of the table to add columns to
+    missing_columns : list
+        List of column names to add
+        
+    Returns
+    -------
+    bool
+        True if successful, False otherwise
+    """
+    try:
+        for column in missing_columns:
+            alter_query = f"ALTER TABLE `{table_name}` ADD COLUMN `{column}` VARCHAR(3) NULL"
+            cursor.execute(alter_query)
+            print(f"  ✓ Added column '{column}' to table '{table_name}'")
+        connection.commit()
+        return True
+    except Error as e:
+        print(f"  ✗ Error adding columns to '{table_name}': {e}")
+        return False
+
 def calculate_nfl_score(p_id, year, stats):
     """
     Calculate NFL fantasy score based on player position
@@ -261,7 +320,7 @@ def calculate_nfl_score(p_id, year, stats):
     return nfl_score
 
 
-def insert_player_stats_to_db(p_id, year, week, stats):
+def insert_player_stats_to_db(p_id, year, week, stats, team_abbr=None):
     """
     Insert player stats into their player table
     
@@ -275,6 +334,9 @@ def insert_player_stats_to_db(p_id, year, week, stats):
         Week number
     stats : dict
         Player statistics dictionary
+    team_abbr : str, optional
+        PFL team abbreviation (e.g., 'CMN'). If provided, will lookup and insert
+        game information (versus, home_away, win_loss, location)
         
     Returns
     -------
@@ -301,43 +363,87 @@ def insert_player_stats_to_db(p_id, year, week, stats):
             cursor = connection.cursor()
             
             # Construct table name from player ID
-            table_name = f"`{p_id}`"
+            table_name = p_id  # Store without backticks for checking
+            table_name_quoted = f"`{p_id}`"  # Use backticks for queries
+            
+            # Check for missing columns
+            missing_columns = check_required_columns(cursor, table_name)
+            
+            if missing_columns:
+                print(f"\n⚠️  Table '{table_name}' is missing columns: {', '.join(missing_columns)}")
+                response = input(f"Do you want to add these columns to '{table_name}'? (yes/no): ").strip().lower()
+                
+                if response in ['yes', 'y']:
+                    print(f"\nAdding missing columns to '{table_name}'...")
+                    success = add_missing_columns(cursor, connection, table_name, missing_columns)
+                    if not success:
+                        print(f"\n✗ Failed to add columns. Cannot insert data.")
+                        return False
+                    print(f"✓ Columns added successfully")
+                else:
+                    print(f"\n✗ Cannot insert data without required columns")
+                    return False
             
             # Create week_id (format: YYYYWW)
             week_id = f"{year}{week:02d}"
             
             # Extract team abbreviations and home/away status
-            team = stats.get('Team', '')
-            versus = stats.get('Versus Team', '')
-            home_away_value = stats.get('Home or Away', '')
-            home_away = 'H' if home_away_value == 'vs' else 'A'
-            game_location = home_away_value  # Store 'vs' or '@' in game_location
+            # These will be populated from ESPN API (2001+) or wp_stathead_* tables (1991-2000)
+            team = stats.get('Team', '') or ''
+            versus = stats.get('Versus Team', '') or ''
+            home_away_value = stats.get('Home or Away', '') or ''
+            
+            # Calculate home_away field (H or A) and game_location (vs or @)
+            if home_away_value:
+                home_away = 'H' if home_away_value == 'vs' else 'A'
+                game_location = home_away_value  # Store 'vs' or '@' in game_location
+            else:
+                home_away = ''
+                game_location = ''
+            
+            # If PFL team provided, lookup and populate game info
+            game_info = None
+            win_loss = 0
+            location = ''
+            pfl_team = ''  # Will store the PFL team abbreviation
+            if team_abbr:
+                pfl_team = team_abbr  # Store the PFL team abbreviation
+                game_info = get_team_game_info(team_abbr, week, year)
+                if game_info:
+                    # Override with game info from wp_team_* table
+                    versus = game_info['versus']
+                    home_away = game_info['home_away']  # H or A
+                    game_location = 'vs' if game_info['home_away'] == 'H' else '@'
+                    location = game_info['location']
+                    
+                    # Map win_loss letter to value
+                    win_loss_letter = game_info['win_loss']
+                    if win_loss_letter == 'W':
+                        win_loss = 1
+                    elif win_loss_letter == 'L':
+                        win_loss = 0
+                    else:
+                        win_loss = 0
+                else:
+                    print(f"⚠️  Warning: No game info found for team {team_abbr} week {week} in {year}")
+                    print(f"    Inserting without team game information")
             
             # Format date
             game_date = stats.get('Date', '')[:10]  # Get YYYY-MM-DD part
             
-            # Calculate NFL fantasy score
+            # Calculate NFL fantasy score (this is the PFL score)
             nfl_score = calculate_nfl_score(p_id, year, stats)
             
-            # Get existing PFL points from database to calculate diff
-            # First try to get existing points value
-            pfl_points = 0
-            try:
-                check_query = f"SELECT points FROM {table_name} WHERE week_id = %s"
-                cursor.execute(check_query, (week_id,))
-                existing_row = cursor.fetchone()
-                if existing_row and existing_row[0] is not None:
-                    pfl_points = int(existing_row[0])
-            except:
-                pass  # pfl_points stays 0 if query fails or no record exists
+            # Use the calculated NFL score as the PFL points
+            pfl_points = nfl_score
             
-            # Calculate score difference: points - nflscore
+            # Calculate score difference: points - nflscore (should be 0 for new inserts)
             score_diff = pfl_points - nfl_score
             
             # Prepare SQL for INSERT or UPDATE
             # Note: ON DUPLICATE KEY UPDATE does NOT update 'points' - that's managed manually in PFL
             query = f"""
-                INSERT INTO {table_name} (
+                INSERT INTO {table_name_quoted} (
                     week_id, year, week, points, team, versus, playerid, win_loss,
                     home_away, location, game_date, nflteam, game_location, nflopp,
                     pass_yds, pass_td, pass_int, rush_yds, rush_td, rec_yds, rec_td,
@@ -349,6 +455,11 @@ def insert_player_stats_to_db(p_id, year, week, stats):
                     %s, %s, %s, %s, %s, %s
                 )
                 ON DUPLICATE KEY UPDATE
+                    points = VALUES(points),
+                    team = VALUES(team),
+                    versus = VALUES(versus),
+                    win_loss = VALUES(win_loss),
+                    location = VALUES(location),
                     nflteam = VALUES(nflteam),
                     nflopp = VALUES(nflopp),
                     home_away = VALUES(home_away),
@@ -366,12 +477,12 @@ def insert_player_stats_to_db(p_id, year, week, stats):
                     fgm = VALUES(fgm),
                     fga = VALUES(fga),
                     nflscore = VALUES(nflscore),
-                    scorediff = points - VALUES(nflscore)
+                    scorediff = 0
             """
             
             values = (
-                week_id, year, week, pfl_points, '', '', p_id, 0,
-                home_away, '', game_date, team, game_location, versus,
+                week_id, year, week, pfl_points, pfl_team, versus, p_id, win_loss,
+                home_away, location, game_date, team, game_location, versus,
                 stats.get('Pass Yds', 0),
                 stats.get('Pass TD', 0),
                 stats.get('Pass Int', 0),
@@ -385,6 +496,12 @@ def insert_player_stats_to_db(p_id, year, week, stats):
                 stats.get('FG Att', 0),
                 nfl_score, score_diff
             )
+            
+            # Debug: show what's being inserted
+            print(f"\n  Debug - PFL Team: {pfl_team}")
+            print(f"  Debug - Versus: {versus}")
+            print(f"  Debug - Location: {location}")
+            print(f"  Debug - Win/Loss: {win_loss}")
             
             cursor.execute(query, values)
             connection.commit()
@@ -812,6 +929,107 @@ def find_player_team(player_name, year=2024):
     return None
 
 
+def get_stats_from_stathead_tables(player_name, week, year, p_id=None):
+    """
+    Get player statistics from wp_stathead_* tables for years 1991-2000
+    
+    Parameters
+    ----------
+    player_name : str
+        Player's name (e.g., 'Warren Moon')
+    week : int
+        Week number
+    year : int
+        Season year (1991-2000)
+    p_id : str, optional
+        Player ID to determine position
+        
+    Returns
+    -------
+    dict or None
+        Player statistics in same format as get_comprehensive_player_stats
+    """
+    if not HAS_MYSQL:
+        print("MySQL not available - cannot query stathead tables")
+        return None
+    
+    # Determine position from p_id if available
+    position = None
+    if p_id and len(p_id) >= 2:
+        position = p_id[-2:].upper()
+    
+    # Map position to table name
+    position_tables = {
+        'QB': 'wp_stathead_QB',
+        'RB': 'wp_stathead_RB',
+        'WR': 'wp_stathead_WR',
+        'PK': 'wp_stathead_PK'
+    }
+    
+    connection = None
+    cursor = None
+    try:
+        connection = mysql.connector.connect(
+            host=DB_CONFIG['host'],
+            user=DB_CONFIG['user'],
+            password=DB_CONFIG['password'],
+            database=DB_CONFIG['database'],
+            unix_socket=MYSQL_SOCKET
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor(dictionary=True)
+            
+            # If we know the position, query specific table
+            tables_to_check = [position_tables[position]] if position and position in position_tables else list(position_tables.values())
+            
+            for table_name in tables_to_check:
+                query = f"""
+                    SELECT * FROM {table_name}
+                    WHERE playername = %s AND year = %s AND week = %s
+                    LIMIT 1
+                """
+                
+                cursor.execute(query, (player_name, year, week))
+                result = cursor.fetchone()
+                
+                if result:
+                    # Convert database row to stats format
+                    stats = {
+                        'Date': str(result.get('game_date', '')) if result.get('game_date') else '',
+                        'Team': result.get('team', '') or '',
+                        'Versus Team': result.get('versusteam', '') or '',
+                        'Home or Away': result.get('homeaway', '') or '',
+                        'Pass Yds': result.get('passyards', 0) or 0,
+                        'Pass TD': result.get('passtd', 0) or 0,
+                        'Pass Int': result.get('passint', 0) or 0,
+                        'Rush Yds': result.get('rushyards', 0) or 0,
+                        'Rush TD': result.get('rushtd', 0) or 0,
+                        'Rec Yds': result.get('recyards', 0) or 0,
+                        'Rec TD': result.get('rectd', 0) or 0,
+                        '2pt conversions': result.get('twopt', 0) or 0,
+                        'XP Made': result.get('xp', 0) or 0,
+                        'XP Att': 0,  # Not stored in stathead tables
+                        'FG Made': result.get('fg', 0) or 0,
+                        'FG Att': 0,  # Not stored in stathead tables
+                        'Player': player_name,
+                        '_source': 'stathead'  # Mark the source
+                    }
+                    return stats
+            
+            return None
+            
+    except Exception as e:
+        print(f"Error querying stathead tables: {e}")
+        return None
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+
+
 def get_comprehensive_player_stats(player_name, week, year=2024):
     """
     Get comprehensive player statistics for a specific week
@@ -999,6 +1217,151 @@ def get_comprehensive_player_stats(player_name, week, year=2024):
         return None
 
 
+def get_pfl_teams_list():
+    """
+    Get list of all PFL teams from wp_team_* tables
+    
+    Returns
+    -------
+    list
+        Sorted list of team abbreviations (3-letter codes)
+    """
+    if not HAS_MYSQL:
+        return []
+    
+    connection = None
+    cursor = None
+    try:
+        connection = mysql.connector.connect(
+            host=DB_CONFIG['host'],
+            user=DB_CONFIG['user'],
+            password=DB_CONFIG['password'],
+            database=DB_CONFIG['database'],
+            unix_socket=MYSQL_SOCKET
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor()
+            
+            # Query information_schema to get all wp_team_* tables
+            query = """
+                SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES 
+                WHERE TABLE_SCHEMA = %s AND TABLE_NAME LIKE 'wp_team_%'
+                ORDER BY TABLE_NAME
+            """
+            
+            cursor.execute(query, (DB_CONFIG['database'],))
+            results = cursor.fetchall()
+            
+            # Extract team abbreviations from table names
+            teams = []
+            for row in results:
+                table_name = row[0]
+                # Extract team abbreviation (e.g., 'CMN' from 'wp_team_CMN')
+                team_abbr = table_name.replace('wp_team_', '')
+                teams.append(team_abbr)
+            
+            return sorted(teams)
+            
+    except Exception:
+        # Silently fail
+        return []
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+
+
+def get_team_game_info(team_abbr, week, year):
+    """
+    Get game information for a PFL team in a specific week
+    
+    Parameters
+    ----------
+    team_abbr : str
+        3-letter PFL team abbreviation (e.g., 'CMN')
+    week : int
+        Week number
+    year : int
+        Season year
+        
+    Returns
+    -------
+    dict or None
+        Dictionary with keys: versus, home_away, win_loss, location
+        Returns None if team table doesn't exist or no record found
+    """
+    if not HAS_MYSQL:
+        return None
+    
+    connection = None
+    cursor = None
+    try:
+        connection = mysql.connector.connect(
+            host=DB_CONFIG['host'],
+            user=DB_CONFIG['user'],
+            password=DB_CONFIG['password'],
+            database=DB_CONFIG['database'],
+            unix_socket=MYSQL_SOCKET
+        )
+        
+        if connection.is_connected():
+            cursor = connection.cursor(dictionary=True)
+            
+            # Build table name
+            table_name = f"wp_team_{team_abbr}"
+            
+            # Query for the specific week
+            query = f"""
+                SELECT vs, home_away, result, stadium 
+                FROM `{table_name}`
+                WHERE season = %s AND week = %s
+                LIMIT 1
+            """
+            
+            try:
+                cursor.execute(query, (year, week))
+                result = cursor.fetchone()
+                
+                if result:
+                    # Map result column to win_loss field
+                    # result: 1=win, 0=loss, -1=tie
+                    result_value = result.get('result')
+                    if result_value == 1:
+                        win_loss = 'W'
+                    elif result_value == 0:
+                        win_loss = 'L'
+                    elif result_value == -1:
+                        win_loss = 'T'
+                    else:
+                        win_loss = ''
+                    
+                    return {
+                        'versus': result.get('vs', ''),
+                        'home_away': result.get('home_away', ''),
+                        'win_loss': win_loss,
+                        'location': result.get('stadium', '')
+                    }
+                
+                return None
+                
+            except mysql.connector.Error:
+                # Table doesn't exist or query error
+                return None
+            
+    except Exception:
+        # Silently fail
+        return None
+        
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+
+
 def get_team_list():
     """
     Get list of all NFL teams
@@ -1033,7 +1396,7 @@ def get_team_list():
         return []
 
 
-def process_single_week(player_name, year, week, insert_to_db, p_id=None):
+def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_abbr=None):
     """Process stats for a single week
     
     Parameters
@@ -1048,6 +1411,9 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None):
         Whether to insert into database
     p_id : str, optional
         Player ID (will be fetched if not provided)
+    team_abbr : str, optional
+        PFL team abbreviation (e.g., 'CMN'). If provided, will lookup and insert
+        game information
         
     Returns
     -------
@@ -1061,7 +1427,13 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None):
         p_id = get_player_id_from_db(player_name)
     
     # Get comprehensive player stats
-    stats = get_comprehensive_player_stats(player_name, week, year)
+    # For years 1991-2000, use wp_stathead_* tables
+    # For years 2001+, use ESPN API
+    if 1991 <= year <= 2000:
+        print(f"Using wp_stathead_* tables for year {year}...")
+        stats = get_stats_from_stathead_tables(player_name, week, year, p_id)
+    else:
+        stats = get_comprehensive_player_stats(player_name, week, year)
     
     if stats:
         # Format date
@@ -1080,9 +1452,9 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None):
             print(f"Player ID (p_id): Not found in database")
         print("=" * 60)
         print(f"Date of game:      {formatted_date}")
-        print(f"Team:              {stats['Team']}")
-        print(f"Versus Team:       {stats['Versus Team']}")
-        print(f"Home or Away:      {stats['Home or Away']}")
+        print(f"Team:              {stats['Team'] or 'N/A'}")
+        print(f"Versus Team:       {stats['Versus Team'] or 'N/A'}")
+        print(f"Home or Away:      {stats['Home or Away'] or 'N/A'}")
         print("\nPassing Stats:")
         print(f"  Pass Yds:        {stats['Pass Yds']}")
         print(f"  Pass TD:         {stats['Pass TD']}")
@@ -1100,6 +1472,12 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None):
         print(f"  FG Att:          {stats['FG Att']}")
         print("\nOther:")
         print(f"  2pt conversions: {stats['2pt conversions']}")
+        
+        # Calculate and display PFL score
+        if p_id:
+            pfl_score = calculate_nfl_score(p_id, year, stats)
+            print(f"\n🏈 PFL SCORE: {pfl_score} points")
+        
         print("=" * 60)
         
         # Insert into database if requested
@@ -1109,10 +1487,12 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None):
                 print("  Player must exist in wp_players table to insert stats")
             else:
                 print(f"\nInserting stats into table {p_id}...")
-                success = insert_player_stats_to_db(p_id, year, week, stats)
+                success = insert_player_stats_to_db(p_id, year, week, stats, team_abbr=team_abbr)
                 if success:
                     print(f"✓ Successfully inserted/updated stats in {p_id} table")
                     print(f"  Week ID: {year}{week:02d}")
+                    if team_abbr:
+                        print(f"  PFL Team: {team_abbr}")
                 else:
                     print(f"✗ Failed to insert stats into database")
         
@@ -1137,6 +1517,7 @@ def main():
         print('  python3 getplayernfldata.py "Josh Allen" 2024 13')
         print('  python3 getplayernfldata.py "Josh Allen" 2024 13 Yes')
         print('  python3 getplayernfldata.py "Josh Allen" 2024 "11,12,13" Yes')
+        print('  python3 getplayernfldata.py "Josh Allen" 2024 all Yes')
         sys.exit(1)
     
     # Parse arguments
@@ -1148,18 +1529,24 @@ def main():
         print("Error: YEAR must be an integer")
         sys.exit(1)
     
-    # Parse week parameter - can be single or comma-separated
-    week_param = sys.argv[3]
-    try:
-        if ',' in week_param:
-            # Multiple weeks
-            weeks = [int(w.strip()) for w in week_param.split(',')]
-        else:
-            # Single week
-            weeks = [int(week_param)]
-    except ValueError:
-        print("Error: WEEK must be an integer or comma-separated integers")
-        sys.exit(1)
+    # Parse week parameter - can be single, comma-separated, or 'all'
+    week_param = sys.argv[3].strip().lower()
+    weeks = None  # Will be determined after getting player ID if 'all'
+    
+    if week_param == 'all':
+        # Will fetch weeks from database after getting player ID
+        weeks = 'all'
+    else:
+        try:
+            if ',' in week_param:
+                # Multiple weeks
+                weeks = [int(w.strip()) for w in week_param.split(',')]
+            else:
+                # Single week
+                weeks = [int(week_param)]
+        except ValueError:
+            print("Error: WEEK must be an integer, comma-separated integers, or 'all'")
+            sys.exit(1)
     
     # Parse optional INSERT parameter (default: 'No')
     insert_to_db = False
@@ -1175,21 +1562,16 @@ def main():
             sys.exit(1)
     
     # Validate inputs
-    if year < 2000 or year > 2100:
-        print("Error: Invalid year")
+    if year < 1991 or year > 2100:
+        print("Error: Invalid year (must be between 1991 and 2100)")
         sys.exit(1)
     
-    for week in weeks:
-        if week < 1 or week > 18:
-            print(f"Error: Week {week} must be between 1 and 18")
-            sys.exit(1)
-    
-    # Print summary
-    if len(weeks) == 1:
-        print(f"Processing {player_name} for Week {weeks[0]}, {year}")
-    else:
-        print(f"Processing {player_name} for {len(weeks)} weeks: {', '.join(map(str, weeks))}")
-        print(f"Year: {year}")
+    # Validate week numbers if not 'all'
+    if weeks != 'all':
+        for week in weeks:
+            if week < 1 or week > 18:
+                print(f"Error: Week {week} must be between 1 and 18")
+                sys.exit(1)
     
     # Get player ID once (reuse for all weeks)
     p_id = get_player_id_from_db(player_name)
@@ -1201,10 +1583,28 @@ def main():
         if weeks_played:
             weeks_csv = ','.join(map(str, weeks_played))
             print(f"Weeks Played in {year}: {weeks_csv}")
+            
+            # If 'all' was specified, use the weeks from the database
+            if weeks == 'all':
+                weeks = weeks_played
+                print(f"\nProcessing all {len(weeks)} weeks player has in database")
         else:
-            print(f"Weeks Played in {year}: No data found")
+            if weeks == 'all':
+                print(f"Weeks Played in {year}: No data found")
+                print("\nError: Cannot use 'all' parameter - no weeks found in database")
+                print("Player must have existing week data in their table to use 'all'")
+                sys.exit(1)
+            else:
+                print(f"Weeks Played in {year}: No data found")
     else:
         print("Player ID: Not found in database")
+        
+        # If 'all' was specified, we can't proceed
+        if weeks == 'all':
+            print("\nError: Cannot use 'all' parameter without a valid Player ID")
+            print("Player must exist in wp_players table to use 'all'")
+            sys.exit(1)
+        
         if insert_to_db:
             print("\n⚠ Warning: Player ID not found automatically")
         
@@ -1229,6 +1629,33 @@ def main():
         except (EOFError, KeyboardInterrupt):
             print("\nNo Player ID entered - continuing without database insertion")
     
+    # Print summary
+    if len(weeks) == 1:
+        print(f"\nProcessing {player_name} for Week {weeks[0]}, {year}")
+    else:
+        print(f"\nProcessing {player_name} for {len(weeks)} weeks: {', '.join(map(str, weeks))}")
+        print(f"Year: {year}")
+    
+    # Prompt for PFL team if inserting to database
+    team_abbr = None
+    if insert_to_db:
+        pfl_teams = get_pfl_teams_list()
+        if pfl_teams:
+            print(f"\n📋 Available PFL Teams: {', '.join(pfl_teams)}")
+            while True:
+                team_input = input("\nEnter PFL team abbreviation (or leave blank to skip): ").strip().upper()
+                if not team_input:
+                    print("Skipping team lookup...")
+                    break
+                elif team_input in pfl_teams:
+                    team_abbr = team_input
+                    print(f"✓ Using team: {team_abbr}")
+                    break
+                else:
+                    print(f"❌ Invalid team '{team_input}'. Valid options: {', '.join(pfl_teams)}")
+        else:
+            print("\n⚠️  Warning: Could not fetch list of PFL teams from database")
+    
     # Process each week
     results = []
     for i, week in enumerate(weeks):
@@ -1237,7 +1664,7 @@ def main():
             print(f"Processing Week {i+1} of {len(weeks)}: Week {week}")
             print(f"{'='*60}")
         
-        success, p_id = process_single_week(player_name, year, week, insert_to_db, p_id)
+        success, p_id = process_single_week(player_name, year, week, insert_to_db, p_id, team_abbr=team_abbr)
         results.append((week, success))
     
     # Print summary if multiple weeks

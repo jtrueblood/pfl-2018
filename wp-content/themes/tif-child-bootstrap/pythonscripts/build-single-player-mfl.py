@@ -515,6 +515,8 @@ def insert_player_data_to_db(p_id, year, week, points, team_context):
         week_id = f"{year}{week:02d}"
         
         # Extract context
+        if team_context is None:
+            team_context = {}
         team = team_context.get('team', '')
         versus = team_context.get('versus', '')
         home_away = team_context.get('home_away', 'H')
@@ -697,12 +699,7 @@ def main():
     if not score_data:
         print("Error: Cannot insert to database - no score data available")
         sys.exit(1)
-    
-    if not team_context:
-        print("Error: Cannot insert to database - team context not available")
-        print("Player may not have been a starter this week")
-        sys.exit(1)
-    
+
     # Prompt user for confirmation
     response = input("\nInsert this data into the database? (yes/no): ").strip().lower()
     

@@ -71,13 +71,17 @@
 				
 				<!--Page content-->
 				<div id="page-content">
-			
+				
+					<div class="row">
+					
+					<!-- Left column for pro bowl panels -->
+					<div class="col-xs-24 col-md-16">
 					<?php
 				foreach ($probowldetails as $key => $value){
                     $theyear = $key;
 						// get the first row
                 echo '<div class="row">';
-					echo '<div class="col-xs-24 col-sm-10 eq-box-sm pro-bowl-box">';
+					echo '<div class="col-xs-24">';
 						echo '<div class="panel panel-bordered panel-dark">';
 							echo '<div class="panel-heading">';
 							echo '<h3 class="panel-title"><span class="text-bold">'.$key.'</span> Pro Bowl</h3>';
@@ -204,7 +208,228 @@
 				}	
 				
 				?>
-
+					</div><!-- End left column -->
+					
+					<!-- Right column for summary -->
+					<div class="col-xs-24 col-md-8">
+						<?php
+							// Calculate overall wins, total points, and consecutive wins
+							$egad_wins = 0;
+							$dgas_wins = 0;
+							$egad_total_points = 0;
+							$dgas_total_points = 0;
+							
+							// Sort by year to calculate consecutive wins
+							$sorted_details = $probowldetails;
+							ksort($sorted_details);
+							
+							$egad_consecutive = 0;
+							$dgas_consecutive = 0;
+							$egad_max_consecutive = 0;
+							$dgas_max_consecutive = 0;
+							
+							foreach($sorted_details as $year => $detail):
+								$egad_total_points += $detail['egad'];
+								$dgas_total_points += $detail['dgas'];
+								
+								if($detail['winner'] == 'EGAD'):
+									$egad_wins++;
+									$egad_consecutive++;
+									$dgas_consecutive = 0;
+									if($egad_consecutive > $egad_max_consecutive):
+										$egad_max_consecutive = $egad_consecutive;
+									endif;
+								elseif($detail['winner'] == 'DGAS'):
+									$dgas_wins++;
+									$dgas_consecutive++;
+									$egad_consecutive = 0;
+									if($dgas_consecutive > $dgas_max_consecutive):
+										$dgas_max_consecutive = $dgas_consecutive;
+									endif;
+								endif;
+							endforeach;
+							
+							$labels = array('League', 'Wins', 'Total Pts', 'Consec Wins');
+							tablehead('Pro Bowl Summary', $labels);
+							echo '<tr><td>EGAD</td><td>'.$egad_wins.'</td><td>'.$egad_total_points.'</td><td>'.$egad_max_consecutive.'</td></tr>';
+							echo '<tr><td>DGAS</td><td>'.$dgas_wins.'</td><td>'.$dgas_total_points.'</td><td>'.$dgas_max_consecutive.'</td></tr>';
+							tablefoot('');
+							
+							// Calculate top team performances
+							$team_performances = array();
+							foreach($probowldetails as $year => $detail):
+								$team_performances[] = array(
+									'year' => $year,
+									'team' => 'EGAD',
+									'points' => $detail['egad']
+								);
+								$team_performances[] = array(
+									'year' => $year,
+									'team' => 'DGAS',
+									'points' => $detail['dgas']
+								);
+							endforeach;
+							
+							// Sort by points descending
+							usort($team_performances, function($a, $b) {
+								return $b['points'] - $a['points'];
+							});
+							
+							// Get top 5
+							$top_5 = array_slice($team_performances, 0, 5);
+							
+							echo '<br>';
+							$labels = array('Year', 'Team', 'Points');
+							tablehead('Top 5 Team Performances', $labels);
+							foreach($top_5 as $perf):
+								echo '<tr><td>'.$perf['year'].'</td>';
+								echo '<td>'.$perf['team'].'</td>';
+								echo '<td>'.$perf['points'].'</td></tr>';
+							endforeach;
+							tablefoot('');
+							
+							// Count games by player
+							$player_games = array();
+							foreach($proboxes as $box):
+								if(!isset($player_games[$box['playerid']])):
+									$player_games[$box['playerid']] = 0;
+								endif;
+								$player_games[$box['playerid']]++;
+							endforeach;
+							
+							// Sort by games descending
+							arsort($player_games);
+							
+							// Get top 10
+							$top_10_players = array_slice($player_games, 0, 10, true);
+							
+							echo '<br>';
+							$labels = array('Player', 'Games');
+							tablehead('Most Games Played', $labels);
+							foreach($top_10_players as $playerid => $games):
+								echo '<tr><td>'.$pname[$playerid][0].' '.$pname[$playerid][1].'</td>';
+								echo '<td>'.$games.'</td></tr>';
+							endforeach;
+							tablefoot('');
+							
+							// Calculate total points by player
+							$player_points = array();
+							foreach($proboxes as $box):
+								if(!isset($player_points[$box['playerid']])):
+									$player_points[$box['playerid']] = 0;
+								endif;
+								$player_points[$box['playerid']] += $box['points'];
+							endforeach;
+							
+							// Sort by points descending
+							arsort($player_points);
+							
+							// Get top 10
+							$top_10_scorers = array_slice($player_points, 0, 10, true);
+							
+							echo '<br>';
+							$labels = array('Player', 'Points');
+							tablehead('Most Total Points', $labels);
+							foreach($top_10_scorers as $playerid => $points):
+								echo '<tr><td>'.$pname[$playerid][0].' '.$pname[$playerid][1].'</td>';
+								echo '<td>'.$points.'</td></tr>';
+							endforeach;
+							tablefoot('');
+							
+							// Find highest individual game scores
+							$top_games = array();
+							foreach($proboxes as $box):
+								$top_games[] = array(
+									'playerid' => $box['playerid'],
+									'year' => $box['year'],
+									'league' => $box['league'],
+									'team' => $box['team'],
+									'points' => $box['points']
+								);
+							endforeach;
+							
+							// Sort by points descending
+							usort($top_games, function($a, $b) {
+								return $b['points'] - $a['points'];
+							});
+							
+							// Get top 10
+							$top_10_games = array_slice($top_games, 0, 10);
+							
+							echo '<br>';
+							$labels = array('Player', 'Year', 'PB Team', 'PFL Team', 'Points');
+							tablehead('Highest Individual Games', $labels);
+							foreach($top_10_games as $game):
+								echo '<tr><td>'.$pname[$game['playerid']][0].' '.$pname[$game['playerid']][1].'</td>';
+								echo '<td>'.$game['year'].'</td>';
+								echo '<td>'.$game['league'].'</td>';
+								echo '<td>'.$game['team'].'</td>';
+								echo '<td>'.$game['points'].'</td></tr>';
+							endforeach;
+							tablefoot('');
+							
+							// Calculate consecutive Pro Bowl appearances
+							$player_years = array();
+							foreach($proboxes as $box):
+								if(!isset($player_years[$box['playerid']])):
+									$player_years[$box['playerid']] = array();
+								endif;
+								$player_years[$box['playerid']][] = $box['year'];
+							endforeach;
+							
+							// Find longest streaks for each player
+							$player_streaks = array();
+							foreach($player_years as $playerid => $years):
+								$years = array_unique($years);
+								sort($years);
+								
+								$current_streak = 1;
+								$max_streak = 1;
+								$streak_start = $years[0];
+								$max_start = $years[0];
+								
+								for($i = 1; $i < count($years); $i++):
+									if($years[$i] == $years[$i-1] + 1):
+										$current_streak++;
+										if($current_streak > $max_streak):
+											$max_streak = $current_streak;
+											$max_start = $streak_start;
+										endif;
+									else:
+										$current_streak = 1;
+										$streak_start = $years[$i];
+									endif;
+								endfor;
+								
+								$player_streaks[] = array(
+									'playerid' => $playerid,
+									'streak' => $max_streak,
+									'start_year' => $max_start,
+									'end_year' => $max_start + $max_streak - 1
+								);
+							endforeach;
+							
+							// Sort by streak length descending
+							usort($player_streaks, function($a, $b) {
+								return $b['streak'] - $a['streak'];
+							});
+							
+							// Get top 10
+							$top_10_streaks = array_slice($player_streaks, 0, 10);
+							
+							echo '<br>';
+							$labels = array('Player', 'Streak', 'Years');
+							tablehead('Longest Consecutive Appearances', $labels);
+							foreach($top_10_streaks as $streak):
+								echo '<tr><td>'.$pname[$streak['playerid']][0].' '.$pname[$streak['playerid']][1].'</td>';
+								echo '<td>'.$streak['streak'].'</td>';
+								echo '<td>'.$streak['start_year'].' - '.$streak['end_year'].'</td></tr>';
+							endforeach;
+							tablefoot('');
+						?>
+					</div><!-- End right column -->
+					
+					</div><!-- End row -->
 
 				</div><!--End page content-->
 

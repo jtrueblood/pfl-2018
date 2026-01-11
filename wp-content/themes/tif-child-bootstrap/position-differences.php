@@ -77,12 +77,12 @@
                         foreach ($new_comp_qb as $team => $value):
                             $printqb .='<tr><td>'.$team.'</td>';
                             $printqb .='<td class="min-width">'.$value.'</td>';
-                            $transient_qb = get_transient( $team.'_QB_leaders' );
+                            $transient_qb = get_transient( $team.'_QB_leaders_5' );
                             if( ! empty( $transient_qb  ) ) {
                                 $printqb .='<td>'.$transient_qb.'</td></tr>';
                             } else {
-                                $top_team_qb_csv = print_array_as_csv(3, $team, 'QB');
-                                set_transient( $team.'_QB_leaders', $top_team_qb_csv, 600000 );
+                                $top_team_qb_csv = rtrim(print_array_as_csv(5, $team, 'QB'), ', ');
+                                set_transient( $team.'_QB_leaders_5', $top_team_qb_csv, 600000 );
                                 $printqb .='<td>'.$top_team_qb_csv.'</td></tr>';
                             }
                         endforeach;
@@ -102,12 +102,12 @@
                     foreach ($new_comp_rb as $team => $value):
                         $printrb .='<tr><td>'.$team.'</td>';
                         $printrb .='<td>'.$value.'</td>';
-                        $transient_rb = get_transient( $team.'_RB_leaders' );
+                        $transient_rb = get_transient( $team.'_RB_leaders_5' );
                         if( ! empty( $transient_rb  ) ) {
                             $printrb .='<td>'.$transient_rb.'</td></tr>';
                         } else {
-                            $top_team_rb_csv = print_array_as_csv(3, $team, 'RB');
-                            set_transient( $team.'_RB_leaders', $top_team_rb_csv, 600000 );
+                            $top_team_rb_csv = rtrim(print_array_as_csv(5, $team, 'RB'), ', ');
+                            set_transient( $team.'_RB_leaders_5', $top_team_rb_csv, 600000 );
                             $printrb .='<td>'.$top_team_rb_csv.'</td></tr>';
                         }
                     endforeach;
@@ -126,12 +126,12 @@
                     foreach ($new_comp_wr as $team => $value):
                         $printwr .='<tr><td>'.$team.'</td>';
                         $printwr .='<td>'.$value.'</td>';
-                        $transient_wr = get_transient( $team.'_WR_leaders' );
+                        $transient_wr = get_transient( $team.'_WR_leaders_5' );
                         if( ! empty( $transient_wr  ) ) {
                             $printwr .='<td>'.$transient_wr.'</td></tr>';
                         } else {
-                            $top_team_wr_csv = print_array_as_csv(3, $team, 'WR');
-                            set_transient( $team.'_WR_leaders', $top_team_wr_csv, 600000 );
+                            $top_team_wr_csv = rtrim(print_array_as_csv(5, $team, 'WR'), ', ');
+                            set_transient( $team.'_WR_leaders_5', $top_team_wr_csv, 600000 );
                             $printwr .='<td>'.$top_team_wr_csv.'</td></tr>';
                         }
                     endforeach;
@@ -150,12 +150,12 @@
                     foreach ($new_comp_pk as $team => $value):
                         $printpk .='<tr><td>'.$team.'</td>';
                         $printpk .='<td>'.$value.'</td>';
-                        $transient_pk = get_transient( $team.'_PK_leaders' );
+                        $transient_pk = get_transient( $team.'_PK_leaders_5' );
                         if( ! empty( $transient_pk  ) ) {
                             $printpk .='<td>'.$transient_pk.'</td></tr>';
                         } else {
-                            $top_team_pk_csv = print_array_as_csv(3, $team, 'PK');
-                            set_transient( $team.'_PK_leaders', $top_team_pk_csv, 600000 );
+                            $top_team_pk_csv = rtrim(print_array_as_csv(5, $team, 'PK'), ', ');
+                            set_transient( $team.'_PK_leaders_5', $top_team_pk_csv, 600000 );
                             $printpk .='<td>'.$top_team_pk_csv.'</td></tr>';
                         }
                     endforeach;
@@ -169,22 +169,13 @@
                     ?>
                 </div>
 
-                </div>
+            </div><!--End page content-->
 
-            </div>
-        </div>
-</div>
-
-
-
-    </div><!--End page content-->
-
-</div><!--END CONTENT CONTAINER-->
-
+        </div><!--END CONTENT CONTAINER-->
 
 <?php include_once('main-nav.php'); ?>
 <?php include_once('aside.php'); ?>
 
-</div>
+</div><!--END BOXED-->
 
 <?php get_footer(); ?>

@@ -241,9 +241,12 @@ arsort($cleanedup);
                 </div>
             </div>
         </div>
-    </div>
-    </div>
-</div>
+    </div><!--END CONTENT CONTAINER-->
+    
+    <?php include_once('main-nav.php'); ?>
+    <?php include_once('aside.php'); ?>
+    
+</div><!--END BOXED-->
 
 <?php // printr($cleanedup, 0); ?>
 

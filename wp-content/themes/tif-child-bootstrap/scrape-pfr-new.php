@@ -58,7 +58,7 @@ $yearsplayed = get_player_years_played($randomplayer);
 
 $stylesheet_uri = get_stylesheet_directory_uri();
 
-$gettheyear = 2024;
+$gettheyear = 1993;
 
 get_header(); 
 ?>
@@ -243,7 +243,7 @@ get_header();
 								<?php
 
                             // SET YEAR HERE -- can be a single value or an array
-                            $yearclean = array(2025);
+                            $yearclean = array(1993);
 
                                 echo $getyearclean.'-'.$weekclean.'<br>';
 								//printr($yearclean, 0);

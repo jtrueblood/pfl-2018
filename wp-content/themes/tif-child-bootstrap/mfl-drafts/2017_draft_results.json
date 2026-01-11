@@ -1,0 +1,574 @@
+{
+  "draftResults": {
+    "draftUnit": {
+      "unit": "LEAGUE",
+      "draftPick": [
+        {
+          "comments": "Pick Skipped By Commissioner\nPick Skipped By Commissioner Replacement pick made by Commissioner",
+          "timestamp": "1503771291",
+          "franchise": "0003",
+          "pick": "01",
+          "player": "13129",
+          "round": "01"
+        },
+        {
+          "pick": "02",
+          "franchise": "0005",
+          "player": "9118",
+          "round": "01",
+          "comments": "",
+          "timestamp": "1503772391"
+        },
+        {
+          "timestamp": "1503772391",
+          "comments": "Pick made based on Pre-Draft List",
+          "player": "12652",
+          "round": "01",
+          "franchise": "0009",
+          "pick": "03"
+        },
+        {
+          "franchise": "0004",
+          "pick": "04",
+          "player": "13131",
+          "round": "01",
+          "comments": "Pick made based on Pre-Draft List",
+          "timestamp": "1503772391"
+        },
+        {
+          "comments": "Pick traded from Euro-Trashers.",
+          "timestamp": "1503772966",
+          "franchise": "0007",
+          "pick": "05",
+          "round": "01",
+          "player": "4925"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503773016",
+          "pick": "06",
+          "franchise": "0001",
+          "round": "01",
+          "player": "13130"
+        },
+        {
+          "round": "01",
+          "player": "9902",
+          "pick": "07",
+          "franchise": "0006",
+          "timestamp": "1503773107",
+          "comments": ""
+        },
+        {
+          "timestamp": "1503773121",
+          "comments": "Pick traded from Raging Bulls.",
+          "round": "01",
+          "player": "11644",
+          "pick": "08",
+          "franchise": "0002"
+        },
+        {
+          "comments": "Pick traded from Sixty Niners.",
+          "timestamp": "1503773333",
+          "franchise": "0004",
+          "pick": "09",
+          "round": "01",
+          "player": "12154"
+        },
+        {
+          "round": "01",
+          "player": "9823",
+          "franchise": "0008",
+          "pick": "10",
+          "timestamp": "1503773564",
+          "comments": ""
+        },
+        {
+          "player": "11674",
+          "round": "02",
+          "franchise": "0003",
+          "pick": "01",
+          "timestamp": "1503773633",
+          "comments": ""
+        },
+        {
+          "round": "02",
+          "player": "10708",
+          "pick": "02",
+          "franchise": "0005",
+          "timestamp": "1503773756",
+          "comments": ""
+        },
+        {
+          "round": "02",
+          "player": "13128",
+          "pick": "03",
+          "franchise": "0009",
+          "timestamp": "1503773807",
+          "comments": ""
+        },
+        {
+          "franchise": "0002",
+          "pick": "04",
+          "round": "02",
+          "player": "10729",
+          "comments": "Pick traded from Space Warriorz.",
+          "timestamp": "1503773842"
+        },
+        {
+          "pick": "05",
+          "franchise": "0010",
+          "player": "13138",
+          "round": "02",
+          "comments": "Pick traded from Euro-Trashers.",
+          "timestamp": "1503774004"
+        },
+        {
+          "player": "12620",
+          "round": "02",
+          "franchise": "0001",
+          "pick": "06",
+          "timestamp": "1503774034",
+          "comments": ""
+        },
+        {
+          "franchise": "0006",
+          "pick": "07",
+          "player": "7391",
+          "round": "02",
+          "comments": "",
+          "timestamp": "1503774142"
+        },
+        {
+          "timestamp": "1503774181",
+          "comments": "",
+          "round": "02",
+          "player": "10700",
+          "pick": "08",
+          "franchise": "0010"
+        },
+        {
+          "comments": "Pick traded from Sixty Niners.\nPick traded from Space Warriorz.",
+          "timestamp": "1503774229",
+          "franchise": "0007",
+          "pick": "09",
+          "round": "02",
+          "player": "13113"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503774247",
+          "pick": "10",
+          "franchise": "0008",
+          "round": "02",
+          "player": "8670"
+        },
+        {
+          "franchise": "0009",
+          "pick": "01",
+          "player": "10722",
+          "round": "03",
+          "comments": "Pick traded from Peppers.",
+          "timestamp": "1503774300"
+        },
+        {
+          "timestamp": "1503774315",
+          "comments": "",
+          "player": "8359",
+          "round": "03",
+          "pick": "02",
+          "franchise": "0005"
+        },
+        {
+          "pick": "03",
+          "franchise": "0009",
+          "round": "03",
+          "player": "11668",
+          "comments": "",
+          "timestamp": "1503774351"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503774442",
+          "franchise": "0004",
+          "pick": "04",
+          "player": "10313",
+          "round": "03"
+        },
+        {
+          "franchise": "0002",
+          "pick": "05",
+          "round": "03",
+          "player": "11232",
+          "comments": "",
+          "timestamp": "1503774498"
+        },
+        {
+          "franchise": "0001",
+          "pick": "06",
+          "round": "03",
+          "player": "6789",
+          "comments": "",
+          "timestamp": "1503774708"
+        },
+        {
+          "timestamp": "1503774722",
+          "comments": "",
+          "player": "10527",
+          "round": "03",
+          "franchise": "0006",
+          "pick": "07"
+        },
+        {
+          "timestamp": "1503774786",
+          "comments": "",
+          "round": "03",
+          "player": "10976",
+          "franchise": "0010",
+          "pick": "08"
+        },
+        {
+          "player": "10500",
+          "round": "03",
+          "franchise": "0007",
+          "pick": "09",
+          "timestamp": "1503775019",
+          "comments": ""
+        },
+        {
+          "round": "03",
+          "player": "6929",
+          "pick": "10",
+          "franchise": "0008",
+          "timestamp": "1503775282",
+          "comments": ""
+        },
+        {
+          "player": "12261",
+          "round": "04",
+          "pick": "01",
+          "franchise": "0003",
+          "timestamp": "1503775423",
+          "comments": ""
+        },
+        {
+          "timestamp": "1503775541",
+          "comments": "",
+          "player": "9918",
+          "round": "04",
+          "franchise": "0005",
+          "pick": "02"
+        },
+        {
+          "round": "04",
+          "player": "9884",
+          "franchise": "0009",
+          "pick": "03",
+          "timestamp": "1503775590",
+          "comments": ""
+        },
+        {
+          "comments": "Pick made based on Pre-Draft List",
+          "timestamp": "1503775590",
+          "pick": "04",
+          "franchise": "0004",
+          "round": "04",
+          "player": "11688"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503775715",
+          "franchise": "0002",
+          "pick": "05",
+          "round": "04",
+          "player": "11384"
+        },
+        {
+          "franchise": "0001",
+          "pick": "06",
+          "round": "04",
+          "player": "11673",
+          "comments": "",
+          "timestamp": "1503775830"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503775848",
+          "pick": "07",
+          "franchise": "0006",
+          "player": "8742",
+          "round": "04"
+        },
+        {
+          "timestamp": "1503775956",
+          "comments": "",
+          "round": "04",
+          "player": "9427",
+          "franchise": "0010",
+          "pick": "08"
+        },
+        {
+          "comments": "Pick traded from Sixty Niners.\nPick made based on Pre-Draft List",
+          "timestamp": "1503775956",
+          "pick": "09",
+          "franchise": "0004",
+          "round": "04",
+          "player": "10506"
+        },
+        {
+          "round": "04",
+          "player": "12801",
+          "pick": "10",
+          "franchise": "0008",
+          "timestamp": "1503776114",
+          "comments": ""
+        },
+        {
+          "comments": "",
+          "timestamp": "1503776252",
+          "pick": "01",
+          "franchise": "0003",
+          "player": "12956",
+          "round": "05"
+        },
+        {
+          "player": "10276",
+          "round": "05",
+          "pick": "02",
+          "franchise": "0005",
+          "timestamp": "1503776527",
+          "comments": ""
+        },
+        {
+          "timestamp": "1503776596",
+          "comments": "",
+          "round": "05",
+          "player": "2842",
+          "pick": "03",
+          "franchise": "0009"
+        },
+        {
+          "player": "13153",
+          "round": "05",
+          "franchise": "0004",
+          "pick": "04",
+          "timestamp": "1503776596",
+          "comments": "Pick made based on Pre-Draft List"
+        },
+        {
+          "player": "11454",
+          "round": "05",
+          "pick": "05",
+          "franchise": "0002",
+          "timestamp": "1503776696",
+          "comments": ""
+        },
+        {
+          "timestamp": "1503776818",
+          "comments": "",
+          "player": "12155",
+          "round": "05",
+          "pick": "06",
+          "franchise": "0001"
+        },
+        {
+          "pick": "07",
+          "franchise": "0006",
+          "player": "8930",
+          "round": "05",
+          "comments": "",
+          "timestamp": "1503776867"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503777076",
+          "franchise": "0010",
+          "pick": "08",
+          "round": "05",
+          "player": "10369"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503777178",
+          "franchise": "0007",
+          "pick": "09",
+          "round": "05",
+          "player": "10872"
+        },
+        {
+          "player": "5666",
+          "round": "05",
+          "pick": "10",
+          "franchise": "0008",
+          "timestamp": "1503777178",
+          "comments": "Pick made based on Pre-Draft List"
+        },
+        {
+          "player": "9898",
+          "round": "06",
+          "franchise": "0003",
+          "pick": "01",
+          "timestamp": "1503777495",
+          "comments": ""
+        },
+        {
+          "player": "12391",
+          "round": "06",
+          "franchise": "0005",
+          "pick": "02",
+          "timestamp": "1503777521",
+          "comments": ""
+        },
+        {
+          "pick": "03",
+          "franchise": "0009",
+          "round": "06",
+          "player": "10413",
+          "comments": "",
+          "timestamp": "1503777575"
+        },
+        {
+          "timestamp": "1503777575",
+          "comments": "Pick made based on Pre-Draft List",
+          "round": "06",
+          "player": "11387",
+          "pick": "04",
+          "franchise": "0004"
+        },
+        {
+          "pick": "05",
+          "franchise": "0002",
+          "round": "06",
+          "player": "10709",
+          "comments": "",
+          "timestamp": "1503777600"
+        },
+        {
+          "timestamp": "1503777715",
+          "comments": "",
+          "player": "13115",
+          "round": "06",
+          "pick": "06",
+          "franchise": "0001"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503777719",
+          "pick": "07",
+          "franchise": "0006",
+          "player": "7393",
+          "round": "06"
+        },
+        {
+          "timestamp": "1503777966",
+          "comments": "",
+          "round": "06",
+          "player": "11678",
+          "pick": "08",
+          "franchise": "0010"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503777984",
+          "pick": "09",
+          "franchise": "0007",
+          "player": "9831",
+          "round": "06"
+        },
+        {
+          "player": "11222",
+          "round": "06",
+          "pick": "10",
+          "franchise": "0008",
+          "timestamp": "1503777984",
+          "comments": "Pick made based on Pre-Draft List"
+        },
+        {
+          "franchise": "0003",
+          "pick": "01",
+          "player": "9694",
+          "round": "07",
+          "comments": "",
+          "timestamp": "1503778146"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503778263",
+          "pick": "02",
+          "franchise": "0005",
+          "round": "07",
+          "player": "9319"
+        },
+        {
+          "pick": "03",
+          "franchise": "0009",
+          "round": "07",
+          "player": "11244",
+          "comments": "",
+          "timestamp": "1503778410"
+        },
+        {
+          "timestamp": "1503778948",
+          "comments": "Pick Skipped By Commissioner",
+          "round": "07",
+          "player": "----",
+          "pick": "04",
+          "franchise": "0004"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503778961",
+          "franchise": "0002",
+          "pick": "05",
+          "player": "12186",
+          "round": "07"
+        },
+        {
+          "comments": "",
+          "timestamp": "1503778977",
+          "pick": "06",
+          "franchise": "0001",
+          "player": "9686",
+          "round": "07"
+        },
+        {
+          "player": "9064",
+          "round": "07",
+          "franchise": "0006",
+          "pick": "07",
+          "timestamp": "1503778988",
+          "comments": ""
+        },
+        {
+          "player": "13176",
+          "round": "07",
+          "franchise": "0010",
+          "pick": "08",
+          "timestamp": "1503779128",
+          "comments": ""
+        },
+        {
+          "timestamp": "1503779191",
+          "comments": "Pick traded from Sixty Niners.",
+          "round": "07",
+          "player": "7877",
+          "pick": "09",
+          "franchise": "0002"
+        },
+        {
+          "pick": "10",
+          "franchise": "0008",
+          "round": "07",
+          "player": "8687",
+          "comments": "Pick made based on Pre-Draft List",
+          "timestamp": "1503779191"
+        }
+      ],
+      "round1DraftOrder": "0003,0005,0009,0004,0007,0001,0006,0002,0004,0008,",
+      "static_url": "https://www48.myfantasyleague.com/fflnetdynamic2017/38954_LEAGUE_draft_results.xml",
+      "draftType": "SAME"
+    }
+  },
+  "encoding": "utf-8",
+  "version": "1.0"
+}

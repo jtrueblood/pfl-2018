@@ -18,9 +18,9 @@
 			
 				if ($value['award'] != 'Owner of the Year'){
 			?>
-					<div class="col-xs-24 col-sm-8 eq-box-sm">	
+				<div class="col-xs-24 col-sm-8 eq-box-sm">	
 						<div class="panel">
-							<div class="widget-header">
+							<div class="widget-header" style="height: 200px; overflow: hidden; position: relative;">
 								
 								<?php
 								$playerimgobj = get_attachment_url_by_slug($value['pid']);
@@ -29,7 +29,7 @@
 								$playerimg = $image_attributes[0];
 								?>
 								
-								<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image">
+								<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">
 							</div>
 							<div class="widget-body text-center">
 								<h4 class="mar-no text-center"><?php echo $value['first'].'<br>'.$value['last']; ?></h4>
@@ -48,11 +48,11 @@
 				
 				if ($value['award'] == 'Owner of the Year'){
 			?>
-					<div class="col-xs-24 col-sm-8 eq-box-sm ooty-season">	
+			<div class="col-xs-24 col-sm-8 eq-box-sm ooty-season">	
 						<div class="panel">
-							<div class="widget-header">
+							<div class="widget-header" style="height: 200px; overflow: hidden; position: relative;">
 																
-							<img class="widget-bg img-responsive" src="/wp-content/uploads/<?php echo $value['team']; ?>-helmet-full-250x250.png" alt="Image">
+							<img class="widget-bg img-responsive" src="/wp-content/uploads/<?php echo $value['team']; ?>-helmet-full-250x250.png" alt="Image" style="width: 100%; height: 100%; object-fit: contain; object-position: center;">
 							</div>
 							<div class="widget-body text-center">
 								<?php $ownername = explode(' ', $value['owner']); ?>
@@ -74,8 +74,8 @@
 			
 // 			printr($awards, 0);
 			?>
-			
-		</div>
 		
 	</div>
+	</div>
+	
 </div>

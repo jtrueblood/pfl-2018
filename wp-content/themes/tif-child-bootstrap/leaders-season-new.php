@@ -662,4 +662,135 @@ printr($ispro, 0);
 
 <?php include_once('aside.php'); ?>
 
+<style>
+.copy-col {
+	width: 30px;
+	padding: 4px !important;
+	text-align: center;
+	border: none !important;
+}
+
+.copy-python-btn {
+	background: none;
+	background-color: transparent;
+	border: 0px !important;
+	border-width: 0px !important;
+	box-shadow: none !important;
+	color: #ccc;
+	cursor: pointer;
+	padding: 4px 6px;
+	font-size: 12px;
+	outline: none !important;
+	opacity: 0.4;
+	transition: opacity 0.2s, color 0.2s;
+}
+
+.copy-python-btn:focus {
+	outline: none !important;
+	border: 0px !important;
+	box-shadow: none !important;
+}
+
+.copy-python-btn:hover {
+	color: #999;
+	opacity: 1;
+}
+
+.copy-python-btn:active {
+	transform: scale(0.9);
+}
+
+.copy-python-btn.copied {
+	color: #5cb85c;
+	opacity: 1;
+}
+
+tr:hover .copy-python-btn {
+	opacity: 0.7;
+}
+</style>
+
+<script>
+(function() {
+	document.addEventListener('DOMContentLoaded', function() {
+		console.log('Copy buttons script loaded');
+		const copyButtons = document.querySelectorAll('.copy-python-btn');
+		console.log('Found ' + copyButtons.length + ' copy buttons');
+		
+		copyButtons.forEach(function(button) {
+			button.addEventListener('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				const command = this.getAttribute('data-command');
+				console.log('Attempting to copy command:', command);
+				
+				var self = this;
+				
+				// Try modern Clipboard API first
+				if (navigator.clipboard && navigator.clipboard.writeText) {
+					console.log('Using Clipboard API');
+					navigator.clipboard.writeText(command).then(function() {
+						console.log('Copy successful!');
+						// Visual feedback
+						self.classList.add('copied');
+						const originalHTML = self.innerHTML;
+						self.innerHTML = '<i class="fa fa-check"></i>';
+						
+						setTimeout(function() {
+							self.classList.remove('copied');
+							self.innerHTML = originalHTML;
+						}, 1500);
+					}).catch(function(err) {
+						console.error('Clipboard API failed:', err);
+						// Try fallback
+						useFallback(command, self);
+					});
+				} else {
+					console.log('Clipboard API not available, using fallback');
+					useFallback(command, self);
+				}
+			});
+		});
+		
+		function useFallback(command, button) {
+			// Fallback for older browsers or when Clipboard API fails
+			const textArea = document.createElement('textarea');
+			textArea.value = command;
+			textArea.style.position = 'fixed';
+			textArea.style.top = '0';
+			textArea.style.left = '-9999px';
+			textArea.setAttribute('readonly', '');
+			document.body.appendChild(textArea);
+			textArea.focus();
+			textArea.select();
+			
+			try {
+				const successful = document.execCommand('copy');
+				if (successful) {
+					console.log('Fallback copy successful!');
+					// Visual feedback
+					button.classList.add('copied');
+					const originalHTML = button.innerHTML;
+					button.innerHTML = '<i class="fa fa-check"></i>';
+					
+					setTimeout(function() {
+						button.classList.remove('copied');
+						button.innerHTML = originalHTML;
+					}, 1500);
+				} else {
+					console.error('execCommand copy failed');
+					alert('Failed to copy command to clipboard');
+				}
+			} catch (err) {
+				console.error('execCommand error:', err);
+				alert('Failed to copy command to clipboard: ' + err.message);
+			}
+			
+			document.body.removeChild(textArea);
+		}
+	});
+})();
+</script>
+
 <?php get_footer(); ?>

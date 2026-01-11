@@ -78,7 +78,7 @@
                 $syracuse = $college['Syracuse'];
                 $denison = $college['Denison'];
                 $bucknell = $college['Bucknell'];
-                $posse_college = array('Vanderbilt' => $vandy, 'Penn State' => $psu, 'Florida' => $florida, 'Amherst' => $ameherst, 'Ursinus' => $ursinus, 'Franklin & Marshall' => $fandm, 'Syracuse' => $syracuse, 'Denison' => $denison, 'Bucknell' => $bucknell);
+                $posse_college = array('Vanderbilt' => $vandy, 'Penn St.' => $psu, 'Florida' => $florida, 'Amherst' => $ameherst, 'Ursinus' => $ursinus, 'Franklin & Marshall' => $fandm, 'Syracuse' => $syracuse, 'Denison' => $denison, 'Bucknell' => $bucknell);
 
                 foreach ($posse_college as $key => $value):
                     if($value):

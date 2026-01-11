@@ -137,6 +137,41 @@ function get_player_inc_highs(){
 
 $playerpts = get_player_inc_highs();
 
+// Get postseason team scoring records using postseason function
+$postseason_data = get_postseason();
+$postseason_scores = array();
+$postseason_high = 0;
+$postseason_player_scores = array();
+$postseason_player_high = 0;
+
+// Group postseason scores by week and team, and track individual player scores
+foreach($postseason_data as $game):
+    // Pad week to 2 digits
+    $week_padded = str_pad($game['week'], 2, '0', STR_PAD_LEFT);
+    $weekid = $game['year'].$week_padded;
+    $team = $game['team'];
+    $playerid = $game['playerid'];
+    $player_score = floatval($game['score']);
+    
+    // Store player scores
+    if(!isset($postseason_player_scores[$weekid])):
+        $postseason_player_scores[$weekid] = array();
+    endif;
+    $postseason_player_scores[$weekid][] = array(
+        'playerid' => $playerid,
+        'score' => $player_score
+    );
+    
+    // Get team total points for this game
+    $team_points = get_playoff_points_by_team_year($game['year'], $team, $game['week']);
+    if($team_points > 0):
+        // Only store each team once per week (avoid duplicates from multiple players)
+        if(!isset($postseason_scores[$weekid][$team])):
+            $postseason_scores[$weekid][$team] = $team_points;
+        endif;
+    endif;
+endforeach;
+
 foreach ($playerpts as $week => $team):
     foreach ($team as $key => $value):
         foreach($value as $k => $v):
@@ -205,8 +240,6 @@ endforeach;
                 <p>Best Individual Season by a Player</p>
                 <p>Highest team game score</p>
                 <p>Highest team season score</p>
-                <p>Highest Post Season Team Score</p>
-                <p>Highest Post Season Individual Score</p>
                 <p>Largest Margin of vicory</p>
 
                 <?php
@@ -315,6 +348,30 @@ endforeach;
                                     echo '<span class="label label-info">Grand Slam: '.$value['teamid'].'</span>';
                                 endif;
                             endforeach;
+                            
+                            // Postseason Team Scoring Record
+                            $weeknum = intval(substr($week, 4, 2));
+                            $year = intval(substr($week, 0, 4));
+                            if($year >= 1992 && ($weeknum == 15 || $weeknum == 16) && isset($postseason_scores[$week])):
+                                foreach($postseason_scores[$week] as $team => $score):
+                                    if($postseason_high <= $score):
+                                        $weektype = ($weeknum == 15) ? 'Semifinal' : 'Posse Bowl';
+                                        echo '<span class="label label-warning">Postseason Record: '.$teams[$team]['team'].' - '.$score.' pts ('.$weektype.')</span>';
+                                        $postseason_high = $score;
+                                    endif;
+                                endforeach;
+                            endif;
+                            
+                            // Postseason Individual Player Scoring Record
+                            if($year >= 1992 && ($weeknum == 15 || $weeknum == 16) && isset($postseason_player_scores[$week])):
+                                foreach($postseason_player_scores[$week] as $player_data):
+                                    if($postseason_player_high <= $player_data['score']):
+                                        $weektype = ($weeknum == 15) ? 'Semifinal' : 'Posse Bowl';
+                                        echo '<span class="label label-warning">Postseason Player Record: '.pid_to_name($player_data['playerid'], 1).' - '.$player_data['score'].' pts ('.$weektype.')</span>';
+                                        $postseason_player_high = $player_data['score'];
+                                    endif;
+                                endforeach;
+                            endif;
 
                             // Player Career Point Milestones
                             if($ppc):

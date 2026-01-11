@@ -46,7 +46,7 @@
 										
 				<div class="col-xs-24 col-sm-6 col-md-4 eq-box-sm">	
 					<div class="panel widget">
-						<div class="widget-header bg-light">
+						<div class="widget-header bg-light" style="height: 200px; overflow: hidden; position: relative;">
 							
 							<?php
 							$playerimgobj = get_attachment_url_by_slug($rotyid);
@@ -55,7 +55,7 @@
 							$playerimg = $image_attributes[0];
 							?>
 							
-							<img class="widget-bg img-responsive" src="<?php echo $playerimg;?>" alt="Image">
+							<img class="widget-bg" src="<?php echo $playerimg;?>" alt="Image" style="width: 100%; height: 100%; object-fit: cover; object-position: center top;">
 						</div>
 						<div class="widget-body text-center bg-primary">
 							<img alt="Profile Picture" class="widget-img img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $rotypos; ?>.jpg">

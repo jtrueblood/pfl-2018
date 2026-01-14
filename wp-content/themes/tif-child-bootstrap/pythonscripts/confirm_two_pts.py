@@ -163,14 +163,15 @@ def add_two_point_conversion(player_id, year, week):
         print(f"\n✓ Found game record:")
         print(f"   Current nflscore: {game_record['nflscore']}")
         print(f"   Current scorediff: {game_record['scorediff']}")
-        print(f"   Current twopt: {game_record['twopt']}")
+        print(f"   Current twopt: {game_record['twopt']} (type: {type(game_record['twopt'])})")
         
         # Update the record
         # Increment twopt, increment nflscore, decrement scorediff
+        # Use COALESCE to handle NULL values just in case
         update_query = f"""
             UPDATE {table_name}
             SET 
-                twopt = twopt + 1,
+                twopt = COALESCE(twopt, 0) + 1,
                 nflscore = nflscore + 1,
                 scorediff = scorediff - 1
             WHERE year = %s AND week = %s

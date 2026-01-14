@@ -273,6 +273,11 @@
                             <span class="script-desc">- Add a new player to the database with interactive prompts (creates player record in wp_players and new player stats table)</span>
                             <br><code style="font-size: 12px;">python3 add_player.py</code>
                         </li>
+                        <li>
+                            <strong><code>correct_game_score.py</code></strong>
+                            <span class="script-desc">- Manually adjust a team's final game score and automatically update both teams' records (points, result, vs_points)</span>
+                            <br><code style="font-size: 12px;">python3 correct_game_score.py YEAR WEEK TEAM NEW_SCORE</code>
+                        </li>
                     </ul>
                 </div>
 
@@ -315,7 +320,8 @@
                     'likely_two_point_conversions' => array(),
                     'scoring_entry_errors_1991_1993' => array(),
                     'other_scoring_discrepancies_1991' => array(),
-                    'other_scoring_discrepancies_1992plus' => array()
+                    'other_scoring_discrepancies_1992plus' => array(),
+                    'players_on_bye' => array()
                 );
 
                 // Get all team IDs for validation (using 'int' field from wp_teams)
@@ -681,6 +687,84 @@
                     }
                 }
 
+                // Check for players on bye who appear in boxscores
+                // Get all games from all team tables
+                foreach ($teams as $team) {
+                    $team_id = $team['team_int'];
+                    $team_table = 'wp_team_' . $team_id;
+                    
+                    // Check if team table exists
+                    $table_exists = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s AND table_name = %s",
+                            DB_NAME,
+                            $team_table
+                        )
+                    );
+                    
+                    if (!$table_exists) continue;
+                    
+                    // Get all games for this team
+                    $games = $wpdb->get_results(
+                        "SELECT season, week, QB1, RB1, WR1, PK1, QB2, RB2, WR2, PK2 FROM `{$team_table}` WHERE season >= 1991",
+                        ARRAY_A
+                    );
+                    
+                    foreach ($games as $game) {
+                        $year = $game['season'];
+                        $week = $game['week'];
+                        $week_id = sprintf('%04d%02d', $year, $week);
+                        
+                        // Check all player positions
+                        $positions = array(
+                            'QB1' => 'QB1',
+                            'RB1' => 'RB1',
+                            'WR1' => 'WR1',
+                            'PK1' => 'PK1',
+                            'QB2' => 'QB2',
+                            'RB2' => 'RB2',
+                            'WR2' => 'WR2',
+                            'PK2' => 'PK2'
+                        );
+                        
+                        foreach ($positions as $slot => $position_label) {
+                            $player_id = $game[$slot];
+                            
+                            // Skip if no player in this slot, if it's empty string, or if it's 'None'
+                            if (empty($player_id) || $player_id == 'None' || trim($player_id) == '') continue;
+                            
+                            // Check if this player was on bye
+                            $bye_status = is_player_on_bye($player_id, $week_id);
+                            
+                            if ($bye_status == 'Yes') {
+                                // Get player info
+                                $player_info = $wpdb->get_row(
+                                    $wpdb->prepare("SELECT playerFirst, playerLast FROM wp_players WHERE p_id = %s", $player_id),
+                                    ARRAY_A
+                                );
+                                
+                                if ($player_info) {
+                                    $player_name = $player_info['playerFirst'] . ' ' . $player_info['playerLast'];
+                                    $player_link = home_url('/player/?id=' . $player_id);
+                                    $results_url = home_url('/results/?Y=' . $year . '&W=' . sprintf('%02d', $week));
+                                    
+                                    $errors['players_on_bye'][] = array(
+                                        'player_name' => $player_name,
+                                        'player_id' => $player_id,
+                                        'player_link' => $player_link,
+                                        'team' => $team_id,
+                                        'year' => $year,
+                                        'week' => $week,
+                                        'position' => $position_label,
+                                        'results_url' => $results_url
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
+
+                
                 // Calculate total errors
                 $total_errors = count($errors['players_missing_team']) +
                                 count($errors['players_with_invalid_team']) +
@@ -692,7 +776,8 @@
                                 count($errors['likely_two_point_conversions']) +
                                 count($errors['scoring_entry_errors_1991_1993']) +
                                 count($errors['other_scoring_discrepancies_1991']) +
-                                count($errors['other_scoring_discrepancies_1992plus']);
+                                count($errors['other_scoring_discrepancies_1992plus']) +
+                                count($errors['players_on_bye']);
                 ?>
 
                 <!-- Summary Statistics -->
@@ -1357,6 +1442,60 @@
                                                     🔍 Likely Cause: <?php echo $game['likely_cause']; ?>
                                                 </span>
                                             <?php endif; ?>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    </div>
+                </div>
+
+                <!-- Players on Bye -->
+                <div class="error-check-section <?php echo empty($errors['players_on_bye']) ? 'no-errors' : ''; ?>" data-section-id="players-on-bye">
+                    <h2 onclick="toggleSection(this)">
+                        <span>
+                            Players on Bye (Listed in Boxscore)
+                            <?php if (!empty($errors['players_on_bye'])): ?>
+                                <span class="error-count"><?php echo count($errors['players_on_bye']); ?></span>
+                            <?php endif; ?>
+                        </span>
+                        <span class="collapse-toggle collapsed">▼</span>
+                    </h2>
+                    <div class="section-content collapsed">
+                        <p style="color: #666; font-size: 0.9em; margin-top: 0;">Players who were on bye but appear in a team's boxscore for that week.</p>
+                    <?php if (empty($errors['players_on_bye'])): ?>
+                        <p class="success-message">✓ No players on bye found in boxscores</p>
+                    <?php else: ?>
+                        <?php
+                        // Group by player
+                        $grouped_bye = array();
+                        foreach ($errors['players_on_bye'] as $error) {
+                            $pid = $error['player_id'];
+                            if (!isset($grouped_bye[$pid])) {
+                                $grouped_bye[$pid] = array(
+                                    'player_name' => $error['player_name'],
+                                    'player_id' => $error['player_id'],
+                                    'player_link' => $error['player_link'],
+                                    'games' => array()
+                                );
+                            }
+                            $grouped_bye[$pid]['games'][] = $error;
+                        }
+                        ?>
+                        <ul class="error-list">
+                            <?php foreach ($grouped_bye as $player_data): ?>
+                                <li>
+                                    <a href="<?php echo $player_data['player_link']; ?>" target="_blank">
+                                        <?php echo esc_html($player_data['player_name']); ?> <span style="color: #666; font-size: 0.9em;"><?php echo $player_data['player_id']; ?></span>
+                                    </a>
+                                    <?php foreach ($player_data['games'] as $game): ?>
+                                        <div class="error-game-row">
+                                            <div class="error-game-info" style="color: #d63638; font-size: 0.9em;">
+                                                → <a href="<?php echo $game['results_url']; ?>" target="_blank" style="color: #d63638; text-decoration: underline;"><?php echo $game['year']; ?>, Week: <?php echo $game['week']; ?></a>
+                                                | <strong>Team: <?php echo esc_html($game['team']); ?></strong>
+                                                | Position: <?php echo $game['position']; ?>
+                                            </div>
                                         </div>
                                     <?php endforeach; ?>
                                 </li>

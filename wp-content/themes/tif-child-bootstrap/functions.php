@@ -2195,6 +2195,76 @@ function get_player_points_by_week($pid, $week) {
     return $get;
 }
 
+// Check if a player was on bye for a specific week
+function is_player_on_bye($pid, $weekid) {
+    global $wpdb;
+    
+    // Extract year and week from weekid (e.g., '201411' -> year: 2014, week: 11)
+    $year = (int)substr($weekid, 0, 4);
+    $week = (int)substr($weekid, 4, 2);
+    
+    // Try to get player's NFL team for that specific week
+    $result = $wpdb->get_results($wpdb->prepare(
+        "SELECT nflteam FROM `{$pid}` WHERE week_id = %s LIMIT 1",
+        $weekid
+    ), ARRAY_N);
+    
+    // If player didn't play that week, check previous/next weeks for their NFL team
+    $nfl_team = null;
+    if (!empty($result) && isset($result[0][0]) && $result[0][0] != '' && $result[0][0] !== null) {
+        $nfl_team = $result[0][0];
+    } else {
+        // Try to find NFL team from surrounding weeks in the same season
+        $surrounding_weeks = array();
+        for ($i = 1; $i <= 3; $i++) {
+            $surrounding_weeks[] = sprintf('%04d%02d', $year, $week - $i);
+            $surrounding_weeks[] = sprintf('%04d%02d', $year, $week + $i);
+        }
+        
+        foreach ($surrounding_weeks as $check_week) {
+            $check_result = $wpdb->get_results($wpdb->prepare(
+                "SELECT nflteam FROM `{$pid}` WHERE week_id = %s AND nflteam IS NOT NULL AND nflteam != '' LIMIT 1",
+                $check_week
+            ), ARRAY_N);
+            
+            if (!empty($check_result) && isset($check_result[0][0]) && $check_result[0][0] != '' && $check_result[0][0] !== null) {
+                $nfl_team = $check_result[0][0];
+                break;
+            }
+        }
+    }
+    
+    // If we couldn't determine the NFL team, return 'Unknown'
+    if (empty($nfl_team) || $nfl_team === null || $nfl_team === '') {
+        return 'Unknown';
+    }
+    
+    // Load bye week data from JSON file
+    $json_file = get_stylesheet_directory() . '/nfl-bye-weeks/bye_weeks_' . $year . '.json';
+    
+    if (!file_exists($json_file)) {
+        return 'No Data';
+    }
+    
+    $json_data = file_get_contents($json_file);
+    $bye_data = json_decode($json_data, true);
+    
+    if (!isset($bye_data['bye_weeks'])) {
+        return 'No Data';
+    }
+    
+    // Check if the NFL team is on bye for this specific week
+    foreach ($bye_data['bye_weeks'] as $bye_week) {
+        if ($bye_week['week'] == $week) {
+            if (in_array($nfl_team, $bye_week['teams'])) {
+                return 'Yes';
+            }
+        }
+    }
+    
+    return 'No';
+}
+
 
 // gets the years a player played from the player table 
 function get_player_years_played($pid) {

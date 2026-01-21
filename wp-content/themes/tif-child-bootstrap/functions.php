@@ -5858,23 +5858,33 @@ function format_player_linescore($playerid, $weekvar) {
 	$game = $playerdata[$week_id];
 	$parts = array();
 	
+	// Check if player has any non-zero stats to determine if they played
+	$has_pass_stats = ($game['pass_yds'] != 0 || $game['pass_td'] != 0 || $game['pass_int'] != 0);
+	$has_rush_stats = ($game['rush_yds'] != 0 || $game['rush_td'] != 0);
+	$has_rec_stats = ($game['rec_yds'] != 0 || $game['rec_td'] != 0);
+	$has_kick_stats = ($game['fgm'] != 0 || $game['xpm'] != 0);
+	$has_twopt = (isset($game['twopt']) && $game['twopt'] != 0);
+	
+	// If player has ANY stats (even if points = 0), show all relevant stats including zeros
+	$player_played = ($has_pass_stats || $has_rush_stats || $has_rec_stats || $has_kick_stats || $has_twopt);
+	
 	// Pass stats (Pass Yds/TDs/INTs)
-	if ($game['pass_yds'] > 0 || $game['pass_td'] > 0 || $game['pass_int'] > 0) {
+	if ($has_pass_stats) {
 		$parts[] = 'Pass: ' . $game['pass_yds'] . ' / ' . $game['pass_td'] . ' / ' . $game['pass_int'];
 	}
 	
 	// Rush stats (Rush Yds/TDs)
-	if ($game['rush_yds'] > 0 || $game['rush_td'] > 0) {
+	if ($has_rush_stats) {
 		$parts[] = 'Rush: ' . $game['rush_yds'] . ' / ' . $game['rush_td'];
 	}
 	
 	// Rec stats (Rec Yds/TDs)
-	if ($game['rec_yds'] > 0 || $game['rec_td'] > 0) {
+	if ($has_rec_stats) {
 		$parts[] = 'Rec: ' . $game['rec_yds'] . ' / ' . $game['rec_td'];
 	}
 	
 	// Kicking stats (FGM/XPM)
-	if ($game['fgm'] > 0 || $game['xpm'] > 0) {
+	if ($has_kick_stats) {
 		$parts[] = 'K: ' . $game['fgm'] . ' / ' . $game['xpm'];
 	}
 	

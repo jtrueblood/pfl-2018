@@ -723,7 +723,7 @@ printr($assoc, 0);
 						echo format_player_linescore($h_pk1, $weekvar);
 
                         if($homeboxscoreerror):
-                            echo '<div style="color: red;">ERROR: Boxscore is '.$checkhometotal.' / Diff: '.$hdiff_check.'</div>';
+                            echo '<div style="color: red;">ERROR: Boxscore is '.$checkhometotal.' / Diff: '.$hdiff_check.' <button class="copy-cmd-btn" onclick="copyCommand(\'python3 correct_game_score.py '.$year_sel.' '.$nonzeroweek.' '.$hometeam.' '.$checkhometotal.'\', this)" style="margin-left: 5px;" title="correct_game_score">+</button></div>';
                         endif;
 
                     $startershome = array($h_qb1,$h_rb1,$h_wr1,$h_pk1,$h_qb2,$h_rb2,$h_wr2,$h_pk2);
@@ -913,7 +913,7 @@ printr($assoc, 0);
 						echo format_player_linescore($a_pk1, $weekvar);
 
                         if($awayboxscoreerror):
-                            echo '<div style="color: red;">ERROR: Boxscore is '.$checkroadtotal.' / Diff: '.$adiff_check.'</div>';
+                            echo '<div style="color: red;">ERROR: Boxscore is '.$checkroadtotal.' / Diff: '.$adiff_check.' <button class="copy-cmd-btn" onclick="copyCommand(\'python3 correct_game_score.py '.$year_sel.' '.$nonzeroweek.' '.$awayteam.' '.$checkroadtotal.'\', this)" style="margin-left: 5px;" title="correct_game_score">+</button></div>';
                         endif;
 
                     $startersroad = array($a_qb1,$a_rb1,$a_wr1,$a_pk1,$a_qb2,$a_rb2,$a_wr2,$a_pk2);
@@ -1217,11 +1217,32 @@ printr($assoc, 0);
 										$totalgamescore = $homepoints + $awaypoints;
 										$differential = $homepoints - $awaypoints;
 										
+									// Display game-specific notes from ACF BEFORE game score section
+									$home_game_note = isset($game_notes_by_team[$weekvar][$hometeam]) ? $game_notes_by_team[$weekvar][$hometeam] : '';
+									$away_game_note = isset($game_notes_by_team[$weekvar][$awayteam]) ? $game_notes_by_team[$weekvar][$awayteam] : '';
+									$legacy_note = isset($weeknotes[$hometeam]) ? $weeknotes[$hometeam] : '';
+									
+									// Display home team note, away team note, or legacy note (100% width)
+									if ($home_game_note) {
+										echo '<div style="font-style: italic; margin-top: 0px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-left: 3px solid #cc0000; width: 100%;">';
+										echo $home_game_note;
+										echo '</div>';
+									}
+									if ($away_game_note && $away_game_note != $home_game_note) {
+										echo '<div style="font-style: italic; margin-top: 0px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-left: 3px solid #cc0000; width: 100%;">';
+										echo $away_game_note;
+										echo '</div>';
+									}
+									// Fallback to legacy database notes if no ACF notes exist
+									if (!$home_game_note && !$away_game_note && $legacy_note) {
+										echo '<div style="font-style: italic; margin-bottom: 10px;">'.$legacy_note.'</div>';
+									}
+										
 										if($is_extra_ot == 1){
 											echo '<span class="text-bold">Double Overtime: </span>Home Team Wins<br>';
 										}
 										
-										echo '<span class="text-bold">Total Game Score: </span>'.$totalgamescore.'<br>';	
+										echo '<span class="text-bold">Total Game Score: </span>'.$totalgamescore.'<br>';
 										
 									
 										// point differential 
@@ -1295,27 +1316,6 @@ printr($assoc, 0);
 											);
 											insertslams($insertarr);
 										}
-										
-									// Display game-specific notes from ACF if they exist for either team
-									$home_game_note = isset($game_notes_by_team[$weekvar][$hometeam]) ? $game_notes_by_team[$weekvar][$hometeam] : '';
-									$away_game_note = isset($game_notes_by_team[$weekvar][$awayteam]) ? $game_notes_by_team[$weekvar][$awayteam] : '';
-									$legacy_note = isset($weeknotes[$hometeam]) ? $weeknotes[$hometeam] : '';
-									
-									// Display home team note, away team note, or legacy note
-									if ($home_game_note) {
-										echo '<p></p><div style="font-style: italic; margin-top: 0px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-left: 3px solid #cc0000; width: 50%;">';
-										echo $home_game_note;
-										echo '</div>';
-									}
-									if ($away_game_note && $away_game_note != $home_game_note) {
-										echo '<div style="font-style: italic; margin-top: 0px; margin-bottom: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-left: 3px solid #cc0000; width: 50%;">';
-										echo $away_game_note;
-										echo '</div>';
-									}
-									// Fallback to legacy database notes if no ACF notes exist
-									if (!$home_game_note && !$away_game_note && $legacy_note) {
-										echo '<p></p><i>'.$legacy_note.'</i>';
-									}
 
 
                                     // JERSEY SECTION
@@ -1465,7 +1465,7 @@ printr($assoc, 0);
 
 							//printr($tops, 0);
 							
-							?>	
+							?>
 							
 							<div class="panel panel-dark">
 								<div class="panel-heading">
@@ -1532,12 +1532,43 @@ printr($assoc, 0);
 						<div class="panel panel-dark">
 							<div class="panel-body">
 								
-									<?php $week_update_url = $update_pdf[$weekvar];
+									<?php 
+									// First check for PDF update
+									$week_update_url = $update_pdf[$weekvar];
+									
+									// Determine MFL League ID and subdomain based on year (2011+)
+									$mfl_league_id = '';
+									$mfl_subdomain = 'www47'; // Default subdomain
+									
+									if ($year_sel == 2011) {
+										$mfl_league_id = '79122';
+										$mfl_subdomain = 'www49'; // 2011 uses www49
+									} elseif ($year_sel == 2012) {
+										$mfl_league_id = '47001';
+									} elseif ($year_sel == 2013) {
+										$mfl_league_id = '23875';
+									} elseif ($year_sel == 2014) {
+										$mfl_league_id = '11521';
+									} elseif ($year_sel == 2015) {
+										$mfl_league_id = '47099';
+									} elseif ($year_sel >= 2016) {
+										$mfl_league_id = '38954';
+									}
+									
+									$mfl_url = '';
+									if (!empty($mfl_league_id)) {
+										$mfl_url = 'https://' . $mfl_subdomain . '.myfantasyleague.com/' . $year_sel . '/weekly?L=' . $mfl_league_id . '&W=' . $nonzeroweek;
+									}
+									
+									// Display logic: PDF first, then MFL, then "Not Found"
 									if (isset($week_update_url)){
 										echo '<h4><a href="'.$week_update_url .'" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;&nbsp;Update - '.$week_sel.', '.$year_sel.'</a></h4>';
+									} elseif (!empty($mfl_url)) {
+										echo '<h4><a href="'.$mfl_url.'" target="_blank">MFL Weekly Results</a></h4>';
 									} else {
 										echo '<h4>No Printed Update Found</h4>';
-									} ?>
+									} 
+									?>
 							
 							</div>
 							<div class="panel-footer">

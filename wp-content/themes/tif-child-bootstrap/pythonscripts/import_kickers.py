@@ -69,13 +69,24 @@ def import_csv_to_db(csv_file_path):
             # Skip first row (category headers like "PAT", "FG", etc.)
             next(f)
             
-            # Now create DictReader with the actual column names (line 2)
-            reader = csv.DictReader(f, skipinitialspace=True)
+            # Read header line to get column names
+            header_line = f.readline().strip()
+            headers = [h.strip() for h in header_line.split(',')]
+            
+            # Now read data rows
+            reader = csv.reader(f)
             
             rows_to_insert = []
             skipped_rows = 0
             
-            for row in reader:
+            for values in reader:
+                if len(values) < len(headers):
+                    skipped_rows += 1
+                    continue
+                
+                # Create dict from headers and values
+                row = dict(zip(headers, values))
+                
                 # Skip empty rows or header-like rows
                 if not row.get('Player') or row.get('Player') == 'Player':
                     skipped_rows += 1
@@ -85,6 +96,11 @@ def import_csv_to_db(csv_file_path):
                 player_name = row.get('Player', '').strip()
                 week = row.get('Week', '').strip()
                 date_str = row.get('Date', '').strip()
+                team = row.get('Team', '').strip()
+                opp = row.get('Opp', '').strip()
+                # Column 10 is either '@' (away) or '' (home) or 'vs' (home)
+                location_marker = values[10].strip() if len(values) > 10 else ''
+                homeaway = '@' if location_marker == '@' else 'vs'
                 xpm = row.get('XPM', '0').strip() or '0'
                 fgm = row.get('FGM', '0').strip() or '0'
                 player_id_raw = row.get('-additional', '').strip()
@@ -115,6 +131,9 @@ def import_csv_to_db(csv_file_path):
                     'year': year,
                     'week': week_int,
                     'game_date': game_date,
+                    'team': team,
+                    'versusteam': opp,
+                    'homeaway': homeaway,
                     'passyards': 0,
                     'passtd': 0,
                     'passint': 0,
@@ -143,7 +162,12 @@ def import_csv_to_db(csv_file_path):
                 print(f"\n  Row {i}:")
                 print(f"    Player: {row['playername']} (ID: {row['playerid']})")
                 print(f"    Year: {row['year']}, Week: {row['week']}, Date: {row['game_date']}")
+                print(f"    Team: {row['team']}, vs/@: {row['homeaway']}, Opponent: {row['versusteam']}")
                 print(f"    XP: {row['xp']}, FG: {row['fg']}")
+                print(f"    Pass: {row['passyards']} yds, {row['passtd']} TD, {row['passint']} INT")
+                print(f"    Rush: {row['rushyards']} yds, {row['rushtd']} TD")
+                print(f"    Rec: {row['recyards']} yds, {row['rectd']} TD")
+                print(f"    2PT: {row['twopt']}")
             
             # Confirm import
             response = input(f"\n⚠️  Import {len(rows_to_insert)} rows into wp_stathead_PK? (yes/no): ").strip().lower()
@@ -157,9 +181,10 @@ def import_csv_to_db(csv_file_path):
             
             insert_query = """
                 INSERT INTO wp_stathead_PK 
-                (playerid, playername, year, week, game_date, passyards, passtd, passint,
-                 rushyards, rushtd, recyards, rectd, xp, fg, twopt)
+                (playerid, playername, year, week, game_date, team, versusteam, homeaway,
+                 passyards, passtd, passint, rushyards, rushtd, recyards, rectd, xp, fg, twopt)
                 VALUES (%(playerid)s, %(playername)s, %(year)s, %(week)s, %(game_date)s,
+                        %(team)s, %(versusteam)s, %(homeaway)s,
                         %(passyards)s, %(passtd)s, %(passint)s, %(rushyards)s, %(rushtd)s,
                         %(recyards)s, %(rectd)s, %(xp)s, %(fg)s, %(twopt)s)
             """

@@ -291,17 +291,34 @@
                 // Get all teams from wp_teams table  
                 $teams = $wpdb->get_results("SELECT * FROM wp_teams", ARRAY_A);
                 
-                // Load weekly update PDFs from ACF options
+                // Load weekly update PDFs, raw data files, and notes from ACF options
                 $weekly_pdfs = array();
+                $weekly_raw_data = array();
+                $weekly_notes = array();
                 $pdf_count = get_option('options_update_pdfs', 0);
                 for ($i = 0; $i < $pdf_count; $i++) {
                     $week_id = get_option("options_update_pdfs_{$i}_week_id");
                     $pdf_id = get_option("options_update_pdfs_{$i}_pdf_file");
+                    $raw_data_id = get_option("options_update_pdfs_{$i}_raw_data");
+                    $update_notes = get_option("options_update_pdfs_{$i}_update_notes");
+                    
                     if ($week_id && $pdf_id) {
                         $pdf_url = wp_get_attachment_url($pdf_id);
                         if ($pdf_url) {
                             $weekly_pdfs[$week_id] = $pdf_url;
                         }
+                    }
+                    
+                    if ($week_id && $raw_data_id) {
+                        $raw_data_url = wp_get_attachment_url($raw_data_id);
+                        if ($raw_data_url) {
+                            $weekly_raw_data[$week_id] = $raw_data_url;
+                        }
+                        error_log("Week {$week_id}: raw_data_url = " . var_export($raw_data_url, true));
+                    }
+                    
+                    if ($week_id && $update_notes) {
+                        $weekly_notes[$week_id] = $update_notes;
                     }
                 }
 
@@ -321,7 +338,8 @@
                     'scoring_entry_errors_1991_1993' => array(),
                     'other_scoring_discrepancies_1991' => array(),
                     'other_scoring_discrepancies_1992plus' => array(),
-                    'players_on_bye' => array()
+                    'players_on_bye' => array(),
+                    'boxscore_errors' => array()
                 );
 
                 // Get all team IDs for validation (using 'int' field from wp_teams)
@@ -764,6 +782,98 @@
                     }
                 }
 
+                // Check for boxscore errors (game scores that don't match player total points)
+                foreach ($teams as $team) {
+                    $team_id = $team['team_int'];
+                    $team_table = 'wp_team_' . $team_id;
+                    
+                    // Check if team table exists
+                    $table_exists = $wpdb->get_var(
+                        $wpdb->prepare(
+                            "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = %s AND table_name = %s",
+                            DB_NAME,
+                            $team_table
+                        )
+                    );
+                    
+                    if (!$table_exists) continue;
+                    
+                    // Get all games for this team
+                    $games = $wpdb->get_results(
+                        "SELECT season, week, points, QB1, RB1, WR1, PK1, QB2, RB2, WR2, PK2, result, versusteam, overtime FROM `{$team_table}` WHERE season >= 1991",
+                        ARRAY_A
+                    );
+                    
+                    foreach ($games as $game) {
+                        $year = $game['season'];
+                        $week = $game['week'];
+                        $game_points = $game['points'];
+                        
+                        // Calculate boxscore total from player points
+                        $qb1_points = 0;
+                        $rb1_points = 0;
+                        $wr1_points = 0;
+                        $pk1_points = 0;
+                        
+                        if (!empty($game['QB1']) && $game['QB1'] != 'None') {
+                            $qb1_data = $wpdb->get_row(
+                                $wpdb->prepare("SELECT points FROM `{$game['QB1']}` WHERE year = %d AND week = %d", $year, $week),
+                                ARRAY_A
+                            );
+                            $qb1_points = $qb1_data ? intval($qb1_data['points']) : 0;
+                        }
+                        
+                        if (!empty($game['RB1']) && $game['RB1'] != 'None') {
+                            $rb1_data = $wpdb->get_row(
+                                $wpdb->prepare("SELECT points FROM `{$game['RB1']}` WHERE year = %d AND week = %d", $year, $week),
+                                ARRAY_A
+                            );
+                            $rb1_points = $rb1_data ? intval($rb1_data['points']) : 0;
+                        }
+                        
+                        if (!empty($game['WR1']) && $game['WR1'] != 'None') {
+                            $wr1_data = $wpdb->get_row(
+                                $wpdb->prepare("SELECT points FROM `{$game['WR1']}` WHERE year = %d AND week = %d", $year, $week),
+                                ARRAY_A
+                            );
+                            $wr1_points = $wr1_data ? intval($wr1_data['points']) : 0;
+                        }
+                        
+                        if (!empty($game['PK1']) && $game['PK1'] != 'None') {
+                            $pk1_data = $wpdb->get_row(
+                                $wpdb->prepare("SELECT points FROM `{$game['PK1']}` WHERE year = %d AND week = %d", $year, $week),
+                                ARRAY_A
+                            );
+                            $pk1_points = $pk1_data ? intval($pk1_data['points']) : 0;
+                        }
+                        
+                        $boxscore_total = $qb1_points + $rb1_points + $wr1_points + $pk1_points;
+                        $diff = $game_points - $boxscore_total;
+                        
+                        // Check if OT winner with diff of 1 (exclude from errors)
+                        // OT winners get +1 bonus point, so only exclude if:
+                        // - overtime column is 1 (OT game)
+                        // - diff is exactly 1
+                        // - result > 0 (team won)
+                        $is_ot_winner = false;
+                        if ($game['overtime'] == 1 && $diff == 1 && $game['result'] > 0) {
+                            $is_ot_winner = true;
+                        }
+                        
+                        // If there's a mismatch and it's not an OT winner case
+                        if ($diff != 0 && !$is_ot_winner) {
+                            $errors['boxscore_errors'][] = array(
+                                'team' => $team_id,
+                                'year' => $year,
+                                'week' => $week,
+                                'game_points' => $game_points,
+                                'boxscore_total' => $boxscore_total,
+                                'diff' => $diff
+                            );
+                        }
+                    }
+                }
+
                 
                 // Calculate total errors
                 $total_errors = count($errors['players_missing_team']) +
@@ -815,6 +925,11 @@
                                     <th>NFL Dataset</th>
                                     <th>MFL Results</th>
                                     <th>PFL Update</th>
+                                    <th>Raw Data</th>
+                                    <th style="width: 80px; text-align: center;">Errors</th>
+                                    <th style="width: 80px; text-align: center;">2pts</th>
+                                    <th style="width: 80px; text-align: center;">Boxscore</th>
+                                    <th style="width: 80px; text-align: center;">Likely Byes</th>
                                     <th>PFL Notes</th>
                                 </tr>
                             </thead>
@@ -825,6 +940,64 @@
                                 for ($year = 1991; $year <= $current_year; $year++) {
                                     for ($week = 1; $week <= 17; $week++) {
                                         $results_url = home_url('/results/?Y=' . $year . '&W=' . sprintf('%02d', $week));
+                                        
+                                        // Count errors for this year/week
+                                        $week_errors = 0;
+                                        $week_twopts = 0;
+                                        $week_boxscore = 0;
+                                        $week_byes = 0;
+                                        $error_player_ids = array();
+                                        $twopt_player_ids = array();
+                                        $boxscore_team_ids = array();
+                                        $bye_player_ids = array();
+                                        
+                                        // Check likely two point conversions (separate counter)
+                                        foreach ($errors['likely_two_point_conversions'] as $error) {
+                                            if ($error['year'] == $year && $error['week'] == $week) {
+                                                $week_twopts++;
+                                                $twopt_player_ids[] = $error['player_id'];
+                                            }
+                                        }
+                                        
+                                        // Check scoring entry errors 1991-1993
+                                        foreach ($errors['scoring_entry_errors_1991_1993'] as $error) {
+                                            if ($error['year'] == $year && $error['week'] == $week) {
+                                                $week_errors++;
+                                                $error_player_ids[] = $error['player_id'];
+                                            }
+                                        }
+                                        
+                                        // Check other scoring discrepancies 1991
+                                        foreach ($errors['other_scoring_discrepancies_1991'] as $error) {
+                                            if ($error['year'] == $year && $error['week'] == $week) {
+                                                $week_errors++;
+                                                $error_player_ids[] = $error['player_id'];
+                                            }
+                                        }
+                                        
+                                        // Check other scoring discrepancies 1992+
+                                        foreach ($errors['other_scoring_discrepancies_1992plus'] as $error) {
+                                            if ($error['year'] == $year && $error['week'] == $week) {
+                                                $week_errors++;
+                                                $error_player_ids[] = $error['player_id'];
+                                            }
+                                        }
+                                        
+                                        // Check boxscore errors (separate counter)
+                                        foreach ($errors['boxscore_errors'] as $error) {
+                                            if ($error['year'] == $year && $error['week'] == $week) {
+                                                $week_boxscore++;
+                                                $boxscore_team_ids[] = $error['team'];
+                                            }
+                                        }
+                                        
+                                        // Check players on bye (separate counter)
+                                        foreach ($errors['players_on_bye'] as $error) {
+                                            if ($error['year'] == $year && $error['week'] == $week) {
+                                                $week_byes++;
+                                                $bye_player_ids[] = $error['player_id'];
+                                            }
+                                        }
                                         
                                         // Determine MFL League ID based on year (only 2012+)
                                         $mfl_league_id = '';
@@ -852,11 +1025,16 @@
                                         $pfr_url = 'https://www.pro-football-reference.com/years/' . $year . '/week_' . $week . '.htm';
                                         $pfr_link = '<a href="' . $pfr_url . '" target="_blank" style="color: #0073aa; text-decoration: underline;">PFR Week ' . $week . '</a>';
                                         
-                                        // Check for PFL Update PDF from ACF options
+                                        // Check for PFL Update PDF and Raw Data from ACF options
                                         $week_id = sprintf('%04d%02d', $year, $week);
                                         $pfl_update_link = '<span style="color: #999;">Not Available</span>';
                                         if (isset($weekly_pdfs[$week_id])) {
                                             $pfl_update_link = '<a href="' . $weekly_pdfs[$week_id] . '" target="_blank" style="color: #0073aa; text-decoration: underline;">Week ' . $week . ', ' . $year . ' Update</a>';
+                                        }
+                                        
+                                        $raw_data_link = '<span style="color: #999;">Not Available</span>';
+                                        if (isset($weekly_raw_data[$week_id])) {
+                                            $raw_data_link = '<a href="' . $weekly_raw_data[$week_id] . '" target="_blank" style="color: #0073aa; text-decoration: underline;">Raw Data</a>';
                                         }
                                         
                                         // NFL Dataset: ESPN API for 2001+, CSV fallback for 1991-2000
@@ -892,7 +1070,43 @@
                                         echo '<td>' . $espn_dataset . '</td>'; // NFL Dataset
                                         echo '<td>' . $mfl_link . '</td>'; // MFL Results
                                         echo '<td>' . $pfl_update_link . '</td>'; // PFL Update
-                                        echo '<td></td>'; // PFL Notes
+                                        echo '<td>' . $raw_data_link . '</td>'; // Raw Data
+                                        
+                                        // Display error count (red badge)
+                                        if ($week_errors > 0) {
+                                            $error_tooltip = implode(', ', $error_player_ids);
+                                            echo '<td style="text-align: center;"><span style="background: #dc3232; color: white; padding: 2px 8px; border-radius: 3px; font-weight: bold; cursor: help;" title="' . esc_attr($error_tooltip) . '">' . $week_errors . '</span></td>';
+                                        } else {
+                                            echo '<td style="text-align: center; color: #999;">0</td>';
+                                        }
+                                        
+                                        // Display 2pt conversion count (blue badge)
+                                        if ($week_twopts > 0) {
+                                            $twopt_tooltip = implode(', ', $twopt_player_ids);
+                                            echo '<td style="text-align: center;"><span style="background: #2271b1; color: white; padding: 2px 8px; border-radius: 3px; font-weight: bold; cursor: help;" title="' . esc_attr($twopt_tooltip) . '">' . $week_twopts . '</span></td>';
+                                        } else {
+                                            echo '<td style="text-align: center; color: #999;">0</td>';
+                                        }
+                                        
+                                        // Display boxscore error count (purple badge)
+                                        if ($week_boxscore > 0) {
+                                            $boxscore_tooltip = implode(', ', $boxscore_team_ids);
+                                            echo '<td style="text-align: center;"><span style="background: #7e3794; color: white; padding: 2px 8px; border-radius: 3px; font-weight: bold; cursor: help;" title="' . esc_attr($boxscore_tooltip) . '">' . $week_boxscore . '</span></td>';
+                                        } else {
+                                            echo '<td style="text-align: center; color: #999;">0</td>';
+                                        }
+                                        
+                                        // Display bye count (orange badge)
+                                        if ($week_byes > 0) {
+                                            $bye_tooltip = implode(', ', $bye_player_ids);
+                                            echo '<td style="text-align: center;"><span style="background: #f58220; color: white; padding: 2px 8px; border-radius: 3px; font-weight: bold; cursor: help;" title="' . esc_attr($bye_tooltip) . '">' . $week_byes . '</span></td>';
+                                        } else {
+                                            echo '<td style="text-align: center; color: #999;">0</td>';
+                                        }
+                                        
+                                        // Display PFL Notes
+                                        $pfl_notes = isset($weekly_notes[$week_id]) ? esc_html($weekly_notes[$week_id]) : '';
+                                        echo '<td style="font-size: 0.9em; color: #666;">' . $pfl_notes . '</td>';
                                         echo '</tr>';
                                     }
                                 }

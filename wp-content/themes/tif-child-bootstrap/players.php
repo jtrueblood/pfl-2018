@@ -487,11 +487,11 @@ $rosteredif = check_player_rostered($playerid, $year);
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-4 left-column">
 			<div class="panel widget">
-				<div id="player_widget_img" class="player-img-top">
+				<div id="player_widget_img" class="player-img-top" style="width:100%;height:200px;overflow:hidden;">
                     <?php if($image_attributes[0]):?>
-					<img src="<?php echo $image_attributes[0]; ?>" style="height: 200px;"/>
+					<img src="<?php echo $image_attributes[0]; ?>" style="width:100%;height:200px;object-fit:cover;object-position:center top;"/>
                     <?php else: ?>
-                    <img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/no-player.jpg" style="height: 200px;"/>
+                    <img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/no-player.jpg" style="width:100%;height:200px;object-fit:cover;object-position:center top;"/>
                         <p></p>
                     <?php endif; ?>
 				</div>

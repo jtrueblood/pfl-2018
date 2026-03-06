@@ -7,18 +7,51 @@
 
 <!-- necessary cache fies are pulled in via the 'pointsleader' function in functions.php -->
 
-<?php get_header(); 
+<?php get_header();
 //$geturl = $_SERVER['REQUEST_URI'];
 //$geturl = the_permalink();
 //echo $geturl;
 //$yearid = 1998;
 $yearid = $_GET['id'];
 $yearis = date('Y');
-	
+
+// Purge and rebuild: delete stored data for the year then JS-redirect to reload cleanly
+if (isset($_GET['purge']) && $_GET['purge'] == '1' && !empty($yearid)) {
+	global $wpdb;
+
+	// Remove non-PFL-rostered players from wp_season_leaders.
+	// A rostered player has at least one row in their individual table with a non-empty team field.
+	$season_players = $wpdb->get_col($wpdb->prepare(
+		"SELECT playerid FROM wp_season_leaders WHERE season = %d",
+		$yearid
+	));
+	foreach ($season_players as $pid) {
+		$table = esc_sql($pid);
+		// Check the table exists before querying it; if missing, skip (don't delete)
+		$table_exists = $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = %s",
+			$table
+		));
+		if (!$table_exists) continue;
+		$has_pfl_games = $wpdb->get_var($wpdb->prepare(
+			"SELECT COUNT(*) FROM `{$table}` WHERE year = %d AND team != '' AND team IS NOT NULL",
+			$yearid
+		));
+		if ((int)$has_pfl_games === 0) {
+			$wpdb->delete('wp_season_leaders', ['playerid' => $pid, 'season' => $yearid]);
+		}
+	}
+
+	$wpdb->query($wpdb->prepare("DELETE FROM wp_number_ones WHERE year = %d", $yearid));
+	$wpdb->query($wpdb->prepare("DELETE FROM wp_player_pvqs WHERE year = %d", $yearid));
+	echo '<script>window.location = "' . esc_url(home_url('/leaders-season/?id=' . intval($yearid))) . '";</script>';
+	exit;
+}
+
 $theyears = the_seasons();
 $playersassoc = get_players_assoc ();
 //$playerdata = set_allplayerdata_trans('1991SmitRB');
-//$getplayer = get_allplayerdata_trans('1992KosaQB'); 
+//$getplayer = get_allplayerdata_trans('1992KosaQB');
 
 $playerids = just_player_ids_with_position();
 
@@ -398,8 +431,14 @@ printr($ispro, 0);
 				
 				<div id="page-title">
 					<?php while (have_posts()) : the_post(); ?>
-						<h1 class="page-header text-bold"><?php the_title();?> - <?php echo $yearid; ?></h1>
-					<?php endwhile; wp_reset_query(); ?>	
+						<h1 class="page-header text-bold"><?php the_title();?> - <?php echo $yearid; ?>
+							<a href="?id=<?php echo $yearid; ?>&purge=1"
+							   style="font-size: 13px; font-weight: normal; margin-left: 15px; padding: 4px 12px; border: 1px solid #cc0000; border-radius: 4px; color: #cc0000; text-decoration: none; vertical-align: middle;"
+							   onclick="return confirm('Purge and rebuild <?php echo $yearid; ?> leaders data?');">
+							   &#8635; Purge &amp; Rebuild
+							</a>
+						</h1>
+					<?php endwhile; wp_reset_query(); ?>
 				</div>
 				
 				<!--Page content-->

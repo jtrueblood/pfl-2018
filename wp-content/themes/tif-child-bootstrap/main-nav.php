@@ -160,7 +160,20 @@
                                                 <li class="<?php ifbodyclass (1743, 'active-link'); ?>"><a href="/scorigami/?W=202501">Scorigami</a></li>
                                                 <li class="<?php ifbodyclass (1939, 'active-link'); ?>"><a href="/position-difference">Position Difference</a></li>
                                                 <li class="<?php ifbodyclass (1941, 'active-link'); ?>"><a href="/colleges">Colleges</a></li>
-                                                <li><a href="<?php echo home_url('/error-check'); ?>">Error Check</a></li>
+                                            </ul>
+                                    </li>
+                                    
+                                    <!--Menu list item-->
+                                    <li class="active-sub">
+                                        <a href="#">
+                                            <i class="fa fa-th"></i>
+                                            <span class="menu-title">Error Check</span>
+                                            <i class="arrow"></i>
+                                        </a>
+                                        <!--Submenu-->
+                                        <ul class="collapse in">
+                                            <li><a href="<?php echo home_url('/error-check'); ?>">Error Check</a></li>
+                                            <li><a href="<?php echo home_url('/1991-check'); ?>">1991 Check</a></li>
 											</ul>
 									</li>
 						

@@ -3,13 +3,24 @@
 Script to fetch NFL player data using ESPN's unofficial API (2001+) or wp_stathead_* tables (1991-2000)
 
 Usage:
-    python3 getplayernfldata.py "Player Name" YEAR WEEK [INSERT]
+    python3 getplayernfldata.py "Player Name" YEAR WEEK [INSERT] [PFL_TEAM]
     
 Parameters:
     Player Name - Full name of the player (e.g., "Josh Allen")
     YEAR        - Season year (1991-2100)
     WEEK        - Week number(s): single week (13), comma-separated weeks (11,12,13), or 'all'
+                  Using 'all' will loop through all weeks in the season:
+                    - Historical seasons (1991-2020): 14 weeks
+                    - Modern seasons (2021+): 18 weeks
+                  Weeks where the player did not play will show "Did Not Play"
     INSERT      - Optional: 'Yes' to insert into database, 'No' to just display (default: 'No')
+    PFL_TEAM    - Optional: PFL team abbreviation (e.g., 'CMN'). Used when inserting to
+                  populate game information (versus, home_away, win_loss, location)
+
+Output Format:
+    - Single week: Detailed format with all stat categories
+    - Multiple weeks: Compact single-line format per week
+      Format: WEEK X - Player Name - {Statlines} - {PFL SCORE}
 
 Data Sources:
     - Years 1991-2000: wp_stathead_QB, wp_stathead_RB, wp_stathead_WR, wp_stathead_PK tables
@@ -18,9 +29,10 @@ Data Sources:
 Examples:
     python3 getplayernfldata.py "Josh Allen" 2024 13
     python3 getplayernfldata.py "Josh Allen" 2024 13 Yes
-    python3 getplayernfldata.py "Josh Allen" 2024 "11,12,13" Yes
+    python3 getplayernfldata.py "Josh Allen" 2024 "11,12,13" Yes CMN
     python3 getplayernfldata.py "Warren Moon" 1991 5 Yes
-    python3 getplayernfldata.py "Emmitt Smith" 1995 all Yes
+    python3 getplayernfldata.py "John Elway" 1991 6 No CMN
+    python3 getplayernfldata.py "Emmitt Smith" 1995 all Yes DAL
 """
 
 import requests
@@ -51,6 +63,12 @@ DB_TABLE_PREFIX = 'wp_'
 
 # Specific socket for this Local by Flywheel site (from getpflimage.py)
 MYSQL_SOCKET = "/Users/jamietrueblood/Library/Application Support/Local/run/JYl9oL2fW/mysql/mysqld.sock"
+
+# Path to NFL bye weeks JSON files
+BYE_WEEKS_DIR = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    'nfl-bye-weeks'
+)
 
 # NFL Team name to abbreviation mapping (from functions.php all_nfl_teams_flipped)
 NFL_TEAM_ABBREVIATIONS = {
@@ -145,6 +163,70 @@ def get_team_abbreviation(team_name):
         3-letter abbreviation or original name if not found
     """
     return NFL_TEAM_ABBREVIATIONS.get(team_name, team_name)
+
+
+def load_bye_weeks(year):
+    """
+    Load bye week data for a specific year
+    
+    Parameters
+    ----------
+    year : int
+        Season year
+        
+    Returns
+    -------
+    dict or None
+        Dictionary mapping week numbers to lists of team abbreviations on bye,
+        or None if file not found or error loading
+    """
+    bye_weeks_file = os.path.join(BYE_WEEKS_DIR, f'bye_weeks_{year}.json')
+    
+    if not os.path.exists(bye_weeks_file):
+        return None
+    
+    try:
+        with open(bye_weeks_file, 'r') as f:
+            data = json.load(f)
+        
+        # Convert to a dictionary mapping week -> list of teams
+        bye_weeks = {}
+        for entry in data.get('bye_weeks', []):
+            week = entry.get('week')
+            teams = entry.get('teams', [])
+            bye_weeks[week] = teams
+        
+        return bye_weeks
+    except Exception as e:
+        # Silently fail if we can't load bye weeks
+        return None
+
+
+def is_team_on_bye(nfl_team_abbr, week, year):
+    """
+    Check if an NFL team is on bye in a specific week
+    
+    Parameters
+    ----------
+    nfl_team_abbr : str
+        NFL team abbreviation (e.g., 'BUF', 'DEN')
+    week : int
+        Week number
+    year : int
+        Season year
+        
+    Returns
+    -------
+    bool
+        True if team is on bye that week, False otherwise
+    """
+    bye_weeks = load_bye_weeks(year)
+    
+    if not bye_weeks:
+        return False
+    
+    teams_on_bye = bye_weeks.get(week, [])
+    return nfl_team_abbr in teams_on_bye
 
 
 def _load_wp_db_config():
@@ -502,6 +584,8 @@ def insert_player_stats_to_db(p_id, year, week, stats, team_abbr=None):
             print(f"  Debug - Versus: {versus}")
             print(f"  Debug - Location: {location}")
             print(f"  Debug - Win/Loss: {win_loss}")
+            print(f"  Debug - XP Made: {stats.get('XP Made', 0)} | XP Att: {stats.get('XP Att', 0)}")
+            print(f"  Debug - FG Made: {stats.get('FG Made', 0)} | FG Att: {stats.get('FG Att', 0)}")
             
             cursor.execute(query, values)
             connection.commit()
@@ -995,6 +1079,12 @@ def get_stats_from_stathead_tables(player_name, week, year, p_id=None):
                 
                 if result:
                     # Convert database row to stats format
+                    # For kicking stats: check if xpa/fga columns exist, otherwise default to 0
+                    xp_made = result.get('xp', 0) or 0
+                    xp_att = result.get('xpa', 0) or 0
+                    fg_made = result.get('fg', 0) or 0
+                    fg_att = result.get('fga', 0) or 0
+                    
                     stats = {
                         'Date': str(result.get('game_date', '')) if result.get('game_date') else '',
                         'Team': result.get('team', '') or '',
@@ -1008,10 +1098,10 @@ def get_stats_from_stathead_tables(player_name, week, year, p_id=None):
                         'Rec Yds': result.get('recyards', 0) or 0,
                         'Rec TD': result.get('rectd', 0) or 0,
                         '2pt conversions': result.get('twopt', 0) or 0,
-                        'XP Made': result.get('xp', 0) or 0,
-                        'XP Att': 0,  # Not stored in stathead tables
-                        'FG Made': result.get('fg', 0) or 0,
-                        'FG Att': 0,  # Not stored in stathead tables
+                        'XP Made': xp_made,
+                        'XP Att': xp_att,
+                        'FG Made': fg_made,
+                        'FG Att': fg_att,
                         'Player': player_name,
                         '_source': 'stathead'  # Mark the source
                     }
@@ -1192,19 +1282,33 @@ def get_comprehensive_player_stats(player_name, week, year=2024):
                                     fg_stat = str(stats[i])
                                     if '/' in fg_stat:
                                         parts = fg_stat.split('/')
-                                        player_stats['FG Made'] = parts[0]
-                                        player_stats['FG Att'] = parts[1]
+                                        try:
+                                            player_stats['FG Made'] = int(parts[0])
+                                            player_stats['FG Att'] = int(parts[1])
+                                        except (ValueError, IndexError):
+                                            player_stats['FG Made'] = 0
+                                            player_stats['FG Att'] = 0
                                     else:
-                                        player_stats['FG Made'] = fg_stat
+                                        try:
+                                            player_stats['FG Made'] = int(fg_stat)
+                                        except ValueError:
+                                            player_stats['FG Made'] = 0
                                 elif label == 'XP':
                                     # Parse 'MADE/ATT' format
                                     xp_stat = str(stats[i])
                                     if '/' in xp_stat:
                                         parts = xp_stat.split('/')
-                                        player_stats['XP Made'] = parts[0]
-                                        player_stats['XP Att'] = parts[1]
+                                        try:
+                                            player_stats['XP Made'] = int(parts[0])
+                                            player_stats['XP Att'] = int(parts[1])
+                                        except (ValueError, IndexError):
+                                            player_stats['XP Made'] = 0
+                                            player_stats['XP Att'] = 0
                                     else:
-                                        player_stats['XP Made'] = xp_stat
+                                        try:
+                                            player_stats['XP Made'] = int(xp_stat)
+                                        except ValueError:
+                                            player_stats['XP Made'] = 0
                 
                 if found_player:
                     player_stats['Player'] = player_name
@@ -1396,7 +1500,7 @@ def get_team_list():
         return []
 
 
-def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_abbr=None):
+def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_abbr=None, compact_output=False, allow_dnp=False, nfl_team_hint=None):
     """Process stats for a single week
     
     Parameters
@@ -1414,13 +1518,21 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_a
     team_abbr : str, optional
         PFL team abbreviation (e.g., 'CMN'). If provided, will lookup and insert
         game information
+    compact_output : bool, optional
+        If True, output stats as a single line instead of detailed format
+    allow_dnp : bool, optional
+        If True, treats "Did Not Play" as a valid result (not a failure)
+    nfl_team_hint : str, optional
+        NFL team abbreviation hint for bye week checking (e.g., 'BUF')
         
     Returns
     -------
     tuple
-        (success: bool, p_id: str)
+        (success: bool, p_id: str, status: str)
+        status can be 'played', 'dnp', or 'bye'
     """
-    print(f"\nFetching stats for {player_name} - Week {week}, {year}...")
+    if not compact_output:
+        print(f"\nFetching stats for {player_name} - Week {week}, {year}...")
     
     # Get player ID from database if not provided
     if not p_id:
@@ -1430,7 +1542,8 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_a
     # For years 1991-2000, use wp_stathead_* tables
     # For years 2001+, use ESPN API
     if 1991 <= year <= 2000:
-        print(f"Using wp_stathead_* tables for year {year}...")
+        if not compact_output:
+            print(f"Using wp_stathead_* tables for year {year}...")
         stats = get_stats_from_stathead_tables(player_name, week, year, p_id)
     else:
         stats = get_comprehensive_player_stats(player_name, week, year)
@@ -1443,80 +1556,139 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_a
         except:
             formatted_date = stats['Date']
         
-        # Print results
-        print("=" * 60)
-        print(f"Player: {player_name}")
-        if p_id:
-            print(f"Player ID (p_id): {p_id}")
-        else:
-            print(f"Player ID (p_id): Not found in database")
-        print("=" * 60)
-        print(f"Date of game:      {formatted_date}")
-        print(f"Team:              {stats['Team'] or 'N/A'}")
-        print(f"Versus Team:       {stats['Versus Team'] or 'N/A'}")
-        print(f"Home or Away:      {stats['Home or Away'] or 'N/A'}")
-        print("\nPassing Stats:")
-        print(f"  Pass Yds:        {stats['Pass Yds']}")
-        print(f"  Pass TD:         {stats['Pass TD']}")
-        print(f"  Pass Int:        {stats['Pass Int']}")
-        print("\nRushing Stats:")
-        print(f"  Rush Yds:        {stats['Rush Yds']}")
-        print(f"  Rush TD:         {stats['Rush TD']}")
-        print("\nReceiving Stats:")
-        print(f"  Rec Yds:         {stats['Rec Yds']}")
-        print(f"  Rec TD:          {stats['Rec TD']}")
-        print("\nKicking Stats:")
-        print(f"  XP Made:         {stats['XP Made']}")
-        print(f"  XP Att:          {stats['XP Att']}")
-        print(f"  FG Made:         {stats['FG Made']}")
-        print(f"  FG Att:          {stats['FG Att']}")
-        print("\nOther:")
-        print(f"  2pt conversions: {stats['2pt conversions']}")
-        
-        # Calculate and display PFL score
+        # Calculate PFL score
+        pfl_score = None
         if p_id:
             pfl_score = calculate_nfl_score(p_id, year, stats)
-            print(f"\n🏈 PFL SCORE: {pfl_score} points")
         
-        print("=" * 60)
+        # Print results based on format
+        if compact_output:
+            # Compact single-line format for multi-week display
+            # Build stat line components
+            stat_parts = []
+            
+            # Passing stats
+            if stats['Pass Yds'] or stats['Pass TD'] or stats['Pass Int']:
+                stat_parts.append(f"Pass: {stats['Pass Yds']} yds, {stats['Pass TD']} TD, {stats['Pass Int']} INT")
+            
+            # Rushing stats
+            if stats['Rush Yds'] or stats['Rush TD']:
+                stat_parts.append(f"Rush: {stats['Rush Yds']} yds, {stats['Rush TD']} TD")
+            
+            # Receiving stats
+            if stats['Rec Yds'] or stats['Rec TD']:
+                stat_parts.append(f"Rec: {stats['Rec Yds']} yds, {stats['Rec TD']} TD")
+            
+            # Kicking stats
+            if stats['XP Made'] or stats['FG Made']:
+                stat_parts.append(f"Kick: {stats['XP Made']} XP, {stats['FG Made']} FG")
+            
+            stat_line = " | ".join(stat_parts) if stat_parts else "No stats"
+            
+            # Format: WEEK X - Player Name - {Statlines} - {PFL SCORE}
+            score_text = f"{pfl_score} pts" if pfl_score is not None else "N/A"
+            print(f"WEEK {week} - {player_name} - {stat_line} - {score_text}")
+        else:
+            # Detailed format for single week
+            print("=" * 60)
+            print(f"Player: {player_name}")
+            if p_id:
+                print(f"Player ID (p_id): {p_id}")
+            else:
+                print(f"Player ID (p_id): Not found in database")
+            print("=" * 60)
+            print(f"Date of game:      {formatted_date}")
+            print(f"Team:              {stats['Team'] or 'N/A'}")
+            print(f"Versus Team:       {stats['Versus Team'] or 'N/A'}")
+            print(f"Home or Away:      {stats['Home or Away'] or 'N/A'}")
+            print("\nPassing Stats:")
+            print(f"  Pass Yds:        {stats['Pass Yds']}")
+            print(f"  Pass TD:         {stats['Pass TD']}")
+            print(f"  Pass Int:        {stats['Pass Int']}")
+            print("\nRushing Stats:")
+            print(f"  Rush Yds:        {stats['Rush Yds']}")
+            print(f"  Rush TD:         {stats['Rush TD']}")
+            print("\nReceiving Stats:")
+            print(f"  Rec Yds:         {stats['Rec Yds']}")
+            print(f"  Rec TD:          {stats['Rec TD']}")
+            print("\nKicking Stats:")
+            print(f"  XP Made:         {stats['XP Made']}")
+            print(f"  XP Att:          {stats['XP Att']}")
+            print(f"  FG Made:         {stats['FG Made']}")
+            print(f"  FG Att:          {stats['FG Att']}")
+            print("\nOther:")
+            print(f"  2pt conversions: {stats['2pt conversions']}")
+            
+            # Display PFL score
+            if pfl_score is not None:
+                print(f"\n🏈 PFL SCORE: {pfl_score} points")
+            
+            print("=" * 60)
         
         # Insert into database if requested
         if insert_to_db:
             if not p_id:
-                print("\n⚠ Cannot insert to database: Player ID (p_id) not found")
-                print("  Player must exist in wp_players table to insert stats")
+                if not compact_output:
+                    print("\n⚠ Cannot insert to database: Player ID (p_id) not found")
+                    print("  Player must exist in wp_players table to insert stats")
             else:
-                print(f"\nInserting stats into table {p_id}...")
+                if not compact_output:
+                    print(f"\nInserting stats into table {p_id}...")
                 success = insert_player_stats_to_db(p_id, year, week, stats, team_abbr=team_abbr)
                 if success:
-                    print(f"✓ Successfully inserted/updated stats in {p_id} table")
-                    print(f"  Week ID: {year}{week:02d}")
-                    if team_abbr:
-                        print(f"  PFL Team: {team_abbr}")
+                    if not compact_output:
+                        print(f"✓ Successfully inserted/updated stats in {p_id} table")
+                        print(f"  Week ID: {year}{week:02d}")
+                        if team_abbr:
+                            print(f"  PFL Team: {team_abbr}")
                 else:
-                    print(f"✗ Failed to insert stats into database")
+                    if not compact_output:
+                        print(f"✗ Failed to insert stats into database")
         
-        return (True, p_id)
+        return (True, p_id, 'played')
     else:
-        print("✗ Could not retrieve player stats")
-        print("\nPossible reasons:")
-        print("  - Player name is incorrect or not found")
-        print("  - Player didn't play in that week")
-        print("  - Game hasn't been played yet")
-        print("  - Week or year is invalid")
-        return (False, p_id)
+        # Player didn't play - check if it was a bye week
+        is_bye = False
+        if nfl_team_hint:
+            is_bye = is_team_on_bye(nfl_team_hint, week, year)
+        
+        if compact_output:
+            if is_bye:
+                print(f"WEEK {week} - {player_name} - Bye Week")
+                status = 'bye'
+            else:
+                print(f"WEEK {week} - {player_name} - Did Not Play")
+                status = 'dnp'
+            
+            # If allow_dnp is True, this is not considered a failure
+            if allow_dnp:
+                return (True, p_id, status)  # Success, but marked as DNP or Bye
+            else:
+                return (False, p_id, status)
+        else:
+            if is_bye:
+                print("ℹ️ Player's team was on bye this week")
+            else:
+                print("✗ Could not retrieve player stats")
+                print("\nPossible reasons:")
+                print("  - Player name is incorrect or not found")
+                print("  - Player didn't play in that week")
+                print("  - Game hasn't been played yet")
+                print("  - Week or year is invalid")
+            return (False, p_id, 'bye' if is_bye else 'dnp')
 
 
 def main():
     """Main function to handle command-line arguments"""
     
     # Check if arguments are provided
-    if len(sys.argv) < 4 or len(sys.argv) > 5:
-        print("Usage: python3 getplayernfldata.py \"Player Name\" YEAR WEEK [INSERT]")
+    if len(sys.argv) < 4 or len(sys.argv) > 6:
+        print("Usage: python3 getplayernfldata.py \"Player Name\" YEAR WEEK [INSERT] [PFL_TEAM]")
         print("\nExamples:")
         print('  python3 getplayernfldata.py "Josh Allen" 2024 13')
         print('  python3 getplayernfldata.py "Josh Allen" 2024 13 Yes')
-        print('  python3 getplayernfldata.py "Josh Allen" 2024 "11,12,13" Yes')
+        print('  python3 getplayernfldata.py "Josh Allen" 2024 "11,12,13" Yes CMN')
+        print('  python3 getplayernfldata.py "John Elway" 1991 6 No CMN')
         print('  python3 getplayernfldata.py "Josh Allen" 2024 all Yes')
         sys.exit(1)
     
@@ -1534,7 +1706,7 @@ def main():
     weeks = None  # Will be determined after getting player ID if 'all'
     
     if week_param == 'all':
-        # Will fetch weeks from database after getting player ID
+        # Will loop through all weeks in the season
         weeks = 'all'
     else:
         try:
@@ -1550,7 +1722,7 @@ def main():
     
     # Parse optional INSERT parameter (default: 'No')
     insert_to_db = False
-    if len(sys.argv) == 5:
+    if len(sys.argv) >= 5:
         insert_param = sys.argv[4].lower()
         if insert_param in ['yes', 'y', 'true', '1']:
             insert_to_db = True
@@ -1560,6 +1732,11 @@ def main():
             print(f"Invalid INSERT parameter: {sys.argv[4]}")
             print("Use 'Yes' or 'No'")
             sys.exit(1)
+    
+    # Parse optional PFL_TEAM parameter
+    team_abbr_arg = None
+    if len(sys.argv) >= 6:
+        team_abbr_arg = sys.argv[5].strip().upper()
     
     # Validate inputs
     if year < 1991 or year > 2100:
@@ -1573,6 +1750,15 @@ def main():
                 print(f"Error: Week {week} must be between 1 and 18")
                 sys.exit(1)
     
+    # Determine the number of weeks in the season based on year
+    # Historical seasons (1991-2020): 14 weeks (16 weeks from 1990-2020, but PFL uses 14)
+    # Modern seasons (2021+): 18 weeks
+    def get_season_weeks(year):
+        if year >= 2021:
+            return 18
+        else:
+            return 14
+    
     # Get player ID once (reuse for all weeks)
     p_id = get_player_id_from_db(player_name)
     if p_id:
@@ -1583,51 +1769,58 @@ def main():
         if weeks_played:
             weeks_csv = ','.join(map(str, weeks_played))
             print(f"Weeks Played in {year}: {weeks_csv}")
-            
-            # If 'all' was specified, use the weeks from the database
-            if weeks == 'all':
-                weeks = weeks_played
-                print(f"\nProcessing all {len(weeks)} weeks player has in database")
         else:
-            if weeks == 'all':
-                print(f"Weeks Played in {year}: No data found")
-                print("\nError: Cannot use 'all' parameter - no weeks found in database")
-                print("Player must have existing week data in their table to use 'all'")
-                sys.exit(1)
-            else:
-                print(f"Weeks Played in {year}: No data found")
+            print(f"Weeks Played in {year}: No data found")
+        
+        # If 'all' was specified, loop through all weeks in the season
+        if weeks == 'all':
+            season_weeks = get_season_weeks(year)
+            weeks = list(range(1, season_weeks + 1))
+            print(f"\nProcessing all {len(weeks)} weeks in {year} season")
     else:
         print("Player ID: Not found in database")
         
-        # If 'all' was specified, we can't proceed
+        # If 'all' was specified, we can still proceed but need player ID
         if weeks == 'all':
-            print("\nError: Cannot use 'all' parameter without a valid Player ID")
-            print("Player must exist in wp_players table to use 'all'")
-            sys.exit(1)
+            # We need a player ID to calculate scores
+            pass  # Will prompt for manual entry below
         
-        if insert_to_db:
-            print("\n⚠ Warning: Player ID not found automatically")
-        
-        # Prompt user to manually enter the Player ID
-        print("\nWould you like to manually enter the Player ID?")
-        print("Enter the Player ID (e.g., '2018AlleQB') or press Enter to skip:")
-        try:
-            manual_p_id = input("> ").strip()
-            if manual_p_id:
-                p_id = manual_p_id
-                print(f"Using manually entered Player ID: {p_id}")
-                
-                # Try to get weeks played with the manual ID
-                weeks_played = get_player_weeks_played_in_season(p_id, year)
-                if weeks_played:
-                    weeks_csv = ','.join(map(str, weeks_played))
-                    print(f"Weeks Played in {year}: {weeks_csv}")
+        if insert_to_db or weeks == 'all':
+            if insert_to_db:
+                print("\n⚠ Warning: Player ID not found automatically")
+            
+            # Prompt user to manually enter the Player ID
+            print("\nWould you like to manually enter the Player ID?")
+            print("Enter the Player ID (e.g., '2018AlleQB') or press Enter to skip:")
+            try:
+                manual_p_id = input("> ").strip()
+                if manual_p_id:
+                    p_id = manual_p_id
+                    print(f"Using manually entered Player ID: {p_id}")
+                    
+                    # Try to get weeks played with the manual ID
+                    weeks_played = get_player_weeks_played_in_season(p_id, year)
+                    if weeks_played:
+                        weeks_csv = ','.join(map(str, weeks_played))
+                        print(f"Weeks Played in {year}: {weeks_csv}")
+                    else:
+                        print(f"Weeks Played in {year}: No data found (table may not exist)")
+                    
+                    # If 'all' was specified with manual ID, generate all weeks
+                    if weeks == 'all':
+                        season_weeks = get_season_weeks(year)
+                        weeks = list(range(1, season_weeks + 1))
+                        print(f"\nProcessing all {len(weeks)} weeks in {year} season")
                 else:
-                    print(f"Weeks Played in {year}: No data found (table may not exist)")
-            else:
-                print("No Player ID entered - continuing without database insertion")
-        except (EOFError, KeyboardInterrupt):
-            print("\nNo Player ID entered - continuing without database insertion")
+                    if weeks == 'all':
+                        print("\nError: Player ID required to use 'all' parameter for PFL score calculation")
+                        sys.exit(1)
+                    print("No Player ID entered - continuing without database insertion")
+            except (EOFError, KeyboardInterrupt):
+                if weeks == 'all':
+                    print("\nError: Player ID required to use 'all' parameter for PFL score calculation")
+                    sys.exit(1)
+                print("\nNo Player ID entered - continuing without database insertion")
     
     # Print summary
     if len(weeks) == 1:
@@ -1636,36 +1829,48 @@ def main():
         print(f"\nProcessing {player_name} for {len(weeks)} weeks: {', '.join(map(str, weeks))}")
         print(f"Year: {year}")
     
-    # Prompt for PFL team if inserting to database
+    # Use PFL team from command-line argument if provided
     team_abbr = None
-    if insert_to_db:
+    if team_abbr_arg:
         pfl_teams = get_pfl_teams_list()
-        if pfl_teams:
-            print(f"\n📋 Available PFL Teams: {', '.join(pfl_teams)}")
-            while True:
-                team_input = input("\nEnter PFL team abbreviation (or leave blank to skip): ").strip().upper()
-                if not team_input:
-                    print("Skipping team lookup...")
-                    break
-                elif team_input in pfl_teams:
-                    team_abbr = team_input
-                    print(f"✓ Using team: {team_abbr}")
-                    break
-                else:
-                    print(f"❌ Invalid team '{team_input}'. Valid options: {', '.join(pfl_teams)}")
-        else:
-            print("\n⚠️  Warning: Could not fetch list of PFL teams from database")
+        if pfl_teams and team_abbr_arg not in pfl_teams:
+            print(f"❌ Invalid PFL team '{team_abbr_arg}'. Valid options: {', '.join(pfl_teams)}")
+            sys.exit(1)
+        team_abbr = team_abbr_arg
+        print(f"✓ Using PFL team: {team_abbr}")
     
     # Process each week
     results = []
+    compact_output = len(weeks) > 1  # Use compact format if multiple weeks
+    allow_dnp = week_param == 'all'  # Allow DNP when using 'all' parameter
+    
+    if compact_output:
+        # For multi-week, print header once
+        print(f"\n{'='*60}")
+        print(f"Processing {len(weeks)} weeks for {player_name} in {year}")
+        print(f"{'='*60}\n")
+    
+    # Try to get NFL team hint for bye week checking
+    nfl_team_hint = None
+    if p_id:
+        # Try to get team from first week with stats
+        for test_week in weeks:
+            if 1991 <= year <= 2000:
+                test_stats = get_stats_from_stathead_tables(player_name, test_week, year, p_id)
+            else:
+                test_stats = get_comprehensive_player_stats(player_name, test_week, year)
+            
+            if test_stats and test_stats.get('Team'):
+                nfl_team_hint = test_stats['Team']
+                break
+    
     for i, week in enumerate(weeks):
-        if len(weeks) > 1:
-            print(f"\n{'='*60}")
-            print(f"Processing Week {i+1} of {len(weeks)}: Week {week}")
-            print(f"{'='*60}")
+        if not compact_output:
+            # Single week processing
+            pass
         
-        success, p_id = process_single_week(player_name, year, week, insert_to_db, p_id, team_abbr=team_abbr)
-        results.append((week, success))
+        success, p_id, status = process_single_week(player_name, year, week, insert_to_db, p_id, team_abbr=team_abbr, compact_output=compact_output, allow_dnp=allow_dnp, nfl_team_hint=nfl_team_hint)
+        results.append((week, success, status))
     
     # Print summary if multiple weeks
     if len(weeks) > 1:
@@ -1678,19 +1883,33 @@ def main():
         print(f"\nResults:")
         successful = 0
         failed = 0
-        for week, success in results:
-            status = "✓" if success else "✗"
-            print(f"  Week {week:2d}: {status}")
+        dnp_count = 0
+        bye_count = 0
+        for week, success, status in results:
+            if status == 'bye':
+                display_status = "BYE"
+                bye_count += 1
+            elif status == 'dnp':
+                display_status = "DNP"
+                dnp_count += 1
+            else:
+                display_status = "✓" if success else "✗"
+            print(f"  Week {week:2d}: {display_status}")
             if success:
                 successful += 1
             else:
                 failed += 1
-        print(f"\nSuccessful: {successful}")
-        print(f"Failed: {failed}")
+        print(f"\nWeeks with stats: {successful - dnp_count - bye_count}")
+        if bye_count > 0:
+            print(f"Bye weeks: {bye_count}")
+        if dnp_count > 0:
+            print(f"Weeks DNP: {dnp_count}")
+        if failed > 0:
+            print(f"Failed: {failed}")
         print(f"{'='*60}")
     
-    # Exit with error if any week failed
-    if any(not success for week, success in results):
+    # Exit with error only if any week failed (not DNP or BYE)
+    if any(not success and status not in ['dnp', 'bye'] for week, success, status in results):
         sys.exit(1)
 
 

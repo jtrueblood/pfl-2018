@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PFL Results — Week 12, 2025 (Design Test)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            border: '#e4e4e7',
+            input: '#e4e4e7',
+            ring: '#18181b',
+            background: '#ffffff',
+            foreground: '#09090b',
+            card: { DEFAULT: '#ffffff', foreground: '#09090b' },
+            muted: { DEFAULT: '#f4f4f5', foreground: '#71717a' },
+            accent: { DEFAULT: '#f4f4f5', foreground: '#18181b' },
+            destructive: { DEFAULT: '#ef4444', foreground: '#fafafa' },
+            zinc: {
+              50: '#fafafa', 100: '#f4f4f5', 200: '#e4e4e7',
+              300: '#d4d4d8', 400: '#a1a1aa', 500: '#71717a',
+              600: '#52525b', 700: '#3f3f46', 800: '#27272a',
+              900: '#18181b', 950: '#09090b',
+            }
+          },
+          borderRadius: { sm: '6px', DEFAULT: '8px', md: '8px', lg: '10px' }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fafafa; color: #09090b; }
+
+    /* ── Controls bar ── */
+    .ctrl-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ctrl-select {
+      height: 32px; padding: 0 10px; font-size: 13px; font-family: inherit;
+      border: 1px solid #e4e4e7; border-radius: 6px; background: #fff;
+      color: #09090b; outline: none; cursor: pointer;
+    }
+    .ctrl-select:focus { border-color: #a1a1aa; box-shadow: 0 0 0 2px rgba(24,24,27,.08); }
+    .ctrl-btn {
+      height: 32px; padding: 0 12px; font-size: 13px; font-family: inherit;
+      border: 1px solid #e4e4e7; border-radius: 6px; background: #fff;
+      color: #09090b; cursor: pointer; white-space: nowrap; font-weight: 500;
+      transition: background .12s, border-color .12s;
+    }
+    .ctrl-btn:hover { background: #f4f4f5; border-color: #d4d4d8; }
+    .ctrl-btn.active { background: #18181b; color: #fff; border-color: #18181b; }
+    .ctrl-divider { width: 1px; height: 20px; background: #e4e4e7; margin: 0 2px; }
+
+    /* ── Card ── */
+    .card {
+      background: #fff; border: 1px solid #e4e4e7; border-radius: 10px;
+      overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+
+    /* ── Score header ── */
+    .score-header { padding: 14px 16px 12px; border-bottom: 1px solid #f4f4f5; }
+    .team-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; }
+    .team-name { font-size: 15px; font-weight: 600; color: #09090b; }
+    .team-name.loser { font-weight: 400; color: #71717a; }
+    .team-score { font-size: 16px; font-weight: 700; color: #09090b; }
+    .team-score.loser { font-weight: 500; color: #a1a1aa; }
+    .winner-chip {
+      display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .04em;
+      text-transform: uppercase; background: #18181b; color: #fff;
+      border-radius: 4px; padding: 1px 5px; margin-left: 6px; vertical-align: middle;
+    }
+    .ot-badge {
+      font-size: 10px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+      color: #ef4444; border: 1px solid #fca5a5; border-radius: 4px;
+      padding: 1px 5px; margin-left: 8px;
+    }
+
+    /* ── Boxscore columns ── */
+    .boxscore-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #f4f4f5; }
+    .boxscore-col { padding: 14px 16px; }
+    .boxscore-col:first-child { border-right: 1px solid #f4f4f5; }
+    .col-label {
+      font-size: 10px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+      color: #a1a1aa; margin-bottom: 10px;
+    }
+
+    /* ── Player row ── */
+    .player-row { margin-bottom: 12px; }
+    .player-row:last-child { margin-bottom: 0; }
+    .player-line { display: flex; align-items: baseline; justify-content: space-between; gap: 4px; }
+    .pos-badge {
+      display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .04em;
+      color: #71717a; background: #f4f4f5; border-radius: 4px;
+      padding: 1px 5px; margin-right: 4px; flex-shrink: 0;
+    }
+    .player-name { font-size: 14px; font-weight: 500; color: #09090b; flex: 1; }
+    .player-name a { color: inherit; text-decoration: none; }
+    .player-name a:hover { text-decoration: underline; text-underline-offset: 2px; }
+    .player-pts { font-size: 14px; font-weight: 700; color: #09090b; white-space: nowrap; }
+    .player-pts .diff-pos { color: #16a34a; font-size: 12px; font-weight: 600; }
+    .player-pts .diff-neg { color: #ef4444; font-size: 12px; font-weight: 600; }
+    .stat-line { font-size: 12px; color: #a1a1aa; margin-top: 2px; }
+    .on-bye { font-size: 11px; color: #ef4444; font-weight: 500; margin-top: 1px; }
+
+    /* ── Tool buttons (hidden by default) ── */
+    .tool-btns { display: none; gap: 3px; margin-bottom: 3px; flex-wrap: wrap; }
+    body.tools-on .tool-btns { display: flex; }
+    .tool-btn {
+      height: 22px; padding: 0 7px; font-size: 11px; font-family: inherit;
+      border: 1px solid #e4e4e7; border-radius: 4px; background: #fafafa;
+      color: #52525b; cursor: pointer; line-height: 1;
+    }
+    .tool-btn:hover { background: #f4f4f5; }
+
+    /* ── Bench / footer ── */
+    .boxscore-footer { padding: 10px 16px; border-top: 1px solid #f4f4f5; background: #fafafa; }
+    .bench-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: #a1a1aa; margin-bottom: 3px; }
+    .bench-names { font-size: 12px; color: #71717a; }
+    .error-bar { padding: 8px 16px; background: #fff5f5; border-top: 1px solid #fca5a5; font-size: 12px; color: #ef4444; font-weight: 500; }
+  </style>
+</head>
+<body>
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+
+  <!-- ── Page header ── -->
+  <div class="mb-6">
+    <div class="flex items-start justify-between flex-wrap gap-3 mb-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-1">Posse Football League</p>
+        <h1 class="text-2xl font-bold text-zinc-900">Week 12 &mdash; 2025</h1>
+        <p class="text-sm text-zinc-400 mt-1">November 17 – November 23, 2025</p>
+      </div>
+      <div class="flex flex-col gap-2 items-end">
+        <div class="ctrl-bar">
+          <select class="ctrl-select" onchange="">
+            <option>2025</option><option>2024</option><option>2023</option>
+          </select>
+          <select class="ctrl-select">
+            <option>12</option><option>11</option><option>13</option>
+          </select>
+          <button class="ctrl-btn">Go</button>
+          <span class="ctrl-divider"></span>
+          <button class="ctrl-btn">← Prev</button>
+          <button class="ctrl-btn">Next →</button>
+          <span class="ctrl-divider"></span>
+          <button class="ctrl-btn" id="tools-toggle" onclick="toggleTools(this)">⚙ Tools</button>
+        </div>
+      </div>
+    </div>
+    <div class="h-px bg-zinc-200"></div>
+  </div>
+
+  <!-- ── Games grid ── -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- ── Game 1 ── -->
+    <div class="card">
+      <div class="score-header">
+        <div class="team-row">
+          <span class="team-name">Commanders <span class="winner-chip">W</span></span>
+          <span class="team-score">62</span>
+        </div>
+        <div class="team-row">
+          <span class="team-name loser">Wreckers</span>
+          <span class="team-score loser">44</span>
+        </div>
+      </div>
+      <div class="boxscore-grid">
+        <!-- Home -->
+        <div class="boxscore-col">
+          <div class="col-label">Commanders</div>
+          <!-- QB -->
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button>
+              <button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+              <button class="tool-btn">➜</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Josh Allen</a></span></span>
+              <span class="player-pts">28</span>
+            </div>
+            <div class="stat-line">Pass: 312 / 3 / 0 | Rush: 42 / 1</div>
+          </div>
+          <!-- RB -->
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Derrick Henry</a></span></span>
+              <span class="player-pts">18</span>
+            </div>
+            <div class="stat-line">Rush: 124 / 2</div>
+          </div>
+          <!-- WR -->
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">Stefon Diggs</a></span></span>
+              <span class="player-pts">12</span>
+            </div>
+            <div class="stat-line">Rec: 98 / 1</div>
+          </div>
+          <!-- PK -->
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Tyler Bass</a></span></span>
+              <span class="player-pts">4</span>
+            </div>
+            <div class="stat-line">EP: 4/4 | FG: 0/1</div>
+          </div>
+        </div>
+        <!-- Away -->
+        <div class="boxscore-col">
+          <div class="col-label">Wreckers</div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Lamar Jackson</a></span></span>
+              <span class="player-pts">22</span>
+            </div>
+            <div class="stat-line">Pass: 198 / 2 / 1 | Rush: 55 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Saquon Barkley</a></span></span>
+              <span class="player-pts">14</span>
+            </div>
+            <div class="stat-line">Rush: 88 / 1 | Rec: 22 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">Davante Adams</a></span></span>
+              <span class="player-pts">6</span>
+            </div>
+            <div class="stat-line">Rec: 62 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Evan McPherson</a></span></span>
+              <span class="player-pts">2</span>
+            </div>
+            <div class="stat-line">EP: 2/2 | FG: 0/0</div>
+          </div>
+        </div>
+      </div>
+      <div class="boxscore-footer">
+        <div class="bench-label">Bench · Commanders</div>
+        <div class="bench-names">C. Kupp WR / T. Pollard RB / M. Andrews TE</div>
+      </div>
+    </div>
+
+    <!-- ── Game 2 ── -->
+    <div class="card">
+      <div class="score-header">
+        <div class="team-row">
+          <span class="team-name loser">Destroyers</span>
+          <span class="team-score loser">38</span>
+        </div>
+        <div class="team-row">
+          <span class="team-name">Phantoms <span class="winner-chip">W</span></span>
+          <span class="team-score">51</span>
+        </div>
+      </div>
+      <div class="boxscore-grid">
+        <div class="boxscore-col">
+          <div class="col-label">Destroyers</div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+              <button class="tool-btn">➜</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Patrick Mahomes</a></span></span>
+              <span class="player-pts">16 <span class="diff-neg">(-2)</span></span>
+            </div>
+            <div class="stat-line">Pass: 244 / 2 / 2</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Christian McCaffrey</a></span></span>
+              <span class="player-pts">14</span>
+            </div>
+            <div class="stat-line">Rush: 72 / 1 | Rec: 48 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">Tyreek Hill</a></span></span>
+              <span class="player-pts">4</span>
+            </div>
+            <div class="stat-line">Rec: 44 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Harrison Butker</a></span></span>
+              <span class="player-pts">4</span>
+            </div>
+            <div class="stat-line">EP: 2/2 | FG: 1/2</div>
+          </div>
+        </div>
+        <div class="boxscore-col">
+          <div class="col-label">Phantoms</div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Jalen Hurts</a></span></span>
+              <span class="player-pts">30</span>
+            </div>
+            <div class="stat-line">Pass: 278 / 3 / 0 | Rush: 38 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Jonathan Taylor</a></span></span>
+              <span class="player-pts">8</span>
+            </div>
+            <div class="stat-line">Rush: 68 / 0 | Rec: 32 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">A.J. Brown</a></span></span>
+              <span class="player-pts">10</span>
+            </div>
+            <div class="stat-line">Rec: 108 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Jake Elliott</a></span></span>
+              <span class="player-pts">3</span>
+            </div>
+            <div class="stat-line">EP: 3/3 | FG: 0/0</div>
+          </div>
+        </div>
+      </div>
+      <div class="error-bar">⚠ Boxscore error: calculated 51 / recorded 51 — OK</div>
+    </div>
+
+    <!-- ── Game 3 ── -->
+    <div class="card">
+      <div class="score-header">
+        <div class="team-row">
+          <span class="team-name">Maximus <span class="winner-chip">W</span></span>
+          <span class="team-score">57</span>
+        </div>
+        <div class="team-row">
+          <span class="team-name loser">Bulls</span>
+          <span class="team-score loser">33</span>
+        </div>
+      </div>
+      <div class="boxscore-grid">
+        <div class="boxscore-col">
+          <div class="col-label">Maximus</div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">C.J. Stroud</a></span></span>
+              <span class="player-pts">22</span>
+            </div>
+            <div class="stat-line">Pass: 289 / 3 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Bijan Robinson</a></span></span>
+              <span class="player-pts">20</span>
+            </div>
+            <div class="stat-line">Rush: 142 / 2 | Rec: 18 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">Puka Nacua</a></span></span>
+              <span class="player-pts">8</span>
+            </div>
+            <div class="stat-line">Rec: 82 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Justin Tucker</a></span></span>
+              <span class="player-pts">7</span>
+            </div>
+            <div class="stat-line">EP: 3/3 | FG: 2/2</div>
+          </div>
+        </div>
+        <div class="boxscore-col">
+          <div class="col-label">Bulls</div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Tua Tagovailoa</a></span></span>
+              <span class="player-pts">10</span>
+            </div>
+            <div class="stat-line">Pass: 222 / 1 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Tony Pollard</a></span></span>
+              <span class="player-pts">12</span>
+            </div>
+            <div class="stat-line">Rush: 96 / 1 | Rec: 12 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="tool-btns">
+              <button class="tool-btn">📋</button><button class="tool-btn">🔍</button>
+              <button class="tool-btn" style="color:#cc0000;font-weight:700;">N</button>
+              <button class="tool-btn">📝</button>
+            </div>
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">Jaylen Waddle</a></span></span>
+              <span class="player-pts">8</span>
+            </div>
+            <div class="stat-line">Rec: 74 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Jason Sanders</a></span></span>
+              <span class="player-pts">3</span>
+            </div>
+            <div class="stat-line">EP: 1/1 | FG: 1/1</div>
+          </div>
+        </div>
+      </div>
+      <div class="boxscore-footer">
+        <div class="bench-label">Bench · Bulls</div>
+        <div class="bench-names">D. Adams WR / J. Cook RB</div>
+      </div>
+    </div>
+
+    <!-- ── Game 4 · Overtime ── -->
+    <div class="card">
+      <div class="score-header">
+        <div class="team-row">
+          <span class="team-name loser">Attackers</span>
+          <span class="team-score loser">44</span>
+        </div>
+        <div class="team-row">
+          <span class="team-name">Sonics <span class="winner-chip">W</span> <span class="ot-badge">OT</span></span>
+          <span class="team-score">45</span>
+        </div>
+      </div>
+      <div class="boxscore-grid">
+        <div class="boxscore-col">
+          <div class="col-label">Attackers</div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Dak Prescott</a></span></span>
+              <span class="player-pts">20</span>
+            </div>
+            <div class="stat-line">Pass: 256 / 2 / 0 | Rush: 18 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Zeke Elliott</a></span></span>
+              <span class="player-pts">10</span>
+            </div>
+            <div class="stat-line">Rush: 78 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">CeeDee Lamb</a></span></span>
+              <span class="player-pts">10</span>
+            </div>
+            <div class="stat-line">Rec: 102 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Brandon Aubrey</a></span></span>
+              <span class="player-pts">4</span>
+            </div>
+            <div class="stat-line">EP: 2/2 | FG: 1/1</div>
+          </div>
+        </div>
+        <div class="boxscore-col">
+          <div class="col-label">Sonics</div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">QB</span><span class="player-name"><a href="#">Trevor Lawrence</a></span></span>
+              <span class="player-pts">18</span>
+            </div>
+            <div class="stat-line">Pass: 234 / 2 / 1</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">RB</span><span class="player-name"><a href="#">Travis Etienne</a></span></span>
+              <span class="player-pts">14</span>
+            </div>
+            <div class="stat-line">Rush: 88 / 1 | Rec: 44 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">WR</span><span class="player-name"><a href="#">Calvin Ridley</a></span></span>
+              <span class="player-pts">4</span>
+            </div>
+            <div class="stat-line">Rec: 44 / 0</div>
+          </div>
+          <div class="player-row">
+            <div class="player-line">
+              <span><span class="pos-badge">PK</span><span class="player-name"><a href="#">Evan McPherson</a></span></span>
+              <span class="player-pts">9</span>
+            </div>
+            <div class="stat-line">EP: 3/3 | FG: 3/3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /games grid -->
+</div><!-- /container -->
+
+<script>
+  function toggleTools(btn) {
+    document.body.classList.toggle('tools-on');
+    btn.classList.toggle('active');
+  }
+</script>
+</body>
+</html>

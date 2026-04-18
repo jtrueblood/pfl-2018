@@ -102,7 +102,9 @@ def import_csv_to_db(csv_file_path):
                 location_marker = values[10].strip() if len(values) > 10 else ''
                 homeaway = '@' if location_marker == '@' else 'vs'
                 xpm = row.get('XPM', '0').strip() or '0'
+                xpa = row.get('XPA', '0').strip() or '0'
                 fgm = row.get('FGM', '0').strip() or '0'
+                fga = row.get('FGA', '0').strip() or '0'
                 player_id_raw = row.get('-additional', '').strip()
                 
                 # Validate required fields
@@ -113,7 +115,9 @@ def import_csv_to_db(csv_file_path):
                 try:
                     week_int = int(week)
                     xp_int = int(xpm)
+                    xpa_int = int(xpa)
                     fg_int = int(fgm)
+                    fga_int = int(fga)
                 except ValueError:
                     skipped_rows += 1
                     continue
@@ -142,7 +146,9 @@ def import_csv_to_db(csv_file_path):
                     'recyards': 0,
                     'rectd': 0,
                     'xp': xp_int,
+                    'xpa': xpa_int,
                     'fg': fg_int,
+                    'fga': fga_int,
                     'twopt': 0
                 }
                 
@@ -163,7 +169,7 @@ def import_csv_to_db(csv_file_path):
                 print(f"    Player: {row['playername']} (ID: {row['playerid']})")
                 print(f"    Year: {row['year']}, Week: {row['week']}, Date: {row['game_date']}")
                 print(f"    Team: {row['team']}, vs/@: {row['homeaway']}, Opponent: {row['versusteam']}")
-                print(f"    XP: {row['xp']}, FG: {row['fg']}")
+                print(f"    XP: {row['xp']}/{row['xpa']}, FG: {row['fg']}/{row['fga']}")
                 print(f"    Pass: {row['passyards']} yds, {row['passtd']} TD, {row['passint']} INT")
                 print(f"    Rush: {row['rushyards']} yds, {row['rushtd']} TD")
                 print(f"    Rec: {row['recyards']} yds, {row['rectd']} TD")
@@ -182,11 +188,11 @@ def import_csv_to_db(csv_file_path):
             insert_query = """
                 INSERT INTO wp_stathead_PK 
                 (playerid, playername, year, week, game_date, team, versusteam, homeaway,
-                 passyards, passtd, passint, rushyards, rushtd, recyards, rectd, xp, fg, twopt)
+                 passyards, passtd, passint, rushyards, rushtd, recyards, rectd, xp, xpa, fg, fga, twopt)
                 VALUES (%(playerid)s, %(playername)s, %(year)s, %(week)s, %(game_date)s,
                         %(team)s, %(versusteam)s, %(homeaway)s,
                         %(passyards)s, %(passtd)s, %(passint)s, %(rushyards)s, %(rushtd)s,
-                        %(recyards)s, %(rectd)s, %(xp)s, %(fg)s, %(twopt)s)
+                        %(recyards)s, %(rectd)s, %(xp)s, %(xpa)s, %(fg)s, %(fga)s, %(twopt)s)
             """
             
             try:

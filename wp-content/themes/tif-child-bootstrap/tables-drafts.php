@@ -198,6 +198,63 @@
 				?>
 			</div>
 			
+			<!-- Worst Picks Ever -->
+			<div class="col-xs-24 col-sm-12 col-md-8">
+				<?php
+				global $wpdb;
+				
+				// Get bottom 25 picks by value score
+				// Value scores now include tie-breakers (pick number and career points)
+				// Exclude 'No Pick' entries and picks from last 5 years
+				$current_year = date('Y');
+				$min_year = $current_year - 5;
+				$worst_picks_query = $wpdb->get_results("
+					SELECT 
+						pv.year,
+						pv.playerid,
+						pv.playername,
+						pv.team,
+						pv.round,
+						pv.picknum as pick,
+						pv.valuescore
+					FROM wp_drafts_pick_value pv
+					WHERE pv.playername != 'No Pick'
+						AND pv.playername IS NOT NULL
+						AND pv.year <= {$min_year}
+					ORDER BY pv.valuescore ASC
+					LIMIT 25
+				", ARRAY_A);
+				
+				$labels = array('Rk', 'Player', 'Year', 'Team', 'Rd', 'Pick', 'Value');
+				tablehead('Worst Picks Ever (Bottom 25)', $labels);
+				
+				$printworstpicks = '';
+				$rank = 1;
+				foreach ($worst_picks_query as $pick) {
+					$player_name = $pick['playername'];
+					$round = ltrim($pick['round'], '0');
+					$picknum = ltrim($pick['pick'], '0');
+					$value_score = number_format($pick['valuescore'], 5);
+					
+					$printworstpicks .= '<tr>';
+					$printworstpicks .= '<td class="text-center">' . $rank . '</td>';
+					$printworstpicks .= '<td>' . $player_name . '</td>';
+					$printworstpicks .= '<td class="text-center">' . $pick['year'] . '</td>';
+					$printworstpicks .= '<td>' . $pick['team'] . '</td>';
+					$printworstpicks .= '<td class="text-center">' . $round . '</td>';
+					$printworstpicks .= '<td class="text-center">' . $picknum . '</td>';
+					$printworstpicks .= '<td class="text-right">' . $value_score . '</td>';
+					$printworstpicks .= '</tr>';
+					
+					$rank++;
+				}
+				
+				echo $printworstpicks;
+				
+			tablefoot('Lowest value picks (excluding last 5 years, value scores include pick number and career points tie-breakers)');
+				?>
+			</div>
+			
 			<!-- First Round Busts -->
 			<div class="col-xs-24 col-sm-12 col-md-8">
 				<?php
@@ -285,7 +342,161 @@
 				
 				echo $printteams;
 				
-			tablefoot('Teams ranked by average value score of their draft picks');
+		tablefoot('Teams ranked by average value score of their draft picks');
+				?>
+			</div>
+			
+			<!-- Best Undrafted Acquisitions -->
+			<div class="col-xs-24 col-sm-12 col-md-8">
+				<?php
+				global $wpdb;
+				
+				// Get all player IDs from allleaders
+				$all_players = $wpdb->get_results("
+					SELECT pid FROM wp_allleaders
+				", ARRAY_A);
+				
+				$undrafted_acquisitions = array();
+				
+				foreach ($all_players as $player_row) {
+					$playerid = $player_row['pid'];
+					$player_table = strtolower($playerid);
+					
+					// Check if player table exists
+					$table_exists = $wpdb->get_var(
+						"SELECT COUNT(*) FROM information_schema.tables 
+						 WHERE table_schema = '{$wpdb->dbname}' 
+						 AND table_name = '$player_table'"
+					);
+					
+					if (!$table_exists) continue;
+					
+					// Get points by team from player table
+					$team_points = $wpdb->get_results("
+						SELECT 
+							team,
+							SUM(points) as total_points,
+							MIN(year) as first_year
+						FROM `$player_table`
+						GROUP BY team
+						HAVING total_points > 0
+					", ARRAY_A);
+					
+					foreach ($team_points as $team_data) {
+						$team = $team_data['team'];
+						$points = $team_data['total_points'];
+						$first_year = $team_data['first_year'];
+						
+						// Check if this team drafted the player
+						$was_drafted = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT COUNT(*) FROM wp_drafts 
+								 WHERE playerid = %s 
+								 AND team = %s",
+								$playerid,
+								$team
+							)
+						);
+						
+						if ($was_drafted > 0) continue;
+						
+						// Check if player was traded TO this team
+						// Player traded TO team1 if they appear in players1
+						// Player traded TO team2 if they appear in players2
+						$was_traded = $wpdb->get_var(
+							$wpdb->prepare(
+								"SELECT COUNT(*) FROM wp_trades 
+								 WHERE (team1 = %s AND FIND_IN_SET(%s, REPLACE(players1, ',', ','))) 
+								 OR (team2 = %s AND FIND_IN_SET(%s, REPLACE(players2, ',', ',')))",
+								$team,
+								$playerid,
+								$team,
+								$playerid
+							)
+						);
+						
+						// Only include if team did NOT draft or trade for the player
+						// Also exclude John Elway (special case: RBS became BST)
+						if ($was_traded == 0 && $playerid != '1991ElwaQB') {
+							$undrafted_acquisitions[] = array(
+								'playerid' => $playerid,
+								'team' => $team,
+								'points' => (int)$points,
+								'first_year' => $first_year
+							);
+						}
+					}
+				}
+				
+				// Sort by points descending and get top 20
+				usort($undrafted_acquisitions, function($a, $b) {
+					return $b['points'] - $a['points'];
+				});
+				
+				$top_20 = array_slice($undrafted_acquisitions, 0, 20);
+				
+				// Get player names and positions
+				foreach ($top_20 as &$player) {
+					$pid = $player['playerid'];
+					
+					// Try wp_drafts first
+					$draft_info = $wpdb->get_row(
+						$wpdb->prepare(
+							"SELECT playerfirst, playerlast, pos 
+							 FROM wp_drafts 
+							 WHERE playerid = %s 
+							 LIMIT 1",
+							$pid
+						),
+						ARRAY_A
+					);
+					
+					if ($draft_info) {
+						$player['playername'] = trim($draft_info['playerfirst'] . ' ' . $draft_info['playerlast']);
+						$player['position'] = $draft_info['pos'];
+					} else {
+						// Fall back to wp_players if not in drafts
+						$player_info = $wpdb->get_row(
+							$wpdb->prepare(
+								"SELECT playerFirst, playerLast, position 
+								 FROM wp_players 
+								 WHERE p_id = %s",
+								$pid
+							),
+							ARRAY_A
+						);
+						
+						if ($player_info) {
+							$player['playername'] = trim($player_info['playerFirst'] . ' ' . $player_info['playerLast']);
+							$player['position'] = $player_info['position'];
+						} else {
+							$player['playername'] = $pid;
+							$player['position'] = '';
+						}
+					}
+				}
+				unset($player); // Break the reference to avoid issues in next loop
+				
+				$labels = array('Rk', 'Player', 'Team', 'Year', 'Pos', 'Points');
+				tablehead('Best Undrafted Pickups', $labels);
+				
+				$printundrafted = '';
+				$rank = 1;
+				foreach ($top_20 as $player) {
+					$printundrafted .= '<tr>';
+					$printundrafted .= '<td class="text-center">' . $rank . '</td>';
+					$printundrafted .= '<td>' . esc_html($player['playername']) . '</td>';
+					$printundrafted .= '<td class="text-center">' . esc_html($player['team']) . '</td>';
+					$printundrafted .= '<td class="text-center">' . esc_html($player['first_year']) . '</td>';
+					$printundrafted .= '<td class="text-center">' . esc_html($player['position']) . '</td>';
+					$printundrafted .= '<td class="text-right"><strong>' . number_format($player['points']) . '</strong></td>';
+					$printundrafted .= '</tr>';
+					$rank++;
+				}
+				
+				echo $printundrafted;
+				
+				tablefoot('Players who scored the most points for teams that did not draft or trade for them (acquired via waiver)');
 				?>
 			</div>
 

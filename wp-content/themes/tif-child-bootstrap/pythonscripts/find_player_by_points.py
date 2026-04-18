@@ -109,12 +109,18 @@ def calculate_points(year, position, stats):
         # QB, RB, WR: position-agnostic scoring
         if year == 1991:
             # 1991 scoring rules
-            pass_get = pass_yds // 50
-            pass_data = max(0, pass_get)  # Can't be negative
-            nfl_score = pass_data + (rush_yds // 25) + ((pass_td + rush_td + rec_td) * 2) + (rec_yds // 25) - pass_int
+            # Floor all yardage calculations at 0 (negative yards don't penalize)
+            pass_pts = max(0, pass_yds // 50)
+            rush_pts = max(0, rush_yds // 25)
+            rec_pts = max(0, rec_yds // 25)
+            nfl_score = pass_pts + rush_pts + ((pass_td + rush_td + rec_td) * 2) + rec_pts - pass_int
         else:
             # 1992+ scoring rules
-            nfl_score = (pass_yds // 30) + (rush_yds // 10) + ((pass_td + rush_td + rec_td) * 2) + (rec_yds // 10) - pass_int
+            # Floor all yardage calculations at 0 (negative yards don't penalize)
+            pass_pts = max(0, pass_yds // 30)
+            rush_pts = max(0, rush_yds // 10)
+            rec_pts = max(0, rec_yds // 10)
+            nfl_score = pass_pts + rush_pts + ((pass_td + rush_td + rec_td) * 2) + rec_pts - pass_int
         
         return nfl_score
 
@@ -178,28 +184,55 @@ def main():
     # Check if command-line arguments were provided
     if len(sys.argv) == 5:
         # Parse command-line arguments: YEAR WEEK POSITION POINTS
+        # Support both single values and comma-separated arrays
         try:
             year = int(sys.argv[1])
-            week = int(sys.argv[2])
             position = sys.argv[3].strip().upper()
-            expected_points = int(sys.argv[4])
-            print(f"Using command-line arguments: Year={year}, Week={week}, Position={position}, Points={expected_points}")
+            
+            # Parse weeks - support single week or comma-separated list
+            week_input = sys.argv[2].strip()
+            if ',' in week_input:
+                weeks = [int(w.strip()) for w in week_input.split(',')]
+            else:
+                weeks = [int(week_input)]
+            
+            # Parse points - support single value or comma-separated list
+            points_input = sys.argv[4].strip()
+            if ',' in points_input:
+                expected_points_list = [int(p.strip()) for p in points_input.split(',')]
+            else:
+                expected_points_list = [int(points_input)]
+            
+            # Validate that weeks and points arrays have the same length
+            if len(weeks) != len(expected_points_list):
+                print(f"\n❌ Error: Number of weeks ({len(weeks)}) must match number of points ({len(expected_points_list)})")
+                print("Example: python3 find_player_by_points.py 1993 \"8,9,10\" QB \"4,5,15\"")
+                sys.exit(1)
+            
+            if len(weeks) > 1:
+                print(f"Using command-line arguments: Year={year}, Weeks={weeks}, Position={position}, Points={expected_points_list}")
+            else:
+                print(f"Using command-line arguments: Year={year}, Week={weeks[0]}, Position={position}, Points={expected_points_list[0]}")
             print()
         except ValueError as e:
             print(f"\n❌ Invalid command-line arguments: {e}")
             print("Usage: python3 find_player_by_points.py YEAR WEEK POSITION POINTS")
-            print("Example: python3 find_player_by_points.py 1992 5 QB 14")
+            print("Single week: python3 find_player_by_points.py 1992 5 QB 14")
+            print("Multiple weeks: python3 find_player_by_points.py 1993 \"8,9,10\" QB \"4,5,15\"")
             sys.exit(1)
     elif len(sys.argv) > 1:
         # Wrong number of arguments
         print("❌ Invalid number of arguments")
         print("\nUsage:")
         print("  Interactive mode: python3 find_player_by_points.py")
-        print("  Command-line mode: python3 find_player_by_points.py YEAR WEEK POSITION POINTS")
-        print("\nExample: python3 find_player_by_points.py 1992 5 QB 14")
+        print("  Command-line mode (single): python3 find_player_by_points.py YEAR WEEK POSITION POINTS")
+        print("  Command-line mode (multi): python3 find_player_by_points.py YEAR \"WEEK1,WEEK2,...\" POSITION \"POINTS1,POINTS2,...\"")
+        print("\nExamples:")
+        print("  python3 find_player_by_points.py 1992 5 QB 14")
+        print("  python3 find_player_by_points.py 1993 \"8,9,10\" QB \"4,5,15\"")
         sys.exit(1)
     else:
-        # No arguments - use interactive mode
+        # No arguments - use interactive mode (single week only)
         print("SCORING SYSTEM:")
         print("-" * 60)
         print("1991 Scoring (QB/RB/WR):")
@@ -228,6 +261,9 @@ def main():
             week = int(input("Enter Week (1-17): ").strip())
             position = input("Enter Position (QB, RB, WR, PK): ").strip().upper()
             expected_points = int(input("Enter Expected Points: ").strip())
+            # Set up single-week arrays for consistency
+            weeks = [week]
+            expected_points_list = [expected_points]
         except ValueError as e:
             print(f"\n❌ Invalid input: {e}")
             sys.exit(1)
@@ -238,73 +274,183 @@ def main():
         print("Valid positions: QB, RB, WR, PK")
         sys.exit(1)
     
-    if week < 1 or week > 17:
-        print(f"\n❌ Invalid week: {week}")
-        print("Week must be between 1 and 17")
-        sys.exit(1)
+    # Validate all weeks
+    for week in weeks:
+        if week < 1 or week > 17:
+            print(f"\n❌ Invalid week: {week}")
+            print("Week must be between 1 and 17")
+            sys.exit(1)
     
-    print(f"\n🔍 Searching for {position} players in {year} Week {week} with {expected_points} points...")
-    print("-" * 60)
-    
-    # Find matching players
-    matches = find_players_by_points(year, week, position, expected_points)
-    
-    if matches:
-        print(f"\n✅ Found {len(matches)} player(s) with {expected_points} points:\n")
-        for i, match in enumerate(matches, 1):
-            print(f"{i}. {match['player']} - {match['points']} points")
-            
-            # Get PFL roster information and p_id
-            player_name = match['player']
-            teams, p_id = get_player_roster_info(player_name, year, position)
-            
-            # Show PFL Player ID
-            if p_id:
-                print(f"   PFL Player ID: {p_id}")
-            else:
-                print(f"   PFL Player ID: (not found in wp_players)")
-            
-            # Show PFL roster information
-            if teams:
-                if len(teams) == 1:
-                    print(f"   PFL Team: {teams[0]}")
-                else:
-                    print(f"   PFL Team: {', '.join(teams)} (multiple teams)")
-            else:
-                print(f"   PFL Team: Not Rostered")
-            
-            # Show relevant stats based on position
-            stats = match['stats']
-            if position == 'PK':
-                xp = stats.get('xp', 0)
-                fg = stats.get('fg', 0)
-                print(f"   Stats: XP: {xp}, FG: {fg}")
-            elif position == 'QB':
-                pass_yds = stats.get('passyards', 0)
-                pass_td = stats.get('passtd', 0)
-                pass_int = stats.get('passint', 0)
-                rush_yds = stats.get('rushyards', 0)
-                rush_td = stats.get('rushtd', 0)
-                print(f"   Stats: Pass: {pass_yds} yds, {pass_td} TD, {pass_int} INT")
-                if rush_yds > 0 or rush_td > 0:
-                    print(f"          Rush: {rush_yds} yds, {rush_td} TD")
-            elif position in ['RB', 'WR']:
-                rush_yds = stats.get('rushyards', 0)
-                rush_td = stats.get('rushtd', 0)
-                rec_yds = stats.get('recyards', 0)
-                rec_td = stats.get('rectd', 0)
-                
-                stats_str = []
-                if rush_yds > 0 or rush_td > 0:
-                    stats_str.append(f"Rush: {rush_yds} yds, {rush_td} TD")
-                if rec_yds > 0 or rec_td > 0:
-                    stats_str.append(f"Rec: {rec_yds} yds, {rec_td} TD")
-                
-                if stats_str:
-                    print(f"   Stats: {' | '.join(stats_str)}")
-            print()
+    # Handle single week search
+    if len(weeks) == 1:
+        week = weeks[0]
+        expected_points = expected_points_list[0]
+        print(f"\n🔍 Searching for {position} players in {year} Week {week} with {expected_points} points...")
+        print("-" * 60)
+        
+        # Find matching players
+        matches = find_players_by_points(year, week, position, expected_points)
     else:
-        print(f"\n❌ No {position} players found with {expected_points} points in {year} Week {week}")
+        # Handle multiple weeks search - find players who match ALL week/point combinations
+        print(f"\n🔍 Searching for {position} players in {year} matching multiple weeks...")
+        print("-" * 60)
+        
+        # Dictionary to track player matches: {player_name: {week: match_data}}
+        player_matches = {}
+        
+        for i, (week, expected_points) in enumerate(zip(weeks, expected_points_list)):
+            print(f"Week {week}: Looking for {expected_points} points...")
+            week_matches = find_players_by_points(year, week, position, expected_points)
+            
+            for match in week_matches:
+                player_name = match['player']
+                if player_name not in player_matches:
+                    player_matches[player_name] = {}
+                player_matches[player_name][week] = match
+        
+        # Filter players who have matches for ALL specified weeks
+        matches = []
+        for player_name, week_data in player_matches.items():
+            if len(week_data) == len(weeks):  # Player matched all weeks
+                # Create a combined match entry
+                # Get roster info once
+                teams, p_id = get_player_roster_info(player_name, year, position)
+                
+                matches.append({
+                    'player': player_name,
+                    'p_id': p_id,
+                    'teams': teams,
+                    'week_data': week_data
+                })
+        
+        print()
+    
+    # Display results
+    if len(weeks) == 1:
+        # Single week display
+        if matches:
+            print(f"\n✅ Found {len(matches)} player(s) with {expected_points} points:\n")
+            for i, match in enumerate(matches, 1):
+                print(f"{i}. {match['player']} - {match['points']} points")
+                
+                # Get PFL roster information and p_id
+                player_name = match['player']
+                teams, p_id = get_player_roster_info(player_name, year, position)
+                
+                # Show PFL Player ID
+                if p_id:
+                    print(f"   PFL Player ID: {p_id}")
+                else:
+                    print(f"   PFL Player ID: (not found in wp_players)")
+                
+                # Show PFL roster information
+                if teams:
+                    if len(teams) == 1:
+                        print(f"   PFL Team: {teams[0]}")
+                    else:
+                        print(f"   PFL Team: {', '.join(teams)} (multiple teams)")
+                else:
+                    print(f"   PFL Team: Not Rostered")
+                
+                # Show relevant stats based on position
+                stats = match['stats']
+                if position == 'PK':
+                    xp = stats.get('xp', 0)
+                    fg = stats.get('fg', 0)
+                    print(f"   Stats: XP: {xp}, FG: {fg}")
+                elif position == 'QB':
+                    pass_yds = stats.get('passyards', 0)
+                    pass_td = stats.get('passtd', 0)
+                    pass_int = stats.get('passint', 0)
+                    rush_yds = stats.get('rushyards', 0)
+                    rush_td = stats.get('rushtd', 0)
+                    print(f"   Stats: Pass: {pass_yds} yds, {pass_td} TD, {pass_int} INT")
+                    if rush_yds > 0 or rush_td > 0:
+                        print(f"          Rush: {rush_yds} yds, {rush_td} TD")
+                elif position in ['RB', 'WR']:
+                    rush_yds = stats.get('rushyards', 0)
+                    rush_td = stats.get('rushtd', 0)
+                    rec_yds = stats.get('recyards', 0)
+                    rec_td = stats.get('rectd', 0)
+                    
+                    stats_str = []
+                    if rush_yds > 0 or rush_td > 0:
+                        stats_str.append(f"Rush: {rush_yds} yds, {rush_td} TD")
+                    if rec_yds > 0 or rec_td > 0:
+                        stats_str.append(f"Rec: {rec_yds} yds, {rec_td} TD")
+                    
+                    if stats_str:
+                        print(f"   Stats: {' | '.join(stats_str)}")
+                print()
+        else:
+            print(f"\n❌ No {position} players found with {expected_points} points in {year} Week {week}")
+    else:
+        # Multiple weeks display
+        if matches:
+            weeks_str = ', '.join([str(w) for w in weeks])
+            points_str = ', '.join([str(p) for p in expected_points_list])
+            print(f"\n✅ Found {len(matches)} player(s) matching all criteria:\n")
+            print(f"   (Weeks: {weeks_str} with Points: {points_str} respectively)\n")
+            
+            for i, match in enumerate(matches, 1):
+                print(f"{i}. {match['player']}")
+                
+                # Show PFL Player ID
+                if match['p_id']:
+                    print(f"   PFL Player ID: {match['p_id']}")
+                else:
+                    print(f"   PFL Player ID: (not found in wp_players)")
+                
+                # Show PFL roster information
+                if match['teams']:
+                    if len(match['teams']) == 1:
+                        print(f"   PFL Team: {match['teams'][0]}")
+                    else:
+                        print(f"   PFL Team: {', '.join(match['teams'])} (multiple teams)")
+                else:
+                    print(f"   PFL Team: Not Rostered")
+                
+                print(f"\n   Week-by-week breakdown:")
+                for week in sorted(match['week_data'].keys()):
+                    week_match = match['week_data'][week]
+                    stats = week_match['stats']
+                    points = week_match['points']
+                    
+                    # Show stats based on position
+                    if position == 'PK':
+                        xp = stats.get('xp', 0)
+                        fg = stats.get('fg', 0)
+                        print(f"   Week {week}: {points} pts (XP: {xp}, FG: {fg})")
+                    elif position == 'QB':
+                        pass_yds = stats.get('passyards', 0)
+                        pass_td = stats.get('passtd', 0)
+                        pass_int = stats.get('passint', 0)
+                        rush_yds = stats.get('rushyards', 0)
+                        rush_td = stats.get('rushtd', 0)
+                        stats_str = f"Pass: {pass_yds} yds, {pass_td} TD, {pass_int} INT"
+                        if rush_yds > 0 or rush_td > 0:
+                            stats_str += f" | Rush: {rush_yds} yds, {rush_td} TD"
+                        print(f"   Week {week}: {points} pts ({stats_str})")
+                    elif position in ['RB', 'WR']:
+                        rush_yds = stats.get('rushyards', 0)
+                        rush_td = stats.get('rushtd', 0)
+                        rec_yds = stats.get('recyards', 0)
+                        rec_td = stats.get('rectd', 0)
+                        
+                        stats_parts = []
+                        if rush_yds > 0 or rush_td > 0:
+                            stats_parts.append(f"Rush: {rush_yds} yds, {rush_td} TD")
+                        if rec_yds > 0 or rec_td > 0:
+                            stats_parts.append(f"Rec: {rec_yds} yds, {rec_td} TD")
+                        
+                        stats_str = ' | '.join(stats_parts) if stats_parts else "No stats"
+                        print(f"   Week {week}: {points} pts ({stats_str})")
+                print()
+        else:
+            weeks_str = ', '.join([str(w) for w in weeks])
+            points_str = ', '.join([str(p) for p in expected_points_list])
+            print(f"\n❌ No {position} players found matching all criteria")
+            print(f"   (Weeks: {weeks_str} with Points: {points_str} respectively)")
     
     print("=" * 60)
 

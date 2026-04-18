@@ -18,7 +18,7 @@ MYSQL_USER = "root"
 MYSQL_PASS = "root"
 MYSQL_DB = "local"
 
-DraftPick = namedtuple('DraftPick', ['pick_num', 'round', 'team', 'name', 'position', 'season_pts', 'career_pts', 'protected', 'hall_of_fame', 'playerid'])
+DraftPick = namedtuple('DraftPick', ['pick_num', 'round', 'team', 'name', 'position', 'season_pts', 'career_pts', 'protected', 'hall_of_fame', 'playerid', 'total_career_pts'])
 
 
 def run_mysql_query(query):
@@ -227,8 +227,22 @@ def fetch_draft_picks(year, hof_members, protected_players):
         # Get points if we have a playerid
         season_pts = 0
         career_pts = 0
+        total_career_pts = 0
         if playerid and playerid != 'NULL':
             season_pts, career_pts = fetch_player_points(playerid, team, year)
+            
+            # Get total career points across all teams from wp_allleaders
+            total_career_query = f"""
+            SELECT COALESCE(points, 0)
+            FROM wp_allleaders
+            WHERE pid = '{playerid}'
+            """
+            total_career_result = run_mysql_query(total_career_query)
+            if total_career_result and total_career_result.strip():
+                try:
+                    total_career_pts = int(float(total_career_result.strip()))
+                except (ValueError, TypeError):
+                    total_career_pts = 0
         
         # Check protection and HOF status
         protected = name in protected_players
@@ -244,7 +258,8 @@ def fetch_draft_picks(year, hof_members, protected_players):
             career_pts=career_pts,
             protected=protected,
             hall_of_fame=hall_of_fame,
-            playerid=playerid
+            playerid=playerid,
+            total_career_pts=total_career_pts
         )
         picks.append(pick)
     
@@ -278,6 +293,18 @@ def calculate_value_score(pick):
     # PENALTY: Kickers are less valuable
     if pick.position == 'PK':
         value_score *= 0.4
+    
+    # ADJUSTMENT FOR ZERO-VALUE PICKS:
+    # If value_score is 0, apply small negative adjustments based on tie-breakers
+    # This ensures proper sorting: earlier picks and fewer career points = worse
+    if value_score == 0.0:
+        # Base adjustment starts at 0 for the worst possible pick
+        # Pick #1 with 0 career points = 0.0 (absolute worst)
+        # Each pick later adds a tiny bit: +0.0001 per pick number
+        # Each career point adds a tiny bit: +0.00001 per point
+        pick_adjustment = pick.pick_num * 0.0001
+        career_adjustment = pick.total_career_pts * 0.00001
+        value_score = pick_adjustment + career_adjustment
     
     return value_score
 
@@ -338,7 +365,7 @@ def create_pick_value_table():
         team VARCHAR(10) NOT NULL,
         picknum INT NOT NULL,
         round INT NOT NULL,
-        valuescore DECIMAL(10,2) NOT NULL,
+        valuescore DECIMAL(15,6) NOT NULL,
         INDEX idx_year (year),
         INDEX idx_playerid (playerid),
         INDEX idx_team (team),
@@ -368,13 +395,13 @@ def save_pick_values_to_db(analysis, year):
             insert_query = f"""
             INSERT INTO wp_drafts_pick_value 
             (year, playername, playerid, team, picknum, round, valuescore)
-            VALUES ({year}, '{safe_name}', NULL, '{pick.team}', {pick.pick_num}, {pick.round}, {value_score:.2f})
+            VALUES ({year}, '{safe_name}', NULL, '{pick.team}', {pick.pick_num}, {pick.round}, {value_score:.6f})
             """
         else:
             insert_query = f"""
             INSERT INTO wp_drafts_pick_value 
             (year, playername, playerid, team, picknum, round, valuescore)
-            VALUES ({year}, '{safe_name}', '{safe_playerid}', '{pick.team}', {pick.pick_num}, {pick.round}, {value_score:.2f})
+            VALUES ({year}, '{safe_name}', '{safe_playerid}', '{pick.team}', {pick.pick_num}, {pick.round}, {value_score:.6f})
             """
         
         result = run_mysql_query(insert_query)

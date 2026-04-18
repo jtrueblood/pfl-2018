@@ -14055,6 +14055,297 @@ function pfl_api_leaders_season(WP_REST_Request $request) {
     return rest_ensure_response($result);
 }
 
+// ── WEEK RESOURCES (links to external/local research assets) ─────────────────
+add_action('rest_api_init', function () {
+    register_rest_route('pfl/v1', '/week-resources', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_week_resources',
+        'permission_callback' => '__return_true',
+        'args'                => [
+            'year' => ['required' => true, 'type' => 'integer'],
+            'week' => ['required' => true, 'type' => 'integer'],
+        ],
+    ]);
+});
+
+function pfl_api_week_resources(WP_REST_Request $request) {
+    $year = (int) $request->get_param('year');
+    $week = (int) $request->get_param('week');
+
+    if ($year < 1991 || $year > (int) date('Y') || $week < 1 || $week > 17) {
+        return new WP_Error('invalid_params', 'Invalid year or week', ['status' => 400]);
+    }
+
+    $cache_key = "pfl_week_resources_{$year}_w{$week}_v1";
+    $cached = get_transient($cache_key);
+    if ($cached !== false) return rest_ensure_response($cached);
+
+    $week_pad = sprintf('%02d', $week);
+    $week_id  = $year . $week_pad;
+
+    // ── Results Page ──────────────────────────────────────────────────────────
+    $results_url = home_url('/results/?Y=' . $year . '&W=' . $week_pad);
+
+    // ── Pro Football Reference ────────────────────────────────────────────────
+    $pfr_url = 'https://www.pro-football-reference.com/years/' . $year . '/week_' . $week . '.htm';
+
+    // ── NFL Dataset ───────────────────────────────────────────────────────────
+    if ($year >= 2001) {
+        $nfl_dataset = ['label' => 'ESPN API Dataset', 'url' => null];
+    } else {
+        $theme_path = get_stylesheet_directory();
+        $positions  = ['QB', 'RB', 'WR', 'PK'];
+        $available  = [];
+        foreach ($positions as $pos) {
+            if (file_exists($theme_path . '/pfr-raw-season/' . $year . '-' . $pos . '.csv')) {
+                $available[] = $pos;
+            }
+        }
+        $nfl_dataset = !empty($available)
+            ? ['label' => 'PFR Dataset — ' . implode(', ', $available), 'url' => null]
+            : ['label' => null, 'url' => null];
+    }
+
+    // ── MFL Results ───────────────────────────────────────────────────────────
+    $mfl_ids = [2012 => '47001', 2013 => '23875', 2014 => '11521', 2015 => '47099'];
+    $mfl_id  = isset($mfl_ids[$year]) ? $mfl_ids[$year] : ($year >= 2016 ? '38954' : '');
+    $mfl_url = $mfl_id
+        ? 'https://www47.myfantasyleague.com/' . $year . '/weekly?L=' . $mfl_id . '&W=' . $week
+        : null;
+
+    // ── PFL Update PDF & Raw Data — from ACF repeater stored as WP options ───
+    $pdf_count      = (int) get_option('options_update_pdfs', 0);
+    $pfl_update_url = null;
+    $raw_data_url   = null;
+    for ($i = 0; $i < $pdf_count; $i++) {
+        $opt_week_id = get_option("options_update_pdfs_{$i}_week_id");
+        if ($opt_week_id != $week_id) continue;
+
+        $pdf_id = get_option("options_update_pdfs_{$i}_pdf_file");
+        if ($pdf_id) {
+            $url = wp_get_attachment_url($pdf_id);
+            if ($url) $pfl_update_url = $url;
+        }
+
+        $raw_id = get_option("options_update_pdfs_{$i}_raw_data");
+        if ($raw_id) {
+            $url = wp_get_attachment_url($raw_id);
+            if ($url) $raw_data_url = $url;
+        }
+        break;
+    }
+
+    $result = [
+        'year'        => $year,
+        'week'        => $week,
+        'results_page' => $results_url,
+        'pfr'          => $pfr_url,
+        'nfl_dataset'  => $nfl_dataset,
+        'mfl'          => $mfl_url,
+        'pfl_update'   => $pfl_update_url,
+        'raw_data'     => $raw_data_url,
+    ];
+
+    set_transient($cache_key, $result, DAY_IN_SECONDS);
+    return rest_ensure_response($result);
+}
+
+// ── RESULTS SIDEBAR (week-specific leaders, standings, POTW) ─────────────────
+add_action('rest_api_init', function () {
+    register_rest_route('pfl/v1', '/results-sidebar', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_results_sidebar',
+        'permission_callback' => '__return_true',
+        'args'                => [
+            'year' => ['required' => true, 'type' => 'integer'],
+            'week' => ['required' => true, 'type' => 'integer'],
+        ],
+    ]);
+});
+
+function pfl_api_results_sidebar(WP_REST_Request $request) {
+    global $wpdb;
+
+    $year = (int) $request->get_param('year');
+    $week = (int) $request->get_param('week');
+
+    if ($year < 1991 || $year > (int) date('Y') || $week < 1 || $week > 14) {
+        return new WP_Error('invalid_params', 'Invalid year or week', ['status' => 400]);
+    }
+
+    $cache_key = "pfl_results_sidebar_{$year}_w{$week}_v2";
+    $cached = get_transient($cache_key);
+    if ($cached !== false) return rest_ensure_response($cached);
+
+    // ── Team name lookup ──────────────────────────────────────────────────────
+    $team_name_map = [];
+    foreach ($wpdb->get_results("SELECT team_int, team FROM wp_teams", ARRAY_A) as $r) {
+        $team_name_map[$r['team_int']] = $r['team'];
+    }
+
+    // ── Standings: teams + divisions from stand{year}, game data from wp_team_* ──
+    // Use ARRAY_N (positional): [0]=id [1]=year [2]=seed [3]=division [4]=teamid [5]=teamname
+    $stand_rows = $wpdb->get_results("SELECT * FROM stand{$year}", ARRAY_N);
+    $team_divisions = [];
+    $team_fullnames = [];
+    foreach ($stand_rows as $r) {
+        $team_divisions[$r[4]] = $r[3];
+        $team_fullnames[$r[4]] = $r[5];
+    }
+
+    $team_stats = [];
+    foreach ($team_divisions as $team => $div) {
+        if (!preg_match('/^[A-Za-z0-9]+$/', $team)) continue;
+
+        // [0]=id [1]=season [2]=week [3]=team_int [4]=points [5]=versus [6]=versus_pts [7]=home_away [8]=stadium [9]=result
+        $rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM `wp_team_{$team}` WHERE season = %d AND week <= %d",
+            $year, $week
+        ), ARRAY_N);
+
+        $wins = $losses = $pts = $ptsvs = $divwin = $divloss = 0;
+        foreach ($rows as $r) {
+            $result   = (float) $r[9];
+            $opp      = $r[5];
+            $opp_div  = $team_divisions[$opp] ?? null;
+            $is_win   = $result > 0;
+
+            if ($is_win) { $wins++;   } else { $losses++; }
+            $pts   += (float) $r[4];
+            $ptsvs += (float) $r[6];
+
+            if ($opp_div === $div) {
+                if ($is_win) { $divwin++; } else { $divloss++; }
+            }
+        }
+
+        $team_stats[$team] = [
+            'teamid'  => $team,
+            'name'    => $team_fullnames[$team] ?? ($team_name_map[$team] ?? $team),
+            'div'     => $div,
+            'win'     => $wins,
+            'loss'    => $losses,
+            'pts'     => round($pts, 1),
+            'ptsvs'   => round($ptsvs, 1),
+            'divwin'  => $divwin,
+            'divloss' => $divloss,
+            'gb'      => 0,
+        ];
+    }
+
+    // Group by division, sort, compute GB
+    $divs_grouped = [];
+    foreach ($team_stats as $t) {
+        $divs_grouped[$t['div']][] = $t;
+    }
+    $standings_result = [];
+    foreach ($divs_grouped as $div => $teams) {
+        usort($teams, fn($a, $b) => $b['win'] <=> $a['win'] ?: $b['pts'] <=> $a['pts']);
+        $leader_wins = $teams[0]['win'];
+        foreach ($teams as &$t) {
+            $t['gb'] = ($t['win'] === $leader_wins) ? 0 : round(($leader_wins - $t['win']) / 1, 1);
+        }
+        unset($t);
+        $standings_result[] = ['division' => $div, 'teams' => $teams];
+    }
+
+    // ── Leaders: sum player points up to $week from individual tables ─────────
+    $leader_rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT sl.playerid, p.playerFirst AS first, p.playerLast AS last
+         FROM wp_season_leaders sl
+         JOIN wp_players p ON p.p_id = sl.playerid
+         WHERE sl.season = %d",
+        $year
+    ), ARRAY_A);
+
+    $by_pos = ['QB' => [], 'RB' => [], 'WR' => [], 'PK' => []];
+
+    foreach ($leader_rows as $row) {
+        $pid = $row['playerid'];
+        $pos = strtoupper(substr($pid, -2));
+        if (!isset($by_pos[$pos])) continue;
+        if (!preg_match('/^[A-Za-z0-9]+$/', $pid)) continue;
+
+        $stats = $wpdb->get_row($wpdb->prepare(
+            "SELECT SUM(points) AS total, COUNT(*) AS games
+             FROM `{$pid}` WHERE year = %d AND week <= %d AND week < 15",
+            $year, $week
+        ), ARRAY_A);
+
+        $total_pts = (float) ($stats['total'] ?? 0);
+        $games     = (int)   ($stats['games'] ?? 0);
+
+        // Teams this player played for through this week
+        $team_rows2 = $wpdb->get_results($wpdb->prepare(
+            "SELECT DISTINCT team FROM `{$pid}`
+             WHERE year = %d AND week <= %d AND week < 15 AND team != '' AND team IS NOT NULL",
+            $year, $week
+        ), ARRAY_A);
+        $teams = array_values(array_column($team_rows2, 'team'));
+
+        $by_pos[$pos][] = [
+            'pid'    => $pid,
+            'first'  => $row['first'],
+            'last'   => $row['last'],
+            'points' => $total_pts,
+            'games'  => $games,
+            'teams'  => $teams,
+        ];
+    }
+
+    foreach ($by_pos as &$players) {
+        usort($players, fn($a, $b) => $b['points'] <=> $a['points']);
+    }
+    unset($players);
+
+    // ── POTW: single entry for this specific week ─────────────────────────────
+    $weekid = sprintf('%04d%02d', $year, $week);
+    $potw_pid = $wpdb->get_var($wpdb->prepare(
+        "SELECT playerid FROM wp_player_of_week WHERE weekid = %s",
+        $weekid
+    ));
+
+    $potw = null;
+    if ($potw_pid && preg_match('/^[A-Za-z0-9]+$/', $potw_pid)) {
+        $pname = $wpdb->get_row($wpdb->prepare(
+            "SELECT playerFirst AS first, playerLast AS last FROM wp_players WHERE p_id = %s",
+            $potw_pid
+        ), ARRAY_A);
+
+        $prow = $wpdb->get_row($wpdb->prepare(
+            "SELECT points, team FROM `{$potw_pid}` WHERE week_id = %s LIMIT 1",
+            $weekid
+        ), ARRAY_A);
+
+        $ppoints   = $prow ? (float) $prow['points'] : null;
+        $team_int  = $prow['team'] ?? null;
+        $team_name = $team_int ? ($team_name_map[$team_int] ?? $team_int) : null;
+
+        $potw = [
+            'week'   => $week,
+            'pid'    => $potw_pid,
+            'first'  => $pname['first'] ?? '',
+            'last'   => $pname['last'] ?? '',
+            'team'   => $team_name,
+            'points' => $ppoints,
+            'img'    => pfl_player_img_url($potw_pid),
+        ];
+    }
+
+    $result = [
+        'year'      => $year,
+        'week'      => $week,
+        'standings' => $standings_result,
+        'leaders'   => $by_pos,
+        'potw'      => $potw,
+    ];
+
+    // Cache for 1 hour for current season, 24h for past seasons
+    $ttl = ($year >= (int) date('Y')) ? HOUR_IN_SECONDS : DAY_IN_SECONDS;
+    set_transient($cache_key, $result, $ttl);
+    return rest_ensure_response($result);
+}
+
 // ── PROTECTIONS ENDPOINT ──────────────────────────────────────────────────────
 add_action('rest_api_init', function () {
     register_rest_route('pfl/v1', '/protections', [
@@ -14581,7 +14872,7 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
     $week      = (int) ($week_raw ?: 1);
     $week_pad  = str_pad($week, 2, '0', STR_PAD_LEFT);
     $weekid    = $year . $week_pad;
-    $cache_key = "pfl_weekly_results_{$year}{$week_pad}_v5";
+    $cache_key = "pfl_weekly_results_{$year}{$week_pad}_v10";
 
     $cached = get_transient($cache_key);
     if ($cached !== false) return rest_ensure_response($cached);
@@ -14696,6 +14987,20 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
         }
     }
 
+    // ── Fetch jersey numbers for all players in one query ────────────────────
+    $player_numbers = [];
+    if (!empty($all_pids)) {
+        $pids_in = "'" . implode("','", array_map('esc_sql', $all_pids)) . "'";
+        $num_rows = $wpdb->get_results(
+            "SELECT p_id, numberarray FROM wp_players WHERE p_id IN ({$pids_in})",
+            ARRAY_A
+        );
+        foreach ($num_rows as $nr) {
+            $arr = json_decode($nr['numberarray'], true);
+            $player_numbers[$nr['p_id']] = is_array($arr) ? $arr : [];
+        }
+    }
+
     // ── Game notes from wp_game_notes ────────────────────────────────────────
     // Index [1]=weekid, [2]=team, [3]=note_text (based on existing results.php usage)
     $notes_db = [];
@@ -14725,6 +15030,29 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
         $helmet_code_map[$tm] = pfl_get_helmet_num($tm, $year);
     }
 
+    // ── Pre-fetch uniform era info for all teams ─────────────────────────────
+    $uni_info_map = [];
+    foreach ($all_teams as $tm) {
+        $uni_info_map[$tm] = get_uni_info_by_team($tm);
+    }
+
+    // ── Jersey URL builder closure (H and R only) ─────────────────────────────
+    $make_jersey_url = function($pid, $team, $location) use ($player_numbers, $uni_info_map, $year, $theme_uri) {
+        $uni_info = $uni_info_map[$team] ?? [];
+        $uni_code = $uni_info[$year] ?? 1;
+        $nums = $player_numbers[$pid] ?? [];
+        $num  = 0;
+        if (!empty($nums)) {
+            $num = isset($nums[$year]) ? $nums[$year] : end($nums);
+        }
+        $jersey_rel  = show_jersey_svg($team, $location, $uni_code, $num);
+        $jersey_disk = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/tif-child-bootstrap' . $jersey_rel;
+        if (!file_exists($jersey_disk)) {
+            $jersey_rel = show_jersey_svg($team, 'H', $uni_code, $num);
+        }
+        return $theme_uri . $jersey_rel;
+    };
+
     // ── Build each game ──────────────────────────────────────────────────────
     $games = [];
 
@@ -14752,7 +15080,7 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
         $home_helm_code = $helmet_code_map[$home_team] ?? 1;
         $away_helm_code = $helmet_code_map[$away_team] ?? 1;
         $home_helmet_url = $theme_uri . '/img/helmets/weekly/' . $home_team . '-helm-right-' . $home_helm_code . '.png';
-        $away_helmet_url = $theme_uri . '/img/helmets/weekly/' . $away_team . '-helm-left-' . $away_helm_code . '.png';
+        $away_helmet_url = $theme_uri . '/img/helmets/weekly/' . $away_team . '-helm-right-' . $away_helm_code . '.png';
 
         // ── Starters builder ──────────────────────────────────────────────────
         $build_starters = function($row, $start_col) use ($player_names, $player_stats) {
@@ -14760,7 +15088,16 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
             $result = [];
             for ($i = 0; $i < 4; $i++) {
                 $pid = $row[$start_col + $i] ?? '';
-                if (empty($pid)) continue;
+                if (empty($pid)) {
+                    $result[$positions[$i]] = [
+                        'pid'       => null,
+                        'first'     => '?',
+                        'last'      => 'None',
+                        'points'    => 0,
+                        'linescore' => null,
+                    ];
+                    continue;
+                }
                 $names = $player_names[$pid] ?? ['first' => '?', 'last' => $pid];
                 $stats = $player_stats[$pid] ?? null;
                 $linescore = null;
@@ -14793,6 +15130,16 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
 
         $home_starters = $build_starters($home_row, 10);
         $away_starters = $build_starters($away_row, 10);
+
+        // Attach jersey URLs to each starter — home always H, away always R
+        $home_location = 'H';
+        $away_location = 'R';
+        foreach ($home_starters as &$s) {
+            $s['jersey_url'] = $s['pid'] ? $make_jersey_url($s['pid'], $home_team, $home_location) : null;
+        } unset($s);
+        foreach ($away_starters as &$s) {
+            $s['jersey_url'] = $s['pid'] ? $make_jersey_url($s['pid'], $away_team, $away_location) : null;
+        } unset($s);
 
         // OT starters (cols 15-18)
         $home_ot = null;
@@ -14897,7 +15244,7 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
 
         // ── MVP ───────────────────────────────────────────────────────────────
         $winning_starters = ($winner === $home_team) ? $home_starters : $away_starters;
-        $winning_location = ($winner === $home_team) ? $home_row[7] : $away_row[7]; // H or R
+        $winning_location = ($winner === $home_team) ? 'H' : 'R';
         $winning_uniform  = ($winner === $home_team) ? $uniform_col : $away_uniform_col;
 
         $best_pid   = null;
@@ -14921,23 +15268,10 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
             $mvp_names = $player_names[$best_pid] ?? ['first' => '?', 'last' => $best_pid];
             $mvp_pts   = (float) ($winning_starters[$best_pos]['points'] ?? 0);
 
-            // Jersey URL
-            $uni_info  = get_uni_info_by_team($winner);
-            $uni_code  = $uni_info[$year] ?? 1;
+            // Jersey URL (H/R only, fallback to H if R missing)
+            $uni_info   = $uni_info_map[$winner] ?? [];
+            $uni_code   = $uni_info[$year] ?? 1;
             $jersey_loc = $winning_location;
-
-            // Handle alternate uniform
-            if (!empty($winning_uniform)) {
-                $altvar = explode('-', $winning_uniform);
-                if (count($altvar) >= 3) {
-                    if ($altvar[1] === 'ALT') {
-                        $jersey_loc = 'A';
-                        $uni_code   = (int) $altvar[2];
-                    } elseif ($altvar[1] === 'TBK') {
-                        $uni_code   = (int) $altvar[2];
-                    }
-                }
-            }
 
             $player_nums = get_numbers_by_season($best_pid);
             $num = 0;
@@ -14950,16 +15284,9 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
                 }
             }
 
-            // Build jersey URL with fallback: A → R → H if file is missing
             $jersey_rel  = show_jersey_svg($winner, $jersey_loc, $uni_code, $num);
             $jersey_disk = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/tif-child-bootstrap' . $jersey_rel;
-            if (!file_exists($jersey_disk) && $jersey_loc === 'A') {
-                // Team has no alternate jersey — try road
-                $jersey_rel  = show_jersey_svg($winner, 'R', $uni_code, $num);
-                $jersey_disk = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/themes/tif-child-bootstrap' . $jersey_rel;
-            }
             if (!file_exists($jersey_disk)) {
-                // Try home as final fallback
                 $jersey_rel = show_jersey_svg($winner, 'H', $uni_code, $num);
             }
             $jersey_url = $theme_uri . $jersey_rel;

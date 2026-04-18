@@ -157,6 +157,102 @@ get_header();
     </div>
 
 <div class="panel-heading">
+    <h3 class="panel-title">Upload Player Image</h3>
+</div>
+<div class="panel-body">
+    <div class="col-xs-24">
+        <div id="pfl-image-upload">
+            <div id="pfl-drop-zone" style="border:2px dashed #aaa;border-radius:8px;padding:30px 20px;text-align:center;cursor:pointer;background:#fafafa;transition:background .2s;">
+                <p style="margin:0;color:#888;font-size:14px;">Drag &amp; drop a JPG or WebP here<br>or <strong>click to browse</strong></p>
+                <p id="pfl-file-name" style="margin:8px 0 0;font-size:13px;color:#555;"></p>
+            </div>
+            <input type="file" id="pfl-file-input" accept=".jpg,.jpeg,.webp" style="display:none;">
+            <div style="margin-top:12px;display:flex;gap:8px;align-items:center;">
+                <input type="text" id="pfl-player-id" value="<?php echo esc_attr($randomplayer); ?>" readonly
+                    style="flex:1;padding:7px 10px;border:1px solid #ccc;border-radius:4px;font-size:14px;background:#f5f5f5;color:#333;font-family:monospace;">
+                <button id="pfl-upload-btn" disabled
+                    style="padding:7px 18px;background:#337ab7;color:#fff;border:none;border-radius:4px;font-size:14px;cursor:pointer;opacity:.5;">
+                    Upload
+                </button>
+            </div>
+            <div id="pfl-upload-status" style="margin-top:10px;font-size:13px;display:none;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const dropZone  = document.getElementById('pfl-drop-zone');
+    const fileInput = document.getElementById('pfl-file-input');
+    const fileName  = document.getElementById('pfl-file-name');
+    const playerInput = document.getElementById('pfl-player-id');
+    const uploadBtn = document.getElementById('pfl-upload-btn');
+    const status    = document.getElementById('pfl-upload-status');
+    let selectedFile = null;
+
+    function setFile(file) {
+        selectedFile = file;
+        fileName.textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
+        dropZone.style.background = '#eaf4ff';
+        dropZone.style.borderColor = '#337ab7';
+        checkReady();
+    }
+
+    function checkReady() {
+        const ready = !!selectedFile;
+        uploadBtn.disabled = !ready;
+        uploadBtn.style.opacity = ready ? '1' : '.5';
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = '#ddeeff'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.background = selectedFile ? '#eaf4ff' : '#fafafa'; });
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        if (e.dataTransfer.files[0]) setFile(e.dataTransfer.files[0]);
+    });
+
+    uploadBtn.addEventListener('click', function () {
+        if (!selectedFile || !playerInput.value.trim()) return;
+
+        uploadBtn.disabled = true;
+        uploadBtn.textContent = 'Uploading…';
+        status.style.display = 'block';
+        status.style.color = '#555';
+        status.innerHTML = '⏳ Processing…';
+
+        const form = new FormData();
+        form.append('action', 'upload_player_image');
+        form.append('nonce', '<?php echo wp_create_nonce("upload_player_image"); ?>');
+        form.append('player_id', playerInput.value.trim());
+        form.append('image', selectedFile);
+
+        fetch('<?php echo admin_url("admin-ajax.php"); ?>', { method: 'POST', body: form })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    status.style.color = '#2a7a2a';
+                    status.innerHTML = '✓ Uploaded successfully.<br><pre style="font-size:11px;margin-top:6px;white-space:pre-wrap;">' + (data.data.message || '') + '</pre>';
+                } else {
+                    status.style.color = '#a00';
+                    status.innerHTML = '✗ ' + (data.data?.message || 'Upload failed.');
+                }
+            })
+            .catch(err => {
+                status.style.color = '#a00';
+                status.innerHTML = '✗ Request error: ' + err.message;
+            })
+            .finally(() => {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload';
+            });
+    });
+})();
+</script>
+
+<div class="panel-heading">
     <h3 class="panel-title">Python Scripts</h3>
 </div>
 <div class="panel-body">

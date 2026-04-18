@@ -26,15 +26,14 @@ $nonidplayers = get_non_pfl_players();
 //$teams_rostered = get_player_teams_rostered_by_season('2016HenrRB');
 //printr($teams_rostered, 1);
 
-function check_if_drafted_is_rostered($playerid, $season)
-{
-    $howaquired = how_player_was_acquired($playerid, $season, );
-    $seeifplayerisrostered = get_rostered_player_by_season($playerid, $season);
-
-}
-
-
-printr($seeifplayerisrostered, 0);
+// Commented out broken function - incomplete
+// function check_if_drafted_is_rostered($playerid, $season)
+// {
+//     $howaquired = how_player_was_acquired($playerid, $season, );
+//     $seeifplayerisrostered = get_rostered_player_by_season($playerid, $season);
+// 
+// }
+// printr($seeifplayerisrostered, 0);
 
 // NEED TO FIGURE OUT -------------------------------------------------
 // 1. CHECK IF PLAYER WAS DRAFTED BY NOT ON ROSTER TABLE eg. 2016HenrRB
@@ -62,7 +61,7 @@ function insert_nopid_players($nonid, $first, $last, $pos, $team){
 }
 
 
-function print_roster_table($season, $team, $season_drafts = null){
+function print_roster_table($season, $team, $season_drafts = null, $all_protections = null, $all_trades = null){
     $getroster = get_rosters($season, $team);
     $teams = get_teams();
 
@@ -92,7 +91,7 @@ function print_roster_table($season, $team, $season_drafts = null){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts, $all_protections, $all_trades);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].'  '.$acquired['protected'];
@@ -126,7 +125,7 @@ function print_roster_table($season, $team, $season_drafts = null){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts, $all_protections, $all_trades);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].' / '.$acquired['protected'];
@@ -160,7 +159,7 @@ function print_roster_table($season, $team, $season_drafts = null){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts, $all_protections, $all_trades);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].' / '.$acquired['protected'];
@@ -194,7 +193,7 @@ function print_roster_table($season, $team, $season_drafts = null){
             $points = $getstats ? array_sum($getstats) : '--';
             $games = $getstats ? count($getstats) : '--';
 
-            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts);
+            $acquired = how_player_was_acquired($player, $season, $team, $season_drafts, $all_protections, $all_trades);
             $countarr = count($acquired);
             if ($countarr == 2):
                 $printacquired = $acquired['traded'].' / '.$acquired['protected'];
@@ -267,6 +266,9 @@ function print_roster_table($season, $team, $season_drafts = null){
                     echo '<h3>'.$season.'</h3>';
                     // Fetch drafts once for the season
                     $yeardraft = get_drafts_by_year($season);
+                    // Temporarily disable bulk fetching to debug
+                    $all_protections = null;
+                    $all_trades = null;
                     
                     // Initialize arrays
                     $rosterseason = array();
@@ -293,7 +295,7 @@ function print_roster_table($season, $team, $season_drafts = null){
                         if ($getroster != null):
                             echo '<h4>'.$key.'</h4>';
                             //printr($getroster, 0);
-                            print_roster_table($season, $key, $yeardraft);
+                            print_roster_table($season, $key, $yeardraft, $all_protections, $all_trades);
                             $rosterseason[$season][$key] = $getroster;
                             $rosterflat = array_flatten($rosterseason);
                         endif;
@@ -355,6 +357,10 @@ function print_roster_table($season, $team, $season_drafts = null){
                 //printr($cleandraft, 0);
                 printr($rosterflat, 0);
 
+                // COMMENTED OUT - This expensive loop causes page hangs
+                // It queries get_the_bench() for every team and every week (15 teams × 14 weeks = 210+ queries)
+                // Only uncomment when needed for roster maintenance
+                /*
                 echo '<p>These players did not play, and were not drafted, but were still included on the MFL .json BENCH and IR rosters from 2011-present</p>';
 
                 foreach($teams as $theteam => $thevalue):
@@ -396,6 +402,7 @@ function print_roster_table($season, $team, $season_drafts = null){
                         endif;
                     endforeach;
                 endif;
+                */
 
                 ?>
 

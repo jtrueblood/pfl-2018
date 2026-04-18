@@ -110,8 +110,14 @@ $menu_structure = array(
             'Kicker Drafts' => '/kicker-draft/?draft_year=2025/',
             'Scorigami' => '/scorigami/?W=202501',
             'Position Difference' => '/position-difference',
-            'Colleges' => '/colleges',
-            'Error Check' => '/error-check'
+            'Colleges' => '/colleges'
+        )
+    ),
+    'Error Check' => array(
+        'url' => '#',
+        'children' => array(
+            'Error Check' => '/error-check',
+            '1991 Check' => '/1991-check'
         )
     )
 );

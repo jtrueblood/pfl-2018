@@ -132,9 +132,11 @@ def get_google_image_urls(player_name, max_results=50, api_key=None, cx_id=None)
         params = {
             'key': api_key,
             'cx': cx_id,
-            'q': f"{player_name} game image nfl",
+            'q': f"{player_name} NFL football",
             'searchType': 'image',
             'fileType': 'jpg,webp',  # Filter for jpg and webp
+            'imgType': 'photo',      # Real photos only, no clipart/lineart
+            'imgSize': 'xlarge',     # 750px+ on each dimension (closest to 800px min)
             'num': results_needed,
             'start': start_index
         }

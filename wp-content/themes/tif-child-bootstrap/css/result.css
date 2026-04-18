@@ -115,6 +115,10 @@ a {
   padding-left: 0px;
   font-size: 14px;
 }
+.results .boxscorebox a,
+.results .boxscorebox .pull-right {
+  font-size: 18px;
+}
 .results .notes-area {
   border-top: 1px solid rgba(0, 0, 0, 0.05);
   margin-top: 20px;
@@ -810,10 +814,10 @@ img.widget-bg.team-helmet-image {
   padding-top: 10px;
 }
 .next-prev-week {
-  padding-top: 30px;
+  padding-top: 14px;
 }
 .select-the-week {
-  padding-top: 20px;
+  padding-top: 14px;
 }
 .panel.the-supercard {
   overflow: hidden;

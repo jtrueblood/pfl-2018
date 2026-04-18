@@ -40,27 +40,47 @@ $image_url = $options['url'];
 $title = isset($options['title']) ? $options['title'] : '';
 $desired_filename = isset($options['filename']) ? $options['filename'] : '';
 
-// Download the image to a temporary file
-$tmp_file = download_url($image_url);
-
-if (is_wp_error($tmp_file)) {
-    ob_end_clean();
-    echo json_encode([
-        'success' => false,
-        'message' => 'Failed to download image: ' . $tmp_file->get_error_message()
-    ]);
-    exit(1);
+// Handle local file paths (passed as file:// or as a bare path)
+$local_path = null;
+if (strpos($image_url, 'file://') === 0) {
+    $local_path = substr($image_url, 7); // strip file://
+} elseif (file_exists($image_url)) {
+    $local_path = $image_url;
 }
 
-// Determine file extension
-$file_type = wp_check_filetype_and_ext($tmp_file, $image_url);
-$extension = $file_type['ext'];
+if ($local_path !== null) {
+    // Use the local file directly — copy to a temp location so the rest of
+    // the script can treat it the same as a downloaded file
+    $tmp_file = tempnam(sys_get_temp_dir(), 'wp_upload_');
+    if (!copy($local_path, $tmp_file)) {
+        ob_end_clean();
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to copy local file: ' . $local_path,
+        ]);
+        exit(1);
+    }
+    $extension = strtolower(pathinfo($local_path, PATHINFO_EXTENSION));
+} else {
+    // Download remote URL
+    $tmp_file = download_url($image_url);
 
-if (empty($extension)) {
-    // Try to get extension from URL
-    $parsed_url = parse_url($image_url);
-    $path = $parsed_url['path'] ?? '';
-    $extension = pathinfo($path, PATHINFO_EXTENSION);
+    if (is_wp_error($tmp_file)) {
+        ob_end_clean();
+        echo json_encode([
+            'success' => false,
+            'message' => 'Failed to download image: ' . $tmp_file->get_error_message(),
+        ]);
+        exit(1);
+    }
+
+    $file_type = wp_check_filetype_and_ext($tmp_file, $image_url);
+    $extension  = $file_type['ext'];
+
+    if (empty($extension)) {
+        $parsed_url = parse_url($image_url);
+        $extension  = pathinfo($parsed_url['path'] ?? '', PATHINFO_EXTENSION);
+    }
 }
 
 // Set filename

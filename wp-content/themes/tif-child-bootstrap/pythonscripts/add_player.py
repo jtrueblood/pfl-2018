@@ -153,14 +153,24 @@ def insert_player(cursor, connection, p_id, player_data):
         return False
 
 
-def player_exists(cursor, p_id):
-    """Check if player already exists"""
+def get_existing_player(cursor, p_id):
+    """Check if player already exists and return their info"""
     try:
-        cursor.execute("SELECT p_id FROM wp_players WHERE p_id = %s", (p_id,))
+        cursor.execute(
+            "SELECT p_id, playerFirst, playerLast, position FROM wp_players WHERE p_id = %s", 
+            (p_id,)
+        )
         result = cursor.fetchone()
-        return result is not None
+        if result:
+            return {
+                'p_id': result[0],
+                'playerFirst': result[1],
+                'playerLast': result[2],
+                'position': result[3]
+            }
+        return None
     except:
-        return False
+        return None
 
 
 def table_exists(cursor, table_name):
@@ -197,15 +207,56 @@ def main():
         
         cursor = connection.cursor()
         
-        # Check if player already exists
-        if player_exists(cursor, p_id):
-            print(f"✗ Player with ID {p_id} already exists in wp_players")
-            return
-        
-        # Check if table already exists
-        if table_exists(cursor, p_id):
-            print(f"✗ Table `{p_id}` already exists")
-            return
+        # Check if player ID already exists and handle duplicates
+        while True:
+            existing_player = get_existing_player(cursor, p_id)
+            if existing_player:
+                print(f"\n⚠️  Player ID '{p_id}' already exists in database!")
+                print(f"   Existing player: {existing_player['playerFirst']} {existing_player['playerLast']}")
+                print(f"   Position: {existing_player['position']}")
+                print()
+                print("Options:")
+                print("  1. Cancel - if this is the same player (entered in error)")
+                print("  2. Enter a new unique Player ID manually")
+                print()
+                choice = input("Enter choice (1 to cancel, 2 to enter new ID): ").strip()
+                
+                if choice == '1':
+                    print("\n❌ Operation cancelled.")
+                    return
+                elif choice == '2':
+                    p_id = input("Enter new unique Player ID: ").strip()
+                    if not p_id:
+                        print("Player ID cannot be empty")
+                        continue
+                    print(f"\nNew Player ID: {p_id}")
+                    # Loop will check if new ID also exists
+                else:
+                    print("Invalid choice. Please enter 1 or 2.")
+                    continue
+            elif table_exists(cursor, p_id):
+                print(f"\n⚠️  Table `{p_id}` already exists but no player record found.")
+                print("Options:")
+                print("  1. Cancel")
+                print("  2. Enter a new unique Player ID manually")
+                print()
+                choice = input("Enter choice (1 to cancel, 2 to enter new ID): ").strip()
+                
+                if choice == '1':
+                    print("\n❌ Operation cancelled.")
+                    return
+                elif choice == '2':
+                    p_id = input("Enter new unique Player ID: ").strip()
+                    if not p_id:
+                        print("Player ID cannot be empty")
+                        continue
+                    print(f"\nNew Player ID: {p_id}")
+                else:
+                    print("Invalid choice. Please enter 1 or 2.")
+                    continue
+            else:
+                # ID is unique, proceed
+                break
         
         # Create new player table
         print(f"\nCreating new player table `{p_id}`...")

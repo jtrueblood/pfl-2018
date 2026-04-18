@@ -355,7 +355,7 @@ printr($assoc, 0);
 
 					
 						
-						<div class="col-xs-24 col-sm-12 col-md-8">	
+						<div class="col-xs-24 col-sm-12 col-md-8">
 							<?php echo '<h2>Week '.$week_sel.'</h2>'; ?>
                             <?php //$playerdate = get_gamedate_by_player ('2018AlleQB', $weekvar);
                                 //printr($playerdate, 0);
@@ -392,43 +392,37 @@ printr($assoc, 0);
 						</div>					
 						
 						<div class="col-xs-24 col-sm-12 col-md-8 next-prev-week">
-							<p>
+							<div class="results-controls">
 								<?php if ($week_sel == '14'){ ?>
-										<a href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">Prev Week</a>
-											&emsp;|&emsp;
-										<a href="?Y=<?php echo $year_sel + 1; ?>&W=<?php echo '01'; ?>">Next Week</a>
-								<?php } 
-									if($week_sel > 1 && $week_sel < 14) { ?>
-										<a href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">Prev Week</a>
-											&emsp;|&emsp;
-										<a href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next Week</a>
+									<a class="results-ctrl-btn" href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">&#8592; Prev</a>
+									<a class="results-ctrl-btn" href="?Y=<?php echo $year_sel + 1; ?>&W=<?php echo '01'; ?>">Next &#8594;</a>
 								<?php }
-								
+									if($week_sel > 1 && $week_sel < 14) { ?>
+									<a class="results-ctrl-btn" href="?Y=<?php echo $prev_year; ?>&W=<?php echo $prev_week; ?>">&#8592; Prev</a>
+									<a class="results-ctrl-btn" href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next &#8594;</a>
+								<?php }
 									if($week_sel == '01'){ ?>
-										<a href="?Y=<?php echo $year_sel - 1; ?>&W=<?php echo '14'; ?>">Prev Week</a>
-											&emsp;|&emsp;
-										<a href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next Week</a>
+									<a class="results-ctrl-btn" href="?Y=<?php echo $year_sel - 1; ?>&W=<?php echo '14'; ?>">&#8592; Prev</a>
+									<a class="results-ctrl-btn" href="?Y=<?php echo $next_year; ?>&W=<?php echo $next_week; ?>">Next &#8594;</a>
 								<?php } ?>
-							</p>
+							</div>
 						</div>
 						
 						<div class="col-xs-24 col-md-8 select-the-week">
-							
-							<select name="Words" id="comboYear"'; 
-								<option value="1991">1991</option>
+							<div class="results-controls">
+								<select class="results-ctrl-select" id="comboYear">
 									<?php foreach($allSeasons as $select_year){ 
-								echo'<option value="'.$select_year.'">'.$select_year.'</option>';    
-								}
-							?> </select> 
-							
-							<select name="Words" id="comboWeek">'; 
-							<?php foreach($allWeeksZero as $select_week){ 
-								echo'<option value="'.$select_week.'">'.$select_week.'</option>';    
-								}
-							?> </select>
-							
-													 
-							<button id="schedulebtn" class="btn btn-default btn-hover-warning">Change Week</button><br/>
+										echo '<option value="'.$select_year.'">'.$select_year.'</option>';
+									} ?>
+								</select>
+								<select class="results-ctrl-select" id="comboWeek">
+									<?php foreach($allWeeksZero as $select_week){ 
+										echo '<option value="'.$select_week.'">'.$select_week.'</option>';
+									} ?>
+								</select>
+								<button class="results-ctrl-btn" id="schedulebtn">Go</button>
+								<button class="results-ctrl-btn" id="helper-toggle-btn" onclick="toggleHelperButtons()">🛠 Tools</button>
+							</div>
 						</div>
 					
 						<div class="clear"></div>
@@ -639,18 +633,16 @@ printr($assoc, 0);
 						
 						$h_qb1_pos = substr($h_qb1, -2);
 						$h_qb1_pfr_url = get_player_game_pfr_url($h_qb1, $weekvar);
-						$h_qb1_pfr_button = (($h_qb1_scorediff != 0 || $homeboxscoreerror) && !empty($h_qb1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_qb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$h_qb1_show_buttons = ($h_qb1_scorediff != 0 || $homeboxscoreerror);
+						$h_qb1_pfr_button = !empty($h_qb1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_qb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$h_qb1_show_2pt_btn = ($h_qb1_scorediff == 1 && $year_sel >= 1994);
 						$h_qb1_buttons = '';
-						if ($h_qb1_show_buttons) {
-							$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_qb1_pos.' '.$h_qb1_data['points'].'\', this)" style="margin-right: ' . ($h_qb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($h_qb1_show_2pt_btn) {
-								$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_qb1_data['first'] . '\', \''. $h_qb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_qb1_pos.' '.$h_qb1_data['points'].'\', this)" style="margin-right: ' . ($h_qb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($h_qb1_show_2pt_btn) {
+							$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$h_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_qb1_data['first'] . '\', \''. $h_qb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_qb1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($h_qb1_data['first'] . ' ' . $h_qb1_data['last']) . '\', \''. $hometeam . '\', '.$year_sel.', '.$nonzeroweek.', '.$h_qb1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$h_qb1_scorediff_display = ($h_qb1_scorediff != 0) ? format_scorediff($h_qb1_scorediff, $year_sel) : '';
 						echo $h_qb1_buttons . $h_qb1_pfr_button . ' <a href="/player/?id='.$h_qb1.'">' . ($h_qb1_data['first'] ? $h_qb1_data['first'] : 'None') . ' ' . $h_qb1_data['last'].'</a><span class="pull-right">'.$h_qb1_data['points'].$h_qb1_scorediff_display.'</span><br>';
 						$h_qb1_bye = is_player_on_bye($h_qb1, $weekvar);
@@ -660,18 +652,16 @@ printr($assoc, 0);
 						echo format_player_linescore($h_qb1, $weekvar);
 						$h_rb1_pos = substr($h_rb1, -2);
 						$h_rb1_pfr_url = get_player_game_pfr_url($h_rb1, $weekvar);
-						$h_rb1_pfr_button = (($h_rb1_scorediff != 0 || $homeboxscoreerror) && !empty($h_rb1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_rb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$h_rb1_show_buttons = ($h_rb1_scorediff != 0 || $homeboxscoreerror);
+						$h_rb1_pfr_button = !empty($h_rb1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_rb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$h_rb1_show_2pt_btn = ($h_rb1_scorediff == 1 && $year_sel >= 1994);
 						$h_rb1_buttons = '';
-						if ($h_rb1_show_buttons) {
-							$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_rb1_pos.' '.$h_rb1_data['points'].'\', this)" style="margin-right: ' . ($h_rb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($h_rb1_show_2pt_btn) {
-								$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_rb1_data['first'] . '\', \''. $h_rb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_rb1_pos.' '.$h_rb1_data['points'].'\', this)" style="margin-right: ' . ($h_rb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($h_rb1_show_2pt_btn) {
+							$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$h_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_rb1_data['first'] . '\', \''. $h_rb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_rb1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($h_rb1_data['first'] . ' ' . $h_rb1_data['last']) . '\', \''. $hometeam . '\', '.$year_sel.', '.$nonzeroweek.', '.$h_rb1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$h_rb1_scorediff_display = ($h_rb1_scorediff != 0) ? format_scorediff($h_rb1_scorediff, $year_sel) : '';
 						echo $h_rb1_buttons . $h_rb1_pfr_button . ' <a href="/player/?id='.$h_rb1.'">' . ($h_rb1_data['first'] ? $h_rb1_data['first'] : 'None') . ' ' . $h_rb1_data['last'].'</a><span class="pull-right">'.$h_rb1_data['points'].$h_rb1_scorediff_display.'</span><br>'; 
 						$h_rb1_bye = is_player_on_bye($h_rb1, $weekvar);
@@ -681,18 +671,16 @@ printr($assoc, 0);
 						echo format_player_linescore($h_rb1, $weekvar);
 						$h_wr1_pos = substr($h_wr1, -2);
 						$h_wr1_pfr_url = get_player_game_pfr_url($h_wr1, $weekvar);
-						$h_wr1_pfr_button = (($h_wr1_scorediff != 0 || $homeboxscoreerror) && !empty($h_wr1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_wr1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$h_wr1_show_buttons = ($h_wr1_scorediff != 0 || $homeboxscoreerror);
+						$h_wr1_pfr_button = !empty($h_wr1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_wr1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$h_wr1_show_2pt_btn = ($h_wr1_scorediff == 1 && $year_sel >= 1994);
 						$h_wr1_buttons = '';
-						if ($h_wr1_show_buttons) {
-							$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_wr1_pos.' '.$h_wr1_data['points'].'\', this)" style="margin-right: ' . ($h_wr1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($h_wr1_show_2pt_btn) {
-								$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_wr1_data['first'] . '\', \''. $h_wr1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_wr1_pos.' '.$h_wr1_data['points'].'\', this)" style="margin-right: ' . ($h_wr1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($h_wr1_show_2pt_btn) {
+							$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$h_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_wr1_data['first'] . '\', \''. $h_wr1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_wr1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($h_wr1_data['first'] . ' ' . $h_wr1_data['last']) . '\', \''. $hometeam . '\', '.$year_sel.', '.$nonzeroweek.', '.$h_wr1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$h_wr1_scorediff_display = ($h_wr1_scorediff != 0) ? format_scorediff($h_wr1_scorediff, $year_sel) : '';
 						echo $h_wr1_buttons . $h_wr1_pfr_button . ' <a href="/player/?id='.$h_wr1.'">' . ($h_wr1_data['first'] ? $h_wr1_data['first'] : 'None') . ' ' . $h_wr1_data['last'].'</a><span class="pull-right">'.$h_wr1_data['points'].$h_wr1_scorediff_display.'</span><br>';
 						$h_wr1_bye = is_player_on_bye($h_wr1, $weekvar);
@@ -702,18 +690,16 @@ printr($assoc, 0);
 						echo format_player_linescore($h_wr1, $weekvar);
 						$h_pk1_pos = substr($h_pk1, -2);
 						$h_pk1_pfr_url = get_player_game_pfr_url($h_pk1, $weekvar);
-						$h_pk1_pfr_button = (($h_pk1_scorediff != 0 || $homeboxscoreerror) && !empty($h_pk1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_pk1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$h_pk1_show_buttons = ($h_pk1_scorediff != 0 || $homeboxscoreerror);
+						$h_pk1_pfr_button = !empty($h_pk1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $h_pk1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$h_pk1_show_2pt_btn = ($h_pk1_scorediff == 1 && $year_sel >= 1994);
 						$h_pk1_buttons = '';
-						if ($h_pk1_show_buttons) {
-							$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_pk1_pos.' '.$h_pk1_data['points'].'\', this)" style="margin-right: ' . ($h_pk1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($h_pk1_show_2pt_btn) {
-								$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_pk1_data['first'] . '\', \''. $h_pk1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_pk1_pos.' '.$h_pk1_data['points'].'\', this)" style="margin-right: ' . ($h_pk1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($h_pk1_show_2pt_btn) {
+							$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$h_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_pk1_data['first'] . '\', \''. $h_pk1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$h_pk1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($h_pk1_data['first'] . ' ' . $h_pk1_data['last']) . '\', \''. $hometeam . '\', '.$year_sel.', '.$nonzeroweek.', '.$h_pk1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$h_pk1_scorediff_display = ($h_pk1_scorediff != 0) ? format_scorediff($h_pk1_scorediff, $year_sel) : '';
 						echo $h_pk1_buttons . $h_pk1_pfr_button . ' <a href="/player/?id='.$h_pk1.'">' . ($h_pk1_data['first'] ? $h_pk1_data['first'] : 'None') . ' ' . $h_pk1_data['last'].'</a><span class="pull-right">'.$h_pk1_data['points'].$h_pk1_scorediff_display.'</span><br>';
 						$h_pk1_bye = is_player_on_bye($h_pk1, $weekvar);
@@ -727,6 +713,18 @@ printr($assoc, 0);
                         endif;
 
                     $startershome = array($h_qb1,$h_rb1,$h_wr1,$h_pk1,$h_qb2,$h_rb2,$h_wr2,$h_pk2);
+                    
+                    // Check for unaccounted players (players who say they played but aren't in lineup)
+                    $unaccounted_home = get_unaccounted_players($hometeam, $weekvar, $startershome);
+                    if(!empty($unaccounted_home)):
+                        echo '<div style="margin-top: 10px;"><strong style="color: #cc0000;">⚠ Unaccounted Players:</strong></div>';
+                        echo '<div style="font-size: 10px; color: #cc0000;">';
+                        foreach ($unaccounted_home as $player):
+                            echo '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 deleteplayerrow.py '.$player['pid'].' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 3px;" title="Delete player row">❌</button> ';
+                            echo '<a href="/player/?id='.$player['pid'].'" style="color: #cc0000;">'.$player['name'].'</a>, '.$player['position'].' ('.$player['points'].' pts) / ';
+                        endforeach;
+                        echo '</div>';
+                    endif;
                     $bench_home = get_the_bench($year_sel, $nonzeroweek, $hometeam);
                     if($w == 1) { perf_checkpoint('Game 1: Home bench query done'); }
                     
@@ -829,18 +827,16 @@ printr($assoc, 0);
 								
 						$a_qb1_pos = substr($a_qb1, -2);
 						$a_qb1_pfr_url = get_player_game_pfr_url($a_qb1, $weekvar);
-						$a_qb1_pfr_button = (($a_qb1_scorediff != 0 || $awayboxscoreerror) && !empty($a_qb1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_qb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$a_qb1_show_buttons = ($a_qb1_scorediff != 0 || $awayboxscoreerror);
+						$a_qb1_pfr_button = !empty($a_qb1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_qb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$a_qb1_show_2pt_btn = ($a_qb1_scorediff == 1 && $year_sel >= 1994);
 						$a_qb1_buttons = '';
-						if ($a_qb1_show_buttons) {
-							$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_qb1_pos.' '.$a_qb1_data['points'].'\', this)" style="margin-right: ' . ($a_qb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($a_qb1_show_2pt_btn) {
-								$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_qb1_data['first'] . '\', \''. $a_qb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_qb1_pos.' '.$a_qb1_data['points'].'\', this)" style="margin-right: ' . ($a_qb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($a_qb1_show_2pt_btn) {
+							$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_qb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$a_qb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_qb1_data['first'] . '\', \''. $a_qb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_qb1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($a_qb1_data['first'] . ' ' . $a_qb1_data['last']) . '\', \''. $awayteam . '\', '.$year_sel.', '.$nonzeroweek.', '.$a_qb1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$a_qb1_scorediff_display = ($a_qb1_scorediff != 0) ? format_scorediff($a_qb1_scorediff, $year_sel) : '';
 						echo $a_qb1_buttons . $a_qb1_pfr_button . ' <a href="/player/?id='.$a_qb1.'">' . ($a_qb1_data['first'] ? $a_qb1_data['first'] : 'None') . ' ' . $a_qb1_data['last'].'</a><span class="pull-right">'.$a_qb1_data['points'].$a_qb1_scorediff_display.'</span><br>';
 						$a_qb1_bye = is_player_on_bye($a_qb1, $weekvar);
@@ -850,18 +846,16 @@ printr($assoc, 0);
 						echo format_player_linescore($a_qb1, $weekvar);
 						$a_rb1_pos = substr($a_rb1, -2);
 						$a_rb1_pfr_url = get_player_game_pfr_url($a_rb1, $weekvar);
-						$a_rb1_pfr_button = (($a_rb1_scorediff != 0 || $awayboxscoreerror) && !empty($a_rb1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_rb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$a_rb1_show_buttons = ($a_rb1_scorediff != 0 || $awayboxscoreerror);
+						$a_rb1_pfr_button = !empty($a_rb1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_rb1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$a_rb1_show_2pt_btn = ($a_rb1_scorediff == 1 && $year_sel >= 1994);
 						$a_rb1_buttons = '';
-						if ($a_rb1_show_buttons) {
-							$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_rb1_pos.' '.$a_rb1_data['points'].'\', this)" style="margin-right: ' . ($a_rb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($a_rb1_show_2pt_btn) {
-								$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_rb1_data['first'] . '\', \''. $a_rb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_rb1_pos.' '.$a_rb1_data['points'].'\', this)" style="margin-right: ' . ($a_rb1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($a_rb1_show_2pt_btn) {
+							$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_rb1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$a_rb1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_rb1_data['first'] . '\', \''. $a_rb1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_rb1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($a_rb1_data['first'] . ' ' . $a_rb1_data['last']) . '\', \''. $awayteam . '\', '.$year_sel.', '.$nonzeroweek.', '.$a_rb1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$a_rb1_scorediff_display = ($a_rb1_scorediff != 0) ? format_scorediff($a_rb1_scorediff, $year_sel) : '';
 						echo $a_rb1_buttons . $a_rb1_pfr_button . ' <a href="/player/?id='.$a_rb1.'">' . ($a_rb1_data['first'] ? $a_rb1_data['first'] : 'None') . ' ' . $a_rb1_data['last'].'</a><span class="pull-right">'.$a_rb1_data['points'].$a_rb1_scorediff_display.'</span><br>';
 						$a_rb1_bye = is_player_on_bye($a_rb1, $weekvar);
@@ -871,18 +865,16 @@ printr($assoc, 0);
 						echo format_player_linescore($a_rb1, $weekvar);
 						$a_wr1_pos = substr($a_wr1, -2);
 						$a_wr1_pfr_url = get_player_game_pfr_url($a_wr1, $weekvar);
-						$a_wr1_pfr_button = (($a_wr1_scorediff != 0 || $awayboxscoreerror) && !empty($a_wr1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_wr1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$a_wr1_show_buttons = ($a_wr1_scorediff != 0 || $awayboxscoreerror);
+						$a_wr1_pfr_button = !empty($a_wr1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_wr1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$a_wr1_show_2pt_btn = ($a_wr1_scorediff == 1 && $year_sel >= 1994);
 						$a_wr1_buttons = '';
-						if ($a_wr1_show_buttons) {
-							$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_wr1_pos.' '.$a_wr1_data['points'].'\', this)" style="margin-right: ' . ($a_wr1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($a_wr1_show_2pt_btn) {
-								$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_wr1_data['first'] . '\', \''. $a_wr1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_wr1_pos.' '.$a_wr1_data['points'].'\', this)" style="margin-right: ' . ($a_wr1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($a_wr1_show_2pt_btn) {
+							$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_wr1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$a_wr1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_wr1_data['first'] . '\', \''. $a_wr1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_wr1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($a_wr1_data['first'] . ' ' . $a_wr1_data['last']) . '\', \''. $awayteam . '\', '.$year_sel.', '.$nonzeroweek.', '.$a_wr1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$a_wr1_scorediff_display = ($a_wr1_scorediff != 0) ? format_scorediff($a_wr1_scorediff, $year_sel) : '';
 						echo $a_wr1_buttons . $a_wr1_pfr_button . ' <a href="/player/?id='.$a_wr1.'">' . ($a_wr1_data['first'] ? $a_wr1_data['first'] : 'None') . ' ' . $a_wr1_data['last'].'</a><span class="pull-right">'.$a_wr1_data['points'].$a_wr1_scorediff_display.'</span><br>';
 						$a_wr1_bye = is_player_on_bye($a_wr1, $weekvar);
@@ -892,18 +884,16 @@ printr($assoc, 0);
 						echo format_player_linescore($a_wr1, $weekvar);
 						$a_pk1_pos = substr($a_pk1, -2);
 						$a_pk1_pfr_url = get_player_game_pfr_url($a_pk1, $weekvar);
-						$a_pk1_pfr_button = (($a_pk1_scorediff != 0 || $awayboxscoreerror) && !empty($a_pk1_pfr_url)) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_pk1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
-						$a_pk1_show_buttons = ($a_pk1_scorediff != 0 || $awayboxscoreerror);
+						$a_pk1_pfr_button = !empty($a_pk1_pfr_url) ? '<button class="copy-cmd-btn" onclick="window.open(\''. $a_pk1_pfr_url . '\', \'_blank\')" style="margin-left: 1px;" title="View on Pro Football Reference">➜</button>' : '';
 						$a_pk1_show_2pt_btn = ($a_pk1_scorediff == 1 && $year_sel >= 1994);
 						$a_pk1_buttons = '';
-						if ($a_pk1_show_buttons) {
-							$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-							$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_pk1_pos.' '.$a_pk1_data['points'].'\', this)" style="margin-right: ' . ($a_pk1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-							if ($a_pk1_show_2pt_btn) {
-								$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-							}
-							$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_pk1_data['first'] . '\', \''. $a_pk1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+						$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_pk1_pos.' '.$a_pk1_data['points'].'\', this)" style="margin-right: ' . ($a_pk1_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+						if ($a_pk1_show_2pt_btn) {
+							$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_pk1.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 						}
+						$a_pk1_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_pk1_data['first'] . '\', \''. $a_pk1_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+						$a_pk1_buttons .= '<button class="copy-note-btn" onclick="copyCorrectionNote(\''. addslashes($a_pk1_data['first'] . ' ' . $a_pk1_data['last']) . '\', \''. $awayteam . '\', '.$year_sel.', '.$nonzeroweek.', '.$a_pk1_scorediff.', this)" title="Copy correction note to clipboard">📝 Note</button> ';
 						$a_pk1_scorediff_display = ($a_pk1_scorediff != 0) ? format_scorediff($a_pk1_scorediff, $year_sel) : '';
 						echo $a_pk1_buttons . $a_pk1_pfr_button . ' <a href="/player/?id='.$a_pk1.'">' . ($a_pk1_data['first'] ? $a_pk1_data['first'] : 'None') . ' ' . $a_pk1_data['last'].'</a><span class="pull-right">'.$a_pk1_data['points'].$a_pk1_scorediff_display.'</span><br>';
 						$a_pk1_bye = is_player_on_bye($a_pk1, $weekvar);
@@ -917,6 +907,18 @@ printr($assoc, 0);
                         endif;
 
                     $startersroad = array($a_qb1,$a_rb1,$a_wr1,$a_pk1,$a_qb2,$a_rb2,$a_wr2,$a_pk2);
+                    
+                    // Check for unaccounted players (players who say they played but aren't in lineup)
+                    $unaccounted_away = get_unaccounted_players($awayteam, $weekvar, $startersroad);
+                    if(!empty($unaccounted_away)):
+                        echo '<div style="margin-top: 10px;"><strong style="color: #cc0000;">⚠ Unaccounted Players:</strong></div>';
+                        echo '<div style="font-size: 10px; color: #cc0000;">';
+                        foreach ($unaccounted_away as $player):
+                            echo '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 deleteplayerrow.py '.$player['pid'].' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 3px;" title="Delete player row">❌</button> ';
+                            echo '<a href="/player/?id='.$player['pid'].'" style="color: #cc0000;">'.$player['name'].'</a>, '.$player['position'].' ('.$player['points'].' pts) / ';
+                        endforeach;
+                        echo '</div>';
+                    endif;
                     $bench_away = get_the_bench($year_sel, $nonzeroweek, $awayteam);
                     if($w == 1) { perf_checkpoint('Game 1: Away bench query done'); }
                     
@@ -1029,17 +1031,14 @@ printr($assoc, 0);
 										$h_pk2_scorediff = $h_pk2_data['scorediff'];
 								
 									$h_qb2_pos = substr($h_qb2, -2);
-									$h_qb2_show_buttons = ($h_qb2_scorediff != 0 || $homeboxscoreerror);
 									$h_qb2_show_2pt_btn = ($h_qb2_scorediff == 1 && $year_sel >= 1994);
 									$h_qb2_buttons = '';
-									if ($h_qb2_show_buttons) {
-										$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_qb2_pos.' '.$h_qb2_data['points'].'\', this)" style="margin-right: ' . ($h_qb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($h_qb2_show_2pt_btn) {
-											$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_qb2_data['first'] . '\', \''. $h_qb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_qb2_pos.' '.$h_qb2_data['points'].'\', this)" style="margin-right: ' . ($h_qb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($h_qb2_show_2pt_btn) {
+										$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$h_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_qb2_data['first'] . '\', \''. $h_qb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$h_qb2_scorediff_display = ($h_qb2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_qb2_scorediff, $year_sel) : '';
 							echo $h_qb2_buttons . '<a href="/player/?id='.$h_qb2.'">' . ($h_qb2_data['first'] ? $h_qb2_data['first'] : 'None') . ' ' . $h_qb2_data['last'].'</a><span class="pull-right">'.$h_qb2_data['points'].$h_qb2_scorediff_display.'</span><br>';
 							$h_qb2_bye = is_player_on_bye($h_qb2, $weekvar);
@@ -1048,17 +1047,14 @@ printr($assoc, 0);
 							}
 							echo format_player_linescore($h_qb2, $weekvar);
 							$h_rb2_pos = substr($h_rb2, -2);
-									$h_rb2_show_buttons = ($h_rb2_scorediff != 0 || $homeboxscoreerror);
 									$h_rb2_show_2pt_btn = ($h_rb2_scorediff == 1 && $year_sel >= 1994);
 									$h_rb2_buttons = '';
-									if ($h_rb2_show_buttons) {
-										$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_rb2_pos.' '.$h_rb2_data['points'].'\', this)" style="margin-right: ' . ($h_rb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($h_rb2_show_2pt_btn) {
-											$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_rb2_data['first'] . '\', \''. $h_rb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_rb2_pos.' '.$h_rb2_data['points'].'\', this)" style="margin-right: ' . ($h_rb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($h_rb2_show_2pt_btn) {
+										$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$h_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_rb2_data['first'] . '\', \''. $h_rb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$h_rb2_scorediff_display = ($h_rb2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_rb2_scorediff, $year_sel) : '';
 							echo $h_rb2_buttons . '<a href="/player/?id='.$h_rb2.'">' . ($h_rb2_data['first'] ? $h_rb2_data['first'] : 'None') . ' ' . $h_rb2_data['last'].'</a><span class="pull-right">'.$h_rb2_data['points'].$h_rb2_scorediff_display.'</span><br>';
 							$h_rb2_bye = is_player_on_bye($h_rb2, $weekvar);
@@ -1067,17 +1063,14 @@ printr($assoc, 0);
 							}
 							echo format_player_linescore($h_rb2, $weekvar);
 							$h_wr2_pos = substr($h_wr2, -2);
-									$h_wr2_show_buttons = ($h_wr2_scorediff != 0 || $homeboxscoreerror);
 									$h_wr2_show_2pt_btn = ($h_wr2_scorediff == 1 && $year_sel >= 1994);
 									$h_wr2_buttons = '';
-									if ($h_wr2_show_buttons) {
-										$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_wr2_pos.' '.$h_wr2_data['points'].'\', this)" style="margin-right: ' . ($h_wr2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($h_wr2_show_2pt_btn) {
-											$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_wr2_data['first'] . '\', \''. $h_wr2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_wr2_pos.' '.$h_wr2_data['points'].'\', this)" style="margin-right: ' . ($h_wr2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($h_wr2_show_2pt_btn) {
+										$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$h_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_wr2_data['first'] . '\', \''. $h_wr2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$h_wr2_scorediff_display = ($h_wr2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_wr2_scorediff, $year_sel) : '';
 							echo $h_wr2_buttons . '<a href="/player/?id='.$h_wr2.'">' . ($h_wr2_data['first'] ? $h_wr2_data['first'] : 'None') . ' ' . $h_wr2_data['last'].'</a><span class="pull-right">'.$h_wr2_data['points'].$h_wr2_scorediff_display.'</span><br>';
 							$h_wr2_bye = is_player_on_bye($h_wr2, $weekvar);
@@ -1086,17 +1079,14 @@ printr($assoc, 0);
 							}
 							echo format_player_linescore($h_wr2, $weekvar);
 							$h_pk2_pos = substr($h_pk2, -2);
-									$h_pk2_show_buttons = ($h_pk2_scorediff != 0 || $homeboxscoreerror);
 									$h_pk2_show_2pt_btn = ($h_pk2_scorediff == 1 && $year_sel >= 1994);
 									$h_pk2_buttons = '';
-									if ($h_pk2_show_buttons) {
-										$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_pk2_pos.' '.$h_pk2_data['points'].'\', this)" style="margin-right: ' . ($h_pk2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($h_pk2_show_2pt_btn) {
-											$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_pk2_data['first'] . '\', \''. $h_pk2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$h_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$h_pk2_pos.' '.$h_pk2_data['points'].'\', this)" style="margin-right: ' . ($h_pk2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($h_pk2_show_2pt_btn) {
+										$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$h_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$h_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $h_pk2_data['first'] . '\', \''. $h_pk2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$hometeam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$h_pk2_scorediff_display = ($h_pk2_scorediff != 0 || $homeboxscoreerror) ? format_scorediff($h_pk2_scorediff, $year_sel) : '';
 							echo $h_pk2_buttons . '<a href="/player/?id='.$h_pk2.'">' . ($h_pk2_data['first'] ? $h_pk2_data['first'] : 'None') . ' ' . $h_pk2_data['last'].'</a><span class="pull-right">'.$h_pk2_data['points'].$h_pk2_scorediff_display.'</span><br>';
 							$h_pk2_bye = is_player_on_bye($h_pk2, $weekvar);
@@ -1120,17 +1110,14 @@ printr($assoc, 0);
 										$a_pk2_scorediff = $a_pk2_data['scorediff'];
 								
 									$a_qb2_pos = substr($a_qb2, -2);
-									$a_qb2_show_buttons = ($a_qb2_scorediff != 0 || $awayboxscoreerror);
 									$a_qb2_show_2pt_btn = ($a_qb2_scorediff == 1 && $year_sel >= 1994);
 									$a_qb2_buttons = '';
-									if ($a_qb2_show_buttons) {
-										$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_qb2_pos.' '.$a_qb2_data['points'].'\', this)" style="margin-right: ' . ($a_qb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($a_qb2_show_2pt_btn) {
-											$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_qb2_data['first'] . '\', \''. $a_qb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_qb2_pos.' '.$a_qb2_data['points'].'\', this)" style="margin-right: ' . ($a_qb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($a_qb2_show_2pt_btn) {
+										$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_qb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$a_qb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_qb2_data['first'] . '\', \''. $a_qb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$a_qb2_scorediff_display = ($a_qb2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_qb2_scorediff, $year_sel) : '';
 							echo $a_qb2_buttons . '<a href="/player/?id='.$a_qb2.'">' . ($a_qb2_data['first'] ? $a_qb2_data['first'] : 'None') . ' ' . $a_qb2_data['last'].'</a><span class="pull-right">'.$a_qb2_data['points'].$a_qb2_scorediff_display.'</span><br>';
 							$a_qb2_bye = is_player_on_bye($a_qb2, $weekvar);
@@ -1139,17 +1126,14 @@ printr($assoc, 0);
 							}
 							echo format_player_linescore($a_qb2, $weekvar);
 							$a_rb2_pos = substr($a_rb2, -2);
-									$a_rb2_show_buttons = ($a_rb2_scorediff != 0 || $awayboxscoreerror);
 									$a_rb2_show_2pt_btn = ($a_rb2_scorediff == 1 && $year_sel >= 1994);
 									$a_rb2_buttons = '';
-									if ($a_rb2_show_buttons) {
-										$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_rb2_pos.' '.$a_rb2_data['points'].'\', this)" style="margin-right: ' . ($a_rb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($a_rb2_show_2pt_btn) {
-											$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_rb2_data['first'] . '\', \''. $a_rb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_rb2_pos.' '.$a_rb2_data['points'].'\', this)" style="margin-right: ' . ($a_rb2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($a_rb2_show_2pt_btn) {
+										$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_rb2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$a_rb2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_rb2_data['first'] . '\', \''. $a_rb2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$a_rb2_scorediff_display = ($a_rb2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_rb2_scorediff, $year_sel) : '';
 							echo $a_rb2_buttons . '<a href="/player/?id='.$a_rb2.'">' . ($a_rb2_data['first'] ? $a_rb2_data['first'] : 'None') . ' ' . $a_rb2_data['last'].'</a><span class="pull-right">'.$a_rb2_data['points'].$a_rb2_scorediff_display.'</span><br>';
 							$a_rb2_bye = is_player_on_bye($a_rb2, $weekvar);
@@ -1158,17 +1142,14 @@ printr($assoc, 0);
 							}
 							echo format_player_linescore($a_rb2, $weekvar);
 							$a_wr2_pos = substr($a_wr2, -2);
-									$a_wr2_show_buttons = ($a_wr2_scorediff != 0 || $awayboxscoreerror);
 									$a_wr2_show_2pt_btn = ($a_wr2_scorediff == 1 && $year_sel >= 1994);
 									$a_wr2_buttons = '';
-									if ($a_wr2_show_buttons) {
-										$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_wr2_pos.' '.$a_wr2_data['points'].'\', this)" style="margin-right: ' . ($a_wr2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($a_wr2_show_2pt_btn) {
-											$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_wr2_data['first'] . '\', \''. $a_wr2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_wr2_pos.' '.$a_wr2_data['points'].'\', this)" style="margin-right: ' . ($a_wr2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($a_wr2_show_2pt_btn) {
+										$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_wr2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$a_wr2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_wr2_data['first'] . '\', \''. $a_wr2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$a_wr2_scorediff_display = ($a_wr2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_wr2_scorediff, $year_sel) : '';
 							echo $a_wr2_buttons . '<a href="/player/?id='.$a_wr2.'">' . ($a_wr2_data['first'] ? $a_wr2_data['first'] : 'None') . ' ' . $a_wr2_data['last'].'</a><span class="pull-right">'.$a_wr2_data['points'].$a_wr2_scorediff_display.'</span><br>';
 							$a_wr2_bye = is_player_on_bye($a_wr2, $weekvar);
@@ -1177,17 +1158,14 @@ printr($assoc, 0);
 							}
 							echo format_player_linescore($a_wr2, $weekvar);
 							$a_pk2_pos = substr($a_pk2, -2);
-									$a_pk2_show_buttons = ($a_pk2_scorediff != 0 || $awayboxscoreerror);
 									$a_pk2_show_2pt_btn = ($a_pk2_scorediff == 1 && $year_sel >= 1994);
 									$a_pk2_buttons = '';
-									if ($a_pk2_show_buttons) {
-										$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
-										$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_pk2_pos.' '.$a_pk2_data['points'].'\', this)" style="margin-right: ' . ($a_pk2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
-										if ($a_pk2_show_2pt_btn) {
-											$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
-										}
-										$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_pk2_data['first'] . '\', \''. $a_pk2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
+									$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 player_boxscore.py '.$a_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: -3px;" title="player_boxscore">📋</button> ';
+									$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 find_player_by_points.py '.$year_sel.' '.$nonzeroweek.' '.$a_pk2_pos.' '.$a_pk2_data['points'].'\', this)" style="margin-right: ' . ($a_pk2_show_2pt_btn ? '-3px' : '1px') . ';" title="find_player_by_points">🔍</button> ';
+									if ($a_pk2_show_2pt_btn) {
+										$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyCommand(\'python3 confirm_two_pts.py '.$a_pk2.' '.$year_sel.' '.$nonzeroweek.'\', this)" style="margin-right: 1px;" title="confirm_two_pts">2</button>';
 									}
+									$a_pk2_buttons .= '<button class="copy-cmd-btn" onclick="copyGetNFLDataScript(\''. $a_pk2_data['first'] . '\', \''. $a_pk2_data['last'] . '\', '.$year_sel.', '.$nonzeroweek.', \''.$awayteam.'\', this)" style="margin-right: 1px;" title="getplayernfldata"><span style="color: #cc0000; font-weight: bold;">N</span></button> ';
 							$a_pk2_scorediff_display = ($a_pk2_scorediff != 0 || $awayboxscoreerror) ? format_scorediff($a_pk2_scorediff, $year_sel) : '';
 							echo $a_pk2_buttons . '<a href="/player/?id='.$a_pk2.'">' . ($a_pk2_data['first'] ? $a_pk2_data['first'] : 'None') . ' ' . $a_pk2_data['last'].'</a><span class="pull-right">'.$a_pk2_data['points'].$a_pk2_scorediff_display.'</span><br>';
 							$a_pk2_bye = is_player_on_bye($a_pk2, $weekvar);
@@ -1921,6 +1899,55 @@ if (current_user_can('administrator')) {
 ?>
 
 <style>
+.copy-cmd-btn, .copy-note-btn {
+	display: none;
+}
+body.helper-btns-on .copy-cmd-btn,
+body.helper-btns-on .copy-note-btn {
+	display: inline-block;
+}
+.results-controls {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex-wrap: wrap;
+	padding-top: 8px;
+}
+.results-ctrl-btn,
+.results-ctrl-select {
+	height: 30px;
+	padding: 0 10px;
+	font-size: 13px;
+	border: 1px solid #bbb;
+	border-radius: 4px;
+	background: #f7f7f7;
+	color: #444;
+	cursor: pointer;
+	line-height: 28px;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	white-space: nowrap;
+	transition: background 0.15s, border-color 0.15s;
+}
+.results-ctrl-btn:hover,
+.results-ctrl-select:hover {
+	background: #ebebeb;
+	border-color: #999;
+	color: #222;
+	text-decoration: none;
+}
+.results-ctrl-btn:active {
+	background: #ddd;
+}
+#helper-toggle-btn {
+	background: #f7f7f7;
+}
+body.helper-btns-on #helper-toggle-btn {
+	background: #2271b1;
+	color: white;
+	border-color: #1a5a8c;
+}
 .copy-cmd-btn {
 	background: none;
 	border: 1px solid #ccc;
@@ -1947,9 +1974,41 @@ if (current_user_can('administrator')) {
 	border-color: #4CAF50;
 	color: white;
 }
+.copy-note-btn {
+	background: #e91e63;
+	border: 1px solid #c2185b;
+	border-radius: 3px;
+	padding: 2px 5px;
+	cursor: pointer;
+	font-size: 11px;
+	line-height: 1;
+	vertical-align: middle;
+	margin-right: 5px;
+	color: white;
+	transition: all 0.2s;
+}
+.copy-note-btn:hover {
+	background-color: #c2185b;
+	border-color: #ad1457;
+}
+.copy-note-btn:active {
+	background-color: #ad1457;
+}
+.copy-note-btn.copied {
+	background-color: #4CAF50;
+	border-color: #4CAF50;
+	color: white;
+}
 </style>
 
 <script>
+var correctionNoteNonce = '<?php echo wp_create_nonce('correction_note_nonce'); ?>';
+var ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+
+function toggleHelperButtons() {
+	document.body.classList.toggle('helper-btns-on');
+}
+
 function copyCommand(cmd, btn) {
 	// Create a temporary textarea element
 	const textarea = document.createElement('textarea');
@@ -1987,12 +2046,79 @@ function copyCommand(cmd, btn) {
 	}
 }
 
-function copyGetNFLDataScript(firstName, lastName, year, week, btn) {
+function copyGetNFLDataScript(firstName, lastName, year, week, teamAbbr, btn) {
 	// Construct the getplayernfldata.py command
 	const playerName = firstName + ' ' + lastName;
-	const cmd = 'python3 getplayernfldata.py "' + playerName + '" ' + year + ' ' + week + ' No';
+	const cmd = 'python3 getplayernfldata.py "' + playerName + '" ' + year + ' ' + week + ' Yes ' + teamAbbr;
 	// Use the existing copyCommand function
 	copyCommand(cmd, btn);
+}
+
+function copyCorrectionNote(playerName, teamAbbr, year, week, scoreDiff, button) {
+	// Disable button during processing
+	const originalText = button.innerHTML;
+	button.innerHTML = '⏳';
+	button.disabled = true;
+	
+	// Invert the score difference: negative becomes positive, positive becomes negative
+	const invertedDiff = -scoreDiff;
+	const absDiff = Math.abs(invertedDiff);
+	
+	// Make AJAX request to add the note
+	fetch(ajaxUrl, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		body: new URLSearchParams({
+			action: 'add_correction_note',
+			nonce: correctionNoteNonce,
+			player_name: playerName,
+			team_abbr: teamAbbr,
+			year: year,
+			week: week,
+			point_change: absDiff
+		})
+	})
+	.then(response => response.json())
+	.then(data => {
+		if (data.success) {
+			// Show success
+			button.innerHTML = '✓';
+			button.classList.add('copied');
+			
+			// Show alert
+			alert('Note added successfully!\n\nWeek ID: ' + data.data.week_id + '\nTeam: ' + data.data.team + '\nNote: ' + data.data.note);
+			
+			// Reset button after 2 seconds
+			setTimeout(function() {
+				button.innerHTML = originalText;
+				button.classList.remove('copied');
+				button.disabled = false;
+			}, 2000);
+		} else {
+			// Show error
+			button.innerHTML = '✗';
+			alert('Failed to add note: ' + (data.data ? data.data.message : 'Unknown error'));
+			
+			// Reset button
+			setTimeout(function() {
+				button.innerHTML = originalText;
+				button.disabled = false;
+			}, 2000);
+		}
+	})
+	.catch(error => {
+		console.error('Error:', error);
+		button.innerHTML = '✗';
+		alert('Error adding note. Please try again.');
+		
+		// Reset button
+		setTimeout(function() {
+			button.innerHTML = originalText;
+			button.disabled = false;
+		}, 2000);
+	});
 }
 </script>
 

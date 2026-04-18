@@ -153,6 +153,23 @@
                     .copy-transfer-btn.copied {
                         background: #46b450;
                     }
+                    .copy-note-btn {
+                        background: #e91e63;
+                        color: white;
+                        border: none;
+                        padding: 2px 8px;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        font-size: 11px;
+                        margin-left: 5px;
+                        transition: background 0.2s;
+                    }
+                    .copy-note-btn:hover {
+                        background: #c2185b;
+                    }
+                    .copy-note-btn.copied {
+                        background: #46b450;
+                    }
                     .error-game-row {
                         display: flex;
                         align-items: center;
@@ -282,6 +299,9 @@
                 </div>
 
                 <?php
+                // Include kicker attempt checker
+                require_once(get_stylesheet_directory() . '/inc/check-kicker-attempts.php');
+                
                 // Get all players and teams from database tables
                 global $wpdb;
                 
@@ -339,6 +359,7 @@
                     'other_scoring_discrepancies_1991' => array(),
                     'other_scoring_discrepancies_1992plus' => array(),
                     'players_on_bye' => array(),
+                    'kicker_attempt_errors' => array(),
                     'boxscore_errors' => array()
                 );
 
@@ -873,6 +894,9 @@
                         }
                     }
                 }
+                
+                // Check for kicker attempt errors (1991-2000)
+                $errors['kicker_attempt_errors'] = check_kicker_attempt_errors();
 
                 
                 // Calculate total errors
@@ -1400,6 +1424,7 @@
                                                 <?php endif; ?>
                                                 <button class="copy-script-btn" onclick="copyScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy python script to clipboard">📋 Copy Script</button>
                                                 <button class="copy-transfer-btn" onclick="copyTransferScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy transfer script to clipboard">🔄 Transfer</button>
+                                                <button class="copy-note-btn" onclick="copyCorrectionNote('<?php echo addslashes($player_data['player_name']); ?>', '<?php echo $game['player_team']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, <?php echo $game['difference']; ?>, this)" title="Copy correction note to clipboard">📝 Note</button>
                                             </div>
                                         </div>
                                     <?php endforeach; ?>
@@ -1468,6 +1493,7 @@
                                                 <?php endif; ?>
                                                 <button class="copy-script-btn" onclick="copyScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy python script to clipboard">📋 Copy Script</button>
                                                 <button class="copy-transfer-btn" onclick="copyTransferScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy transfer script to clipboard">🔄 Transfer</button>
+                                                <button class="copy-note-btn" onclick="copyCorrectionNote('<?php echo addslashes($player_data['player_name']); ?>', '<?php echo $game['player_team']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, <?php echo $game['difference']; ?>, this)" title="Copy correction note to clipboard">📝 Note</button>
                                             </div>
                                             <?php if (!empty($game['likely_cause'])): ?>
                                                 <?php 
@@ -1545,6 +1571,7 @@
                                                 <?php endif; ?>
                                                 <button class="copy-script-btn" onclick="copyScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy python script to clipboard">📋 Copy Script</button>
                                                 <button class="copy-transfer-btn" onclick="copyTransferScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy transfer script to clipboard">🔄 Transfer</button>
+                                                <button class="copy-note-btn" onclick="copyCorrectionNote('<?php echo addslashes($player_data['player_name']); ?>', '<?php echo $game['player_team']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, <?php echo $game['difference']; ?>, this)" title="Copy correction note to clipboard">📝 Note</button>
                                             </div>
                                             <?php if (!empty($game['likely_cause'])): ?>
                                                 <?php 
@@ -1646,6 +1673,7 @@
                                                 <?php endif; ?>
                                                 <button class="copy-script-btn" onclick="copyScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy python script to clipboard">📋 Copy Script</button>
                                                 <button class="copy-transfer-btn" onclick="copyTransferScript('<?php echo $game['player_id']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy transfer script to clipboard">🔄 Transfer</button>
+                                                <button class="copy-note-btn" onclick="copyCorrectionNote('<?php echo addslashes($player_data['player_name']); ?>', '<?php echo $game['player_team']; ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, <?php echo $game['difference']; ?>, this)" title="Copy correction note to clipboard">📝 Note</button>
                                             </div>
                                             <?php if (!empty($game['likely_cause'])): ?>
                                                 <?php 
@@ -1718,6 +1746,76 @@
                     <?php endif; ?>
                     </div>
                 </div>
+                
+                <!-- Kicker Attempt Errors -->
+                <div class="error-check-section <?php echo empty($errors['kicker_attempt_errors']) ? 'no-errors' : ''; ?>" data-section-id="kicker-attempt-errors">
+                    <h2 onclick="toggleSection(this)">
+                        <span>
+                            Kicker Attempt Errors (1991-2000)
+                            <?php if (!empty($errors['kicker_attempt_errors'])): ?>
+                                <span class="error-count"><?php echo count($errors['kicker_attempt_errors']); ?></span>
+                            <?php endif; ?>
+                        </span>
+                        <span class="collapse-toggle collapsed">▼</span>
+                    </h2>
+                    <div class="section-content collapsed">
+                        <p style="color: #666; font-size: 0.9em; margin-top: 0;">Kickers with made field goals or extra points but 0 attempts recorded. These need to be corrected by re-inserting data from the updated wp_stathead_PK table.</p>
+                    <?php if (empty($errors['kicker_attempt_errors'])): ?>
+                        <p class="success-message">✓ No kicker attempt errors found</p>
+                    <?php else: ?>
+                        <?php
+                        // Group by player
+                        $grouped_kicker = array();
+                        foreach ($errors['kicker_attempt_errors'] as $error) {
+                            $pid = $error['player_id'];
+                            if (!isset($grouped_kicker[$pid])) {
+                                $grouped_kicker[$pid] = array(
+                                    'player_name' => $error['player_name'],
+                                    'player_id' => $error['player_id'],
+                                    'player_link' => $error['player_link'],
+                                    'games' => array()
+                                );
+                            }
+                            $grouped_kicker[$pid]['games'][] = $error;
+                        }
+                        ?>
+                        <ul class="error-list">
+                            <?php foreach ($grouped_kicker as $player_data): ?>
+                                <li>
+                                    <a href="<?php echo $player_data['player_link']; ?>" target="_blank">
+                                        <?php echo esc_html($player_data['player_name']); ?> <span style="color: #666; font-size: 0.9em;"><?php echo $player_data['player_id']; ?></span>
+                                    </a>
+                                    <span style="color: #dc3232; font-size: 0.9em; margin-left: 10px;">(<?php echo count($player_data['games']); ?> weeks)</span>
+                                    <?php foreach ($player_data['games'] as $game): ?>
+                                        <div class="error-game-row">
+                                            <div class="error-game-info" style="color: #d63638; font-size: 0.9em;">
+                                                → <a href="<?php echo home_url('/results/?Y=' . $game['year'] . '&W=' . sprintf('%02d', $game['week'])); ?>" target="_blank" style="color: #d63638; text-decoration: underline;"><?php echo $game['year']; ?>, Week: <?php echo $game['week']; ?></a>
+                                                <?php if (!empty($game['player_team'])): ?>
+                                                    | <strong>Team: <?php echo esc_html($game['player_team']); ?></strong>
+                                                <?php endif; ?>
+                                                | 
+                                                <?php 
+                                                $issues = array();
+                                                if ($game['xpm'] > 0 && ($game['xpa'] === null || $game['xpa'] == 0)) {
+                                                    $issues[] = "XP: {$game['xpm']}/0";
+                                                }
+                                                if ($game['fgm'] > 0 && ($game['fga'] === null || $game['fga'] == 0)) {
+                                                    $issues[] = "FG: {$game['fgm']}/0";
+                                                }
+                                                echo implode(', ', $issues);
+                                                ?>
+                                            </div>
+                                            <div class="error-game-actions">
+                                                <button class="copy-script-btn" onclick="copyKickerScript('<?php echo addslashes($player_data['player_name']); ?>', <?php echo $game['year']; ?>, <?php echo $game['week']; ?>, this)" title="Copy getplayernfldata.py script to clipboard">📋 Copy Script</button>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                    </div>
+                </div>
 
             </div><!-- .entry-content -->
             
@@ -1732,6 +1830,9 @@
 </div>
 
 <script>
+var correctionNoteNonce = '<?php echo wp_create_nonce('correction_note_nonce'); ?>';
+var ajaxUrl = '<?php echo admin_url('admin-ajax.php'); ?>';
+
 function toggleSection(header) {
     const content = header.nextElementSibling;
     const toggle = header.querySelector('.collapse-toggle');
@@ -1763,6 +1864,45 @@ function toggleSection(header) {
 
 function copyScript(playerId, year, week, button) {
     const script = `python3 player_boxscore.py ${playerId} ${year} ${week}`;
+    
+    // Create a temporary textarea element
+    const textarea = document.createElement('textarea');
+    textarea.value = script;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    
+    // Select and copy the text
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // For mobile devices
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            // Change button appearance to show success
+            const originalText = button.innerHTML;
+            button.innerHTML = '✓ Copied!';
+            button.classList.add('copied');
+            
+            // Reset button after 2 seconds
+            setTimeout(function() {
+                button.innerHTML = originalText;
+                button.classList.remove('copied');
+            }, 2000);
+        } else {
+            alert('Failed to copy to clipboard');
+        }
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy to clipboard');
+    } finally {
+        // Remove the textarea
+        document.body.removeChild(textarea);
+    }
+}
+
+function copyKickerScript(playerName, year, week, button) {
+    const script = `python3 getplayernfldata.py "${playerName}" ${year} ${week} Yes`;
     
     // Create a temporary textarea element
     const textarea = document.createElement('textarea');
@@ -1842,6 +1982,73 @@ function copyTransferScript(playerId, year, week, button) {
         // Remove the textarea
         document.body.removeChild(textarea);
     }
+}
+
+function copyCorrectionNote(playerName, teamAbbr, year, week, scoreDiff, button) {
+    // Disable button during processing
+    const originalText = button.innerHTML;
+    button.innerHTML = '⏳';
+    button.disabled = true;
+    
+    // Invert the score difference: negative becomes positive, positive becomes negative
+    const invertedDiff = -scoreDiff;
+    const absDiff = Math.abs(invertedDiff);
+    
+    // Make AJAX request to add the note
+    fetch(ajaxUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            action: 'add_correction_note',
+            nonce: correctionNoteNonce,
+            player_name: playerName,
+            team_abbr: teamAbbr,
+            year: year,
+            week: week,
+            point_change: absDiff
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Show success
+            button.innerHTML = '✓';
+            button.classList.add('copied');
+            
+            // Show alert
+            alert('Note added successfully!\n\nWeek ID: ' + data.data.week_id + '\nTeam: ' + data.data.team + '\nNote: ' + data.data.note);
+            
+            // Reset button after 2 seconds
+            setTimeout(function() {
+                button.innerHTML = originalText;
+                button.classList.remove('copied');
+                button.disabled = false;
+            }, 2000);
+        } else {
+            // Show error
+            button.innerHTML = '✗';
+            alert('Failed to add note: ' + (data.data ? data.data.message : 'Unknown error'));
+            
+            // Reset button
+            setTimeout(function() {
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 2000);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        button.innerHTML = '✗';
+        alert('Error adding note. Please try again.');
+        
+        // Reset button
+        setTimeout(function() {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }, 2000);
+    });
 }
 
 // Restore panel states from localStorage on page load

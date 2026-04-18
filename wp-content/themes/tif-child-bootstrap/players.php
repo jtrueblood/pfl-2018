@@ -430,16 +430,34 @@ if(isset($teamall)){
 	} 
 }
 
-if($teamall):
-	foreach ($teamall as $key => $value){
-		if($check != $value):
-			$check = $value;
-			$teamall_no_change[$key] = $check; 
-		else:
-			$teamall_no_change[$key] = '';
-		endif;		
+// Build year → team map (first non-empty team found per year)
+$teamByYear = [];
+if ($teamall) {
+	foreach ($teamall as $weekid => $team) {
+		if (!empty($team)) {
+			$year = substr($weekid, 0, 4);
+			if (!isset($teamByYear[$year])) {
+				$teamByYear[$year] = $team;
+			}
+		}
 	}
-endif;
+}
+
+// Emit a new jersey entry when either the team OR the jersey number changes year-over-year
+$numberarray_pre = get_numbers_by_season($playerid);
+$teamall_no_change = [];
+$prev_team = null;
+$prev_number = null;
+foreach ($teamByYear as $year => $team) {
+	$number = ($numberarray_pre && isset($numberarray_pre->$year))
+		? (int)$numberarray_pre->$year
+		: (int)$playernumber;
+	if ($team !== $prev_team || $number !== $prev_number) {
+		$teamall_no_change[$year . '01'] = $team;
+	}
+	$prev_team = $team;
+	$prev_number = $number;
+}
 
 // check if player is on the wp_rosters table, if he isn't and he should be, this adds him
 $rosteredif = check_player_rostered($playerid, $year);
@@ -487,11 +505,11 @@ $rosteredif = check_player_rostered($playerid, $year);
 		<!-- Left COL -->
 		<div class="col-xs-24 col-sm-4 left-column">
 			<div class="panel widget">
-				<div id="player_widget_img" class="player-img-top" style="width:100%;height:200px;overflow:hidden;">
+				<div id="player_widget_img" class="player-img-top" style="width:100%;height:300px;overflow:hidden;">
                     <?php if($image_attributes[0]):?>
-					<img src="<?php echo $image_attributes[0]; ?>" style="width:100%;height:200px;object-fit:cover;object-position:center top;"/>
+					<img src="<?php echo $image_attributes[0]; ?>" style="width:100%;height:300px;object-fit:cover;object-position:center top;"/>
                     <?php else: ?>
-                    <img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/no-player.jpg" style="width:100%;height:200px;object-fit:cover;object-position:center top;"/>
+                    <img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/no-player.jpg" style="width:100%;height:300px;object-fit:cover;object-position:center top;"/>
                         <p></p>
                     <?php endif; ?>
 				</div>
@@ -663,13 +681,10 @@ $rosteredif = check_player_rostered($playerid, $year);
                             else:
                                 $jcheck = 'R';
                             endif;
-                            $numberarray = get_numbers_by_season($playerid);
-                            if($numberarray):
-                                $getjersey = show_jersey_svg($value, $jcheck, $jerseyvalue, $numberarray->$yearuni );
-                                //echo'<p class="text-thin">From Number Array</p>';
+                            if($numberarray_pre):
+                                $getjersey = show_jersey_svg($value, $jcheck, $jerseyvalue, $numberarray_pre->$yearuni );
                             else:
                                 $getjersey = show_jersey_svg($value, $jcheck, $jerseyvalue, $playernumber );
-                                //echo'<p class="text-thin">From Simple Number</p>';
                             endif;
                             echo '<div class="jersey-small">
 				                <img src="'.get_stylesheet_directory_uri().$getjersey.'" class=""/>

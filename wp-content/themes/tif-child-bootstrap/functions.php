@@ -8061,6 +8061,12 @@ function pfl_api_hof() {
             ];
         }
 
+        $player_meta = $wpdb->get_row($wpdb->prepare(
+            "SELECT mflid, retireyear FROM wp_players WHERE p_id = %s", $pid
+        ), ARRAY_A);
+        $retireyear = !empty($player_meta['retireyear']) ? (int) $player_meta['retireyear'] : null;
+        $is_active  = pfl_player_is_nfl_active($player_meta['mflid'] ?? '', $last_yr, false, $player_meta['retireyear'] ?? null);
+
         $data[] = [
             'pid'           => $pid,
             'first'         => $row['playerFirst'],
@@ -8084,6 +8090,8 @@ function pfl_api_hof() {
             'scoringTitles' => $scoring_titles,
             'potwCount'     => $potw,
             'posseBowlApps' => $posse_bowl_apps,
+            'retireyear'    => $retireyear,
+            'active'        => $is_active,
         ];
     }
 
@@ -8117,7 +8125,8 @@ function pfl_api_hof_eligible() {
     $candidates = $wpdb->get_results(
         "SELECT al.pid, al.points, al.games, al.high, al.gamestreak,
                 al.firstyear, al.lastyear, al.position,
-                p.playerFirst AS first, p.playerLast AS last
+                p.playerFirst AS first, p.playerLast AS last,
+                p.retireyear, p.mflid
          FROM wp_allleaders al
          LEFT JOIN wp_players p ON p.p_id = al.pid
          WHERE al.points >= 900
@@ -8234,6 +8243,9 @@ function pfl_api_hof_eligible() {
             ];
         }
 
+        $retireyear = !empty($row['retireyear']) ? (int) $row['retireyear'] : null;
+        $is_active  = pfl_player_is_nfl_active($row['mflid'] ?? '', $last_yr, false, $row['retireyear'] ?? null);
+
         $player = [
             'pid'           => $pid,
             'first'         => $row['first'] ?? '',
@@ -8256,6 +8268,8 @@ function pfl_api_hof_eligible() {
             'scoringTitles' => $scoring_titles,
             'potwCount'     => $potw,
             'posseBowlApps' => $posse_bowl_apps,
+            'retireyear'    => $retireyear,
+            'active'        => $is_active,
         ];
 
         if ($total_pts >= 1000 && $last_yr <= 2022) {

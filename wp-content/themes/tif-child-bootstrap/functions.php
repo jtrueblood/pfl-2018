@@ -21044,3 +21044,182 @@ function pfl_api_player_career_teams(WP_REST_Request $request) {
     ]);
 }
 
+// ── Homepage: Summary + Roster News ──────────────────────────────────────────
+
+add_action('rest_api_init', function () {
+    register_rest_route('pfl/v1', '/home-summary', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_home_summary',
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/roster-news', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_roster_news',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+function pfl_api_home_summary() {
+    global $wpdb;
+
+    $cached = get_transient('pfl_home_summary_v1');
+    if ($cached !== false) return rest_ensure_response($cached);
+
+    $stats = $wpdb->get_row(
+        "SELECT COUNT(DISTINCT season)  AS seasons,
+                COUNT(DISTINCT playerid) AS uniquePlayers,
+                ROUND(SUM(points))       AS totalPoints,
+                SUM(games)               AS totalGames
+         FROM wp_season_leaders",
+        ARRAY_A
+    );
+
+    $champ = $wpdb->get_row(
+        "SELECT c.year, c.winTeam AS team, t.team AS teamName
+         FROM wp_champions c
+         LEFT JOIN wp_teams t ON t.team_int = c.winTeam
+         ORDER BY c.year DESC LIMIT 1",
+        ARRAY_A
+    );
+
+    $data = [
+        'seasons'       => (int)   ($stats['seasons']       ?? 0),
+        'uniquePlayers' => (int)   ($stats['uniquePlayers']  ?? 0),
+        'totalPoints'   => (int)   ($stats['totalPoints']    ?? 0),
+        'totalGames'    => (int)   ($stats['totalGames']     ?? 0),
+        'firstYear'     => 1991,
+        'champion'      => $champ ? [
+            'year'     => (int) $champ['year'],
+            'team'     => $champ['team'],
+            'teamName' => $champ['teamName'],
+        ] : null,
+    ];
+
+    set_transient('pfl_home_summary_v1', $data, 3600);
+    return rest_ensure_response($data);
+}
+
+function pfl_api_roster_news() {
+    global $wpdb;
+
+    $cache_key = 'pfl_roster_news_v3';
+    $cached    = get_transient($cache_key);
+    if ($cached !== false) return rest_ensure_response($cached);
+
+    // Most recent year with roster data
+    $year = (int) $wpdb->get_var(
+        "SELECT MAX(year) FROM wp_rosters WHERE team != '' AND pid != ''"
+    );
+    if (!$year) $year = (int) date('Y') - 1;
+
+    $roster_rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT DISTINCT pid, team FROM wp_rosters
+         WHERE year = %d AND team != '' AND pid != ''",
+        $year
+    ), ARRAY_A);
+
+    $pid_to_team = [];
+    foreach ($roster_rows as $r) $pid_to_team[trim($r['pid'])] = trim($r['team']);
+    $pids = array_keys($pid_to_team);
+
+    if (empty($pids)) {
+        return rest_ensure_response(['news' => [], 'injuries' => [], 'rosterYear' => $year]);
+    }
+
+    $ph          = implode(',', array_fill(0, count($pids), '%s'));
+    $player_rows = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT p_id AS pid, playerFirst AS first, playerLast AS last, mflid
+             FROM wp_players WHERE p_id IN ($ph)",
+            ...$pids
+        ),
+        ARRAY_A
+    );
+
+    $team_name_rows = $wpdb->get_results("SELECT team_int, team FROM wp_teams", ARRAY_A);
+    $team_name_map  = [];
+    foreach ($team_name_rows as $t) $team_name_map[$t['team_int']] = $t['team'];
+
+    $name_map  = [];
+    $mflid_map = [];
+    foreach ($player_rows as $p) {
+        $pid = $p['pid'];
+        if (!isset($pid_to_team[$pid])) continue;
+        $team  = $pid_to_team[$pid];
+        $entry = [
+            'pid'         => $pid,
+            'first'       => $p['first'],
+            'last'        => $p['last'],
+            'pflTeam'     => $team,
+            'pflTeamName' => $team_name_map[$team] ?? $team,
+        ];
+        $norm = strtolower(preg_replace('/[^a-z0-9 ]/i', '', $p['first'] . ' ' . $p['last']));
+        $name_map[$norm] = $entry;
+        if (!empty($p['mflid'])) $mflid_map[trim($p['mflid'])] = $entry;
+    }
+
+    // ESPN news — match articles to rostered players via athlete categories
+    $news     = [];
+    $espn_res = wp_remote_get(
+        'https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?limit=100',
+        ['timeout' => 8, 'sslverify' => false]
+    );
+    if (!is_wp_error($espn_res) && wp_remote_retrieve_response_code($espn_res) === 200) {
+        $espn = json_decode(wp_remote_retrieve_body($espn_res), true);
+        foreach ($espn['articles'] ?? [] as $a) {
+            $matched = [];
+            $seen    = [];
+            foreach ($a['categories'] ?? [] as $cat) {
+                if (($cat['type'] ?? '') !== 'athlete' || empty($cat['description'])) continue;
+                $norm = strtolower(preg_replace('/[^a-z0-9 ]/i', '', $cat['description']));
+                if (isset($name_map[$norm]) && !in_array($name_map[$norm]['pid'], $seen)) {
+                    $matched[] = $name_map[$norm];
+                    $seen[]    = $name_map[$norm]['pid'];
+                }
+            }
+            if (empty($matched)) continue;
+            $news[] = [
+                'id'          => (string) ($a['id'] ?? uniqid()),
+                'headline'    => $a['headline']    ?? '',
+                'description' => $a['description'] ?? '',
+                'published'   => $a['published']   ?? '',
+                'link'        => $a['links']['web']['href'] ?? '',
+                'players'     => $matched,
+            ];
+        }
+    }
+
+    // MFL injury report — filter to rostered players
+    $injuries = [];
+    $mfl_res  = wp_remote_get(
+        "https://api.myfantasyleague.com/{$year}/export?TYPE=injuries&JSON=1",
+        ['timeout' => 8, 'sslverify' => false]
+    );
+    if (!is_wp_error($mfl_res) && wp_remote_retrieve_response_code($mfl_res) === 200) {
+        $mfl = json_decode(wp_remote_retrieve_body($mfl_res), true);
+        foreach ($mfl['injuries']['injury'] ?? [] as $inj) {
+            $mid = trim($inj['id'] ?? '');
+            if (!isset($mflid_map[$mid])) continue;
+            $p          = $mflid_map[$mid];
+            $injuries[] = [
+                'pid'         => $p['pid'],
+                'first'       => $p['first'],
+                'last'        => $p['last'],
+                'pflTeam'     => $p['pflTeam'],
+                'pflTeamName' => $p['pflTeamName'],
+                'status'      => $inj['status']     ?? '',
+                'details'     => $inj['details']    ?? '',
+                'expReturn'   => $inj['exp_return'] ?? '',
+            ];
+        }
+        $priority = ['Out' => 0, 'IR' => 1, 'Doubtful' => 2, 'Questionable' => 3, 'Probable' => 4];
+        usort($injuries, fn($a, $b) =>
+            ($priority[$a['status']] ?? 9) - ($priority[$b['status']] ?? 9)
+        );
+    }
+
+    $result = ['news' => $news, 'injuries' => $injuries, 'rosterYear' => $year];
+    set_transient($cache_key, $result, 1800);
+    return rest_ensure_response($result);
+}
+

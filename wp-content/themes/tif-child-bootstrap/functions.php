@@ -13485,6 +13485,358 @@ add_action('rest_api_init', function () {
         'callback'            => 'pfl_api_team_leaders',
         'permission_callback' => '__return_true',
     ]);
+    register_rest_route('pfl/v1', '/stadiums', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_stadiums',
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-image-settings', [
+        'methods'             => 'GET',
+        'callback'            => function() {
+            return rest_ensure_response((object) get_option('pfl_stadium_image_settings', []));
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-image-settings', [
+        'methods'             => 'POST',
+        'callback'            => function(WP_REST_Request $req) {
+            $url   = esc_url_raw($req->get_param('url'));
+            $scale = (float) $req->get_param('scale');
+            $x     = (float) $req->get_param('x');
+            $y     = (float) $req->get_param('y');
+            if (empty($url)) return new WP_Error('missing_url', 'Image URL required', ['status' => 400]);
+            $settings = get_option('pfl_stadium_image_settings', []);
+            $settings[$url] = ['scale' => $scale, 'x' => $x, 'y' => $y];
+            update_option('pfl_stadium_image_settings', $settings);
+            return rest_ensure_response(['success' => true]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-debug-stand', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            $cols = $wpdb->get_col("SHOW COLUMNS FROM stand2010");
+            $err  = $wpdb->last_error;
+            $rows = $wpdb->get_results("SELECT teamid, seed FROM stand2010", ARRAY_A);
+            $err2 = $wpdb->last_error;
+            return rest_ensure_response([
+                'columns'  => $cols,
+                'cols_err' => $err,
+                'rows'     => array_slice($rows, 0, 3),
+                'row_count' => count($rows),
+                'rows_err' => $err2,
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-debug-show-tables', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            $r = $wpdb->get_var("SHOW TABLES LIKE 'stand2010'");
+            return rest_ensure_response([
+                'show_tables_result' => $r,
+                'is_equal'           => ($r === 'stand2010'),
+                'is_string'          => is_string($r),
+                'len'                => $r ? strlen($r) : 0,
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-debug-internals', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            $rows = $wpdb->get_results("SELECT id, facility_names, team_owned, year_built, currently_occupied FROM wp_stadiums", ARRAY_A);
+            $teams_with_current = [];
+            foreach ($rows as $r) {
+                if ((int) ($r['currently_occupied'] ?? 0) === 1) {
+                    $teams_with_current[pfl_base_team($r['team_owned'])] = true;
+                }
+            }
+            $defunct_teams = [];
+            foreach ($rows as $r) {
+                $bt = pfl_base_team($r['team_owned']);
+                if (empty($teams_with_current[$bt]) || $r['team_owned'] !== $bt) {
+                    $defunct_teams[$bt] = true;
+                }
+            }
+            $team_years_active = [];
+            for ($yr = 1991; $yr <= (int) date('Y'); $yr++) {
+                $tbl = "stand{$yr}";
+                if ($wpdb->get_var("SHOW TABLES LIKE '{$tbl}'") !== $tbl) continue;
+                foreach ($wpdb->get_col("SELECT DISTINCT teamid FROM {$tbl}") as $t) {
+                    if (isset($defunct_teams[$t])) $team_years_active[$t][] = $yr;
+                }
+            }
+            $team_last_year = [];
+            foreach ($team_years_active as $t => $years) {
+                sort($years);
+                $last = $years[0];
+                for ($i = 1; $i < count($years); $i++) {
+                    if ($years[$i] - $years[$i - 1] > 2) break;
+                    $last = $years[$i];
+                }
+                $team_last_year[$t] = $last;
+            }
+            return rest_ensure_response([
+                'teams_with_current' => $teams_with_current,
+                'defunct_teams'      => $defunct_teams,
+                'team_last_year'     => $team_last_year,
+                'bst_years_active'   => $team_years_active['BST'] ?? null,
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-debug-team-years', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            $years = [];
+            for ($yr = 1991; $yr <= (int) date('Y'); $yr++) {
+                $tbl = "stand{$yr}";
+                if ($wpdb->get_var("SHOW TABLES LIKE '{$tbl}'") !== $tbl) continue;
+                $teams = $wpdb->get_col("SELECT DISTINCT teamid FROM {$tbl}");
+                if (in_array('BST', $teams)) $years[] = $yr;
+            }
+            return rest_ensure_response(['bst_years_in_standings' => $years]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-widen-team-col', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            $r = $wpdb->query("ALTER TABLE wp_stadiums MODIFY team_owned VARCHAR(16) NULL");
+            return rest_ensure_response(['ret' => $r, 'error' => $wpdb->last_error]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/wp-stadiums-schema', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            return rest_ensure_response($wpdb->get_results("SHOW COLUMNS FROM wp_stadiums", ARRAY_A));
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-update-raw', [
+        'methods' => 'GET',
+        'callback' => function(WP_REST_Request $req) {
+            global $wpdb;
+            $id    = (int) $req->get_param('id');
+            $field = sanitize_text_field($req->get_param('field') ?? '');
+            $value = sanitize_text_field($req->get_param('value') ?? '');
+            $exec  = (bool) $req->get_param('execute');
+            $allowed = ['team_owned', 'facility_names'];
+            if (!$id || !in_array($field, $allowed, true)) {
+                return new WP_Error('bad_params', 'bad params', ['status' => 400]);
+            }
+            $before = $wpdb->get_row($wpdb->prepare("SELECT id, facility_names, team_owned FROM wp_stadiums WHERE id = %d", $id), ARRAY_A);
+            if (!$exec) return rest_ensure_response(['before' => $before, 'note' => 'add &execute=1']);
+
+            $sql = $wpdb->prepare("UPDATE wp_stadiums SET `{$field}` = %s WHERE id = %d", $value, $id);
+            $ret = $wpdb->query($sql);
+            $err = $wpdb->last_error;
+            $after = $wpdb->get_row($wpdb->prepare("SELECT id, facility_names, team_owned FROM wp_stadiums WHERE id = %d", $id), ARRAY_A);
+            return rest_ensure_response(['sql' => $sql, 'ret' => $ret, 'error' => $err, 'before' => $before, 'after' => $after]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-update', [
+        'methods'  => 'GET',
+        'callback' => function(WP_REST_Request $req) {
+            global $wpdb;
+            $id    = (int) $req->get_param('id');
+            $field = sanitize_text_field($req->get_param('field') ?? '');
+            $value = $req->get_param('value');
+            $exec  = (bool) $req->get_param('execute');
+            $allowed = ['team_owned', 'facility_names', 'year_built', 'currently_occupied'];
+            if (!$id || !in_array($field, $allowed, true)) {
+                return new WP_Error('bad_params', "id + field (one of: " . implode(',', $allowed) . ") required", ['status' => 400]);
+            }
+            $before = $wpdb->get_row($wpdb->prepare(
+                "SELECT id, facility_names, team_owned, year_built, currently_occupied FROM wp_stadiums WHERE id = %d", $id
+            ), ARRAY_A);
+            if (!$before) return new WP_Error('not_found', "Stadium id $id not found", ['status' => 404]);
+
+            $result = ['before' => $before, 'change' => [$field => $value]];
+            if (!$exec) {
+                $result['note'] = "Add &execute=1 to apply the update.";
+                return rest_ensure_response($result);
+            }
+            $rows = $wpdb->update('wp_stadiums', [$field => $value], ['id' => $id]);
+            $after = $wpdb->get_row($wpdb->prepare(
+                "SELECT id, facility_names, team_owned, year_built, currently_occupied FROM wp_stadiums WHERE id = %d", $id
+            ), ARRAY_A);
+            $result['rows_affected'] = (int) $rows;
+            $result['after']         = $after;
+            return rest_ensure_response($result);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-raw', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            return rest_ensure_response($wpdb->get_results(
+                "SELECT id, facility_names, team_owned, year_built, year_renovated, currently_occupied
+                 FROM wp_stadiums ORDER BY team_owned, year_built", ARRAY_A
+            ));
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/stadium-rename', [
+        'methods'             => 'GET',
+        'callback'            => function(WP_REST_Request $req) {
+            global $wpdb;
+            $team   = strtoupper(sanitize_text_field($req->get_param('team') ?? ''));
+            $ystart = (int) $req->get_param('year_start');
+            $yend   = (int) $req->get_param('year_end');
+            $newnm  = $req->get_param('new_name');
+            $exec   = (bool) $req->get_param('execute');
+            if (!$team || !$ystart || !$yend || !$newnm) {
+                return new WP_Error('missing_params', 'team, year_start, year_end, new_name required', ['status' => 400]);
+            }
+            $tbl = "wp_team_{$team}";
+            if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $tbl)) !== $tbl) {
+                return new WP_Error('no_table', "Table {$tbl} not found", ['status' => 404]);
+            }
+            // Preview the current stadium values in the range
+            $preview = $wpdb->get_results($wpdb->prepare(
+                "SELECT season, stadium, COUNT(*) AS cnt
+                 FROM `{$tbl}`
+                 WHERE season BETWEEN %d AND %d AND home_away = 'H'
+                 GROUP BY season, stadium
+                 ORDER BY season, stadium",
+                $ystart, $yend
+            ), ARRAY_A);
+
+            $result = ['preview' => $preview];
+            if (!$exec) {
+                $result['note'] = "Add &execute=1 to apply the update.";
+                return rest_ensure_response($result);
+            }
+
+            // 1. Update wp_team_{TEAM} for those seasons
+            $team_rows = $wpdb->query($wpdb->prepare(
+                "UPDATE `{$tbl}` SET stadium = %s
+                 WHERE season BETWEEN %d AND %d AND home_away = 'H' AND stadium <> %s",
+                $newnm, $ystart, $yend, $newnm
+            ));
+
+            // 2. Look up canonical id for new name and update wp_attendance for matching rows
+            $new_sid = (int) $wpdb->get_var($wpdb->prepare(
+                "SELECT id FROM wp_stadiums WHERE facility_names = %s LIMIT 1", $newnm
+            ));
+            $att_rows = 0;
+            if ($new_sid && $wpdb->get_var("SHOW TABLES LIKE 'wp_attendance'") === 'wp_attendance') {
+                $att_rows = $wpdb->query($wpdb->prepare(
+                    "UPDATE wp_attendance
+                     SET stadium_name = %s, stadium_id = %d
+                     WHERE home_team = %s AND year BETWEEN %d AND %d",
+                    $newnm, $new_sid, $team, $ystart, $yend
+                ));
+            }
+
+            // Bust the weekly-results transient cache for the affected years/weeks
+            $busted = 0;
+            for ($y = $ystart; $y <= $yend; $y++) {
+                for ($w = 1; $w <= 16; $w++) {
+                    $key = "pfl_weekly_results_{$y}" . str_pad($w, 2, '0', STR_PAD_LEFT) . "_v37";
+                    if (delete_transient($key)) $busted++;
+                }
+            }
+
+            $result['executed'] = [
+                'team_table_rows_updated'     => (int) $team_rows,
+                'wp_attendance_rows_updated'  => (int) $att_rows,
+                'new_facility_id'             => $new_sid ?: null,
+                'transients_busted'           => $busted,
+            ];
+            return rest_ensure_response($result);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/attendance-repair', [
+        'methods'             => 'GET',
+        'callback'            => function() {
+            global $wpdb;
+            $aliases = [
+                'The Cuckoos Nest'  => "The Cuckoo's Nest",
+                'Strawberry Fields' => "Octopus' Garden at Strawberry Fields",
+                'Kennedy Compound'  => 'The Kennedy Compound',
+                'Gigalo Pits'       => 'The Gigalo Pits',
+                'The Litter Pan'    => 'The Litter Box',
+                'The Reseviour'     => 'The Reservoir',
+                'Dog House'         => 'The Dog House',
+            ];
+            $updates = [];
+            foreach ($aliases as $bad => $good) {
+                $sid = (int) $wpdb->get_var($wpdb->prepare(
+                    "SELECT id FROM wp_stadiums WHERE facility_names = %s LIMIT 1", $good
+                ));
+                if (!$sid) { $updates[$bad] = ['sid' => null, 'rows' => 0]; continue; }
+                $rows = $wpdb->query($wpdb->prepare(
+                    "UPDATE wp_attendance SET stadium_id = %d, stadium_name = %s WHERE stadium_name = %s",
+                    $sid, $good, $bad
+                ));
+                $updates[$bad] = ['sid' => $sid, 'good' => $good, 'rows' => (int) $rows];
+            }
+            // Also catch any rows that have a stadium_name matching an existing facility_names but stadium_id missing
+            $orphans = $wpdb->query(
+                "UPDATE wp_attendance a
+                 INNER JOIN wp_stadiums s ON s.facility_names = a.stadium_name
+                 SET a.stadium_id = s.id
+                 WHERE a.stadium_id IS NULL OR a.stadium_id = 0"
+            );
+            return rest_ensure_response(['aliases_updated' => $updates, 'orphans_fixed' => (int) $orphans]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/attendance-debug', [
+        'methods'             => 'GET',
+        'callback'            => function() {
+            global $wpdb;
+            $total = (int) $wpdb->get_var("SELECT COUNT(*) FROM wp_attendance");
+            $null_sid = (int) $wpdb->get_var("SELECT COUNT(*) FROM wp_attendance WHERE stadium_id IS NULL");
+            $by_year = $wpdb->get_results(
+                "SELECT year, COUNT(*) AS games, ROUND(AVG(attendance_pct), 2) AS avg_pct
+                 FROM wp_attendance GROUP BY year ORDER BY year",
+                ARRAY_A
+            );
+            $unmatched = $wpdb->get_results(
+                "SELECT DISTINCT home_team, stadium_name FROM wp_attendance WHERE stadium_id IS NULL LIMIT 30",
+                ARRAY_A
+            );
+            $by_sid = $wpdb->get_results(
+                "SELECT a.stadium_id, a.home_team, COUNT(*) AS games, s.facility_names,
+                        MIN(a.stadium_name) AS sample_name
+                 FROM wp_attendance a
+                 LEFT JOIN wp_stadiums s ON s.id = a.stadium_id
+                 GROUP BY a.stadium_id, a.home_team
+                 ORDER BY a.home_team, a.stadium_id",
+                ARRAY_A
+            );
+            $sample_names = $wpdb->get_results(
+                "SELECT home_team, stadium_name, COUNT(*) AS cnt FROM wp_attendance
+                 WHERE (stadium_id IS NULL OR stadium_id = 0)
+                 GROUP BY home_team, stadium_name",
+                ARRAY_A
+            );
+            return rest_ensure_response([
+                'total' => $total,
+                'null_stadium_id' => $null_sid,
+                'unmatched_stadium_names' => $unmatched,
+                'sample_unmatched' => $sample_names,
+                'by_year' => $by_year,
+                'by_stadium' => $by_sid,
+                'all_facility_names' => $wpdb->get_col("SELECT facility_names FROM wp_stadiums ORDER BY facility_names"),
+            ]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
     register_rest_route('pfl/v1', '/team-timeline', [
         'methods'             => 'GET',
         'callback'            => 'pfl_api_team_timeline',
@@ -13734,8 +14086,11 @@ function pfl_get_stadium_data($team) {
     global $wpdb;
 
     // Columns: [1]=facility_names [2]=team_owned [3]=year_built [5]=turf [6]=capacity [8]=lux_suites [9]=club_suites [12]=currently_occupied
+    // Also match `{TEAM}_OLD` so historical rows (e.g. BST_OLD) show up under
+    // the team's "Previous Facilities" list.
     $rows = $wpdb->get_results($wpdb->prepare(
-        "SELECT * FROM wp_stadiums WHERE team_owned = %s ORDER BY id ASC", $team
+        "SELECT * FROM wp_stadiums WHERE team_owned = %s OR team_owned = %s ORDER BY id ASC",
+        $team, $team . '_OLD'
     ), ARRAY_N);
     if (empty($rows)) return null;
 
@@ -13911,6 +14266,638 @@ function pfl_api_team_leaders(WP_REST_Request $request) {
     }
 
     return rest_ensure_response($by_pos);
+}
+
+function pfl_api_stadiums() {
+    global $wpdb;
+
+    // All stadium rows joined with team name
+    $rows = $wpdb->get_results("
+        SELECT s.id, s.facility_names, s.team_owned, s.year_built, s.year_renovated,
+               s.turf, s.capacity, s.capacity_before_reno, s.lux_suites, s.club_suites,
+               s.parking, s.total_cost, s.currently_occupied, s.roof_type, s.region,
+               t.team AS team_name
+        FROM wp_stadiums s
+        LEFT JOIN wp_teams t ON t.team_int = s.team_owned
+        ORDER BY s.year_built DESC, s.id ASC
+    ", ARRAY_A);
+
+    // Build ACF image map: key → [url, ...]
+    // Keys are either a team abbreviation (e.g. "ETS") for current stadiums
+    // or a team abbreviation with _OLD suffix (e.g. "ETS_OLD") for former ones.
+    $STADIUM_POST_ID = 299;
+    $acf_meta = $wpdb->get_results($wpdb->prepare(
+        "SELECT meta_key, meta_value FROM wp_postmeta WHERE post_id = %d AND meta_key LIKE 'stadium_%_team'",
+        $STADIUM_POST_ID
+    ), ARRAY_A);
+    $team_images = [];
+    foreach ($acf_meta as $acf) {
+        if (!preg_match('/stadium_(\d+)_team/', $acf['meta_key'], $m)) continue;
+        $idx  = $m[1];
+        $key  = $acf['meta_value']; // e.g. "ETS" or "ETS_OLD"
+        $raw  = $wpdb->get_var($wpdb->prepare(
+            "SELECT meta_value FROM wp_postmeta WHERE post_id = %d AND meta_key = %s LIMIT 1",
+            $STADIUM_POST_ID, "stadium_{$idx}_image"
+        ));
+        if (!$raw) continue;
+        $val  = maybe_unserialize($raw);
+        $urls = [];
+        if (is_array($val)) {
+            foreach ($val as $aid) { $u = wp_get_attachment_url((int) $aid); if ($u) $urls[] = $u; }
+        } elseif ((int) $val > 0) {
+            $u = wp_get_attachment_url((int) $val); if ($u) $urls[] = $u;
+        }
+        $team_images[$key] = $urls;
+    }
+
+    // Build Posse Bowl map: stadium_name → [{year, roman}]
+    $pb_rows = $wpdb->get_results(
+        "SELECT year, roman, stadium FROM wp_champions WHERE stadium IS NOT NULL AND stadium != '' ORDER BY year ASC",
+        ARRAY_A
+    );
+    $pb_map = [];
+    foreach ($pb_rows as $pb) {
+        $pb_map[$pb['stadium']][] = ['year' => (int) $pb['year'], 'roman' => $pb['roman']];
+    }
+
+    // Teams that have an active (current) stadium — used for image suppression
+    // and to derive closed years for former stadiums. Keyed by base team (so
+    // `BST_OLD` rows can correctly see that `BST` has a current stadium).
+    $teams_with_current   = [];
+    $current_stadium_year = []; // team → year_built of their current stadium
+    foreach ($rows as $r) {
+        if ((int) ($r['currently_occupied'] ?? 0) === 1) {
+            $bt = pfl_base_team($r['team_owned']);
+            $teams_with_current[$bt]   = true;
+            $current_stadium_year[$bt] = (int) $r['year_built'];
+        }
+    }
+
+    // Collect all base teams (for gap detection on hiatus teams like BST_OLD).
+    // A team is "defunct" if no row with currently_occupied=1 exists for the
+    // base team — that includes both fully-defunct teams AND base teams that
+    // only have an _OLD row.
+    $defunct_teams = [];
+    foreach ($rows as $r) {
+        $bt = pfl_base_team($r['team_owned']);
+        if (empty($teams_with_current[$bt])) {
+            $defunct_teams[$bt] = true;
+        } elseif ($r['team_owned'] !== $bt) {
+            // The row is itself _OLD even though the base team has a current
+            // stadium — we still need year-list/gap data for it.
+            $defunct_teams[$bt] = true;
+        }
+    }
+
+    // Standings pass: collect defunct-team year lists AND per-year seeds for
+    // all teams (seeds are needed to identify the home team in playoff games).
+    $team_years_active = []; // defunct team → [years]
+    $year_seeds        = []; // year → team → seed (int, lower = better)
+    for ($yr = 1991; $yr <= (int) date('Y'); $yr++) {
+        $tbl = "stand{$yr}";
+        if ($wpdb->get_var("SHOW TABLES LIKE '{$tbl}'") !== $tbl) continue;
+        $srows = $wpdb->get_results("SELECT teamID AS teamid, playoff_seed AS seed FROM {$tbl}", ARRAY_A);
+        foreach ($srows as $sr) {
+            $t = $sr['teamid'];
+            $year_seeds[$yr][$t] = (int) $sr['seed'];
+            if (isset($defunct_teams[$t])) {
+                $team_years_active[$t][] = $yr;
+            }
+        }
+    }
+
+    // Closed year for defunct teams: last year before first gap > 2 years
+    $team_last_year = [];
+    foreach ($team_years_active as $t => $years) {
+        sort($years);
+        $last = $years[0];
+        for ($i = 1; $i < count($years); $i++) {
+            if ($years[$i] - $years[$i - 1] > 2) break;
+            $last = $years[$i];
+        }
+        $team_last_year[$t] = $last;
+    }
+
+    // All team names for high-score lookups
+    $all_team_names = [];
+    foreach ($wpdb->get_results("SELECT team_int, team FROM wp_teams", ARRAY_A) as $nr) {
+        $all_team_names[$nr['team_int']] = $nr['team'];
+    }
+
+    // Home game counts + W-L + full game rows for high-score analysis.
+    // Keyed by BASE team — wp_team_BST_OLD doesn't exist, but wp_team_BST does.
+    $reg_games      = []; // team → season → ['games' => N, 'wins' => N]
+    $all_home_games = []; // team → [[season, week, versus, points, versus_pts], ...]
+    $all_teams = array_unique(array_map('pfl_base_team', array_column($rows, 'team_owned')));
+    foreach ($all_teams as $t) {
+        $tbl = "wp_team_{$t}";
+        if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $tbl)) !== $tbl) continue;
+        $home_rows = $wpdb->get_results(
+            "SELECT season,
+                    COUNT(*) AS cnt,
+                    SUM(CASE WHEN result > 0 THEN 1 ELSE 0 END) AS wins
+             FROM `{$tbl}`
+             WHERE home_away = 'H' AND week BETWEEN 1 AND 14
+             GROUP BY season",
+            ARRAY_A
+        );
+        foreach ($home_rows as $hr) {
+            $reg_games[$t][(int) $hr['season']] = [
+                'games' => (int) $hr['cnt'],
+                'wins'  => (int) $hr['wins'],
+            ];
+        }
+        $all_home_games[$t] = $wpdb->get_results(
+            "SELECT season, week, vs, points, vs_points,
+                    QB1, RB1, WR1, PK1, QB2, RB2, WR2, PK2 FROM `{$tbl}`
+             WHERE home_away = 'H' AND week BETWEEN 1 AND 14",
+            ARRAY_A
+        );
+    }
+
+    // Pre-compute closed year for every stadium row so we can build the
+    // year → team → stadium_id map needed for playoff host lookups.
+    // For _OLD rows we always defer to gap-detected $team_last_year so a team
+    // that took a hiatus (e.g. BST 2012-2018) closes at the last pre-gap year.
+    $closed_by_id = []; // stadium id → closed year (null = still open)
+    foreach ($rows as $r) {
+        $is_cur     = (int) ($r['currently_occupied'] ?? 0) === 1;
+        $base       = pfl_base_team($r['team_owned']);
+        $is_old_row = ($r['team_owned'] !== $base);
+        if ($is_cur) {
+            $closed_by_id[(int) $r['id']] = null;
+        } elseif ($is_old_row) {
+            $closed_by_id[(int) $r['id']] = $team_last_year[$base] ?? null;
+        } elseif (!empty($teams_with_current[$base])) {
+            $closed_by_id[(int) $r['id']] = isset($current_stadium_year[$base])
+                ? $current_stadium_year[$base] - 1 : null;
+        } else {
+            $closed_by_id[(int) $r['id']] = $team_last_year[$base] ?? null;
+        }
+    }
+
+    // Build year → team → stadium_id from each stadium's active year range.
+    // Keyed by BASE team so playoff/road-game lookups (which use base team)
+    // find the correct historical stadium for that year.
+    $year_team_stadium = []; // year → base_team → stadium_id
+    foreach ($rows as $r) {
+        $opened = max((int) ($r['year_built'] ?? 1991), 1991);
+        $closed = $closed_by_id[(int) $r['id']] ?? (int) date('Y');
+        $base   = pfl_base_team($r['team_owned']);
+        for ($yr = $opened; $yr <= $closed; $yr++) {
+            $year_team_stadium[$yr][$base] = (int) $r['id'];
+        }
+    }
+
+    // Playoff scores: team → year → total points scored
+    $po_scores = [];
+    foreach ($wpdb->get_results(
+        "SELECT team, year, SUM(points) AS pts FROM wp_playoffs WHERE week = 15 GROUP BY team, year",
+        ARRAY_A
+    ) as $sr) {
+        $po_scores[$sr['team']][(int) $sr['year']] = (float) $sr['pts'];
+    }
+
+    // Playoff games hosted per stadium: home = better (lower) seed.
+    // Tracks W-L and collects game details for high-score analysis.
+    $playoff_by_stadium  = []; // stadium_id → ['games'=>N,'wins'=>N,'losses'=>N]
+    $po_games_at_stadium = []; // stadium_id → [{year,home,away,home_pts,away_pts}]
+    $po_pairs = $wpdb->get_results(
+        "SELECT team, versus, year, MAX(result) AS result
+         FROM wp_playoffs WHERE week = 15
+         GROUP BY team, versus, year",
+        ARRAY_A
+    );
+    $po_result_map = [];
+    foreach ($po_pairs as $g) {
+        $po_result_map[$g['year'] . '_' . $g['team'] . '_' . $g['versus']] = (int) $g['result'];
+    }
+    $seen_po = [];
+    foreach ($po_pairs as $g) {
+        $yr  = (int) $g['year'];
+        $t1  = $g['team'];
+        $t2  = $g['versus'];
+        $key = $yr . '_' . min($t1, $t2) . '_' . max($t1, $t2);
+        if (isset($seen_po[$key])) continue;
+        $seen_po[$key] = true;
+        $s1   = $year_seeds[$yr][$t1] ?? 99;
+        $s2   = $year_seeds[$yr][$t2] ?? 99;
+        $home = ($s1 <= $s2) ? $t1 : $t2;
+        $away = ($s1 <= $s2) ? $t2 : $t1;
+        $sid  = $year_team_stadium[$yr][$home] ?? null;
+        if (!$sid) continue;
+        $home_won = ($po_result_map[$yr . '_' . $home . '_' . $away] ?? 0) === 1;
+        if (!isset($playoff_by_stadium[$sid])) {
+            $playoff_by_stadium[$sid] = ['games' => 0, 'wins' => 0, 'losses' => 0];
+        }
+        $playoff_by_stadium[$sid]['games']++;
+        if ($home_won) $playoff_by_stadium[$sid]['wins']++;
+        else           $playoff_by_stadium[$sid]['losses']++;
+        $po_games_at_stadium[$sid][] = [
+            'year'      => $yr,
+            'week'      => 15,
+            'home'      => $home,
+            'away'      => $away,
+            'home_pts'  => $po_scores[$home][$yr] ?? 0,
+            'away_pts'  => $po_scores[$away][$yr] ?? 0,
+        ];
+    }
+
+    // Highest individual team score in a regular-season home game at each stadium.
+    $high_score_by_stadium = []; // stadium_id → game record
+    foreach ($rows as $r) {
+        $sid    = (int) $r['id'];
+        $team   = pfl_base_team($r['team_owned']);
+        $opened = max((int) ($r['year_built'] ?? 1991), 1991);
+        $closed = $closed_by_id[$sid] ?? (int) date('Y');
+        $best   = null;
+
+        foreach ($all_home_games[$team] ?? [] as $g) {
+            $yr = (int) $g['season'];
+            if ($yr < $opened || $yr > $closed) continue;
+            foreach ([
+                [$team, $g['vs'], (float) $g['points']],
+                [$g['vs'], $team, (float) $g['vs_points']],
+            ] as [$scorer, $opp, $pts]) {
+                if (!$best || $pts > $best['points']) {
+                    $best = ['team' => $scorer, 'teamName' => $all_team_names[$scorer] ?? $scorer,
+                             'points' => $pts, 'versus' => $opp,
+                             'versusName' => $all_team_names[$opp] ?? $opp,
+                             'week' => (int) $g['week'], 'year' => $yr];
+                }
+            }
+        }
+
+        $high_score_by_stadium[$sid] = $best;
+    }
+
+    // Per-position high scores at each stadium (regular season, both teams).
+    $rows_by_sid = [];
+    foreach ($rows as $r) { $rows_by_sid[(int) $r['id']] = $r; }
+    $stadium_id_by_name = [];
+    foreach ($rows as $r) { $stadium_id_by_name[$r['facility_names']] = (int) $r['id']; }
+
+    $player_apps = []; // sid → pos → pid → [week_id, ...]
+
+    $pos_cols = ['QB1' => 'QB', 'RB1' => 'RB', 'WR1' => 'WR', 'PK1' => 'PK',
+                 'QB2' => 'QB', 'RB2' => 'RB', 'WR2' => 'WR', 'PK2' => 'PK'];
+
+    // Home team players
+    foreach ($rows as $r) {
+        $sid    = (int) $r['id'];
+        $team   = pfl_base_team($r['team_owned']);
+        $opened = max((int) ($r['year_built'] ?? 1991), 1991);
+        $closed = $closed_by_id[$sid] ?? (int) date('Y');
+        foreach ($all_home_games[$team] ?? [] as $g) {
+            $yr = (int) $g['season'];
+            if ($yr < $opened || $yr > $closed) continue;
+            $wid = sprintf('%04d%02d', $yr, (int) $g['week']);
+            foreach ($pos_cols as $col => $pos) {
+                $pid = trim($g[$col] ?? '');
+                if ($pid) $player_apps[$sid][$pos][$pid][] = $wid;
+            }
+        }
+    }
+
+    // Away (visiting) team players — collect (sid, away_team, season, week)
+    // tuples from each stadium's home games, then look up the away team's
+    // lineup by (season, week) instead of relying on the away row's stadium column.
+    $away_lookups = []; // away_team → [['sid' => ..., 'season' => ..., 'week' => ...], ...]
+    foreach ($rows as $r) {
+        $sid    = (int) $r['id'];
+        $team   = pfl_base_team($r['team_owned']);
+        $opened = max((int) ($r['year_built'] ?? 1991), 1991);
+        $closed = $closed_by_id[$sid] ?? (int) date('Y');
+        foreach ($all_home_games[$team] ?? [] as $g) {
+            $yr = (int) $g['season'];
+            if ($yr < $opened || $yr > $closed) continue;
+            $away = trim($g['vs'] ?? '');
+            if (!$away) continue;
+            $away_lookups[$away][] = ['sid' => $sid, 'season' => $yr, 'week' => (int) $g['week']];
+        }
+    }
+
+    foreach ($away_lookups as $away_team => $games) {
+        $tbl = "wp_team_{$away_team}";
+        if ($wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $tbl)) !== $tbl) continue;
+
+        // Index lookups by season+week so we can map rows back to stadium IDs
+        $sid_by_sw = [];
+        foreach ($games as $g) {
+            $sid_by_sw[$g['season'] . '_' . $g['week']] = $g['sid'];
+        }
+        $conds = [];
+        foreach ($games as $g) {
+            $conds[] = '(season = ' . (int) $g['season'] . ' AND week = ' . (int) $g['week'] . ')';
+        }
+        $where = implode(' OR ', array_unique($conds));
+
+        $away_rows = $wpdb->get_results(
+            "SELECT season, week, QB1, RB1, WR1, PK1, QB2, RB2, WR2, PK2 FROM `{$tbl}`
+             WHERE ({$where}) AND home_away <> 'H' AND week BETWEEN 1 AND 14",
+            ARRAY_A
+        );
+        foreach ($away_rows as $g) {
+            $key = $g['season'] . '_' . $g['week'];
+            $sid = $sid_by_sw[$key] ?? null;
+            if (!$sid) continue;
+            $wid = sprintf('%04d%02d', (int) $g['season'], (int) $g['week']);
+            foreach ($pos_cols as $col => $pos) {
+                $pid = trim($g[$col] ?? '');
+                if ($pid) $player_apps[$sid][$pos][$pid][] = $wid;
+            }
+        }
+    }
+
+    // For each (sid, pos), find the highest score across all players and
+    // collect ALL (pid, week, year, team) entries tied at that score.
+    $pos_bests    = []; // sid → pos → [['pid', 'points', 'year', 'week', 'team'], ...]
+    $names_needed = [];
+    foreach ($player_apps as $sid => $by_pos) {
+        foreach ($by_pos as $pos => $pid_wids) {
+            // First pass: per-player, get max score + all tied games at that player's max
+            $per_player = []; // pid => ['max' => float, 'games' => [['year','week','team'], ...]]
+            foreach ($pid_wids as $pid => $wids) {
+                $safe_pid = esc_sql($pid);
+                $in_list  = implode("','", array_map('esc_sql', array_unique($wids)));
+                $games = $wpdb->get_results(
+                    "SELECT year, week, team, points FROM `{$safe_pid}`
+                     WHERE week_id IN ('{$in_list}') AND week BETWEEN 1 AND 14
+                       AND points = (
+                         SELECT MAX(points) FROM `{$safe_pid}`
+                         WHERE week_id IN ('{$in_list}') AND week BETWEEN 1 AND 14
+                       )",
+                    ARRAY_A
+                );
+                if (empty($games)) continue;
+                $per_player[$pid] = [
+                    'max'   => (float) $games[0]['points'],
+                    'games' => $games,
+                ];
+            }
+
+            // Global max across all players for this (sid, pos)
+            $global_max = null;
+            foreach ($per_player as $d) {
+                if ($global_max === null || $d['max'] > $global_max) $global_max = $d['max'];
+            }
+            if ($global_max === null) continue;
+
+            $entries = [];
+            foreach ($per_player as $pid => $d) {
+                if (abs($d['max'] - $global_max) > 0.0001) continue;
+                foreach ($d['games'] as $g) {
+                    $entries[] = [
+                        'pid'    => $pid,
+                        'points' => $global_max,
+                        'year'   => (int) $g['year'],
+                        'week'   => (int) $g['week'],
+                        'team'   => $g['team'] ?? '',
+                    ];
+                    $names_needed[$pid] = true;
+                }
+            }
+            // Sort tied entries by year/week for stable display
+            usort($entries, fn($a, $b) => [$a['year'], $a['week']] <=> [$b['year'], $b['week']]);
+            $pos_bests[$sid][$pos] = $entries;
+        }
+    }
+
+    // Batch-fetch player names
+    $pos_player_names = [];
+    if (!empty($names_needed)) {
+        $pid_list    = array_keys($names_needed);
+        $ph          = implode(',', array_fill(0, count($pid_list), '%s'));
+        $name_rows   = $wpdb->get_results(
+            $wpdb->prepare("SELECT p_id, playerFirst, playerLast FROM wp_players WHERE p_id IN ($ph)", ...$pid_list),
+            ARRAY_A
+        );
+        foreach ($name_rows as $p) {
+            $pos_player_names[$p['p_id']] = trim($p['playerFirst'] . ' ' . $p['playerLast']);
+        }
+    }
+
+    // Build final per-position high-score array per stadium (flattened; tied
+    // entries share the same `pos` and appear in order)
+    $pos_high_by_stadium = [];
+    foreach ($pos_bests as $sid => $by_pos) {
+        $entries = [];
+        foreach (['QB', 'RB', 'WR', 'PK'] as $pos) {
+            if (empty($by_pos[$pos])) continue;
+            foreach ($by_pos[$pos] as $b) {
+                $entries[] = [
+                    'pos'      => $pos,
+                    'pid'      => $b['pid'],
+                    'name'     => $pos_player_names[$b['pid']] ?? $b['pid'],
+                    'team'     => $b['team'],
+                    'teamName' => $all_team_names[$b['team']] ?? $b['team'],
+                    'points'   => $b['points'],
+                    'year'     => $b['year'],
+                    'week'     => $b['week'],
+                ];
+            }
+        }
+        $pos_high_by_stadium[$sid] = $entries;
+    }
+
+    // Championship years per team (for plotting markers on the attendance chart).
+    $champ_years_by_team = [];
+    foreach ($wpdb->get_results("SELECT year, winTeam FROM wp_champions", ARRAY_A) as $cr) {
+        $champ_years_by_team[$cr['winTeam']][] = (int) $cr['year'];
+    }
+
+    // Per-image zoom/position settings (option keyed by image URL)
+    $img_settings_map = get_option('pfl_stadium_image_settings', []);
+
+    // Aggregate attendance data per stadium (from wp_attendance, if it exists).
+    $attendance_by_stadium = [];
+    if ($wpdb->get_var("SHOW TABLES LIKE 'wp_attendance'") === 'wp_attendance') {
+        $att_agg = $wpdb->get_results(
+            "SELECT stadium_id,
+                    COUNT(*)                                        AS games_count,
+                    ROUND(AVG(attendance_pct), 2)                   AS avg_pct,
+                    ROUND(AVG(attendance_count))                    AS avg_count,
+                    SUM(attendance_count)                           AS total_count,
+                    MAX(attendance_pct)                             AS peak_pct,
+                    MIN(attendance_pct)                             AS low_pct
+             FROM wp_attendance
+             WHERE stadium_id IS NOT NULL
+             GROUP BY stadium_id",
+            ARRAY_A
+        );
+        // Per-year average attendance per stadium for the bar chart
+        $yearly_rows = $wpdb->get_results(
+            "SELECT stadium_id, year, ROUND(AVG(attendance_pct), 2) AS avg_pct, COUNT(*) AS games
+             FROM wp_attendance
+             WHERE stadium_id IS NOT NULL
+             GROUP BY stadium_id, year
+             ORDER BY stadium_id, year",
+            ARRAY_A
+        );
+        $yearly_by_sid = [];
+        foreach ($yearly_rows as $yr) {
+            $yearly_by_sid[(int) $yr['stadium_id']][] = [
+                'year'  => (int) $yr['year'],
+                'pct'   => (float) $yr['avg_pct'],
+                'games' => (int) $yr['games'],
+            ];
+        }
+        $peak_rows = $wpdb->get_results(
+            "SELECT a.stadium_id, a.year, a.week, a.home_team, a.away_team,
+                    a.attendance_pct, a.attendance_count
+             FROM wp_attendance a
+             INNER JOIN (
+                 SELECT stadium_id, MAX(attendance_pct) AS peak
+                 FROM wp_attendance
+                 WHERE stadium_id IS NOT NULL
+                 GROUP BY stadium_id
+             ) m ON a.stadium_id = m.stadium_id AND a.attendance_pct = m.peak
+             ORDER BY a.year DESC, a.week DESC",
+            ARRAY_A
+        );
+        $peak_by_sid = [];
+        foreach ($peak_rows as $pr) {
+            $sid = (int) $pr['stadium_id'];
+            if (isset($peak_by_sid[$sid])) continue; // first row wins (most recent)
+            $peak_by_sid[$sid] = [
+                'year'              => (int) $pr['year'],
+                'week'              => (int) $pr['week'],
+                'homeTeam'          => $pr['home_team'],
+                'homeTeamName'      => $all_team_names[$pr['home_team']] ?? $pr['home_team'],
+                'awayTeam'          => $pr['away_team'],
+                'awayTeamName'      => $all_team_names[$pr['away_team']] ?? $pr['away_team'],
+                'attendancePct'     => (float) $pr['attendance_pct'],
+                'attendanceCount'   => $pr['attendance_count'] !== null ? (int) $pr['attendance_count'] : null,
+            ];
+        }
+        foreach ($att_agg as $row) {
+            $sid = (int) $row['stadium_id'];
+            // Find which row in $rows this sid belongs to, get team_owned + year range
+            $stadium_row = null;
+            foreach ($rows as $rr) { if ((int) $rr['id'] === $sid) { $stadium_row = $rr; break; } }
+            $champ_years = [];
+            if ($stadium_row) {
+                $champ_team  = pfl_base_team($stadium_row['team_owned']);
+                $opened_yr   = max((int) ($stadium_row['year_built'] ?? 1991), 1991);
+                $closed_yr   = $closed_by_id[$sid] ?? (int) date('Y');
+                foreach (($champ_years_by_team[$champ_team] ?? []) as $y) {
+                    if ($y >= $opened_yr && $y <= $closed_yr) $champ_years[] = $y;
+                }
+                sort($champ_years);
+            }
+
+            $attendance_by_stadium[$sid] = [
+                'games'             => (int) $row['games_count'],
+                'avgPct'            => (float) $row['avg_pct'],
+                'avgCount'          => $row['avg_count'] !== null ? (int) $row['avg_count'] : null,
+                'totalCount'        => $row['total_count'] !== null ? (int) $row['total_count'] : null,
+                'peakPct'           => (float) $row['peak_pct'],
+                'lowPct'            => (float) $row['low_pct'],
+                'peakGame'          => $peak_by_sid[$sid] ?? null,
+                'yearly'            => $yearly_by_sid[$sid] ?? [],
+                'championshipYears' => $champ_years,
+            ];
+        }
+    }
+
+    $result = [];
+    foreach ($rows as $r) {
+        $is_current       = (int) ($r['currently_occupied'] ?? 0) === 1;
+        $base_team        = pfl_base_team($r['team_owned']);
+        $is_old_row       = ($r['team_owned'] !== $base_team);
+        $team_has_current = !empty($teams_with_current[$base_team]);
+        // For former stadiums: prefer a {TEAM}_OLD ACF entry if present,
+        // otherwise fall back to the team's main entry only when the team
+        // no longer has an active venue (avoids showing current stadium photos).
+        $old_key     = $base_team . '_OLD';
+        $has_old_key = isset($team_images[$old_key]);
+        $show_images = $is_current || $has_old_key || !$team_has_current;
+
+        // Closed year for former stadiums:
+        //   • _OLD row → gap-aware last-year-before-hiatus from standings
+        //   • Team replaced it with a newer venue → year new venue opened - 1
+        //   • Franchise folded / merged → last year seen in standings
+        $closed = null;
+        if (!$is_current) {
+            if ($is_old_row) {
+                $closed = $team_last_year[$base_team] ?? null;
+            } elseif ($team_has_current) {
+                $closed = isset($current_stadium_year[$base_team])
+                    ? $current_stadium_year[$base_team] - 1
+                    : null;
+            } else {
+                $closed = $team_last_year[$base_team] ?? null;
+            }
+        }
+
+        // Count games hosted during this stadium's active years
+        $opened_yr   = max((int) ($r['year_built'] ?? 1991), 1991);
+        $closed_yr   = $closed ?? (int) date('Y');
+        $reg_total   = 0;
+        $reg_wins    = 0;
+        $post_total  = 0;
+        $post_wins   = 0;
+        $post_losses = 0;
+        $seasons     = 0;
+        for ($yr = $opened_yr; $yr <= $closed_yr; $yr++) {
+            $reg_yr = $reg_games[$base_team][$yr] ?? null;
+            if (!$reg_yr) continue;
+            $reg_total += $reg_yr['games'];
+            $reg_wins  += $reg_yr['wins'];
+            $seasons++;
+        }
+        $po_sid       = $playoff_by_stadium[(int) $r['id']] ?? null;
+        $post_total   = $po_sid['games']   ?? 0;
+        $post_wins    = $po_sid['wins']    ?? 0;
+        $post_losses  = $po_sid['losses']  ?? 0;
+
+        $result[] = [
+            'id'             => (int) $r['id'],
+            'name'           => $r['facility_names'],
+            // 'team' exposes the BASE team identifier (e.g. "BST") so the
+            // /team page link works the same for _OLD historical stadium rows.
+            'team'           => $base_team,
+            'teamName'       => $all_team_names[$base_team] ?? ($r['team_name'] ?? $base_team),
+            'opened'         => $r['year_built'],
+            'closed'         => $closed,
+            'renovated'      => $r['year_renovated'] ?: null,
+            'surface'        => $r['turf'],
+            'capacity'       => $r['capacity']          ? (int) $r['capacity']          : null,
+            'capacityPreReno'=> $r['capacity_before_reno'] ? (int) $r['capacity_before_reno'] : null,
+            'luxBoxes'       => $r['lux_suites']         ? (int) $r['lux_suites']         : null,
+            'clubSeats'      => $r['club_suites']        ? (int) $r['club_suites']        : null,
+            'parking'        => $r['parking']            ? (int) $r['parking']            : null,
+            'costMillions'   => $r['total_cost']         ? (int) $r['total_cost']         : null,
+            'roofType'       => $r['roof_type'],
+            'region'         => $r['region'],
+            'current'        => $is_current,
+            'images'         => (function() use ($show_images, $is_current, $base_team, $team_images, $old_key, $img_settings_map) {
+                if (!$show_images) return [];
+                $urls = $is_current
+                    ? ($team_images[$base_team] ?? [])
+                    : ($team_images[$old_key] ?? $team_images[$base_team] ?? []);
+                $out = [];
+                foreach ($urls as $u) {
+                    $out[] = ['url' => $u, 'settings' => $img_settings_map[$u] ?? null];
+                }
+                return $out;
+            })(),
+            'posseBowls'     => $pb_map[$r['facility_names']] ?? [],
+            'gamesHosted'    => [
+                'regular'      => $reg_total,
+                'regWins'      => $reg_wins,
+                'regLosses'    => $reg_total - $reg_wins,
+                'postseason'   => $post_total,
+                'postWins'     => $post_wins,
+                'postLosses'   => $post_losses,
+                'seasons'      => $seasons,
+            ],
+            'highScore'      => $high_score_by_stadium[(int) $r['id']] ?? null,
+            'posHighScores'  => $pos_high_by_stadium[(int) $r['id']] ?? [],
+            'attendance'     => $attendance_by_stadium[(int) $r['id']] ?? null,
+        ];
+    }
+    return rest_ensure_response($result);
 }
 
 function pfl_api_team_timeline(WP_REST_Request $request) {
@@ -17848,6 +18835,99 @@ add_action('rest_api_init', function () {
     ]);
 });
 
+// Create the wp_attendance table on first use of the weekly-results endpoint.
+function pfl_ensure_attendance_table() {
+    global $wpdb;
+    static $done = false;
+    if ($done) return;
+    $done = true;
+
+    $wpdb->query("CREATE TABLE IF NOT EXISTS wp_attendance (
+        id               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        year             SMALLINT UNSIGNED NOT NULL,
+        week             TINYINT UNSIGNED NOT NULL,
+        home_team        VARCHAR(8) NOT NULL,
+        away_team        VARCHAR(8) NOT NULL,
+        stadium_name     VARCHAR(120) DEFAULT NULL,
+        stadium_id       INT UNSIGNED DEFAULT NULL,
+        capacity         MEDIUMINT UNSIGNED DEFAULT NULL,
+        attendance_pct   DECIMAL(5,2) NOT NULL,
+        attendance_count MEDIUMINT UNSIGNED DEFAULT NULL,
+        factors_json     TEXT,
+        computed_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE KEY uk_game (year, week, home_team),
+        KEY ix_stadium_id (stadium_id),
+        KEY ix_year (year)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+// Resolve a stadium row's team_owned to the base team identifier used in
+// wp_team_*, wp_attendance, standings, etc. (strips a trailing _OLD suffix).
+// e.g. "BST_OLD" → "BST", "ETS" → "ETS".
+function pfl_base_team($team_owned) {
+    if (!$team_owned) return $team_owned;
+    return preg_replace('/_OLD$/', '', $team_owned);
+}
+
+// Canonical stadium-name aliases — wp_team_*.stadium has spelling drift vs wp_stadiums.facility_names.
+function pfl_canonical_stadium_name($name) {
+    static $aliases = [
+        'The Cuckoos Nest'  => "The Cuckoo's Nest",
+        'Strawberry Fields' => "Octopus' Garden at Strawberry Fields",
+        'Kennedy Compound'  => 'The Kennedy Compound',
+        'Gigalo Pits'       => 'The Gigalo Pits',
+        'The Litter Pan'    => 'The Litter Box',
+        'The Reseviour'     => 'The Reservoir',
+        'Dog House'         => 'The Dog House',
+    ];
+    if (!$name) return $name;
+    $name = trim($name);
+    return $aliases[$name] ?? $name;
+}
+
+// Persist a week's attendance rows into wp_attendance (UPSERT per home game).
+function pfl_write_attendance_rows($year, $week, $games) {
+    global $wpdb;
+    static $sid_by_name = null;
+    if ($sid_by_name === null) {
+        $sid_by_name = [];
+        foreach ($wpdb->get_results("SELECT id, facility_names FROM wp_stadiums", ARRAY_A) as $r) {
+            $sid_by_name[$r['facility_names']] = (int) $r['id'];
+        }
+    }
+
+    foreach ($games as $g) {
+        $home    = $g['home']  ?? null;
+        $away    = $g['away']  ?? null;
+        $pct     = $g['attendance_pct'] ?? null;
+        if (!$home || !$away || $pct === null) continue;
+
+        $stadium_raw = $g['stadium'] ?? null;
+        $stadium     = pfl_canonical_stadium_name($stadium_raw);
+        $capacity    = $g['stadium_capacity'] ?? null;
+        $sid         = $stadium ? ($sid_by_name[$stadium] ?? null) : null;
+        $count       = ($capacity && $pct !== null) ? (int) round($capacity * $pct / 100) : null;
+        $factors     = isset($g['attendance_factors']) ? wp_json_encode($g['attendance_factors']) : null;
+
+        $wpdb->query($wpdb->prepare(
+            "INSERT INTO wp_attendance
+               (year, week, home_team, away_team, stadium_name, stadium_id, capacity, attendance_pct, attendance_count, factors_json)
+             VALUES (%d, %d, %s, %s, %s, %s, %s, %f, %s, %s)
+             ON DUPLICATE KEY UPDATE
+               away_team        = VALUES(away_team),
+               stadium_name     = VALUES(stadium_name),
+               stadium_id       = VALUES(stadium_id),
+               capacity         = VALUES(capacity),
+               attendance_pct   = VALUES(attendance_pct),
+               attendance_count = VALUES(attendance_count),
+               factors_json     = VALUES(factors_json),
+               computed_at      = CURRENT_TIMESTAMP",
+            $year, $week, $home, $away,
+            $stadium, $sid, $capacity, $pct, $count, $factors
+        ));
+    }
+}
+
 function pfl_api_weekly_results(WP_REST_Request $request) {
     global $wpdb;
 
@@ -17857,9 +18937,14 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
     $week_pad  = str_pad($week, 2, '0', STR_PAD_LEFT);
     $weekid    = $year . $week_pad;
     $cache_key = "pfl_weekly_results_{$year}{$week_pad}_v37";
+    $force     = $request->get_param('force') ? true : false;
 
-    $cached = get_transient($cache_key);
-    if ($cached !== false) return rest_ensure_response($cached);
+    pfl_ensure_attendance_table();
+
+    if (!$force) {
+        $cached = get_transient($cache_key);
+        if ($cached !== false) return rest_ensure_response($cached);
+    }
 
     $theme_uri = get_stylesheet_directory_uri();
 
@@ -17893,20 +18978,35 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
     // ── All 15 teams (shared by regular-season and playoff paths) ───────────
     $all_teams = ['RBS','ETS','PEP','WRZ','CMN','BUL','SNR','TSG','BST','MAX','PHR','SON','ATK','HAT','DST'];
 
-    // ── Stadium capacity map (team → seats) ──────────────────────────────────
-    // Prefer currently_occupied=1; fall back to last row if none is flagged.
-    $stadium_capacity_map  = [];
-    $stadium_roof_type_map = [];
-    $stadium_region_map    = [];
+    // ── Stadium attribute maps ───────────────────────────────────────────────
+    // team_owned → attrs for the team's CURRENT stadium (fallback for callers
+    // that don't know the venue yet — e.g. the attendance pre-compute loop).
+    // facility_names → attrs for ERA-correct lookups during game assembly.
+    $stadium_capacity_map      = [];
+    $stadium_roof_type_map     = [];
+    $stadium_region_map        = [];
+    $stadium_capacity_by_venue = [];
+    $stadium_roof_by_venue     = [];
+    $stadium_region_by_venue   = [];
     $stad_rows = $wpdb->get_results(
-        "SELECT team_owned, capacity, roof_type, region, currently_occupied FROM wp_stadiums ORDER BY id ASC",
+        "SELECT facility_names, team_owned, capacity, roof_type, region, currently_occupied FROM wp_stadiums ORDER BY id ASC",
         ARRAY_A
     );
     foreach ($stad_rows as $sr) {
-        $tm = strtoupper($sr['team_owned']);
-        $stadium_capacity_map[$tm]  = (int) $sr['capacity'];
-        $stadium_roof_type_map[$tm] = $sr['roof_type'] ?? 'Open';
-        $stadium_region_map[$tm]    = $sr['region']    ?? null;
+        $tm  = strtoupper($sr['team_owned']);
+        $fn  = $sr['facility_names'];
+        $cap = (int) $sr['capacity'];
+        $rf  = $sr['roof_type'] ?? 'Open';
+        $rg  = $sr['region']    ?? null;
+        // First pass: anything (overwritten by current row below if present)
+        $stadium_capacity_map[$tm]  = $cap;
+        $stadium_roof_type_map[$tm] = $rf;
+        $stadium_region_map[$tm]    = $rg;
+        if (!empty($fn)) {
+            $stadium_capacity_by_venue[$fn] = $cap;
+            $stadium_roof_by_venue[$fn]     = $rf;
+            $stadium_region_by_venue[$fn]   = $rg;
+        }
     }
     foreach ($stad_rows as $sr) {
         if ((int)($sr['currently_occupied'] ?? 0) === 1) {
@@ -17953,6 +19053,43 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
 
         if (!empty($urls)) $stadium_image_map[$tm_upper] = $urls;
     }
+
+    // ── Facility/team mappings for era-aware stadium image lookups ───────────
+    // Two patterns are supported for a team that changed stadiums:
+    //   1) Old row has team_owned = "{TEAM}_OLD" (e.g. BST_OLD) — covered by
+    //      a direct facility_name → team_owned lookup.
+    //   2) Old row keeps team_owned = "{TEAM}" but the ACF gallery for that
+    //      era is stored under "{TEAM}_OLD" — covered by a fallback below.
+    $stadium_acf_key_by_facility = [];
+    $current_facility_by_team    = [];
+    foreach ($wpdb->get_results("SELECT facility_names, team_owned, currently_occupied FROM wp_stadiums", ARRAY_A) as $sr) {
+        if (!empty($sr['facility_names']) && !empty($sr['team_owned'])) {
+            $stadium_acf_key_by_facility[$sr['facility_names']] = $sr['team_owned'];
+            if ((int) ($sr['currently_occupied'] ?? 0) === 1) {
+                $current_facility_by_team[$sr['team_owned']] = $sr['facility_names'];
+            }
+        }
+    }
+    // Helper: given a venue name (as it appears in wp_team_*.stadium) and the
+    // home team abbreviation, return the right gallery URLs.
+    $get_stadium_images = function($venue_raw, $home_team_abbr) use (
+        $stadium_image_map, $stadium_acf_key_by_facility, $current_facility_by_team
+    ) {
+        $venue   = pfl_canonical_stadium_name($venue_raw);
+        $acf_key = $stadium_acf_key_by_facility[$venue] ?? $home_team_abbr;
+        // Pattern (2): venue's team_owned is the base team, but the row isn't
+        // the team's current facility → try the _OLD ACF key first.
+        if (strtoupper($acf_key) === strtoupper($home_team_abbr)) {
+            $current_facility = $current_facility_by_team[$home_team_abbr] ?? null;
+            if ($current_facility && $current_facility !== $venue
+                && isset($stadium_image_map[strtoupper($home_team_abbr) . '_OLD'])) {
+                $acf_key = $home_team_abbr . '_OLD';
+            }
+        }
+        return $stadium_image_map[strtoupper($acf_key)]
+            ?? $stadium_image_map[strtoupper($home_team_abbr)]
+            ?? [];
+    };
 
     // ── Weather lookup: region × week → avg temp / wind / condition ──────────
     // Based on historical US climate averages. Week 1 ≈ early Sep, Week 16 ≈ early Jan.
@@ -18056,7 +19193,34 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
 
     $attendance_map         = [];
     $attendance_factors_map = [];
+
+    // Read previously computed attendance from wp_attendance (single source of truth).
+    // Stored values trump live computation; the live formula only runs for teams that
+    // don't yet have a row (e.g., a never-fetched week or a fresh table).
+    $stored_attendance = [];
+    if ($wpdb->get_var("SHOW TABLES LIKE 'wp_attendance'") === 'wp_attendance') {
+        $stored_rows = $wpdb->get_results($wpdb->prepare(
+            "SELECT home_team, attendance_pct, factors_json
+             FROM wp_attendance WHERE year = %d AND week = %d",
+            $year, $week
+        ), ARRAY_A);
+        foreach ($stored_rows as $sr) {
+            $factors = $sr['factors_json'] ? json_decode($sr['factors_json'], true) : null;
+            $stored_attendance[$sr['home_team']] = [
+                'pct'     => (float) $sr['attendance_pct'],
+                'factors' => $factors,
+            ];
+        }
+    }
+
     foreach ($all_teams as $tm) {
+        // Cache hit: reuse stored value from wp_attendance.
+        if (isset($stored_attendance[$tm])) {
+            $attendance_map[$tm]         = $stored_attendance[$tm]['pct'];
+            $attendance_factors_map[$tm] = $stored_attendance[$tm]['factors'];
+            continue;
+        }
+
         $att_row = $wpdb->get_row($wpdb->prepare(
             "SELECT
                 SUM(CASE WHEN result >= 0 THEN 1 ELSE 0 END)                                        AS career_wins,
@@ -18335,6 +19499,14 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
 
             $auto_notes = [$playoff_label . ' · #' . $home_seed . ' seed vs #' . $away_seed . ' seed'];
 
+            // Look up the actual stadium for that team in that season (handles
+            // teams that changed venues). Fall back to current stadium if not found.
+            $stadium_for_year = $wpdb->get_var($wpdb->prepare(
+                "SELECT stadium FROM wp_team_{$home_team} WHERE season = %d AND home_away = 'H' LIMIT 1",
+                $year
+            ));
+            $po_stadium = $stadium_for_year ?: (get_stadium_by_team($home_team) ?: '');
+
             $po_built_games[] = [
                 'home'             => $home_team,
                 'home_name'        => $team_names[$home_team] ?? $home_team,
@@ -18343,11 +19515,11 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
                 'home_score'       => $home_score,
                 'away_score'       => $away_score,
                 'winner'           => $winner,
-                'stadium'              => get_stadium_by_team($home_team) ?: '',
-                'stadium_capacity'    => $stadium_capacity_map[$home_team] ?? null,
-                'stadium_roof_type'   => $stadium_roof_type_map[$home_team] ?? 'Open',
-                'stadium_region'      => $stadium_region_map[$home_team]    ?? null,
-                'stadium_image_urls'  => $stadium_image_map[$home_team] ?? [],
+                'stadium'              => $po_stadium,
+                'stadium_capacity'    => $stadium_capacity_by_venue[pfl_canonical_stadium_name($po_stadium ?? '')] ?? $stadium_capacity_map[$home_team]  ?? null,
+                'stadium_roof_type'   => $stadium_roof_by_venue[pfl_canonical_stadium_name($po_stadium ?? '')]     ?? $stadium_roof_type_map[$home_team] ?? 'Open',
+                'stadium_region'      => $stadium_region_by_venue[pfl_canonical_stadium_name($po_stadium ?? '')]   ?? $stadium_region_map[$home_team]    ?? null,
+                'stadium_image_urls'  => $get_stadium_images($po_stadium, $home_team),
                 'weather_temp'        => null,
                 'weather_wind_mph'    => null,
                 'weather_condition'   => null,
@@ -18404,6 +19576,7 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
         ];
 
         if (!empty($po_built_games)) {
+            pfl_write_attendance_rows($year, $week, $po_built_games);
             set_transient($cache_key, $po_result, HOUR_IN_SECONDS);
         }
         return rest_ensure_response($po_result);
@@ -18982,8 +20155,11 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
         if ($game_date_str) {
             $gw_season_week = pfl_game_date_to_season_week($game_date_str);
             if ($gw_season_week) {
-                $gw_region = $stadium_region_map[$home_team] ?? null;
-                $gw_roof   = $stadium_roof_type_map[$home_team] ?? 'Open';
+                // Prefer venue-based attrs so historical stadiums (e.g. the
+                // domed A.P. Compfortdome 1994-2011) get the correct roof.
+                $gw_venue  = pfl_canonical_stadium_name($stadium ?? '');
+                $gw_region = $stadium_region_by_venue[$gw_venue] ?? $stadium_region_map[$home_team] ?? null;
+                $gw_roof   = $stadium_roof_by_venue[$gw_venue]   ?? $stadium_roof_type_map[$home_team] ?? 'Open';
                 if ($gw_roof === 'Dome') {
                     $game_weather = ['temp' => 70, 'wind_mph' => 0, 'condition' => 'dome', 'roof_closed' => false];
                 } else {
@@ -19047,10 +20223,10 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
             'away_score'      => $away_score,
             'winner'          => $winner,
             'stadium'             => $stadium,
-            'stadium_capacity'    => $stadium_capacity_map[$home_team] ?? null,
-            'stadium_roof_type'   => $stadium_roof_type_map[$home_team] ?? 'Open',
-            'stadium_region'      => $stadium_region_map[$home_team]    ?? null,
-            'stadium_image_urls'  => $stadium_image_map[$home_team] ?? [],
+            'stadium_capacity'    => $stadium_capacity_by_venue[pfl_canonical_stadium_name($stadium ?? '')] ?? $stadium_capacity_map[$home_team]  ?? null,
+            'stadium_roof_type'   => $stadium_roof_by_venue[pfl_canonical_stadium_name($stadium ?? '')]     ?? $stadium_roof_type_map[$home_team] ?? 'Open',
+            'stadium_region'      => $stadium_region_by_venue[pfl_canonical_stadium_name($stadium ?? '')]   ?? $stadium_region_map[$home_team]    ?? null,
+            'stadium_image_urls'  => $get_stadium_images($stadium, $home_team),
             'weather_temp'        => $game_weather['temp']        ?? null,
             'weather_wind_mph'    => $game_weather['wind_mph']    ?? null,
             'weather_condition'   => $game_weather['condition']   ?? null,
@@ -19095,6 +20271,7 @@ function pfl_api_weekly_results(WP_REST_Request $request) {
 
     // Only cache if we have actual games
     if (!empty($games)) {
+        pfl_write_attendance_rows($year, $week, $games);
         set_transient($cache_key, $result, HOUR_IN_SECONDS);
     }
 
@@ -21102,63 +22279,86 @@ function pfl_api_home_summary() {
 function pfl_api_roster_news() {
     global $wpdb;
 
-    $cache_key = 'pfl_roster_news_v3';
+    $cache_key = 'pfl_roster_news_v6';
     $cached    = get_transient($cache_key);
     if ($cached !== false) return rest_ensure_response($cached);
 
-    // Most recent year with roster data
-    $year = (int) $wpdb->get_var(
-        "SELECT MAX(year) FROM wp_rosters WHERE team != '' AND pid != ''"
-    );
-    if (!$year) $year = (int) date('Y') - 1;
+    // NFL seasons run Sep–Feb, so Jan–Aug of year N still belong to season N-1
+    $mfl_year = (int) date('m') < 9 ? (int) date('Y') - 1 : (int) date('Y');
+    $mfl_lid  = 38954;
+    $mfl_key  = 'aRNp1sySvuWqx1KmO1HIZDYeF7ox';
 
-    $roster_rows = $wpdb->get_results($wpdb->prepare(
-        "SELECT DISTINCT pid, team FROM wp_rosters
-         WHERE year = %d AND team != '' AND pid != ''",
-        $year
-    ), ARRAY_A);
+    // ── Live MFL rosters (cached separately, 15 min) ───────────────────────
+    // mflid → { team: PFL abbr, teamName: full name }
+    $live = get_transient('pfl_mfl_live_rosters_v2');
+    if ($live === false) {
+        $live = [];
 
-    $pid_to_team = [];
-    foreach ($roster_rows as $r) $pid_to_team[trim($r['pid'])] = trim($r['team']);
-    $pids = array_keys($pid_to_team);
+        $team_rows = $wpdb->get_results(
+            "SELECT team_int, team, mfl_team_id FROM wp_teams WHERE mfl_team_id != ''",
+            ARRAY_A
+        );
+        $fid_map = [];  // MFL franchise_id → { team, teamName }
+        foreach ($team_rows as $t) {
+            $fid_map[$t['mfl_team_id']] = ['team' => $t['team_int'], 'teamName' => $t['team']];
+        }
 
-    if (empty($pids)) {
-        return rest_ensure_response(['news' => [], 'injuries' => [], 'rosterYear' => $year]);
+        $roster_res = wp_remote_get(
+            "https://www48.myfantasyleague.com/{$mfl_year}/export?TYPE=rosters&L={$mfl_lid}&APIKEY={$mfl_key}&FRANCHISE=&W=&JSON=1",
+            ['timeout' => 8, 'sslverify' => false, 'redirection' => 5]
+        );
+        if (!is_wp_error($roster_res) && wp_remote_retrieve_response_code($roster_res) === 200) {
+            $rdata = json_decode(wp_remote_retrieve_body($roster_res), true);
+            foreach ($rdata['rosters']['franchise'] ?? [] as $franchise) {
+                $fid      = $franchise['id'] ?? '';
+                $team_inf = $fid_map[$fid] ?? null;
+                if (!$team_inf) continue;
+                $players = $franchise['player'] ?? [];
+                if (!is_array($players)) $players = [$players];
+                foreach ($players as $pl) {
+                    if (!empty($pl['id'])) $live[trim($pl['id'])] = $team_inf;
+                }
+            }
+        }
+
+        set_transient('pfl_mfl_live_rosters_v2', $live, 900); // 15 min
     }
 
-    $ph          = implode(',', array_fill(0, count($pids), '%s'));
+    if (empty($live)) {
+        return rest_ensure_response(['news' => [], 'injuries' => [], 'rosterYear' => $mfl_year]);
+    }
+
+    // ── Player lookup by mflid ─────────────────────────────────────────────
+    $mflids = array_keys($live);
+    $ph     = implode(',', array_fill(0, count($mflids), '%s'));
     $player_rows = $wpdb->get_results(
         $wpdb->prepare(
             "SELECT p_id AS pid, playerFirst AS first, playerLast AS last, mflid
-             FROM wp_players WHERE p_id IN ($ph)",
-            ...$pids
+             FROM wp_players WHERE mflid IN ($ph)",
+            ...$mflids
         ),
         ARRAY_A
     );
 
-    $team_name_rows = $wpdb->get_results("SELECT team_int, team FROM wp_teams", ARRAY_A);
-    $team_name_map  = [];
-    foreach ($team_name_rows as $t) $team_name_map[$t['team_int']] = $t['team'];
-
-    $name_map  = [];
-    $mflid_map = [];
+    $name_map  = [];   // normalized name → entry
+    $mflid_map = [];   // mflid           → entry
     foreach ($player_rows as $p) {
-        $pid = $p['pid'];
-        if (!isset($pid_to_team[$pid])) continue;
-        $team  = $pid_to_team[$pid];
-        $entry = [
-            'pid'         => $pid,
+        $mid = trim($p['mflid']);
+        if (!isset($live[$mid])) continue;
+        $team_inf = $live[$mid];
+        $entry    = [
+            'pid'         => $p['pid'],
             'first'       => $p['first'],
             'last'        => $p['last'],
-            'pflTeam'     => $team,
-            'pflTeamName' => $team_name_map[$team] ?? $team,
+            'pflTeam'     => $team_inf['team'],
+            'pflTeamName' => $team_inf['teamName'],
         ];
         $norm = strtolower(preg_replace('/[^a-z0-9 ]/i', '', $p['first'] . ' ' . $p['last']));
         $name_map[$norm] = $entry;
-        if (!empty($p['mflid'])) $mflid_map[trim($p['mflid'])] = $entry;
+        $mflid_map[$mid] = $entry;
     }
 
-    // ESPN news — match articles to rostered players via athlete categories
+    // ── ESPN news ──────────────────────────────────────────────────────────
     $news     = [];
     $espn_res = wp_remote_get(
         'https://site.api.espn.com/apis/site/v2/sports/football/nfl/news?limit=100',
@@ -21189,10 +22389,10 @@ function pfl_api_roster_news() {
         }
     }
 
-    // MFL injury report — filter to rostered players
+    // ── MFL injuries ───────────────────────────────────────────────────────
     $injuries = [];
     $mfl_res  = wp_remote_get(
-        "https://api.myfantasyleague.com/{$year}/export?TYPE=injuries&JSON=1",
+        "https://api.myfantasyleague.com/{$mfl_year}/export?TYPE=injuries&JSON=1",
         ['timeout' => 8, 'sslverify' => false]
     );
     if (!is_wp_error($mfl_res) && wp_remote_retrieve_response_code($mfl_res) === 200) {
@@ -21218,8 +22418,19 @@ function pfl_api_roster_news() {
         );
     }
 
-    $result = ['news' => $news, 'injuries' => $injuries, 'rosterYear' => $year];
-    set_transient($cache_key, $result, 1800);
+    // ── Helmet URLs for each rostered team ────────────────────────────────
+    $theme_uri   = get_stylesheet_directory_uri();
+    $helm_base   = $theme_uri . '/img/helmets/final-renders';
+    $team_helmets = [];
+    foreach (array_values($live) as $t) {
+        $abbr = $t['team'];
+        if (isset($team_helmets[$abbr])) continue;
+        $num = pfl_get_helmet_num($abbr, $mfl_year);
+        $team_helmets[$abbr] = "{$helm_base}/{$abbr}/helmet-{$abbr}-{$num}-front.png";
+    }
+
+    $result = ['news' => $news, 'injuries' => $injuries, 'rosterYear' => $mfl_year, 'teamHelmets' => $team_helmets];
+    set_transient($cache_key, $result, 900); // 15 min — matches live roster freshness
     return rest_ensure_response($result);
 }
 

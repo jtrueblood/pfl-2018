@@ -605,6 +605,84 @@ def insert_player_stats_to_db(p_id, year, week, stats, team_abbr=None):
             connection.close()
 
 
+def update_playoff_linescore(p_id, year, week, stats):
+    """
+    Update linescore columns on the matching wp_playoffs row.
+    Safe to call for any week; does nothing if no matching row exists.
+    """
+    if not HAS_MYSQL:
+        return False
+
+    connection = None
+    cursor = None
+    try:
+        connection = mysql.connector.connect(
+            host=DB_CONFIG['host'],
+            user=DB_CONFIG['user'],
+            password=DB_CONFIG['password'],
+            database=DB_CONFIG['database'],
+            unix_socket=MYSQL_SOCKET
+        )
+        if not connection.is_connected():
+            return False
+
+        cursor = connection.cursor()
+        nflteam = stats.get('Team') or None
+
+        query = """
+            UPDATE wp_playoffs
+               SET pass_yds = %s, pass_td  = %s, pass_int = %s,
+                   rush_yds = %s, rush_td  = %s,
+                   rec_yds  = %s, rec_td   = %s,
+                   xpm = %s, xpa = %s, fgm = %s, fga = %s,
+                   twopt = %s, nflteam = %s
+             WHERE playerid = %s AND year = %s AND week = %s
+        """
+        values = (
+            int(stats.get('Pass Yds', 0) or 0),
+            int(stats.get('Pass TD',  0) or 0),
+            int(stats.get('Pass Int', 0) or 0),
+            int(stats.get('Rush Yds', 0) or 0),
+            int(stats.get('Rush TD',  0) or 0),
+            int(stats.get('Rec Yds',  0) or 0),
+            int(stats.get('Rec TD',   0) or 0),
+            int(stats.get('XP Made',  0) or 0),
+            int(stats.get('XP Att',   0) or 0),
+            int(stats.get('FG Made',  0) or 0),
+            int(stats.get('FG Att',   0) or 0),
+            int(stats.get('2pt conversions', 0) or 0),
+            nflteam,
+            p_id, year, week,
+        )
+        cursor.execute(query, values)
+        connection.commit()
+        rows_updated = cursor.rowcount
+        if rows_updated:
+            print(f"  ✓ Updated wp_playoffs linescore for {p_id} year={year} week={week}")
+            # Bust the WordPress transient so the next page load reflects the new data
+            week_pad = f"{week:02d}"
+            transient_key = f"pfl_weekly_results_{year}{week_pad}_v17"
+            cursor.execute(
+                "DELETE FROM wp_options WHERE option_name IN (%s, %s)",
+                (f"_transient_{transient_key}", f"_transient_timeout_{transient_key}")
+            )
+            connection.commit()
+            print(f"  ✓ Cleared cache: {transient_key}")
+        else:
+            print(f"  ⚠ No wp_playoffs row found for {p_id} year={year} week={week}")
+        return rows_updated > 0
+
+    except Exception as e:
+        print(f"Error updating wp_playoffs linescore: {e}")
+        return False
+
+    finally:
+        if cursor:
+            cursor.close()
+        if connection and connection.is_connected():
+            connection.close()
+
+
 def get_player_id_from_db(player_name):
     """
     Get p_id from wp_players table for a given player name
@@ -1631,6 +1709,14 @@ def process_single_week(player_name, year, week, insert_to_db, p_id=None, team_a
                 if not compact_output:
                     print("\n⚠ Cannot insert to database: Player ID (p_id) not found")
                     print("  Player must exist in wp_players table to insert stats")
+            elif week >= 15:
+                # Playoff/Posse Bowl: write linescore to wp_playoffs, not the player table
+                if not compact_output:
+                    print(f"\nUpdating wp_playoffs linescore for {p_id} week {week}...")
+                success = update_playoff_linescore(p_id, year, week, stats)
+                if success:
+                    if not compact_output:
+                        print(f"✓ Successfully updated wp_playoffs linescore for {p_id}")
             else:
                 if not compact_output:
                     print(f"\nInserting stats into table {p_id}...")

@@ -1,0 +1,182 @@
+[
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Rams",
+    "player_name": "Marc Bulger",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Cardinals",
+    "player_name": "Neil Rackers",
+    "position": "K",
+    "injury": "right Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Seahawks",
+    "player_name": "Nate Burleson",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Broncos",
+    "player_name": "Eddie Royal",
+    "position": "WR",
+    "injury": "Neck, Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Saints",
+    "player_name": "Lance Moore",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Bills",
+    "player_name": "Trent Edwards",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Raiders",
+    "player_name": "Justin Fargas",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Raiders",
+    "player_name": "Bruce Gradkowski",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Raiders",
+    "player_name": "Darrius Heyward-Bey",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Niners",
+    "player_name": "Isaac Bruce",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Niners",
+    "player_name": "Glen Coffee",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Niners",
+    "player_name": "Joe Nedney",
+    "position": "K",
+    "injury": "left Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Colts",
+    "player_name": "Pierre Garcon",
+    "position": "WR",
+    "injury": "Hand",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Panthers",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "right Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Panthers",
+    "player_name": "Tyrell Sutton",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Panthers",
+    "player_name": "DeAngelo Williams",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 16,
+    "team": "Redskins",
+    "player_name": "Devin Thomas",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  }
+]

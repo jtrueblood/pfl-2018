@@ -67,8 +67,13 @@
 	endif;
 
 	$stadiumimage = $stad_arr[$teamid]['image'];
+	//echo $stadiumimage;
+    //http://pfl-data.local/wp-content/uploads/hutch-b-400x400.png
+    $strip_png = substr($stadiumimage, 0, -4);
+    //echo $strip_png;
 
-	?>
+
+    ?>
 	<div class="panel-body stadium <?php if(isset($stadiumimage)){ echo 'stadium-img-class'; }?>" style="background-image: url(<?php echo $stadiumimage; ?>);">
 		<?php if (isset($stadium)){ ?>
 	

@@ -1,0 +1,155 @@
+[
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Steelers",
+    "player_name": "Dennis Dixon",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Cardinals",
+    "player_name": "Early Doucet",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Rams",
+    "player_name": "Billy Bajema",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Rams",
+    "player_name": "Michael Hoomanawanui",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Rams",
+    "player_name": "Laurent Robinson",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Broncos",
+    "player_name": "Knowshon Moreno",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Niners",
+    "player_name": "Ted Ginn",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Saints",
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Cowboys",
+    "player_name": "Deon Anderson",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Browns",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Browns",
+    "player_name": "Brian Robiskie",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Ravens",
+    "player_name": "Donte' Stallworth",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Lions",
+    "player_name": "Nate Burleson",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 3,
+    "team": "Chargers",
+    "player_name": "Ryan Mathews",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  }
+]

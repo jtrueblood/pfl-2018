@@ -1,0 +1,70 @@
+{
+  "season": 2017,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "ATL",
+        "DEN",
+        "NOR",
+        "WAS"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "BUF",
+        "CIN",
+        "DAL",
+        "SEA"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "DET",
+        "HOU"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ARI",
+        "GNB",
+        "JAX",
+        "LAR",
+        "NYG",
+        "TEN"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CHI",
+        "CLE",
+        "LAC",
+        "MIN",
+        "NWE",
+        "PIT"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "BAL",
+        "KAN",
+        "OAK",
+        "PHI"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "CAR",
+        "IND",
+        "NYJ",
+        "SFO"
+      ]
+    }
+  ]
+}

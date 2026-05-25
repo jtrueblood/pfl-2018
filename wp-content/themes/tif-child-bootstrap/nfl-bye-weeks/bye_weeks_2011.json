@@ -1,0 +1,67 @@
+{
+  "season": 2011,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "BAL",
+        "CLE",
+        "DAL",
+        "MIA",
+        "STL",
+        "WAS"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ARI",
+        "DEN",
+        "KAN",
+        "SDG",
+        "SEA",
+        "TEN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BUF",
+        "CIN",
+        "NWE",
+        "NYG",
+        "PHI",
+        "SFO"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ATL",
+        "CHI",
+        "GNB",
+        "NYJ",
+        "OAK",
+        "TAM"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CAR",
+        "DET",
+        "JAX",
+        "MIN"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "HOU",
+        "IND",
+        "NOR",
+        "PIT"
+      ]
+    }
+  ]
+}

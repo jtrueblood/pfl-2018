@@ -37,22 +37,33 @@ $teamlist = teamlist();
 						<h3><?php echo $year; ?> PFL Season</h3>
 						<hr>
 						<?php $champs = get_just_champions(); 
-							echo '<h4>'.$teamlist[$champs[$year]].'</h4>';
+							echo '<h4>'.$teamlist[$champs[$year]].' - PFL Champions</h4>';
+							echo '<img class="" width="200px" src="/wp-content/uploads/'.$champs[$year].'-helmet-full-250x250.png" alt="Image">';
 						?>
-						<h5>PFL Champions</h5>
 					</div>
 				</div>
+
+                <?php
+                include_once('inc/season_playerofweek.php');
+                include_once('inc/season_weekhighs.php');
+                include_once('inc/season_fifties.php');
+                include_once('inc/season_iron_men.php');
+                ?>
 				
 			</div>		
 					
 			<!-- MIDDLE COL -->
 			<div class="col-xs-24 col-md-9">
 
-				<?php 
-					selectseason();
-					include_once('inc/season_standings.php');
-					//include_once('inc/season_draft.php');
-				?>
+			<style>
+				#seasondraft { overflow: visible; max-height: none; height: auto; }
+			</style>
+			<?php 
+				selectseason();
+				include_once('inc/season_standings.php');
+				include_once('inc/season_draft.php');
+				include_once('inc/season_trades.php');
+			?>
 				
 			</div>
 			
@@ -62,7 +73,7 @@ $teamlist = teamlist();
 			<!-- RIGHT COL -->
 			<div class="col-xs-24 col-sm-9">
 					
-				<?php 
+			<?php 
 				include_once('inc/season_awards.php');
 				include_once('inc/season_leaders.php');
 				?>

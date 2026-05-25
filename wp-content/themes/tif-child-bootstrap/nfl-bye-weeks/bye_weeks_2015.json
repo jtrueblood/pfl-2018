@@ -1,0 +1,77 @@
+{
+  "season": 2015,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "NWE",
+        "TEN"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "CAR",
+        "MIA",
+        "MIN",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "DAL",
+        "OAK",
+        "STL",
+        "TAM"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CHI",
+        "CIN",
+        "DEN",
+        "GNB"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BUF",
+        "JAX",
+        "PHI",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "ARI",
+        "BAL",
+        "DET",
+        "HOU",
+        "KAN",
+        "SEA"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "ATL",
+        "IND",
+        "SDG",
+        "SFO"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "CLE",
+        "NOR",
+        "NYG",
+        "PIT"
+      ]
+    }
+  ]
+}

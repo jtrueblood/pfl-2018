@@ -1,0 +1,164 @@
+[
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Texans",
+    "player_name": "Owen Daniels",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Rams",
+    "player_name": "Michael Hoomanawanui",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Jaguars",
+    "player_name": "Mike Sims-Walker",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Broncos",
+    "player_name": "Demaryius Thomas",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Browns",
+    "player_name": "Colt McCoy",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Saints",
+    "player_name": "Ladell Betts",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Lions",
+    "player_name": "Shaun Hill",
+    "position": "QB",
+    "injury": "right Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Cowboys",
+    "player_name": "Marion Barber",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Cowboys",
+    "player_name": "Tony Romo",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Colts",
+    "player_name": "Joseph Addai",
+    "position": "RB",
+    "injury": "Neck",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Giants",
+    "player_name": "Hakeem Nicks",
+    "position": "WR",
+    "injury": "Lower Leg",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Giants",
+    "player_name": "Steve Smith",
+    "position": "WR",
+    "injury": "Pectoral",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Steelers",
+    "player_name": "Matt Spaeth",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Bills",
+    "player_name": "Shawn Nelson",
+    "position": "TE",
+    "injury": "Illness",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Chargers",
+    "player_name": "Patrick Crayton",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Chargers",
+    "player_name": "Vincent Jackson",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 13,
+    "team": "Niners",
+    "player_name": "Joe Nedney",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  }
+]

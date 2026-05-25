@@ -1,0 +1,254 @@
+[
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Steelers",
+    "player_name": "Calvin Austin III",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Bengals",
+    "player_name": "Mike Gesicki",
+    "position": "TE",
+    "injury": "Pectoral",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Bengals",
+    "player_name": "Tanner Hudson",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Rams",
+    "player_name": "Puka Nacua",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Jaguars",
+    "player_name": "Quintin Morris",
+    "position": "TE",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Bears",
+    "player_name": "Cairo Santos",
+    "position": "K",
+    "injury": "Thigh",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Titans",
+    "player_name": "Bryce Oliver",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Titans",
+    "player_name": "Calvin Ridley",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Browns",
+    "player_name": "David Njoku",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Raiders",
+    "player_name": "Brock Bowers",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Eagles",
+    "player_name": "Grant Calcaterra",
+    "position": "TE",
+    "injury": "Oblique",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Jets",
+    "player_name": "Garrett Wilson",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Colts",
+    "player_name": "Josh Downs",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Colts",
+    "player_name": "Ashton Dulin",
+    "position": "WR",
+    "injury": "Chest",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Colts",
+    "player_name": "Tyler Goodson",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Giants",
+    "player_name": "Darius Slayton",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Commanders",
+    "player_name": "Terry McLaurin",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Commanders",
+    "player_name": "Deebo Samuel Sr.",
+    "position": "WR",
+    "injury": "Heel",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Packers",
+    "player_name": "Christian Watson",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Cardinals",
+    "player_name": "Emari Demercado",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Falcons",
+    "player_name": "Ray-Ray McCloud",
+    "position": "WR",
+    "injury": "Not injury related - other",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "49ers",
+    "player_name": "Ricky Pearsall",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "49ers",
+    "player_name": "Brock Purdy",
+    "position": "QB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Buccaneers",
+    "player_name": "Chris Godwin Jr.",
+    "position": "WR",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Buccaneers",
+    "player_name": "Bucky Irving",
+    "position": "RB",
+    "injury": "Foot, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Buccaneers",
+    "player_name": "Josh Williams",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Lions",
+    "player_name": "Sione Vaki",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 7,
+    "team": "Texans",
+    "player_name": "Christian Kirk",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  }
+]

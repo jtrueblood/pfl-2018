@@ -1,0 +1,209 @@
+[
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Redskins",
+    "player_name": "Devin Thomas",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Chargers",
+    "player_name": "Jacob Hester",
+    "position": "RB",
+    "injury": "Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Chargers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Seahawks",
+    "player_name": "Nate Burleson",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Raiders",
+    "player_name": "Justin Fargas",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Raiders",
+    "player_name": "Bruce Gradkowski",
+    "position": "QB",
+    "injury": "knees",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Jaguars",
+    "player_name": "Torry Holt",
+    "position": "WR",
+    "injury": "Hand",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Jaguars",
+    "player_name": "Marcedes Lewis",
+    "position": "TE",
+    "injury": "Cheek, Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Browns",
+    "player_name": "Brian Robiskie",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Bears",
+    "player_name": "Johnny Knox",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Saints",
+    "player_name": "Lance Moore",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Rib",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Saints",
+    "player_name": "David Thomas",
+    "position": "TE",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Panthers",
+    "player_name": "Steve Smith",
+    "position": "WR",
+    "injury": "Forearm",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Panthers",
+    "player_name": "Tyrell Sutton",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Panthers",
+    "player_name": "DeAngelo Williams",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Colts",
+    "player_name": "Gijon Robinson",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Trent Edwards",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Steve Johnson",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Josh Reed",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Niners",
+    "player_name": "Joe Nedney",
+    "position": "K",
+    "injury": "left Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Broncos",
+    "player_name": "Brandon Marshall",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 17,
+    "team": "Giants",
+    "player_name": "Brandon Jacobs",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  }
+]

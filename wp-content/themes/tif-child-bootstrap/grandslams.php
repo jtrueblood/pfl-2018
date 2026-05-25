@@ -62,6 +62,13 @@ $teamlist = array(
 					
 					foreach($get as $value){
 						foreach ($value as $key => $val){
+                            $result = $val['result'];
+                            if($result >= 0){
+                                $result = 'W';
+                            } else {
+                                $result = 'L';
+                            }
+
 							$qb = $val['qb1'];
 							$rb = $val['rb1'];
 							$wr = $val['wr1'];
@@ -81,7 +88,7 @@ $teamlist = array(
 						<div class="col-xs-6">		
 							<div class="panel protections">
 								<div class="panel-body">
-									<h4>Week '.$val['week'].', '.$val['season'].' - '.$teamlist[$val['team_int']].'</h4>
+									<h4>Week '.$val['week'].', '.$val['season'].' - '.$teamlist[$val['team_int']].' - '.$result.'</h4>
 									<p>'.$qb_i['first'].' '.$qb_i['last'].' - '.$qb_score.'<br>
 									'.$rb_i['first'].' '.$rb_i['last'].' - '.$rb_score.'<br>
 									'.$wr_i['first'].' '.$wr_i['last'].' - '.$wr_score.'<br>

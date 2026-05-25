@@ -1,0 +1,272 @@
+[
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Dolphins",
+    "player_name": "Chad Henne",
+    "position": "QB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Bills",
+    "player_name": "C.J. Spiller",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Panthers",
+    "player_name": "Jimmy Clausen",
+    "position": "QB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Panthers",
+    "player_name": "Brandon LaFell",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Panthers",
+    "player_name": "Jonathan Stewart",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Panthers",
+    "player_name": "Tyrell Sutton",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Niners",
+    "player_name": "Joe Nedney",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Redskins",
+    "player_name": "Ryan Torain",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Titans",
+    "player_name": "Kenny Britt",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Titans",
+    "player_name": "Kerry Collins",
+    "position": "QB",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Titans",
+    "player_name": "Craig Stevens",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Giants",
+    "player_name": "Madison Hedgecock",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Giants",
+    "player_name": "Steve Smith",
+    "position": "WR",
+    "injury": "Pectoral",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Jaguars",
+    "player_name": "Mike Sims-Walker",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Lions",
+    "player_name": "Jason Hanson",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Lions",
+    "player_name": "Kevin Smith",
+    "position": "RB",
+    "injury": "Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Cowboys",
+    "player_name": "Tony Romo",
+    "position": "QB",
+    "injury": "left Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Chiefs",
+    "player_name": "Tony Moeaki",
+    "position": "TE",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Texans",
+    "player_name": "Owen Daniels",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Jets",
+    "player_name": "Jerricho Cotchery",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Seahawks",
+    "player_name": "Anthony McCoy",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Seahawks",
+    "player_name": "Michael Robinson",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Seahawks",
+    "player_name": "Brandon Stokley",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Seahawks",
+    "player_name": "Golden Tate",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Saints",
+    "player_name": "Jeremy Shockey",
+    "position": "TE",
+    "injury": "Rib",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Chargers",
+    "player_name": "Ryan Mathews",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 11,
+    "team": "Chargers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  }
+]

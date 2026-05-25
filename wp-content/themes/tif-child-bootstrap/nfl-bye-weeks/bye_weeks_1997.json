@@ -1,0 +1,75 @@
+{
+  "season": 1997,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "CIN",
+        "JAX",
+        "PIT",
+        "TEN"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "ARI",
+        "DAL",
+        "PHI",
+        "WAS"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "BUF",
+        "IND",
+        "MIA",
+        "NWE"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ATL",
+        "CAR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BAL",
+        "DEN",
+        "KAN",
+        "OAK",
+        "SDG",
+        "SEA"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "CHI",
+        "GNB",
+        "MIN",
+        "TAM"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "DET",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "NOR",
+        "NYG"
+      ]
+    }
+  ]
+}

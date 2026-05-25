@@ -1,0 +1,82 @@
+{
+  "season": 2019,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "NYJ",
+        "SFO"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "DET",
+        "MIA"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "BUF",
+        "CHI",
+        "IND",
+        "OAK"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CAR",
+        "CLE",
+        "PIT",
+        "TAM"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BAL",
+        "DAL"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "ATL",
+        "CIN",
+        "LAR",
+        "NOR"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "DEN",
+        "HOU",
+        "JAX",
+        "NWE",
+        "PHI",
+        "WAS"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "GNB",
+        "NYG",
+        "SEA",
+        "TEN"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "ARI",
+        "KAN",
+        "LAC",
+        "MIN"
+      ]
+    }
+  ]
+}

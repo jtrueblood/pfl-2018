@@ -1,0 +1,164 @@
+[
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Bears",
+    "player_name": "Garrett Wolfe",
+    "position": "RB",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Niners",
+    "player_name": "Glen Coffee",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Patriots",
+    "player_name": "Brandon Tate",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Colts",
+    "player_name": "Adam Vinatieri",
+    "position": "K",
+    "injury": "right Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Titans",
+    "player_name": "Justin Gage",
+    "position": "WR",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Saints",
+    "player_name": "Lance Moore",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Packers",
+    "player_name": "Jermichael Finley",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Buccaneers",
+    "player_name": "Antonio Bryant",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Steelers",
+    "player_name": "Carey Davis",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Redskins",
+    "player_name": "Chris Cooley",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Redskins",
+    "player_name": "Clinton Portis",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Eagles",
+    "player_name": "Kevin Curtis",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Panthers",
+    "player_name": "Brad Hoover",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Raiders",
+    "player_name": "Javon Walker",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 10,
+    "team": "Jaguars",
+    "player_name": "Ernest Wilford",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  }
+]

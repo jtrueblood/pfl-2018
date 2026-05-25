@@ -1,0 +1,77 @@
+{
+  "season": 2023,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "CLE",
+        "LAC",
+        "SEA",
+        "TAM"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "GNB",
+        "PIT"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CAR",
+        "CIN",
+        "DAL",
+        "HOU",
+        "NYJ",
+        "TEN"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "DEN",
+        "DET",
+        "JAX",
+        "SFO"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "KAN",
+        "LAR",
+        "MIA",
+        "PHI"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "ATL",
+        "IND",
+        "NOR",
+        "NWE"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "BAL",
+        "BUF",
+        "CHI",
+        "LVR",
+        "MIN",
+        "NYG"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "ARI",
+        "WAS"
+      ]
+    }
+  ]
+}

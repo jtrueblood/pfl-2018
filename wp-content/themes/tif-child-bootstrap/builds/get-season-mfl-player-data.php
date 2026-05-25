@@ -15,7 +15,7 @@ get_cache('mfl/thestarters', 0);
 $thestarters = $_SESSION['mfl/thestarters'];
 */
 
-$year = 2017;
+$year = 2020;
 $week = 1; // change this to 1 to 14 and reload page to build all of the week needed starters
 $lid = 38954;
 $mflid = $_GET['id'];
@@ -54,9 +54,10 @@ $pflid = $linkidcache[$mflid][2];
 // get json about player from MFL scores for that player, for each week (reguardless of starter or not) 	
 
 
-$jsonplayerprofile = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=playerProfile&P='.$mflid.'&JSON=1');
+$jsonplayerprofile = file_get_contents('https://api.myfantasyleague.com/'.$year.'/export?TYPE=playerProfile&P='.$mflid.'&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&JSON=1');
 $playerprofile = json_decode($jsonplayerprofile , true);
-
+//
+//printr($playerprofile, 1);
 
 echo '<hr>';
 
@@ -69,9 +70,9 @@ echo '<hr>';
 
 // THIS IS NOW COMMENTED OUT BECAUSE THE TRANSIENTS HAVE BEEN BUILT.  NEXT SEASON UNCOMMENT, CHANGE THE $YEAR and BUILD THE ARRAY EACH WEEK
 
-/*
-$jsonweekresults = file_get_contents('http://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuKox1emO1HIZDYeFbox&W='.$week.'&JSON=1');
-$weekresults = json_decode($jsonweekresults, true);	
+
+$jsonweekresults = file_get_contents('https://www58.myfantasyleague.com/'.$year.'/export?TYPE=weeklyResults&L=38954&APIKEY=aRNp1sySvuWvx0WmO1HIZDYeFbox&W='.$week.'&JSON=1');
+$weekresults = json_decode($jsonweekresults, true);
 $matchups = $weekresults['weeklyResults'];
 
 echo 'starters';
@@ -312,30 +313,29 @@ function weekstarters_trans($aweek, $ayear) {
   }
 }
 
-/*
 $gettransient = weekstarters_trans($week, $year);
 
 echo 'starters';
 printr($gettransient, 0);
-*/
+
 
 // COMMENTED OUT SECTION THAT BUILDS THE TRANSIENTS NEEDED FOR INSERT ENDS HERE
 
 
-$week_data_1 = get_transient( 'weekstarters_trans_1_2017' );
-$week_data_2 = get_transient( 'weekstarters_trans_2_2017' );
-$week_data_3 = get_transient( 'weekstarters_trans_3_2017' );
-$week_data_4 = get_transient( 'weekstarters_trans_4_2017' );
-$week_data_5 = get_transient( 'weekstarters_trans_5_2017' );
-$week_data_6 = get_transient( 'weekstarters_trans_6_2017' );
-$week_data_7 = get_transient( 'weekstarters_trans_7_2017' );
-$week_data_8 = get_transient( 'weekstarters_trans_8_2017' );
-$week_data_9 = get_transient( 'weekstarters_trans_9_2017' );
-$week_data_10 = get_transient( 'weekstarters_trans_10_2017' );
-$week_data_11 = get_transient( 'weekstarters_trans_11_2017' );
-$week_data_12 = get_transient( 'weekstarters_trans_12_2017' );
-$week_data_13 = get_transient( 'weekstarters_trans_13_2017' );
-$week_data_14 = get_transient( 'weekstarters_trans_14_2017' );
+$week_data_1 = get_transient( 'weekstarters_trans_1_2020' );
+$week_data_2 = get_transient( 'weekstarters_trans_2_'.$year.'' );
+$week_data_3 = get_transient( 'weekstarters_trans_3_'.$year.'' );
+$week_data_4 = get_transient( 'weekstarters_trans_4_'.$year.'' );
+$week_data_5 = get_transient( 'weekstarters_trans_5_'.$year.'' );
+$week_data_6 = get_transient( 'weekstarters_trans_6_'.$year.'' );
+$week_data_7 = get_transient( 'weekstarters_trans_7_'.$year.'' );
+$week_data_8 = get_transient( 'weekstarters_trans_8_'.$year.'' );
+$week_data_9 = get_transient( 'weekstarters_trans_9_'.$year.'' );
+$week_data_10 = get_transient( 'weekstarters_trans_10_'.$year.'' );
+$week_data_11 = get_transient( 'weekstarters_trans_11_'.$year.'' );
+$week_data_12 = get_transient( 'weekstarters_trans_12_'.$year.'' );
+$week_data_13 = get_transient( 'weekstarters_trans_13_'.$year.'' );
+$week_data_14 = get_transient( 'weekstarters_trans_14_'.$year.'' );
 
 
 $allstarters = array(

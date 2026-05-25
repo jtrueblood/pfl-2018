@@ -1,0 +1,146 @@
+[
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Broncos",
+    "player_name": "Correll Buckhalter",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Steelers",
+    "player_name": "Willie Parker",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Vikings",
+    "player_name": "Darius Reynaud",
+    "position": "WR",
+    "injury": "Not Injury Related",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Rams",
+    "player_name": "Ruvell Martin",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Browns",
+    "player_name": "Phil Dawson",
+    "position": "K",
+    "injury": "right Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Panthers",
+    "player_name": "Mike Goodson",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Oren O'Neal",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Giants",
+    "player_name": "Kevin Boss",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Niners",
+    "player_name": "Frank Gore",
+    "position": "RB",
+    "injury": "Foot, Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Cowboys",
+    "player_name": "Felix Jones",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 5,
+    "team": "Cowboys",
+    "player_name": "Roy Williams",
+    "position": "WR",
+    "injury": "Ribs",
+    "game_status": "Doubtful"
+  }
+]

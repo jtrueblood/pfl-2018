@@ -1,0 +1,236 @@
+[
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Eagles",
+    "player_name": "Riley Cooper",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Eagles",
+    "player_name": "Mike Vick",
+    "position": "QB",
+    "injury": "Rib",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Niners",
+    "player_name": "Delanie Walker",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Michael Bennett",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Bengals",
+    "player_name": "Jordan Shipley",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Saints",
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Cardinals",
+    "player_name": "Steve Breaston",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Cardinals",
+    "player_name": "Early Doucet",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Packers",
+    "player_name": "Quinn Johnson",
+    "position": "RB",
+    "injury": "Glute",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Redskins",
+    "player_name": "Clinton Portis",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Bears",
+    "player_name": "Jay Cutler",
+    "position": "QB",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Panthers",
+    "player_name": "Steve Smith",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Broncos",
+    "player_name": "Spencer Larsen",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Broncos",
+    "player_name": "Knowshon Moreno",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Ravens",
+    "player_name": "Donte' Stallworth",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Titans",
+    "player_name": "Justin Gage",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Rams",
+    "player_name": "Billy Bajema",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Lions",
+    "player_name": "Aaron Brown",
+    "position": "RB",
+    "injury": "Finger",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Lions",
+    "player_name": "Matthew Stafford",
+    "position": "QB",
+    "injury": "right Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Giants",
+    "player_name": "Madison Hedgecock",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Texans",
+    "player_name": "Jacoby Jones",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 5,
+    "team": "Jaguars",
+    "player_name": "Rashad Jennings",
+    "position": "RB",
+    "injury": "Shoulder",
+    "game_status": "Doubtful"
+  }
+]

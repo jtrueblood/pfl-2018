@@ -1,0 +1,254 @@
+[
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Steelers",
+    "player_name": "Mewelde Moore",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Browns",
+    "player_name": "Colt McCoy",
+    "position": "QB",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Browns",
+    "player_name": "Jordan Norwood",
+    "position": "WR",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Chiefs",
+    "player_name": "Jackie Battle",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Panthers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Saints",
+    "player_name": "John Gilmore",
+    "position": "TE",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Saints",
+    "player_name": "Mark Ingram",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Saints",
+    "player_name": "Lance Moore",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Falcons",
+    "player_name": "Kerry Meier",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Ravens",
+    "player_name": "Anquan Boldin",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Niners",
+    "player_name": "Delanie Walker",
+    "position": "TE",
+    "injury": "Jaw",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Rams",
+    "player_name": "Sam Bradford",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Rams",
+    "player_name": "A.J. Feeley",
+    "position": "QB",
+    "injury": "right Thumb",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Packers",
+    "player_name": "Randall Cobb",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Packers",
+    "player_name": "Greg Jennings",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Packers",
+    "player_name": "James Starks",
+    "position": "RB",
+    "injury": "Knee, Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Bears",
+    "player_name": "Marion Barber",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Vikings",
+    "player_name": "Mickey Shuler",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Giants",
+    "player_name": "Jake Ballard",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Mike Caussin",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Dave Rayner",
+    "position": "K",
+    "injury": "left Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Bills",
+    "player_name": "Brad Smith",
+    "position": "QB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Colts",
+    "player_name": "Peyton Manning",
+    "position": "QB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Jaguars",
+    "player_name": "Zach Potter",
+    "position": "TE",
+    "injury": "Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Jaguars",
+    "player_name": "Cecil Shorts",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Raiders",
+    "player_name": "Jason Campbell",
+    "position": "QB",
+    "injury": "Collarbone",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 17,
+    "team": "Dolphins",
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  }
+]

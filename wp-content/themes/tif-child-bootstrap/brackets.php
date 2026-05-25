@@ -156,12 +156,11 @@ foreach ($stand as $key => $value){
 												echo '<h3>Posse Bowl</h3>';
 													//printr($cybpb, 0);
 													echo '<div class="boxbrack vert-align">';
-														$scorecheck = '';
+														//$scorecheck = '';
 														foreach ($cybpb as $k => $v){
 															$scorecheck[] = $v['pb_score'];
 														}
-							
-														
+
 														foreach ($cybpb as $k => $v){
 															$pbscore = $v['pb_score'];
 															$pbteam = $teamids[$v['team']];

@@ -16,12 +16,16 @@ while ($o < $year){
 
 
 	
-$playersassoc = get_players_assoc();
-foreach ($playersassoc as $key => $value){
-	$playersid[] = $key;
-}
+$getplayersassoc = get_players_assoc();
+$playersassoc = get_or_set($getplayersassoc, 'playersassoc', 6000 );
 
-$leaders = get_allleaders();
+foreach ($playersassoc as $key => $value){
+	$playersidset[] = $key;
+}
+$playersid = get_or_set($playersidset, 'playersid', 6000 );
+
+$getleaders = get_allleaders();
+$leaders = get_or_set($getleaders, 'leaders', 6000 );
 
 foreach($leaders as $key => $item){
    $arr_position[$item['position']][$key] = $item;
@@ -29,16 +33,19 @@ foreach($leaders as $key => $item){
 
 ksort($arr_position, SORT_NUMERIC);
 
-$qb_leaders = $arr_position['QB'];
-$rb_leaders = $arr_position['RB'];
-$wr_leaders = $arr_position['WR'];
-$pk_leaders = $arr_position['PK'];
+$set_qb_leaders = $arr_position['QB'];
+$set_rb_leaders = $arr_position['RB'];
+$set_wr_leaders = $arr_position['WR'];
+$set_pk_leaders = $arr_position['PK'];
+
+$qb_leaders = get_or_set($set_qb_leaders, 'qb_leaders', 6000 );
+$rb_leaders = get_or_set($set_rb_leaders, 'rb_leaders', 6000 );
+$wr_leaders = get_or_set($set_wr_leaders, 'wr_leaders', 6000 );
+$pk_leaders = get_or_set($set_pk_leaders, 'pk_leaders', 6000 );
 
 function sortByOrder($a, $b) {
     return $b['points'] - $a['points'];
 }
-
-
 
 usort($qb_leaders, 'sortByOrder');
 usort($rb_leaders, 'sortByOrder');
@@ -49,11 +56,14 @@ usort($pk_leaders, 'sortByOrder');
 
 function get_leaders_page($array){	
 	$esea = date('Y');
-	$playersassoc = get_players_assoc();
+    $getplayersassoc = get_players_assoc();
+    $playersassoc = get_or_set($getplayersassoc, 'playersassoc', 3000 );
 	
 	foreach ($array as $key => $value)	{
-		
-		$pcs = get_player_career_stats($value['pid']);
+
+		$getpcs = get_player_career_stats($value['pid']);
+		$pcs = get_or_set($getpcs, $value['pid'].'_pcs', 3000);
+
 		if(is_array($pcs['years'])){
 			$lastsea = end($pcs['years']);
 		} else {

@@ -1,0 +1,236 @@
+[
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Broncos",
+    "player_name": "Eddie Royal",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Broncos",
+    "player_name": "Demaryius Thomas",
+    "position": "WR",
+    "injury": "Finger",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Broncos",
+    "player_name": "Julius Thomas",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Packers",
+    "player_name": "Ryan Grant",
+    "position": "RB",
+    "injury": "Kidney",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Lions",
+    "player_name": "Rashied Davis",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Cowboys",
+    "player_name": "Miles Austin",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Cowboys",
+    "player_name": "David Buehler",
+    "position": "K",
+    "injury": "right Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Falcons",
+    "player_name": "Jason Snelling",
+    "position": "RB",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Jets",
+    "player_name": "Logan Payne",
+    "position": "WR",
+    "injury": "Wrist",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Ravens",
+    "player_name": "Lee Evans",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Ravens",
+    "player_name": "David Reed",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Niners",
+    "player_name": "Braylon Edwards",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Niners",
+    "player_name": "Moran Norris",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Patriots",
+    "player_name": "Aaron Hernandez",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Raiders",
+    "player_name": "Louis Murphy",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Bears",
+    "player_name": "Earl Bennett",
+    "position": "WR",
+    "injury": "Chest",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Chiefs",
+    "player_name": "Jon Baldwin",
+    "position": "WR",
+    "injury": "Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Chargers",
+    "player_name": "Antonio Gates",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Saints",
+    "player_name": "David Thomas",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Jaguars",
+    "player_name": "Kassim Osgood",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Jaguars",
+    "player_name": "Montell Owens",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Giants",
+    "player_name": "Brandon Stokley",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Cardinals",
+    "player_name": "Jim Dray",
+    "position": "TE",
+    "injury": "Pectoral",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Texans",
+    "player_name": "Derrick Ward",
+    "position": "RB",
+    "injury": "Ankle, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Colts",
+    "player_name": "Peyton Manning",
+    "position": "QB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 4,
+    "team": "Buccaneers",
+    "player_name": "Sammie Stroughter",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  }
+]

@@ -45,22 +45,32 @@ foreach ($getteams as $team){
 				$sort_arr_team_year[$value['versus']][] = $value;
 			}
 			
+			// Aggregate by opponent, counting each unique game (year+week) only once
 			foreach($sort_arr_team_year as $key => $value){
-				$d = 0; $w = 0; $l = 0; $g = 0;
+				// Use associative array keyed by year+week to ensure unique games
+				$unique_games = array();
 				foreach ($value as $k => $v){
-					
-					$d += $v['diff'];
-					$w += $v['win'];
-					$l += $v['loss'];
-					$final_arr_team_year[$key] = array(
-						'games' => $w + $l,	
-						'wins' => $w,
-						'loss' => $l,
-						'diff' => $d
-					);
-					
+					$game_key = $v['year'] . $v['week'];
+					// Only store the first occurrence of each unique game
+					if (!isset($unique_games[$game_key])) {
+						$unique_games[$game_key] = $v;
+					}
 				}
 				
+				// Now aggregate the unique games
+				$d = 0; $w = 0; $l = 0;
+				foreach ($unique_games as $game) {
+					$d += $game['diff'];
+					$w += $game['win'];
+					$l += $game['loss'];
+				}
+				
+				$final_arr_team_year[$key] = array(
+					'games' => $w + $l,	
+					'wins' => $w,
+					'loss' => $l,
+					'diff' => $d
+				);
 			}
 		}
 		

@@ -1,7 +1,7 @@
 <?php
 /*
  * Template Name: Scrape PFR
- * Description: Script to Scrape Data From Pro Football Reference
+ * Description: Script to Scrape Player Stats From Pro Football Reference
  */
 
 
@@ -11,6 +11,9 @@ header("Refresh: 5; URL=$url1");
 */
 
 $getplayer = $_GET['id'];
+
+//  Set Run Value to '1' if you want to override the .json file that exists in 'pfr-gamelogs'.  This is used for updating players that have played in the past.
+$getrun = $_GET['run'];
  
 $playersassoc = get_players_assoc();
 $i = 0;
@@ -161,55 +164,55 @@ get_header();
 								$html = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'.htm');
 								
 								
-								if($pfr_id):					
+								if($pfr_id):
 										if($html):
 										    $pfr_name = $html->find('h1', 0);
 										    $pfr_height = $html->find('#meta div p[3] span[1]', 0);
 											$pfr_weight = $html->find('#meta div p[3] span[2]', 0);
-											
+
 											$pfr_number = $html->find('.uni_holder', 0);
 											$e = explode(" ", $pfr_number);
 											$p = explode("=", $e[4]);
 											$q = end($p);
 											$number = rtrim($q, '"');
-											
+
 											$pfr_college = $html->find('#meta div p[5]', 0);
 											$c = strip_tags($pfr_college);
 											$d = str_replace("College:", "", $c );
 											$e = explode(",", $d);
 											$college = str_replace("(College Stats)", "", $e);
-											
+
 											$info = array(
-												'name' => strip_tags($pfr_name), 
+												'name' => strip_tags($pfr_name),
 												'height' => strip_tags($pfr_height),
 												'weight' => strip_tags($pfr_weight),
 												'college' => trim($college[0]),
 												'number' => $number,
 											);
-											
+
 											printr($d, 0);
-											
-											$wpdb->query(
-											"UPDATE wp_players
-											SET weight = '$info[weight]', height = '$info[height]', college = '$info[college]', number = '$info[number]', pfruri = '$pfr_id'
-											WHERE p_id = '$randomplayer'"
-											);
-											
+
+//											$wpdb->query(
+//											"UPDATE wp_players
+//											SET weight = '$info[weight]', height = '$info[height]', college = '$info[college]', number = '$info[number]', pfruri = '$pfr_id'
+//											WHERE p_id = '$randomplayer'"
+//											);
+
 											else:
-											
+
 											$report_message = $randomplayer." -- ref page not found || ";
 											echo '<script>console.log("'.$randomplayer.' - ref page not found");</script>';
 											echo $report_message;
-											
+
 										endif;
-									
+
 									else:
-									
+
 										$report_message = $randomplayer." -- ref player PFR ID not found || ";
 										echo '<script>console.log("'.$randomplayer.' - ref player PFR ID not found");</script>';
 										echo $report_message;
-										
-									endif;	
+
+									endif;
 									
 								?>
 
@@ -234,39 +237,17 @@ get_header();
 							<div class="widget-body text-center">
 								<?php 
 									
-								// Functions needed to convert the HTML table we get back from PFR into a CSV	
-								function tdrows($elements)
-								{
-								    $str = "";
-								    foreach ($elements as $element) {
-								        $str .= $element->nodeValue . ", ";
-								    }
-								
-								    return $str;
-								}
-								
-								function getdata($contents)
-								{
-								    $DOM = new DOMDocument;
-								    $DOM->loadHTML($contents);
-								
-								    $items = $DOM->getElementsByTagName('tr');
-								
-								    foreach ($items as $node) {
-								        $storedata[] = tdrows($node->childNodes);
-								    }
-								    return $storedata;
-								}
-								
-								$yearclean = array_values($yearsplayed);
-								//printr($yearclean, 0);
+
+
+        // Toggle this value here to set to either all years player played or a simple array of one or a few years.
+								//$yearclean = array_values($yearsplayed);
+                                $yearclean = array(2024);
+								printr($yearclean, 0);
 								
 								$passyards = array();
 								
-								foreach($yearclean as $y){	
-									// Set Boxscore Table from Page	and Year
-									//$y = 2019;
-									
+								foreach($yearclean as $y){
+
 									$htmlgame = '';
 									
 									$htmlgame = file_get_html('https://www.pro-football-reference.com/players/'.$firstInitCap.'/'.$pfr_id.'/gamelog/'.$y.'/');	
@@ -380,22 +361,33 @@ get_header();
 								$json_store = json_encode($playerstats);
 								
 								$destination_folder = $_SERVER['DOCUMENT_ROOT'].'/wp-content/themes/tif-child-bootstrap/pfr-gamelogs';
-							
-								if (file_exists($destination_folder.'/'.$randomplayer.'.json')):
-									$report_message = $randomplayer.' -- file exsists || ';
-									echo '<script>console.log("'.$randomplayer.' - file exsists");</script>';
-									echo $report_message;
-								else:
-									if($json_store):	
-										file_put_contents("$destination_folder/$randomplayer.json", $json_store);
-										$report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
-										echo $json_store;
-										echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
-										echo $report_message;
-									endif;
-								endif;		
 
-								//printr($cleanlabels, 0);		
+
+								if (file_exists($destination_folder.'/'.$randomplayer.'.json')):
+                                    $report_message = $randomplayer.' -- file exsists || ';
+                                    echo '<script>console.log("'.$randomplayer.' - file exsists");</script>';
+                                    echo $report_message;
+								else:
+                                    if($json_store):
+                                        file_put_contents("$destination_folder/$randomplayer.json", $json_store);
+                                        $report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
+                                        echo $json_store;
+                                        echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
+                                        echo $report_message;
+                                    endif;
+								endif;
+
+								// if the 'run' uri value is set to run, run the file anyway...
+                                $m = '_a';
+								if($getrun == 1):
+                                    file_put_contents("$destination_folder/$randomplayer$m.json", $json_store);
+                                    $report_message =  $randomplayer.' -- Added to pfr-gamelogs-- || ';
+                                    echo $json_store;
+                                    echo '<script>console.log("'.$randomplayer.' - added to gamelog");</script>';
+                                    echo $report_message;
+                                endif;
+
+								//printr($cleanlabels, 0);
 								//printr($json_store, 0);	    
 								?>
 							</div>
@@ -405,10 +397,11 @@ get_header();
 					<div class="col-xs-12 left-column">
 						<div class="panel widget">
 							<div class="widget-body text-center">
-								<?php 
+								<?php
+                               printr($playerstats, 0);
 								//printr($dataarray[0], 0);
-								//printr($yearsplayed, 0); 
-								//printr($alldata, 0); 
+								//printr($yearsplayed, 0);
+								printr($alldata, 0);
 								?>
 							</div>
 						</div>
@@ -430,19 +423,20 @@ get_header();
 
 <script>
 
-setTimeout(function(){
-	var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
-    window.location.href = scrapeclick;
- }, 7000);
+    // DISABLE TO STOP AUTO RELOAD
+
+//setTimeout(function(){
+//	var scrapeclick = '/scrape-pro-football-ref/?id=--><?php //echo $nextplayer; ?>//';
+//    window.location.href = scrapeclick;
+// }, 7000);
 
 </script>
 
-<!--
+
 <script>
 	var scrapeclick = '/scrape-pro-football-ref/?id=<?php echo $nextplayer; ?>';
-           console.log(scrapeclick);
-        </script>
--->
+       //    console.log(scrapeclick);
+</script>
 
 
 		

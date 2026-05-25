@@ -1,0 +1,77 @@
+{
+  "season": 2004,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "BUF",
+        "CAR",
+        "NWE",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "DAL",
+        "DET",
+        "MIN",
+        "SEA"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "CHI",
+        "CIN",
+        "KAN",
+        "PHI"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ARI",
+        "BAL",
+        "IND",
+        "NYG"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "HOU",
+        "PIT",
+        "SFO",
+        "WAS"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "CLE",
+        "NOR",
+        "STL",
+        "TAM"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "ATL",
+        "GNB",
+        "JAX",
+        "TEN"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "DEN",
+        "MIA",
+        "OAK",
+        "SDG"
+      ]
+    }
+  ]
+}

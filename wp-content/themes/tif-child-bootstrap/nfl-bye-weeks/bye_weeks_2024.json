@@ -1,0 +1,77 @@
+{
+  "season": 2024,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "DET",
+        "LAC",
+        "PHI",
+        "TEN"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "KAN",
+        "LAR",
+        "MIA",
+        "MIN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CHI",
+        "DAL"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "PIT",
+        "SFO"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "CLE",
+        "GNB",
+        "LVR",
+        "SEA"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "ARI",
+        "CAR",
+        "NYG",
+        "TAM"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "ATL",
+        "BUF",
+        "CIN",
+        "JAX",
+        "NOR",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "BAL",
+        "DEN",
+        "HOU",
+        "IND",
+        "NWE",
+        "WAS"
+      ]
+    }
+  ]
+}

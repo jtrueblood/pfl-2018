@@ -2,7 +2,8 @@
 
 <div class="panel team-hel-panel">
 	<div class="team-helmet widget-header">
-		<img src="/wp-content/uploads/<?php echo $teamid;?>-helmet-full.png" class="widget-bg team-helmet-image">
+
+        <?php echo '<img src="'.get_stylesheet_directory_uri().'/img/helmets/renders/'.$teamid.'-rendered-1-400.png" class="widget-bg team-helmet-image">';?>
 	    <div class="team-name <?php if ($teamnamelong == 'Destruction'){ echo 'wide-team-name'; } ?>">
 	    	<?php
 				

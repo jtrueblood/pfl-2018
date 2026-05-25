@@ -1,0 +1,68 @@
+{
+  "season": 1994,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "ARI",
+        "DAL",
+        "NYG",
+        "PHI"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "DEN",
+        "KAN",
+        "OAK",
+        "SDG"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "CIN",
+        "CLE",
+        "HOU",
+        "PIT"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CHI",
+        "DET",
+        "GNB",
+        "MIN",
+        "SEA",
+        "TAM"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BUF",
+        "MIA",
+        "NWE",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "ATL",
+        "NOR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "IND",
+        "WAS"
+      ]
+    }
+  ]
+}

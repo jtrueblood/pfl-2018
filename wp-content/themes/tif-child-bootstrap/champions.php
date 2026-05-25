@@ -100,13 +100,13 @@
 				<div id="page-title">
 					<?php while (have_posts()) : the_post(); ?>
 						<h1 class="page-header text-bold"><?php the_title();?></h1>
-					<?php endwhile; wp_reset_query(); ?>	
+					<?php endwhile; wp_reset_query(); ?>
 				</div>
 				
 				<!--Page content-->
 				<div id="page-content">
-			
-					<?php
+
+                    <?php
 					$i = 0;
 					$gamereview = get_field('game_review' ); // get all the rows
 					
@@ -126,6 +126,14 @@
 							// get the first row
 						
 							$modulus = 3;
+							$teamaget = get_helmet_name_history_by_team($teama, $theyear);
+							$teamapost = $teamaget['name'];
+							$team_a_helmet = $teamaget['helmet'];
+							//printr($teamaget, 0);
+                            $teambget = get_helmet_name_history_by_team($teamb, $theyear);
+                            $teambpost = $teambget['name'];
+                            $team_b_helmet = $teambget['helmet'];
+                            //printr($teambget, 0);
 						
 							if ($i % $modulus == 0){
 								echo '<div class="row">';
@@ -139,17 +147,17 @@
 										echo '<h3 class="panel-title">'.$theyear.' <i class="fa fa-angle-double-right text-muted"></i> Posse Bowl '.$numeral.'</h3>';
 									echo '</div>';
 									echo '<div class="panel-body">';
-										echo $seeda.'  <span class="text-2x text-bold">'.$teamids[$teama].'</span>  <span class="text-2x text-bold pull-right">'.$scorea.'</span><br>';
-										echo $seedb.'  <span class="text-2x text-thin">'.$teamids[$teamb].'</span>  <span class="text-2x text-thin pull-right">'.$scoreb.'</span>';
+										echo $seeda.'  <span class="text-2x text-bold">'.$teamapost.'</span>  <span class="text-2x text-bold pull-right">'.$scorea.'</span><br>';
+										echo $seedb.'  <span class="text-2x text-thin">'.$teambpost.'</span>  <span class="text-2x text-thin pull-right">'.$scoreb.'</span>';
 									
 									echo '<hr/><h5>Game Details</h5>';
-									echo '<p class="text-dark">';
+									echo '<p class="text-dark posse-bowl-review">';
 										echo $gamereview[$i]['writeup'];
 										echo '<hr/><h5>Boxscores</h5>';
 																				
-											echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$teama.'-bar.png);">';
+											echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$teama.'-helm-right-'.$team_a_helmet.'.png); background-size: 150px; background-repeat: no-repeat; background-position-x: center;">';
 											echo '</div>'; 
-											echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/'.$teamb.'-bar.png);">';
+											echo '<div class="col-xs-12 team-bar" style="background-image:url('.get_stylesheet_directory_uri().'/img/helmets/weekly/'.$teamb.'-helm-left-'.$team_b_helmet.'.png); background-size: 150px; background-repeat: no-repeat; background-position-x: center;">';
 											echo '</div>';
 											
 										
@@ -187,6 +195,26 @@
 							} /* close 'row' every 3rd time through the loop */
 						}
 					} ?>
+
+                    <div class="col-xs-24 col-sm-8">
+                        <?php
+                        $labels = array('Season', 'Numeral', 'Champion', '', 'Runner Up', '');
+                        tablehead('PFL Champions Summary', $labels);
+
+                        foreach ($champions as $key => $value){
+                            $prchamps .='<tr><td class="min-width bord-rgt">'.$value[0].'</td>';
+                            $prchamps .='<td class="min-width text-center bord-rgt">'.$value[1].'</td>';
+                            $prchamps .='<td>('.$value[4].') <strong>'.$teamids[$value[2]].'</strong></td>';
+                            $prchamps .='<td class="min-width bord-rgt">'.$value[3].'</td>';
+                            $prchamps .='<td>('.$value[7].') <strong>'.$teamids[$value[5]].'</strong></td>';
+                            $prchamps .='<td class="min-width bord-rgt">'.$value[6].'</td>';
+                            $prchamps .='</tr>';
+                        }
+                        echo $prchamps;
+
+                        tablefoot('');
+                        ?>
+                    </div>
 					
 
 				</div><!--End page content-->

@@ -1,0 +1,77 @@
+{
+  "season": 2008,
+  "bye_weeks": [
+    {
+      "week": 2,
+      "teams": [
+        "BAL",
+        "HOU"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "DET",
+        "IND",
+        "MIA",
+        "NWE",
+        "NYG",
+        "SEA"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "CLE",
+        "NYJ",
+        "OAK",
+        "STL"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "BUF",
+        "KAN",
+        "PIT",
+        "TEN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "ARI",
+        "ATL",
+        "JAX",
+        "PHI"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "CHI",
+        "DEN",
+        "GNB",
+        "MIN"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CAR",
+        "NOR",
+        "SDG",
+        "SFO"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "CIN",
+        "DAL",
+        "TAM",
+        "WAS"
+      ]
+    }
+  ]
+}

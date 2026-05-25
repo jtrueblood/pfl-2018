@@ -1,0 +1,218 @@
+[
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Cardinals",
+    "player_name": "Zay Jones",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Vikings",
+    "player_name": "J.J. McCarthy",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Vikings",
+    "player_name": "Ben Yurosek",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Commanders",
+    "player_name": "John Bates",
+    "position": "TE",
+    "injury": "Calf, Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Commanders",
+    "player_name": "Noah Brown",
+    "position": "WR",
+    "injury": "Groin, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Commanders",
+    "player_name": "Jayden Daniels",
+    "position": "QB",
+    "injury": "Knee, Not injury related - resting player",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Commanders",
+    "player_name": "Terry McLaurin",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Falcons",
+    "player_name": "Nate Carter",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Falcons",
+    "player_name": "KhaDarel Hodge",
+    "position": "WR",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Chargers",
+    "player_name": "Derius Davis",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Chargers",
+    "player_name": "Will Dissly",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Giants",
+    "player_name": "Graham Gano",
+    "position": "K",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Giants",
+    "player_name": "Tyrone Tracy Jr.",
+    "position": "RB",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Titans",
+    "player_name": "Bryce Oliver",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Buccaneers",
+    "player_name": "Mike Evans",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Lions",
+    "player_name": "Sione Vaki",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Panthers",
+    "player_name": "Xavier Legette",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Panthers",
+    "player_name": "Ja'Tavion Sanders",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Colts",
+    "player_name": "Alec Pierce",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "49ers",
+    "player_name": "Jordan Watkins",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Raiders",
+    "player_name": "Michael Mayer",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Cowboys",
+    "player_name": "CeeDee Lamb",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Jets",
+    "player_name": "Kene Nwangwu",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 4,
+    "team": "Bengals",
+    "player_name": "Noah Fant",
+    "position": "TE",
+    "injury": "Concussion",
+    "game_status": "Out"
+  }
+]

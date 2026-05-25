@@ -1,0 +1,146 @@
+[
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Eagles",
+    "player_name": "Tanner McKee",
+    "position": "QB",
+    "injury": "Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Chiefs",
+    "player_name": "Jalen Royals",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Dolphins",
+    "player_name": "Darren Waller",
+    "position": "TE",
+    "injury": "Hip",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Dolphins",
+    "player_name": "Jaylen Wright",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Buccaneers",
+    "player_name": "Chris Godwin Jr.",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Broncos",
+    "player_name": "Nate Adkins",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "49ers",
+    "player_name": "Jordan James",
+    "position": "RB",
+    "injury": "Finger",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "49ers",
+    "player_name": "Jordan Watkins",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Seahawks",
+    "player_name": "Jake Bobo",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Seahawks",
+    "player_name": "Dareke Young",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Lions",
+    "player_name": "Sione Vaki",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Texans",
+    "player_name": "Braxton Berrios",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Texans",
+    "player_name": "Christian Kirk",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Ravens",
+    "player_name": "Isaiah Likely",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Bills",
+    "player_name": "Tyler Bass",
+    "position": "K",
+    "injury": "Hip, Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 1,
+    "team": "Vikings",
+    "player_name": "Zavier Scott",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  }
+]

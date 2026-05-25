@@ -14,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <title><?php wp_title(' | '.$playerid, true, 'right'); ?></title>
 	<link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
-	
+    <link rel="stylesheet" href="https://use.typekit.net/bco3uet.css">
 	
 	<!--[if IE 8]>
 	<script type="text/javascript">
@@ -28,7 +28,7 @@
 	<script src="<?php bloginfo('template_directory');?>/js/respond/respond.js" type="text/javascript"></script>
 	<![endif]-->
 
-	<?php wp_head(); ?>  
+	<?php wp_head(); ?>
 
 	<!-- provides page name and appends as body class -->
 	<?php 

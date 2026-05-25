@@ -60,51 +60,90 @@ function get_head_to($arr){
 
 if(isset($ets_vs)){
 	$ets = get_head_to($ets_vs);
+	$matrix_build['ETS'] = $ets['loss'].'-'.$ets['win'];
 }
 if(isset($pep_vs)){
 	$pep = get_head_to($pep_vs);
+    $matrix_build['PEP'] = $pep['loss'].'-'.$pep['win'];
 }
 if(isset($wrz_vs)){
 	$wrz = get_head_to($wrz_vs);
+    $matrix_build['WRZ'] = $wrz['loss'].'-'.$wrz['win'];
 }
 if(isset($cmn_vs)){
 	$cmn = get_head_to($cmn_vs);
+    $matrix_build['CMN'] = $cmn['loss'].'-'.$cmn['win'];
 }
 if(isset($bul_vs)){
 	$bul = get_head_to($bul_vs);
+    $matrix_build['BUL'] = $bul['loss'].'-'.$bul['win'];
 }
 if(isset($snr_vs)){
 	$snr = get_head_to($snr_vs);
+    $matrix_build['SNR'] = $snr['loss'].'-'.$snr['win'];
 }
 if(isset($tsg_vs)){
 	$tsg = get_head_to($tsg_vs);
+    $matrix_build['TSG'] = $tsg['loss'].'-'.$tsg['win'];
 }
 if(isset($rbs_vs)){
 	$rbs = get_head_to($rbs_vs);
+    $matrix_build['RBS'] = $rbs['loss'].'-'.$rbs['win'];
 }
 if(isset($bst_vs)){
 	$bst = get_head_to($bst_vs);
+    $matrix_build['BST'] = $bst['loss'].'-'.$bst['win'];
 }
 if(isset($son_vs)){
 	$son = get_head_to($son_vs);
+    $matrix_build['SON'] = $son['loss'].'-'.$son['win'];
 }
 if(isset($phr_vs)){
 	$phr = get_head_to($phr_vs);
+    $matrix_build['PHR'] = $phr['loss'].'-'.$phr['win'];
 }
 if(isset($hat_vs)){
 	$hat = get_head_to($hat_vs);
+    $matrix_build['HAT'] = $hat['loss'].'-'.$hat['win'];
 }
 if(isset($atk_vs)){
 	$atk = get_head_to($atk_vs);
+    $matrix_build['ATK'] = $atk['loss'].'-'.$atk['win'];
 }
 if(isset($max_vs)){
 	$max = get_head_to($max_vs);
+    $matrix_build['MAX'] = $max['loss'].'-'.$max['win'];
 }
 if(isset($dst_vs)){
 	$dst = get_head_to($dst_vs);
+    $matrix_build['DST'] = $dst['loss'].'-'.$dst['win'];
 }
 
-//printr($head, 0);
+//printr($matrix_build, 0);
+
+// the function below and $matrix_build var above are for storing head to head records in a table to be used on the 'head to head matrix' page.
+//  The head to head tables on the team pages do not require the $matrix_build or the insert_head_table() function.
+$getjson = json_encode($matrix_build);
+
+function insert_head_table($team, $input){
+    global $wpdb;
+    $wpdb->query("delete from wp_head_matrix where teamid = '$team'");
+    $wpdb->insert(
+        'wp_head_matrix',
+        array(
+           'teamid' => $team,
+            'headdata' => $input
+        ),
+        array(
+            '%s','%s'
+        )
+    );
+
+}
+
+$put = insert_head_table($teamid, $getjson);
+
+
 
 ?>	
 <div class="panel">
@@ -112,7 +151,6 @@ if(isset($dst_vs)){
     	<h3 class="panel-title">Head to Head Record <small>(regular season)</small></h3>
 	</div>
 	<div class="panel-body text-center probowl">
-		
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>

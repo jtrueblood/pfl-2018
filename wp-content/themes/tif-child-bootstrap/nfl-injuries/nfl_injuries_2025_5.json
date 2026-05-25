@@ -1,0 +1,227 @@
+[
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "49ers",
+    "player_name": "Jauan Jennings",
+    "position": "WR",
+    "injury": "Ankle, Rib",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "49ers",
+    "player_name": "Ricky Pearsall",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "49ers",
+    "player_name": "Brock Purdy",
+    "position": "QB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "49ers",
+    "player_name": "Jordan Watkins",
+    "position": "WR",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Rams",
+    "player_name": "Tyler Higbee",
+    "position": "TE",
+    "injury": "Hip",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Vikings",
+    "player_name": "J.J. McCarthy",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Broncos",
+    "player_name": "Lucas Krull",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Cowboys",
+    "player_name": "CeeDee Lamb",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Cowboys",
+    "player_name": "KaVontae Turpin",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Jets",
+    "player_name": "Kene Nwangwu",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Dolphins",
+    "player_name": "Cedrick Wilson Jr.",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Panthers",
+    "player_name": "Chuba Hubbard",
+    "position": "RB",
+    "injury": "Calf",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Panthers",
+    "player_name": "Ja'Tavion Sanders",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Ravens",
+    "player_name": "Lamar Jackson",
+    "position": "QB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Colts",
+    "player_name": "Tyler Goodson",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Colts",
+    "player_name": "Alec Pierce",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Giants",
+    "player_name": "Tyrone Tracy Jr.",
+    "position": "RB",
+    "injury": "Shoulder",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Saints",
+    "player_name": "Trey Palmer",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Buccaneers",
+    "player_name": "Mike Evans",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Buccaneers",
+    "player_name": "Bucky Irving",
+    "position": "RB",
+    "injury": "Foot, Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Titans",
+    "player_name": "Bryce Oliver",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Lions",
+    "player_name": "Sione Vaki",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Commanders",
+    "player_name": "Noah Brown",
+    "position": "WR",
+    "injury": "Groin, Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Commanders",
+    "player_name": "Terry McLaurin",
+    "position": "WR",
+    "injury": "Quadricep",
+    "game_status": "Out"
+  },
+  {
+    "year": 2025,
+    "week": 5,
+    "team": "Chargers",
+    "player_name": "Derius Davis",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  }
+]

@@ -1,149 +1,118 @@
 <?php
 /*
- * Template Name: Create New Player
- * Description: Used for creatibng a new player from the MFL API. Pass in the MFL player ID into the form field
+ * Template Name: Kicker Draft
+ * Description: Stuff Goes Here
  */
+
+// IDEAS:  1. Scorigami checking finction.  Pass game id to see if the game is a scorigami.  '2010ETSWRZ'.  Would need so save the event to a db 'wp_check_scorigami'
+// Would also need to step through each week to save historical data, then make a function that checks it moving forward.
  ?>
 
-<!-- In Dec of 2017 this template was switched over to pull data from mysql not from cached files.  -->
-<!-- Make the required arrays and cached files availible on the page -->
-<?php 
-$season = date("Y");
+<?php get_header();
 
-$playerassoc = get_players_assoc();
+$seasons = the_seasons();
+$teams = get_teams();
+$playerid = $_GET['id'];
+$season = $_GET['season'];
+$weeks = array('01','02','03','04','05','06','07','08','09','10','11','12','13','14');
+$weekids = the_weeks();
 
-	
-?>
 
-<?php get_header(); ?>
+//printr($playersassoc, 0);
 
+ ?>
 <div class="boxed">
-			
-			<!--CONTENT CONTAINER-->
-			<div id="content-container">
-				
-				<div id="page-title">
-					<?php while (have_posts()) : the_post(); ?>
-						<h1 class="page-header text-bold"></h1>
-					<?php endwhile; wp_reset_query(); ?>	
-				</div>
-				
-				<!--Page content-->
-				<div id="page-content">
-					
-					
-						
-						<div class="panel panel-bordered panel-light">
-							<div class="panel-heading">
-								<h3 class="panel-title">Create New Player</h3>
-							</div>
-								<div class="panel-body">
-									<div class="col-xs-24">
-										<p><small>Check for player above and if they do not exist enter MFL ID below.</small></p>	
-										<form action="" method="post">
+    <div style="background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 32px; margin: 32px auto; max-width: 1100px;">
+    <h2>Average Points Against Per Game by Team and Season</h2>
+    <div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Season</th>
+                <th>Team Name</th>
+                <th>Avg Points Against Per Game</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php
+        $all_standings = get_all_standings();
+        $rows = [];
 
-											MFL ID: <input type="text" name="mflid" /><br>
-											<br>
-											<input type="submit" />
-											
-											
-										</form>
-										<p><small>Year and possibly league ID value needs to be updated for function get_mfl_player_details()</small></p>
-									</div>
-									
-									<div class="col-xs-24">
-										
-										
-										<?php 
-											if ( isset( $_POST['mflid'] ) ){
-												
-												$form_mfl_id = 	$_POST['mflid'];
-												//echo $form_mfl_id;
-												$mfl_data = get_mfl_player_details($form_mfl_id);
-												printr($mfl_data, 0);
-												
-												$name = $mfl_data['playerProfile']['name'];
-												$xname = explode(',', $name);
-												$xxname = explode(' ', $xname[1]);
-												
-												$draftyear = date('Y');
-												
-												$first = $xxname[1];
-												$last = $xname[0];
-												$position = $xxname[3];
-												$justfour = substr($last, 0, 4);
-												
-												$themflid = $mfl_data['playerProfile']['player']['id']; 
-												$weight = $mfl_data['playerProfile']['player']['weight'];
-												$dob = $mfl_data['playerProfile']['player']['dob']; 
-												$college = $mfl_data['college'];
-												$pflid = $draftyear.$justfour.$position;
-												$height = $mfl_data['playerProfile']['player']['height'];
-																								
-												$insertplayer = array(
-													'p_id' => $pflid,
-													'playerFirst' => ltrim($first),
-													'playerLast' => $last,
-													'position' => $position,
-													'rookie' => $draftyear,
-													'mflid' => $themflid,	
-													'height' => $height,
-													'weight' => $weight,
-													'college' => $for_college,
-													'birthdate' => $dob,
-													'number' => '',
-													'pfruri' => '',
-													'pfrcurl' => '',
-													'nickname' => ''
-												);
-												
-												//var_dump($covheight);
-												//printr($explode, 0);
-	
+        foreach ($all_standings as $season => $teams) {
+            if ($season == '1991') continue; // Skip 1991 season
+            foreach ($teams as $team) {
+                $teamname = isset($team['teamname']) ? $team['teamname'] : '';
+                $ptsvs = isset($team['ptsvs']) ? $team['ptsvs'] : 0;
+                $win = isset($team['win']) ? $team['win'] : 0;
+                $loss = isset($team['loss']) ? $team['loss'] : 0;
+                $games = $win + $loss;
+                $avg_points_against = $games > 0 ? $ptsvs / $games : null;
+                $rows[] = [
+                    'season' => $season,
+                    'teamname' => $teamname,
+                    'avg' => $avg_points_against
+                ];
+            }
+        }
 
-												if(isset($insertplayer)){
-													createnewplayer($insertplayer);
-													printr($insertplayer, 0);
-												}
-											
+        // Sort by avg ascending, treating null as highest
+        usort($rows, function($a, $b) {
+            if ($a['avg'] === null) return 1;
+            if ($b['avg'] === null) return -1;
+            return $a['avg'] <=> $b['avg'];
+        });
 
-										     } ?>
-										     
-									</div>
-									
-								
-								</div>
-							
-						</div>
-						<?php 
-							echo '<h3><a href="'.$pfrlink.'" target="_blank">Pro Football Reference Link</a></h3>';
-							printr($insertplayer, 0); ?>
-<!--
-						<?php
-						//$mflid = '14803';
-						$testplayer = get_mfl_player_details(14803);
-						printr($testplayer, 0);						
-						?>
--->
+        foreach ($rows as $row) {
+            echo '<tr>';
+            echo '<td>' . htmlspecialchars($row['season']) . '</td>';
+            echo '<td>' . htmlspecialchars($row['teamname']) . '</td>';
+            echo '<td>' . ($row['avg'] !== null ? number_format($row['avg'], 2) : 'N/A') . '</td>';
+            echo '</tr>';
+        }
+        ?>
+        </tbody>
+    </table>
+    </div>
+    </div>
 
-						
-			
-											
-				</div><!--End page content-->
+        <!--CONTENT CONTAINER-->
+        <div id="content-container">
 
-			</div><!--END CONTENT CONTAINER-->
+            <!--Page content-->
 
 
-		<?php include_once('main-nav.php'); ?>
-		<?php include_once('aside.php'); ?>
+    </div><!--End page content-->
 
-		</div>
-</div> 
+</div><!--END CONTENT CONTAINER-->
 
-<?php session_destroy(); ?>
-		
-</div>
+
+<?php include_once('main-nav.php'); ?>
+<?php include_once('aside.php'); ?>
+
 </div>
 
+    <?php
+    $jusplayerids = just_player_ids();
+    $currentid = array_search($playerid, $jusplayerids);
+    $nextplayer = $jusplayerids[$currentid + 1];
+    $holeplayer = $jusplayerids[$currentid + 2];
+    ?>
+
+    <script>
+
+        // DISABLE TO STOP AUTO RELOAD
+
+        //setTimeout(function(){
+        //	var reloadpage = '/build-something/?id=<?php //echo $nextplayer; ?>//';
+        //    window.location.href = reloadpage;
+        // }, 3000);
+
+    </script>
+
+
+    <script>
+        var reloadpage = '/build-something/?id=<?php echo $nextplayer; ?>';
+        console.log(reloadpage);
+    </script>
 
 <?php get_footer(); ?>

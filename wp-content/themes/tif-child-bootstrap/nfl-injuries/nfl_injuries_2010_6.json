@@ -1,0 +1,146 @@
+[
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Saints",
+    "player_name": "Reggie Bush",
+    "position": "RB",
+    "injury": "Fibula",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Saints",
+    "player_name": "Pierre Thomas",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Packers",
+    "player_name": "Jermichael Finley",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Giants",
+    "player_name": "Victor Cruz",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Giants",
+    "player_name": "Madison Hedgecock",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Redskins",
+    "player_name": "Clinton Portis",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Chargers",
+    "player_name": "Legedu Naanee",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Ravens",
+    "player_name": "Donte' Stallworth",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Patriots",
+    "player_name": "Fred Taylor",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Raiders",
+    "player_name": "Michael Bennett",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Niners",
+    "player_name": "Delanie Walker",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Browns",
+    "player_name": "Jake Delhomme",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Browns",
+    "player_name": "Seneca Wallace",
+    "position": "QB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Titans",
+    "player_name": "Justin Gage",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2010,
+    "week": 6,
+    "team": "Jaguars",
+    "player_name": "Brock Bolen",
+    "position": "RB",
+    "injury": "Groin",
+    "game_status": "Out"
+  }
+]

@@ -13,6 +13,7 @@ function get_week_stand_this_team($teamarray){
 			$wins += $value['win'];
 			$loss += $value['loss'];
 			$games = $wins + $loss;
+			$division = $value['division'];
 			$points += $value['points'];
 			$ppg = $points / $games;
 			$vspoints += $value['vspoints'];
@@ -22,7 +23,7 @@ function get_week_stand_this_team($teamarray){
 			
 			$cumweek = array(	
 				'team' => $value['teamid'],
-				'div' => $value['division'],
+				'div' => $division,
 				'win' => $wins,
 				'loss' => $loss,
 				'per' => $wins / $games,
@@ -46,12 +47,14 @@ foreach ($teamlist as $key => $value){
 		$standingarray[$key] = $get;
 	}
 }
-//printr($standingarray, 0);
+
 
 					
 foreach($standingarray as $key => $item){
    $arr_resort[$item['div']][$key] = $item;
 }
+
+//printr($arr_resort, 0);
 
 $pfl = $arr_resort['PFL'];
 $egad = $arr_resort['EGAD'];
@@ -65,28 +68,28 @@ function sort_by_wins_points($array){
 	return $array;
 }
 
-if(isset($pfl)){
+if($pfl){
 	$print_pfl = sort_by_wins_points($pfl);
 	$arr_resort_new['PFL'] = $print_pfl; 
 	//printr($print_pfl, 0);
 }
-if(isset($egad)){
+if($egad){
 	$print_egad = sort_by_wins_points($egad);
 	$arr_resort_new['EGAD'] = $print_egad;
 	//printr($print_egad, 0);
 }
-if(isset($dgas)){
+if($dgas){
 	$print_dgas = sort_by_wins_points($dgas);
 	$arr_resort_new['DGAS'] = $print_dgas;
 	//printr($print_dgas, 0);
 }
-if(isset($mgac)){
+if($mgac){
 	$print_mgac = sort_by_wins_points($mgac);
 	$arr_resort_new['MGAC'] = $print_mgac;
 	//printr($print_mgac, 0);
 }
 
-
+//printr($arr_resort, 0);
 
 ?>
 

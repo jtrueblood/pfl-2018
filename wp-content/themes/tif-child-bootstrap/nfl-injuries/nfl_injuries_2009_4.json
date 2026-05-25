@@ -1,0 +1,155 @@
+[
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Giants",
+    "player_name": "Domenik Hixon",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Giants",
+    "player_name": "D.J. Ware",
+    "position": "RB",
+    "injury": "Elbow",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Saints",
+    "player_name": "Mike Bell",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Saints",
+    "player_name": "Darnell Dinkins",
+    "position": "TE",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Steelers",
+    "player_name": "David Johnson",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Steelers",
+    "player_name": "Willie Parker",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Niners",
+    "player_name": "Frank Gore",
+    "position": "RB",
+    "injury": "Ankle, Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Browns",
+    "player_name": "Phil Dawson",
+    "position": "K",
+    "injury": "right Calf",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Browns",
+    "player_name": "Jamal Lewis",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Seahawks",
+    "player_name": "Matt Hasselbeck",
+    "position": "QB",
+    "injury": "Rib",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Colts",
+    "player_name": "Anthony Gonzalez",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Raiders",
+    "player_name": "Nick Miller",
+    "position": "WR",
+    "injury": "Shin",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Raiders",
+    "player_name": "Chaz Schilens",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Texans",
+    "player_name": "Anthony Hill",
+    "position": "TE",
+    "injury": "Illness",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Cowboys",
+    "player_name": "Felix Jones",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Packers",
+    "player_name": "Brandon Jackson",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2009,
+    "week": 4,
+    "team": "Vikings",
+    "player_name": "Darius Reynaud",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  }
+]

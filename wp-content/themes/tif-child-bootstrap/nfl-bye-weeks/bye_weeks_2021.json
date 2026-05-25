@@ -1,0 +1,82 @@
+{
+  "season": 2021,
+  "bye_weeks": [
+    {
+      "week": 6,
+      "teams": [
+        "ATL",
+        "NOR",
+        "NYJ",
+        "SFO"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BUF",
+        "DAL",
+        "JAX",
+        "LAC",
+        "MIN",
+        "PIT"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "BAL",
+        "LVR"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "DET",
+        "SEA",
+        "TAM",
+        "WAS"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "CHI",
+        "CIN",
+        "HOU",
+        "NYG"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "DEN",
+        "LAR"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "ARI",
+        "KAN"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "CAR",
+        "CLE",
+        "GNB",
+        "TEN"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "IND",
+        "MIA",
+        "NWE",
+        "PHI"
+      ]
+    }
+  ]
+}

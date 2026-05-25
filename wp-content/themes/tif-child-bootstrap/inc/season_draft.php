@@ -4,15 +4,15 @@
 		<div id="seasondraft">
 		<?php
 			
-			$draft = get_drafts_by_year($year); 
-			//printr($draft, 0);	
-			
-			$labels = array('', 'Pick', 'Team', 'Selection', 'Orig' );	
-			tablehead($year.' Draft', $labels);	
-			
+			$draft = get_drafts_by_year($year);
+			//printr($draft, 0);
+
+			$labels = array('', 'Pick', 'Team', 'Selection', 'Orig' );
+			tablehead($year.' Draft', $labels);
+
 			foreach ($draft as $key => $value){
-				
-				if($setround != $value['round']){	
+
+				if($setround != $value['round']){
 					$draftprint .='<tr><td class="min-width text-center">'.$value['round'].'</td>';
 				} else  {
 					$draftprint .='<tr><td class="min-width text-center"></td>';
@@ -26,14 +26,15 @@
 					$draftprint .='<td class="min-width"></td></tr>';
 				}
 				$setround = $value['round'];
+                $draftprint .='</td></tr>';
 			}
-			echo '<tr></tr>';
-			
+
 			echo $draftprint;
-			
-			tablefoot('<i class="Footer Label');		
+
+			tablefoot('');
 			?>
-		</div>
-	
-	</div>
+
+    </div>
+
+</div>
 </div>

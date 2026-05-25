@@ -108,7 +108,12 @@
 					
 					if ($i % $modulus == 0){
 						echo '<div class="row">';
-					}	
+					}
+
+					$wins = $career['wins'];
+                    $loss = $career['loss'];
+                    $winper = $wins / ($wins + $loss);
+
 					
 					echo '<div class="col-sm-12 col-lg-8 eq-box-sm">';
 						echo '<div class="panel panel-bordered panel-dark">';
@@ -145,6 +150,10 @@
 									<td class="text-left">Career High</td>
 									<td><span class="text-bold"><?php echo $career['high']; ?></span></td>
 								</tr>
+                                <tr>
+                                    <td class="text-left">Reg Season Record</td>
+                                    <td><span class="text-bold"><?php echo $wins.' - '.$loss.' ('.number_format($winper, 3).')'; ?></span></td>
+                                </tr>
 								<?php if(!empty($printawards)){
 									asort($printawards);
 									

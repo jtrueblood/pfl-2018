@@ -1,0 +1,191 @@
+[
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Steelers",
+    "player_name": "Arnaz Battle",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Steelers",
+    "player_name": "Jonathan Dwyer",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Steelers",
+    "player_name": "Emmanuel Sanders",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Saints",
+    "player_name": "Mark Ingram",
+    "position": "RB",
+    "injury": "Toe",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Chiefs",
+    "player_name": "Kyle Orton",
+    "position": "QB",
+    "injury": "right Finger",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Jason Campbell",
+    "position": "QB",
+    "injury": "Collarbone",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Jacoby Ford",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Taiwan Jones",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Darren McFadden",
+    "position": "RB",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Raiders",
+    "player_name": "Denarius Moore",
+    "position": "WR",
+    "injury": "Foot",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Packers",
+    "player_name": "James Starks",
+    "position": "RB",
+    "injury": "Knee, Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Bills",
+    "player_name": "Scott Chandler",
+    "position": "TE",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Bills",
+    "player_name": "Rian Lindell",
+    "position": "K",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Cowboys",
+    "player_name": "Martellus Bennett",
+    "position": "TE",
+    "injury": "Ribs",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Cowboys",
+    "player_name": "Jon Kitna",
+    "position": "QB",
+    "injury": "Back",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Texans",
+    "player_name": "Andre Johnson",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Bears",
+    "player_name": "Jay Cutler",
+    "position": "QB",
+    "injury": "right Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Bears",
+    "player_name": "Matt Forte",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Colts",
+    "player_name": "Peyton Manning",
+    "position": "QB",
+    "injury": "Neck",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Rams",
+    "player_name": "A.J. Feeley",
+    "position": "QB",
+    "injury": "right Thumb",
+    "game_status": "Out"
+  },
+  {
+    "year": 2011,
+    "week": 14,
+    "team": "Rams",
+    "player_name": "Quinn Porter",
+    "position": "RB",
+    "injury": "Abdomen",
+    "game_status": "Out"
+  }
+]

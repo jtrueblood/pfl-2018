@@ -4,7 +4,6 @@
  * Description: Homepage for the PFL Website
  */
 
-
 /*
 $url1=$_SERVER['REQUEST_URI'];
 header("Refresh: 5; URL=$url1");
@@ -36,6 +35,8 @@ $last = $featuredplayer[1];
 $position = $featuredplayer[2];
 $rookie = $featuredplayer[3];
 $mflid = $featuredplayer[4];
+$name_merge = $last.', '.$first;
+
 
 insert_wp_career_leaders($randomplayer);
 $testprint = insert_wp_season_leaders($randomplayer);
@@ -56,8 +57,6 @@ else {
 */
   
 }
-
-$randomplayerdata = set_randomplayerdata_trans();
 
 /*
 $teamget = get_team_results('PEP');
@@ -91,10 +90,6 @@ get_header();
 //start the loop
 //build player id array. 
 
-
-
-
-
 ?>
 
 <div class="boxed">
@@ -106,7 +101,7 @@ get_header();
 				<div id="page-title">
 					<?php while (have_posts()) : the_post(); ?>
 						<h1 class="page-header text-bold"><?php the_title();?></h1>
-					<?php endwhile; wp_reset_query(); ?>	
+					<?php endwhile; wp_reset_query(); ?>
 				</div>
 				
 				<!--Page content-->
@@ -144,22 +139,65 @@ get_header();
 						
 						
 						<div class="panel panel-bordered panel-light">
-							<div class="panel-heading">
-								<h3 class="panel-title">Scripts</h3>
-							</div>
-								<div class="panel-body">
-									<div class="col-xs-24">
-										<a href="/create-new-player">Create New Player</a><br>	
-										<a href="/builds/build-mfl-weekly/?Y=2019&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
-										<a href="/builds/build-drafts/">Import Draft</a><br>	
-										<a href="/python-scripts">Sportsrefernce API Python Scripts</a><br>
-									</div>	
-								</div>
-							
+<div class="panel-heading">
+    <h3 class="panel-title">PHP Scripts</h3>
+</div>
+    <div class="panel-body">
+        <div class="col-xs-24">
+            <a href="https://api.myfantasyleague.com/2024/login?USERNAME=jtrueblood&PASSWORD=eur0TR@SH!&XML=1" target="_blank">Authenticate MFL API</a><br>
+            <a href="/builds/build-drafts/?SQL=0&Y=2024">Import Draft</a><br>
+            <a href="/create-new-player">Create New Player</a><br>
+            <a href="/scrape-pfr-for-numbers/?id=1991AndePK">Scrape for Player Numbers</a><br>
+            <a href="/builds/build-mfl-weekly/?SET=0&Y=2024&W=1&SQL=false&CURL=false">Run MFL Weekly Data Insert</a><br>
+            <a href="/get-weekly-rosters-mfl/?Y=2024&W=1">Get Weekly Rosters from MFL</a><br>
+            <a href="/player-ot-score/?SQL=0">Build Overtime Scores from MFL</a><br>
+            <a href="/get-player-scores-for-playoffs/?SQL=0&Y=2022&W=15&S1=XXX&S2=XXX&S3=XXX&S4=XXX">Build Playoff Data 15 & 16</a><br>
+            <a href="/team-rosters/?season=2024">Create Full Rosters by Season</a><br>
+        </div>
+    </div>
+
+<div class="panel-heading">
+    <h3 class="panel-title">Python Scripts</h3>
+</div>
+<div class="panel-body">
+    <div class="col-xs-24">
+<h5>Navigate to Python Scripts Directory</h5>
+<pre>cd /Users/jamietrueblood/Local\ Sites/posse-football-league/app/public/wp-content/themes/tif-child-bootstrap/pythonscripts</pre>
+<h5>Get Image for Player from Google Images</h5> <!--python script -->
+<pre>python3 getpflimage.py</pre>
+<h5>ESPN API For NFL Player Game Stats</h5>
+<pre>python3 getplayernfldata.py "Josh Allen" 2025 "1,2,3" No</pre>
+<h5>Download all MFL Transactions for year to json</h5>
+<pre>getmfltransactions.py 2025</pre>
+<h5>Find and Replace Player ID -- used to fix errors</h5>
+<pre>replace_player_id.py</pre>
+<h5>Get Player Boxscore from Database / Make Corrections</h5>
+<pre>python3 player_boxscore.py 1993BoniPK 1995 2</pre>
+<h5>Insert single player game data into database</h5>
+<pre># Using PFL Player ID
+python3 build-single-player-mfl.py 2018AlleQB 2024 13
+# Using player name
+python3 build-single-player-mfl.py "Josh Allen" 2024 13
+# Using MFL ID
+python3 build-single-player-mfl.py 14477 2024 13</pre>
+<h5>Insert end of season standings from week 14 to standYEAR</h5>
+<pre># You will still need to manually update playoff seeds
+python3 update-standings-table.py 2025</pre>
+<h5>Import from Season Leaders into Probowl Boxscore</h5>
+<pre>python3 insert_probowl_leaders.py 2025</pre>
+<h5>Get Draft json data from MFL</h5>
+<pre>python3 fetch_mfl_drafts.py --all</pre>
+<h5>Analyze Draft Year</h5>
+<pre>python3 analyze_draft_db.py 1998</pre>
+
+
+
+
+
+</div>
+                            </div>
 						</div>
-						
-						
-						
+
 						<div class="panel panel-bordered panel-light">
 							<div class="panel-heading">
 								<h3 class="panel-title">Quick Links</h3>
@@ -169,7 +207,15 @@ get_header();
 										<a href="https://www.pro-football-reference.com/" target="_blank">Pro Football Reference</a><br>
 										<a href="https://www.fantasypros.com/" target="_blank">Fantasy Pros</a><br>
 										<a href="https://docs.google.com/document/d/1D8VZPOBn04zVXYQB1gr-xb1NDe2nYLn9Rqgl4oZVhXI/edit?usp=sharing" target="_blank">PFL Rules - Rev 2019</a><br>
-										<hr>
+										<a href="https://wrapbootstrap.com/theme/nifty-responsive-admin-template-WB0048JF7" target="_blank">Nifty for Bootstrap Theme</a><br>
+                                        <a href="https://preview.themeon.net/nifty/index.html" target="_blank">Nifty Theme Demo</a>
+
+                                        <hr>
+                                        <a href="https://www48.myfantasyleague.com/2025/home/38954#0" target="_blank">MFL Website 2025</a><br>
+                                        <a href="https://www48.myfantasyleague.com/2024/home/38954#0" target="_blank">MFL Website 2024</a><br>
+                                        <a href="https://www48.myfantasyleague.com/2023/home/38954#0" target="_blank">MFL Website 2023</a><br>
+                                        <a href="https://www48.myfantasyleague.com/2022/home/38954#0" target="_blank">MFL Website 2022</a><br>
+                                        <a href="https://www48.myfantasyleague.com/2021/home/38954#0" target="_blank">MFL Website 2021</a><br>
 										<a href="https://www58.myfantasyleague.com/2020/home/38954#0" target="_blank">MFL Website 2020</a><br>
 										<a href="http://www58.myfantasyleague.com/2019/home/38954#0" target="_blank">MFL Website 2019</a><br>
 										<a href="http://www58.myfantasyleague.com/2018/home/38954#0" target="_blank">MFL Website 2018</a><br>
@@ -187,7 +233,21 @@ get_header();
 					
 					
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
-							<div class="panel panel-bordered panel-light">
+                            <div class="panel panel-bordered panel-light">
+                                <div class="panel-body">
+
+<!--                                    --><?php //alter_player_table_columns ($randomplayer); ?>
+                                    <?php $mfrline = get_pfr_linescores_by_player($randomplayer);
+                                            printr($mfrline, 0);
+                                    ?>
+
+                                    <?php while (have_posts()) : the_post(); ?>
+                                        <p><?php the_content();?></p>
+                                    <?php endwhile; wp_reset_query(); ?>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-bordered panel-light">
 								<div class="panel-heading">
 									<h3 class="panel-title">Basic Info</h3>
 								</div>
@@ -197,56 +257,37 @@ get_header();
 								</div>
 																
 							</div>
-					</div>
-					
-					<!-- PLAYER SPOTLIGHT -->
-					<div class="col-xs-24 col-sm-4 left-column">
-						<div class="panel widget" >
-							
-							<div class="widget-header" style="min-height: 200px;" >
-								
-								<?php 
-									$ifimage = check_if_image($randomplayer);
 
-									if($ifimage == 1){
-										$playerimgobj = get_attachment_url_by_slug($randomplayer);
-										$imgid =  attachment_url_to_postid( $playerimgobj );
-										$image_attributes = wp_get_attachment_image_src($imgid);
-										
-										echo '<img src="'.$image_attributes[0].'" class="widget-bg img-responsive">';
-									} else {
-										echo '<img src="'.get_stylesheet_directory_uri().'/img/players/'.$randomplayer.'.jpg" class="widget-bg img-responsive">';
-									}
-								?>
-								
-							</div>
-							<div class="widget-body text-center">
-								<?php 
-									if($ifimage == 1){	
-										echo $ifimage.' source: /wp-content/uploads/';
-									} else {
-										echo $ifimage.' source: /img/players/';
-									}
-									?>
-								<img alt="Profile Picture" class="widget-img img-circle img-border-light" src="<?php echo get_stylesheet_directory_uri();?>/img/pos-<?php echo $position; ?>.jpg">
-								<h3 class="mar-no"><a href="/player/?id=<?php echo $randomplayer;?>"><?php echo $first.' '.$last; ?></a></h3>
-								<p></p>
-<!-- 								<h4 class="mar-no text-sm">	text could go here </h4> -->
-							</div>
-						</div>
+
 					</div>
-					
-					<div class="col-xs-12 col-sm-6 eq-box-sm">
-						<div class="panel panel-bordered panel-light">
-							<div class="panel-body">
-								<?php while (have_posts()) : the_post(); ?>
-								<p><?php the_content();?></p>
-								<?php endwhile; wp_reset_query(); ?>
-							</div>
-						</div>
-					</div>
+
+                    <!-- PLAYER SUPERCARD -->
+                    <div class="col-xs-12 col-sm-12 eq-box-md">
+                        <?php $supercard = supercard($randomplayer); ?>
+                    </div>
+
+                    <!-- PLAYER MFL TRANSACTIONS -->
+                    <div class="col-xs-12 col-sm-8 eq-box-md">
+                        <div class="panel panel-bordered panel-light">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">MFL Player Transactions</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>2011 - Present.  Must export json of Transactions from MFL api each season and save to 'mfl-transactions' directory.</p>
+                                <?php
+                                $printit = new_mfl_transactions($randomplayer);
+                                $removeempty = array_filter($printit);
+                                if($removeempty):
+                                    printr($removeempty, 0);
+                                else:
+                                    echo '<h4>No MFL Transaction Data Found</h4>';
+                                endif;
+                                ?>
+                            </div>
+                        </div>
+                    </div>
 							
-					<!-- PLAYER SPOTLIGHT -->
+					<!-- MFL DATA CURL -->
 					<div class="col-xs-24 col-sm-6 left-column">
 						<div class="panel widget">
 							<div class="widget-body text-center">
@@ -374,7 +415,7 @@ get_header();
 					
 					</div>
 					
-				</div>
+
 				<!-- THE ROW -->
 				<div class="row">
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
@@ -390,6 +431,11 @@ get_header();
 										echo '<p>displays games in a row played by a player.  Excludes bye weeks.</p>';
 											$gamestreak = get_player_game_streak($randomplayer); 
 											printr($gamestreak, 0);
+
+                                        echo '<p>get_player_team_games($playerid)</p>';
+                                        echo '<p>Returns an array of games played for a specific team by the player</p>';
+                                            $playerteamcount = get_player_team_games($randomplayer);
+                                            printr($playerteamcount, 0);
 										
 										echo '<p>get_player_record($playerid);</p>';
 										echo '<p>displays just the teams that the player played for by weekid => ETS</p>';
@@ -525,6 +571,8 @@ get_header();
 									<p>get_player_career_stats($pid);</p>
 							<?php $career = get_player_career_stats($randomplayer); 
 								printr($career, 0);
+								$careerpts = $career['points'];
+								echo 'Career Points: '.$careerpts;
 							?>
 							
 								</div>
@@ -565,7 +613,11 @@ get_header();
 							
 								</div>
 							</div>
+
+
+
 					</div>
+
 
 					
 				</div>

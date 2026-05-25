@@ -1,0 +1,115 @@
+{
+  "season": 1999,
+  "bye_weeks": [
+    {
+      "week": 2,
+      "teams": [
+        "STL"
+      ]
+    },
+    {
+      "week": 3,
+      "teams": [
+        "DAL",
+        "MIA",
+        "NOR"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "DET",
+        "GNB",
+        "IND"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "CAR",
+        "SEA",
+        "WAS"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "BAL",
+        "KAN",
+        "TAM"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "ARI",
+        "JAX",
+        "TEN"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "NYJ",
+        "PIT",
+        "SFO"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "NWE",
+        "NYG",
+        "OAK"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "ATL"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "MIN"
+      ]
+    },
+    {
+      "week": 12,
+      "teams": [
+        "DEN"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "BUF"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "CHI"
+      ]
+    },
+    {
+      "week": 15,
+      "teams": [
+        "CIN"
+      ]
+    },
+    {
+      "week": 16,
+      "teams": [
+        "PHI"
+      ]
+    },
+    {
+      "week": 17,
+      "teams": [
+        "CLE"
+      ]
+    }
+  ]
+}

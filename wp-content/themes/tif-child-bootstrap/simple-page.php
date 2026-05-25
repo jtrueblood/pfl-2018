@@ -1,7 +1,7 @@
 <?php
 /*
- * Template Name: Simple Page
- * Description: Page for displaying the protections for each team
+ * Template Name: Scorigami
+ * Description: Page for displaying Scorigami
  */
  ?>
 

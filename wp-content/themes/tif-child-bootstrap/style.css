@@ -8,4 +8,7 @@
  Version:        1.0.0
 */
 
+.results .boxscorebox {
+    padding-left: 0px !important;
+}
 

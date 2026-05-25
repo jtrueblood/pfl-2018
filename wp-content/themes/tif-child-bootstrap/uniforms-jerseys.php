@@ -79,6 +79,32 @@ endif;
 get_header(); 
 ?>
 
+<!-- HIDE BROKEN IMAGE LINK IF JERSEY ISN'T AVAILIBLE -->
+<style>
+    img:-moz-broken{
+        opacity: 0;
+    }
+
+    body {
+        background-color: white;
+    }
+
+    img {
+        position: relative;
+    }
+
+    img::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+    }
+</style>
+
 <div class="boxed">
 			
 			<!--CONTENT CONTAINER-->
@@ -118,70 +144,58 @@ get_header();
 								?>
 							</select>
 							</div>
-							<div class="col-xs-24 col-sm-4">
+							<div class="col-xs-24 col-sm-3">
 								<button class="btn btn-warning" id="playerSelectUnis">Select</button>
 							</div>
-						</div>
-					
-						</div>
-					</div>		
-					
-					<div class="col-xs-24 col-sm-6 left-column">
-						<div class="panel widget" >
-							<div class="widget-body text-center">
-					
-								<?php 
-									//printr($team_switches, 0);
-									foreach($team_switches as $id => $team){
-										$year = substr($id, 0, 4);
-										$uni_hist[] = get_helmet_name_history_by_team($team, $year);
-									}
-									printr($uni_hist, 0);
-								?>		
-					
-							</div>
+
+
+
+                            </div>
+                            <?php
+                            printr($team_switches, 0);
+                            foreach($team_switches as $id => $team){
+                                $year = substr($id, 0, 4);
+                                $uni_hist[] = get_helmet_name_history_by_team($team, $year);
+                            }
+                            printr($uni_hist, 0);
+                            ?>
 						</div>
 					</div>
-						
+
 					<!-- PLAYER SPOTLIGHT -->
-					<div class="col-xs-24 col-sm-4 left-column">
+					<div class="col-xs-24 col-sm-10 left-column">
 						<div class="panel widget" >
 							<div class="widget-body text-center">
-								<?php 
-								
-									//echo '<h2>'.$player_number.'</h2>'; 
-									//printr($yearsplayed, 0);
-								foreach($uni_hist as $uni){	
-									if($player_number > 9):
-										$leftarm = $player_number[1];
-										$rightarm = $player_number[0];
-									else: 
-										$leftarm = $player_number;
-										$rightarm = $player_number;	
-									endif;
-									
-									$team = $uni['team'];
-									$helmet_num = $uni['helmet'];
-								
-									$helmeturl = $stylesheet_uri.'/img/helmets/weekly/'.$team.'-helm-right-'.$helmet_num.'.png';
-									$jerseyurl = $stylesheet_uri.'/uniforms/'.$team.'_'.$version.'_'.$helmet_num.'.png';
-									
-									
-									
-									//echo '<img src="'.$stylesheet_uri.'/uniforms/WRZ_uni_test_l.png"/>';
+								<?php
+                                    foreach ($uni_hist as $uni):
+                                        $getjerseyinfo = get_uni_info_by_team($uni['team']);
+
+                                        $getjersey_h = show_jersey_svg ( $uni['team'], 'H', $uni['jersey'], $player_number);
+                                        $getjersey_r = show_jersey_svg ( $uni['team'], 'R', $uni['jersey'], $player_number);
+                                        $getjersey_a = show_jersey_svg ( $uni['team'], 'A', $uni['jersey'], $player_number);
+                                        $gethelmet = show_helmet($uni['team'], $uni['helmet'], 'right');
+
+                                        if($getjersey_h):
+
+                                            echo
+                                            '<div class="row">
+                                                <div class="col-xs-24 col-sm-8">
+                                                    <img src="'.$stylesheet_uri.$getjersey_h.'" class="svg-jersey"/>
+                                                    <div class="layer-helmet"><img src="'.$stylesheet_uri.$gethelmet.'" class="show-helmet"/></div>
+                                                </div>
+                                                <div class="col-xs-24 col-sm-8">
+                                                    <img src="'.$stylesheet_uri.$getjersey_r.'" class="svg-jersey"/>
+                                                </div>
+                                                <div class="col-xs-24 col-sm-8">
+                                                    <img src="'.$stylesheet_uri.$getjersey_a.'" class="svg-jersey"/>
+                                                </div>
+                                            </div>';
+                                        endif;
+
+                                    endforeach;
+
 								?>
-								
-								<div class="jersey" style="background-image:url(<?php echo $jerseyurl; ?>)" >
-								<img class="helm-jersey" src="<?php echo $helmeturl;?>"/>	
-								<?php echo '<div class="'.$team.'-'.$version.'-'.$helmet_num.'">'; ?>
-										<h3 class="left-arm"><?php echo $leftarm; ?></h2>
-										<h2><?php echo $player_number; ?></h2>
-										<h3 class="right-arm"><?php echo $rightarm; ?></h2>
-									</div>
-								</div>
-								
-								<?php } ?>
-								
+
 							</div>
 						</div>
 					</div>
@@ -189,91 +203,17 @@ get_header();
 					<div class="col-xs-12 col-sm-6 eq-box-sm">
 						<div class="panel panel-bordered panel-light">
 							<div class="panel-body">
-								<?php while (have_posts()) : the_post(); ?>
-								<p><?php the_content();?></p>
-								<?php endwhile; wp_reset_query(); ?>
-								
-								<div class="number-samples">
-									<h2 class="alfa-slab-one"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Alfa Slab One', cursive;</p>
-								</div>
-								<div class="number-samples">
-									<h2 class="black-ops"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Black Ops One', cursive;</p>
-								</div>
-								<div class="number-samples">
-									<h2 class="bungee"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Bungee', cursive;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="bungee-shade"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Bungee Shade', cursive;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="coda"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Coda', cursive;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="exo"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Exo 2', sans-serif;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="montserrat"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Montserrat', sans-serif;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="neuton"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Neuton', serif;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="open-sans"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Open Sans', sans-serif;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="teko"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Teko', sans-serif;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="russo-one"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Russo One', sans-serif;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="staatliches"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Staatliches', cursive;</p>
-								</div>
-									<div class="number-samples">
-									<h2 class="saira"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Saira Stencil One', cursive;</p>
-								</div>
-								<div class="number-samples">
-									<h2 class="tienne"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Tienne', serif;</p>
-								</div>
-								<div class="number-samples">
-									<h2 class="tomorrow"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Tomorrow', sans-serif; </p>
-								</div>
-								<div class="number-samples">
-									<h2 class="holtwoood"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Holtwood One SC', serif; </p>
-								</div>
-								<div class="number-samples">
-									<h2 class="arvo"><?php echo $player_number; ?></h2>
-									<p>font-family: 'Arvo', serif; </p>
-								</div>
-								
-								
-								
 
-								
-							
 						</div>
 					</div>
-				</div>
-				</div>
-			</div>
-</div>
+					</div>
+				</div><!--End page content-->
+				
+			</div><!--END CONTENT CONTAINER-->
+			
+	<?php include_once('main-nav.php'); ?>
+	<?php include_once('aside.php'); ?>
+			
+</div><!--END BOXED-->
 
-
-		
 <?php get_footer(); ?>

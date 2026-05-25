@@ -1,0 +1,75 @@
+{
+  "season": 1995,
+  "bye_weeks": [
+    {
+      "week": 4,
+      "teams": [
+        "BUF",
+        "CAR",
+        "IND",
+        "MIA",
+        "NWE",
+        "SEA"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "CHI",
+        "DET",
+        "GNB",
+        "MIN"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "ATL",
+        "NOR",
+        "SFO",
+        "STL"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "CIN",
+        "CLE",
+        "HOU",
+        "PIT"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ARI",
+        "DAL",
+        "NYG",
+        "PHI"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "DEN",
+        "KAN",
+        "OAK",
+        "SDG"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "JAX",
+        "TAM"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "NYJ",
+        "WAS"
+      ]
+    }
+  ]
+}

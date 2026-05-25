@@ -1,0 +1,70 @@
+{
+  "season": 1998,
+  "bye_weeks": [
+    {
+      "week": 3,
+      "teams": [
+        "ATL",
+        "CAR",
+        "NOR",
+        "SFO"
+      ]
+    },
+    {
+      "week": 4,
+      "teams": [
+        "BUF",
+        "MIA",
+        "NWE",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 5,
+      "teams": [
+        "BAL",
+        "CIN",
+        "JAX",
+        "PIT",
+        "STL",
+        "TEN"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "DET",
+        "GNB",
+        "MIN",
+        "TAM"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "DEN",
+        "KAN",
+        "OAK",
+        "SEA"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "ARI",
+        "DAL",
+        "IND",
+        "NYG",
+        "PHI",
+        "WAS"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "CHI",
+        "SDG"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+[
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Rams",
+    "player_name": "Jordan Whittington",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Eagles",
+    "player_name": "Dallas Goedert",
+    "position": "TE",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Jaguars",
+    "player_name": "Christian Kirk",
+    "position": "WR",
+    "injury": "Shoulder",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Buccaneers",
+    "player_name": "Mike Evans",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Texans",
+    "player_name": "Stefon Diggs",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Ravens",
+    "player_name": "Rasheen Ali",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Ravens",
+    "player_name": "Keaton Mitchell",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Browns",
+    "player_name": "Jerome Ford",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Jets",
+    "player_name": "Allen Lazard",
+    "position": "WR",
+    "injury": "Chest",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Patriots",
+    "player_name": "Drake Maye",
+    "position": "QB",
+    "injury": "Head",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Patriots",
+    "player_name": "Ja'Lynn Polk",
+    "position": "WR",
+    "injury": "Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Darrynton Evans",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Bills",
+    "player_name": "Curtis Samuel",
+    "position": "WR",
+    "injury": "Pectoral",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Seahawks",
+    "player_name": "DK Metcalf",
+    "position": "WR",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Saints",
+    "player_name": "Derek Carr",
+    "position": "QB",
+    "injury": "Oblique",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Saints",
+    "player_name": "Kendre Miller",
+    "position": "RB",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Saints",
+    "player_name": "Cedrick Wilson Jr.",
+    "position": "WR",
+    "injury": "Hip",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Chargers",
+    "player_name": "Derius Davis",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Chargers",
+    "player_name": "Quentin Johnston",
+    "position": "WR",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Chiefs",
+    "player_name": "JuJu Smith-Schuster",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Jonathon Brooks",
+    "position": "RB",
+    "injury": "Knee",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Andy Dalton",
+    "position": "QB",
+    "injury": "Right Thumb",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Feleipe Franks",
+    "position": "TE",
+    "injury": "gameday concussion protocol evaluation, Concussion",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Diontae Johnson",
+    "position": "WR",
+    "injury": "Rib",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Panthers",
+    "player_name": "Adam Thielen",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Cowboys",
+    "player_name": "John Stephens Jr.",
+    "position": "TE",
+    "injury": "Knee",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "49ers",
+    "player_name": "Jauan Jennings",
+    "position": "WR",
+    "injury": "Hip",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "49ers",
+    "player_name": "Jake Moody",
+    "position": "K",
+    "injury": "Right Ankle",
+    "game_status": "Out"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Steelers",
+    "player_name": "Cordarrelle Patterson",
+    "position": "RB",
+    "injury": "Ankle",
+    "game_status": "Doubtful"
+  },
+  {
+    "year": 2024,
+    "week": 8,
+    "team": "Steelers",
+    "player_name": "Roman Wilson",
+    "position": "WR",
+    "injury": "Hamstring",
+    "game_status": "Out"
+  }
+]

@@ -8,7 +8,10 @@
 <!-- Make the required arrays and cached files availible on the page -->
 
 <?php get_header(); ?>
-
+<?php
+$getyear = $_GET['Y'];
+$getteam = $_GET['TEAM'];
+?>
 
 
 <div class="boxed">
@@ -28,81 +31,106 @@
 						
 						<?php
 							$protections = get_protections();
-							$loop = 0;
-							
-							
-							
+
 							foreach($protections as $key => $item){
 							   $arr_resort[$item['team']][$key] = $item;
 							}
 							
 							ksort($arr_resort, SORT_NUMERIC);
-							
-							//printr($arr_resort, 1);
-						$loop = 0;
-	
-						foreach ($arr_resort as $team){
-							foreach ($team as $key => $value){
 
-								$team = $value['team'];
-								$first = $value['first'];
-								$last = $value['last'];
-								$position = $value['position'];
-								$playerid = $value['playerid'];
-							    $year = $value['year'];
-								
-								
-								if($team != $checkteam){
-										$checkteam = $team;
-										?>
-										<div class="col-xs-24">		
-										
-											<h4 class="text-center protection-season"><?php echo $team; ?> Protections</h4>
-									
-										</div>
-										
-										<?php  }  
-											
-										if ($loop % 3 == 0){ ?>
-										<div class="row">
-										<div class="col-xs-2">	
-											<h3 class="text-bold text-center"><?php echo $year; ?></h3>												
-										</div>		
-				
-										<?php } ?>
-												
-										<div class="col-xs-7">		
-											<div class="panel protections">
-												<div class="panel-body <?php echo $position;?>">	
-												<?php
-												if ($first == 'No Protection'){	
-													echo 'No Protection';
-												 } else {
-													 
-													$playerimgobj = get_attachment_url_by_slug($playerid);
-													$imgid =  attachment_url_to_postid( $playerimgobj );
-													$image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));	
-													$playerimg = $image_attributes[0];
-												
-													 
-													 echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position; 
-												 }?>
-												</div>
-											</div>
-										</div>
-									
-										<?php 
-										$loop++;
-										if ($loop % 3 == 0){ 
-											echo '</div>';
-										}
-											
-								}
-							}
+							//printr($arr_resort, 1);
+
+							foreach ($arr_resort as $key => $value):
+                                foreach ($value as $k => $v):
+                                    $teamprotect[$key][$v['year']][] = $v;
+                                endforeach;
+                            endforeach;
+
+                            if($getteam != ''):
+                                $printprotect[$getteam] = $teamprotect[$getteam];
+                            else:
+                                if($getyear != ''):
+                                    foreach($teamprotect as $team => $years):
+                                        if($years[$getyear]):
+                                            $printprotect[$team][$getyear] = $years[$getyear];
+                                        endif;
+                                    endforeach;
+                                else:
+                                    $printprotect = $teamprotect;
+                                endif;
+                            endif;
+
+
+
+                            //printr($printprotect, 0);
+
+                            foreach ($printprotect as $key => $team):
+                            echo '<div class="row">';
+                            echo '<h3>'.$key.'</h3>';
+							foreach ($team as $year => $value):
+                                $i = 0;
+                                    echo '<div class="row">';
+                                        echo '<div class="col-xs-2">';
+                                            echo '<h4>'.$year.'</h4>';
+                                        echo '</div>';
+                                        foreach ($value as $k => $v):
+                                        $lastyear = $year - 1;
+
+                                        $team = $v['team'];
+                                        $first = $v['first'];
+                                        $last = $v['last'];
+                                        $position = $v['position'];
+                                        $playerid = $v['playerid'];
+                                        $lastrank = get_player_season_rank ($playerid, $lastyear);
+                                        $thisrank = get_player_season_rank ($playerid, $year);
+
+                                        $lastcolor = '' ;
+                                        $thiscolor = '' ;
+
+                                        if($lastrank <= 5):
+                                            $lastcolor = 'greentext' ;
+                                        endif;
+                                        if($lastrank >= 20):
+                                            $lastcolor = 'redtext' ;
+                                        endif;
+                                        if($thisrank <= 5):
+                                            $thiscolor = 'greentext' ;
+                                        endif;
+                                        if($thisrank >= 20):
+                                            $thiscolor = 'redtext' ;
+                                        endif;
+
+                                        if($i == 3):
+                                            echo '<div class="col-xs-2"></div>';
+                                        endif;
+                                        ?>
+
+                                            <div class="col-xs-7">
+                                                <div class="panel protections">
+                                                    <div class="panel-body <?php echo $position;?>">
+                                                    <?php
+                                                        $playerimgobj = get_attachment_url_by_slug($playerid);
+                                                        $imgid =  attachment_url_to_postid( $playerimgobj );
+                                                        $image_attributes = wp_get_attachment_image_src($imgid, array( 100, 100 ));
+                                                        $playerimg = $image_attributes[0];
+                                                        echo '<img src="'.$playerimg.'" class="leaders-image"><h4 class="text-bold"><a href="/player/?id='.$playerid.'">'.$first.' '.$last.'</a></h4>, '.$position;
+                                                        echo '<div class="ranktext">
+                                                            <div class="'.$lastcolor.' text-bold">POS RANK Last: '.$lastrank.'</div><div class="'.$thiscolor.' text-bold">POS RANK This: '.$thisrank.'</div>';
+                                                        echo '</div>';
+                                                     ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <?php
+                                            $i++;
+                                            endforeach;
+                                        echo '</div>';
+							    endforeach;
+							    echo '</div>';
+                            endforeach;
 						?>
-							
-							
-											
+
 						</div>
 
 										

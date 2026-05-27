@@ -1,0 +1,82 @@
+{
+  "season": 2026,
+  "bye_weeks": [
+    {
+      "week": 5,
+      "teams": [
+        "CAR",
+        "KAN"
+      ]
+    },
+    {
+      "week": 6,
+      "teams": [
+        "CIN",
+        "DET",
+        "MIA",
+        "MIN"
+      ]
+    },
+    {
+      "week": 7,
+      "teams": [
+        "BUF",
+        "JAX",
+        "LAC",
+        "WAS"
+      ]
+    },
+    {
+      "week": 8,
+      "teams": [
+        "HOU",
+        "NOR",
+        "NYG",
+        "SFO"
+      ]
+    },
+    {
+      "week": 9,
+      "teams": [
+        "PIT",
+        "TEN"
+      ]
+    },
+    {
+      "week": 10,
+      "teams": [
+        "CHI",
+        "DEN",
+        "PHI",
+        "TAM"
+      ]
+    },
+    {
+      "week": 11,
+      "teams": [
+        "ATL",
+        "CLE",
+        "GNB",
+        "LAR",
+        "NWE",
+        "SEA"
+      ]
+    },
+    {
+      "week": 13,
+      "teams": [
+        "BAL",
+        "IND",
+        "LVR",
+        "NYJ"
+      ]
+    },
+    {
+      "week": 14,
+      "teams": [
+        "ARI",
+        "DAL"
+      ]
+    }
+  ]
+}

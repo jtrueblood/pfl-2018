@@ -2308,6 +2308,73 @@ function is_player_on_bye($pid, $weekid) {
 }
 
 
+// REST endpoint: GET /pfl/v1/mfl-weekly-gamelogs?year=N&week=N
+// Returns the cached MFL `weeklyResults` payload for a completed season-week,
+// from the mfl-weekly-gamelogs/{year}{week}.json sidecar files. Used by the
+// pfl-next fetcher as a fallback when MFL refuses APIKEY-only auth for past
+// seasons (schedule + weeklyResults endpoints get locked once the site
+// rolls over to a new season).
+add_action('rest_api_init', function () {
+    register_rest_route('pfl/v1', '/mfl-weekly-gamelogs', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_mfl_weekly_gamelogs',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+function pfl_api_mfl_weekly_gamelogs(WP_REST_Request $request) {
+    $year = (int) $request->get_param('year');
+    $week = (int) $request->get_param('week');
+    if ($year <= 0 || $week <= 0) {
+        return new WP_Error('missing_params', 'year and week query params are required', ['status' => 400]);
+    }
+    $file = get_stylesheet_directory() . '/mfl-weekly-gamelogs/' . $year . $week . '.json';
+    if (!file_exists($file)) {
+        return new WP_Error('not_found', "No cached gamelog for year={$year} week={$week}", ['status' => 404]);
+    }
+    $data = json_decode(file_get_contents($file), true);
+    if (!is_array($data)) {
+        return new WP_Error('parse_error', 'Cached gamelog is not valid JSON', ['status' => 500]);
+    }
+    return rest_ensure_response($data);
+}
+
+
+// REST endpoint: GET /pfl/v1/bye-weeks?year=N
+// Returns the NFL bye-week schedule for the given season, as captured in the
+// nfl-bye-weeks/bye_weeks_<year>.json sidecar files. Used by pfl-next's
+// Gameday page to flag rostered players whose team is on bye this week.
+add_action('rest_api_init', function () {
+    register_rest_route('pfl/v1', '/bye-weeks', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_bye_weeks',
+        'permission_callback' => '__return_true',
+    ]);
+});
+
+function pfl_api_bye_weeks(WP_REST_Request $request) {
+    $year = (int) $request->get_param('year');
+    if ($year <= 0) {
+        return new WP_Error('missing_year', 'year query param required', ['status' => 400]);
+    }
+    $json_file = get_stylesheet_directory() . '/nfl-bye-weeks/bye_weeks_' . $year . '.json';
+    if (!file_exists($json_file)) {
+        return rest_ensure_response([
+            'season'    => $year,
+            'bye_weeks' => [],
+        ]);
+    }
+    $bye_data = json_decode(file_get_contents($json_file), true);
+    if (!is_array($bye_data) || !isset($bye_data['bye_weeks'])) {
+        return rest_ensure_response([
+            'season'    => $year,
+            'bye_weeks' => [],
+        ]);
+    }
+    return rest_ensure_response($bye_data);
+}
+
+
 // Find players who claim to have played for a team but aren't in the team's lineup
 function get_unaccounted_players($team_abbr, $weekid, $lineup_players) {
     global $wpdb;
@@ -3062,6 +3129,20 @@ function get_pfl_mfl_ids_season(){
             '0012' => ''
         ),
         2025 => array(
+            '0001' => 'TSG',
+            '0002' => 'ETS',
+            '0003' => 'PEP',
+            '0004' => 'WRZ',
+            '0005' => 'DST',
+            '0006' => 'BST',
+            '0007' => 'SNR',
+            '0008' => 'HAT',
+            '0009' => 'CMN',
+            '0010' => 'BUL',
+            '0011' => '',
+            '0012' => ''
+        ),
+        2026 => array(
             '0001' => 'TSG',
             '0002' => 'ETS',
             '0003' => 'PEP',
@@ -6560,7 +6641,8 @@ function get_mfl_league_id(){
         2022 => 38954,
         2023 => 38954,
         2024 => 38954,
-        2025 => 38954
+        2025 => 38954,
+        2026 => 38954
     );
     return $leagueids;
 }
@@ -7620,7 +7702,15 @@ function build_sidebar_navigation_menu() {
     
     // Create new menu
     $menu_id = wp_create_nav_menu('Sidebar Navigation');
-    
+
+    // "Most recent season" defaults for the season-scoped links. Pulled from
+    // date() so admin rebuilds during a new season auto-track without code
+    // edits. After the season ends you can bump these by re-running the
+    // builder with ?build_sidebar_menu=1.
+    $default_year      = (int) date('Y');
+    $default_year_str  = (string) $default_year;
+    $default_week_str  = $default_year_str . '01';
+
     // Define the menu structure
     $menu_structure = array(
         'Awards' => array(
@@ -7639,18 +7729,18 @@ function build_sidebar_navigation_menu() {
             'children' => array(
                 'Individual Players' => '/player/?id=1998MannQB',
                 'Career Leaders' => '/leaders',
-                'Leaders By Season' => '/leaders-season/?id=2025',
+                'Leaders By Season' => '/leaders-season/?id=' . $default_year_str,
                 'Supercards' => '/supercards/'
             )
         ),
         'Seasons' => array(
             'url' => '#',
             'children' => array(
-                'Seasons' => '/seasons/?id=2025',
-                'Drafts by Year' => '/drafts/?id=2025',
-                'Standings By Year' => '/standings/?id=2025',
+                'Seasons' => '/seasons/?id=' . $default_year_str,
+                'Drafts by Year' => '/drafts/?id=' . $default_year_str,
+                'Standings By Year' => '/standings/?id=' . $default_year_str,
                 'Playoff Brackets' => '/playoff-brackets',
-                'Team Rosters' => '/team-rosters/?season=2025'
+                'Team Rosters' => '/team-rosters/?season=' . $default_year_str
             )
         ),
         'Teams' => array(
@@ -7664,7 +7754,7 @@ function build_sidebar_navigation_menu() {
         'Games' => array(
             'url' => '#',
             'children' => array(
-                'Weekly Results' => '/results?Y=2025&W=01',
+                'Weekly Results' => '/results?Y=' . $default_year_str . '&W=01',
                 'All Schedules' => '/schedules',
                 'Grandslams' => '/grandslams',
                 'Home and Away' => '/home-and-away',
@@ -7699,8 +7789,8 @@ function build_sidebar_navigation_menu() {
                 'Unis & Helmets' => '/uniforms',
                 'Number Ones' => '/number-ones',
                 'Mr Irrelevant' => '/mr-irrelevant',
-                'Kicker Drafts' => '/kicker-draft/?draft_year=2025/',
-                'Scorigami' => '/scorigami/?W=202501',
+                'Kicker Drafts' => '/kicker-draft/?draft_year=' . $default_year_str . '/',
+                'Scorigami' => '/scorigami/?W=' . $default_week_str,
                 'Position Difference' => '/position-difference',
                 'Colleges' => '/colleges',
                 'Error Check' => '/error-check'
@@ -10295,9 +10385,10 @@ function pfl_api_player_transactions(WP_REST_Request $request) {
 
     // RELEASED: player on roster year N, not protected year N+1
     $released_events = get_released_player($pid);
+    $career_event_cutoff = (int) date('Y'); // skip events for seasons that haven't happened yet
     foreach ($released_events as $released) {
         $yr = (int) $released['year'];
-        if ($yr >= 2026) continue;
+        if ($yr > $career_event_cutoff) continue;
         $date_str = get_draft_date_for_player($yr, $mflid);
         if (!isset($printit[$yr])) $printit[$yr] = [];
         array_unshift($printit[$yr], [
@@ -10331,7 +10422,7 @@ function pfl_api_player_transactions(WP_REST_Request $request) {
     if (!empty($protection_events)) {
         foreach ($protection_events as $protection) {
             $yr = (int) $protection['year'];
-            if ($yr >= 2026) continue;
+            if ($yr > $career_event_cutoff) continue;
             $date_str = get_draft_date_for_player($yr, $mflid);
             if (!isset($printit[$yr])) $printit[$yr] = [];
             array_unshift($printit[$yr], [
@@ -12460,7 +12551,65 @@ add_action('rest_api_init', function () {
         'callback'            => 'pfl_api_player_search',
         'permission_callback' => '__return_true',
     ]);
+    register_rest_route('pfl/v1', '/players-by-mflid', [
+        'methods'             => 'GET',
+        'callback'            => 'pfl_api_players_by_mflid',
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/mfl-franchises', [
+        'methods'             => 'GET',
+        'callback'            => function(WP_REST_Request $req) {
+            $season = (int) ($req->get_param('season') ?: date('Y'));
+            $all = get_pfl_mfl_ids_season();
+            $map = $all[$season] ?? [];
+            global $wpdb;
+            $rows = $wpdb->get_results("SELECT team_int, team, owner FROM wp_teams", ARRAY_A);
+            $by_team = [];
+            foreach ($rows as $r) $by_team[$r['team_int']] = $r;
+            $out = [];
+            foreach ($map as $franchiseId => $teamAbbrev) {
+                if (!$teamAbbrev) continue;
+                $info = $by_team[$teamAbbrev] ?? [];
+                $out[$franchiseId] = [
+                    'team'     => $teamAbbrev,
+                    'teamName' => $info['team'] ?? $teamAbbrev,
+                    'owner'    => $info['owner'] ?? '',
+                ];
+            }
+            return rest_ensure_response((object) $out);
+        },
+        'permission_callback' => '__return_true',
+    ]);
 });
+
+/**
+ * Look up PFL player records by MFL player id (comma-separated `ids` param).
+ * Used by the /gameday view to translate MFL roster pids into real names.
+ *
+ * Response shape:
+ *   { "13130": { "pid": "...", "first": "...", "last": "...", "position": "..." }, ... }
+ */
+function pfl_api_players_by_mflid(WP_REST_Request $request) {
+    global $wpdb;
+    $raw = (string) ($request->get_param('ids') ?? '');
+    $ids = array_values(array_filter(array_map('trim', explode(',', $raw))));
+    if (empty($ids)) return rest_ensure_response((object) []);
+    $placeholders = implode(',', array_fill(0, count($ids), '%s'));
+    $rows = $wpdb->get_results($wpdb->prepare(
+        "SELECT p_id, mflid, playerFirst, playerLast, position FROM wp_players WHERE mflid IN ($placeholders)",
+        ...$ids
+    ), ARRAY_A);
+    $out = [];
+    foreach ($rows as $r) {
+        $out[(string) $r['mflid']] = [
+            'pid'      => $r['p_id'],
+            'first'    => $r['playerFirst'],
+            'last'     => $r['playerLast'],
+            'position' => $r['position'],
+        ];
+    }
+    return rest_ensure_response((object) $out);
+}
 
 function pfl_api_player_search(WP_REST_Request $request) {
     global $wpdb;
@@ -12699,7 +12848,8 @@ add_action('rest_api_init', function () {
 function pfl_api_migrate_protections(WP_REST_Request $request) {
     global $wpdb;
 
-    $years = [2022, 2023, 2024, 2025];
+    $years = [2022, 2023, 2024, 2025, 2026];
+    $year_list_sql = implode(',', $years);
 
     // Debug: show sample rows and distinct years
     if ($request->get_param('debug')) {
@@ -12712,7 +12862,7 @@ function pfl_api_migrate_protections(WP_REST_Request $request) {
     $rows = $wpdb->get_results(
         "SELECT year, playerFirst, playerLast, team, position, playerId
          FROM wp_protections
-         WHERE year IN (2022, 2023, 2024, 2025)",
+         WHERE year IN ({$year_list_sql})",
         ARRAY_A
     );
 
@@ -13610,6 +13760,14 @@ add_action('rest_api_init', function () {
             global $wpdb;
             $r = $wpdb->query("ALTER TABLE wp_stadiums MODIFY team_owned VARCHAR(16) NULL");
             return rest_ensure_response(['ret' => $r, 'error' => $wpdb->last_error]);
+        },
+        'permission_callback' => '__return_true',
+    ]);
+    register_rest_route('pfl/v1', '/wp-players-schema', [
+        'methods' => 'GET',
+        'callback' => function() {
+            global $wpdb;
+            return rest_ensure_response($wpdb->get_results("SHOW COLUMNS FROM wp_players", ARRAY_A));
         },
         'permission_callback' => '__return_true',
     ]);

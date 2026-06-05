@@ -8,7 +8,7 @@
     "grunt-contrib-less": "^0.12.0",
     "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-pngmin": "^0.6.4",
+    "grunt-pngmin": "^2.0.3",
     "grunt-smushit": "^1.3.0"
   }
 }

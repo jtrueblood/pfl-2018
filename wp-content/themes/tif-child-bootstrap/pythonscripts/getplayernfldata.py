@@ -659,15 +659,21 @@ def update_playoff_linescore(p_id, year, week, stats):
         rows_updated = cursor.rowcount
         if rows_updated:
             print(f"  ✓ Updated wp_playoffs linescore for {p_id} year={year} week={week}")
-            # Bust the WordPress transient so the next page load reflects the new data
+            # Bust EVERY weekly-results transient for this year+week regardless
+            # of version suffix (_v17, _v39, whatever). The PHP cache key gets
+            # bumped over time and a hardcoded suffix here silently no-ops.
             week_pad = f"{week:02d}"
-            transient_key = f"pfl_weekly_results_{year}{week_pad}_v17"
+            key_prefix = f"pfl_weekly_results_{year}{week_pad}_"
             cursor.execute(
-                "DELETE FROM wp_options WHERE option_name IN (%s, %s)",
-                (f"_transient_{transient_key}", f"_transient_timeout_{transient_key}")
+                """
+                DELETE FROM wp_options
+                 WHERE option_name LIKE %s
+                    OR option_name LIKE %s
+                """,
+                (f"_transient_{key_prefix}%", f"_transient_timeout_{key_prefix}%"),
             )
             connection.commit()
-            print(f"  ✓ Cleared cache: {transient_key}")
+            print(f"  ✓ Cleared cache: {key_prefix}* ({cursor.rowcount} rows)")
         else:
             print(f"  ⚠ No wp_playoffs row found for {p_id} year={year} week={week}")
         return rows_updated > 0
@@ -1390,6 +1396,13 @@ def get_comprehensive_player_stats(player_name, week, year=2024):
                 
                 if found_player:
                     player_stats['Player'] = player_name
+                    # ESPN's per-player stat dump never carries 2-pt
+                    # conversion attempts; walk the scoringPlays for any
+                    # successful conversion involving this player and use
+                    # that count instead.
+                    twopt = count_two_pt_conversions(game_summary, player_name)
+                    if twopt:
+                        player_stats['2pt conversions'] = twopt
                     return player_stats
         
         return None
@@ -1397,6 +1410,58 @@ def get_comprehensive_player_stats(player_name, week, year=2024):
     except Exception as e:
         print(f"Error: {e}")
         return None
+
+
+def count_two_pt_conversions(game_summary, player_name):
+    """Count SUCCESSFUL 2-point conversions involving the named player.
+
+    ESPN annotates 2pt outcomes inside the parenthetical at the end of a
+    touchdown's scoringPlays text:
+
+      success rush :  "... pass from Josh Allen (Josh Allen Run for Two-Point Conversion)"
+      success pass :  "... TD pass from QB (QB Pass to WR for Two-Point Conversion)"
+      failure      :  "... TD ... (Two-Point Pass Conversion Failed)"
+
+    PFL credits +1 per 2pt to every named participant — i.e. the rusher
+    (for a rushing 2pt), or both the passer AND the receiver (for a
+    passing 2pt). So we match on any occurrence of the player's name
+    inside the parens, as long as 'Failed' isn't present there.
+
+    Parameters
+    ----------
+    game_summary : dict
+        Decoded JSON from ESPN's /summary endpoint.
+    player_name : str
+        Full player name, e.g. "Josh Allen".
+
+    Returns
+    -------
+    int
+        Number of successful 2pt conversions involving this player in
+        the game (typically 0 or 1; could be 2 in a freak game).
+    """
+    if not game_summary:
+        return 0
+
+    name_lower = player_name.strip().lower()
+    if not name_lower:
+        return 0
+
+    paren_re = re.compile(r'\(([^()]*Two-Point[^()]*)\)', re.IGNORECASE)
+    count = 0
+    for play in game_summary.get('scoringPlays', []):
+        text = play.get('text', '') or ''
+        for m in paren_re.finditer(text):
+            paren = m.group(1)
+            paren_lower = paren.lower()
+            # Skip failed attempts (no player is credited there)
+            if 'failed' in paren_lower:
+                continue
+            # ESPN names players with their full first+last in the parenthetical,
+            # so a substring match is reliable here.
+            if name_lower in paren_lower:
+                count += 1
+    return count
 
 
 def get_pfl_teams_list():
